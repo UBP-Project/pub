@@ -32,3 +32,20 @@ class Activity(db.Model):
     title = db.Column(db.String(200), unique=True, index=True)
     description = db.Column(db.String(200))
     date = db.Column(db.DateTime())
+
+    def to_json(self):
+        json_post = {
+            'id': self.id,
+            'title': self.title,
+            'description': self.description,
+            'date': self.date
+        }
+        return json_post
+
+    @staticmethod
+    def from_json(json_activity):
+        title       = json_interest_group.get('title')
+        description = json_interest_group.get('description')
+        date        = json_interest_group.get('date')
+        return Activity(title=title, description=description, date=date)
+
