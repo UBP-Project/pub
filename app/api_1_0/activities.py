@@ -4,15 +4,15 @@ from app.api_1_0 import api
 from app import db
 import json
 
-@api.route('/activity')
+@api.route('/activities')
 def get_activities():
     activities = Activity.query.all()
     return jsonify([
         activity.to_json() for activity in activities
     ])
 
-@api.route('/activity/<int:id>', methods=['GET', 'PUT', 'DELETE'])
-def activity(id):
+@api.route('/activities/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+def activities(id):
     if request.method == 'GET':
         activity = Activity.query.get_or_404(id)
         return jsonify(activity.to_json())
@@ -27,7 +27,7 @@ def activity(id):
         db.session.commit()
         return "Deleted"
 
-@api.route('/activity', methods=['POST'])
+@api.route('/activities', methods=['POST'])
 def new_activity():
     data = request.form.to_dict()
     activity = Activity.from_json(data)
