@@ -44,8 +44,8 @@ class Activity(db.Model):
 
     @staticmethod
     def from_json(json_activity):
-        title       = json_interest_group.get('title')
-        description = json_interest_group.get('description')
-        date        = json_interest_group.get('date')
+        title       = json_activity.get('title')
+        description = json_activity.get('description')
+        date        = json_activity.get('date')
         return Activity(title=title, description=description, date=date)
 
