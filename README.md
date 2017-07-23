@@ -17,7 +17,7 @@ SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
 Create the tables by executing
 ```sh
 $ python manage.py shell
->> db.create_all() 
+>>> db.create_all() 
 ```
 
 ### Development
