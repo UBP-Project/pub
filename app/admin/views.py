@@ -3,4 +3,4 @@ from . import admin
 
 @admin.route('/', methods=['GET', 'POST'])
 def index():
-    return "Admin page";
+    return render_template('admin/index.html');
