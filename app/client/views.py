@@ -6,7 +6,8 @@ from ..models import User, Interest_Group
 
 @client.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template("index.html");
+    interest_groups = Interest_Group.query.all()
+    return render_template("index.html", interest_groups=interest_groups);
 
 @client.route('/home/')
 def viewHome():

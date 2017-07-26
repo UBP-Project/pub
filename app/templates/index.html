@@ -1,8 +1,10 @@
-{% extends "base.html" %}
+{% extends "layout/base.html" %}
 {% block title %}flask{% endblock %}
 
 {% block page_content %}
 <div class="page-header">
-    <h1>Hello World</h1>
+    {% for group in interest_groups %}
+        <li>{{ group['name'] }} - {{ group['about'] }}</li>
+    {% endfor %}
 </div>
 {% endblock %}
