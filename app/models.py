@@ -1,4 +1,4 @@
-from . import db
+from app import db
 from . import login_manager
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -14,6 +14,7 @@ class User(UserMixin, db.Model):
     department    = db.Column(db.String(200))
     position      = db.Column(db.String(200))
     birthday      = db.Column(db.Date)
+    comments      = db.relationship('Comment', backref='user')
 
     @property
     def password(self):
@@ -30,6 +31,42 @@ class User(UserMixin, db.Model):
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+    def to_json(self):
+        json_post = {
+            'id'        : self.id,
+            'firstname' : self.firstname,
+            'middlename': self.middlename,
+            'lastname'  : self.lastname,
+            'email'     : self.email,
+            'password'  : self.password,
+            'department': self.department,
+            'position'  : self.position,
+            'birthday'  : self.birthday
+        }
+        return json_post
+
+    @staticmethod
+    def from_json(json_user):
+        firstname   = json_user.get('firstname')
+        middlename  = json_user.get('middlename')
+        lastname    = json_user.get('lastname')
+        email       = json_user.get('email')
+        password    = json_user.get('password')
+        department  = json_user.get('department')
+        position    = json_user.get('position')
+        birthday    = json_user.get('birthday')
+
+        return User(
+            firstname=firstname,
+            middlename=middlename,
+            lastname=lastname,
+            email=email,
+            password=password,
+            department=department,
+            position=position,
+            birthday=birthday
+        )
 
 
 class Follow(db.Model):
@@ -119,3 +156,11 @@ class Activity_Schedule(db.Model):
     activity_id   = db.Column(db.Integer)
     time          = db.Column(db.Time)
     location      = db.Column(db.String(200))
+
+class Comment(db.Model):
+    __tablename__ = 'comment'
+    id            = db.Column(db.Integer, primary_key=True)
+    text          = db.Column(db.String(300))
+    timestamp     = db.Column(db.Time) #set default to system's current time
+    user_id       = db.column(db.Integer, db.ForeignKey('user.id'))
+    activity_id   = db.column(db.Integer) 
