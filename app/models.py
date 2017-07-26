@@ -72,17 +72,18 @@ class Activity(db.Model):
             'id'         : self.id,
             'title'      : self.title,
             'description': self.description,
-            'start_date' : self.date,
+            'start_date' : self.start_date,
             'end_date'   : self.end_date
         }
         return json_post
 
     @staticmethod
     def from_json(json_activity):
-        title       = json_interest_group.get('title')
-        description = json_interest_group.get('description')
-        date        = json_interest_group.get('date')
-        return Activity(title=title, description=description, date=date)
+        title       = json_activity.get('title')
+        description = json_activity.get('description')
+        start_date  = json_activity.get('start_date')
+        end_date    = json_activity.get('end_date')
+        return Activity(title=title, description=description, start_date=start_date, end_date=end_date)
 
 
 class User_Activity(db.Model):
