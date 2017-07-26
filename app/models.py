@@ -88,12 +88,12 @@ class Interest_Group(db.Model):
 
 class Membership(db.Model):
     __tablename__     = 'membership'
-    id                = db.Column(db.Integer, primary_key=True)
-    user_id           = db.Column(db.Integer)
-    group_id          = db.Column(db.Integer)
-    date_joined       = db.Column(db.Date)
-    membership_status = db.String(db.String(20)) # 'pending', 'accepted', 'declined'
-    membership_level  = db.Column(db.String(20)) # 'admin' or 'regular' member
+    id          = db.Column(db.Integer, primary_key=True)
+    user_id     = db.Column(db.Integer)
+    group_id    = db.Column(db.Integer)
+    date_joined = db.Column(db.Date)
+    status      = db.String(db.String(20)) # 'pending', 'accepted', 'declined'
+    level       = db.Column(db.String(20)) # 'admin' or 'regular' member
 
 
 class Activity(db.Model):
