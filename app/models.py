@@ -6,15 +6,15 @@ from werkzeug.security import generate_password_hash, check_password_hash
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
     id            = db.Column(db.Integer, primary_key=True)
-    firstname     = db.Column(db.String(200))
-    middlename    = db.Column(db.String(200))
-    lastname      = db.Column(db.String(200))
+    firstname     = db.Column(db.String(64))
+    middlename    = db.Column(db.String(64))
+    lastname      = db.Column(db.String(64))
     email         = db.Column(db.String(64))
     password_hash = db.Column(db.String(128))
     department    = db.Column(db.String(200))
     position      = db.Column(db.String(200))
     birthday      = db.Column(db.Date)
-    comments      = db.relationship('Comment', backref='user')
+    # comments      = db.relationship('Comment', backref='user')
 
     @property
     def password(self):

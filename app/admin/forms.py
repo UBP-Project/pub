@@ -3,11 +3,18 @@ from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import Required
 
 
-class Create_InterestGroup_Form(FlaskForm):
-    name = StringField('What is your name?', validators=[Required()])
+class CreateInterestGroupForm(FlaskForm):
+    name = StringField('Group name', validators=[Required()])
     submit = SubmitField('Submit')
 
-class LoginForm(FlaskForm):
-    email = StringField("Email or Username", validators=[Required()])
+class CreateUserForm(FlaskForm):
+    firstname = StringField("First name", validators=[Required()])
+    middlename = StringField("Middle name")
+    lastname = StringField("Last name")
+    email = StringField("Email")
     password = PasswordField("Password")
-    submit = SubmitField("Submit")
+    department = StringField("Department")
+    position = StringField("Position")
+    birthday = StringField("Birthday")
+    submit = SubmitField('Submit')
+
