@@ -1,6 +1,6 @@
 from flask import render_template
-from . import main
+from . import client
 
-@main.route('/', methods=['GET', 'POST'])
+@client.route('/', methods=['GET', 'POST'])
 def index():
     return render_template("index.html");

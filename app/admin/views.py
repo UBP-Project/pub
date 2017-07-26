@@ -1,5 +1,5 @@
 from flask import render_template
-from . import main
+from . import admin
 
 @admin.route('/', methods=['GET', 'POST'])
 def index():
