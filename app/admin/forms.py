@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField
+from wtforms import StringField, SubmitField, PasswordField, DateField
 from wtforms.validators import Required
 
 
@@ -15,7 +15,7 @@ class CreateUserForm(FlaskForm):
     password   = PasswordField("Password")
     department = StringField("Department")
     position   = StringField("Position")
-    birthday   = StringField("Birthday")
+    birthday   = DateField("Birthday")
     submit     = SubmitField("Submit")
 
 class CreateInterestGroupForm(FlaskForm):
@@ -24,4 +24,14 @@ class CreateInterestGroupForm(FlaskForm):
     cover_photo = StringField("Cover Photo")
     group_icon  = StringField("Group Icon")
     submit      = SubmitField("Submit")
+
+class CreateActivity(FlaskForm):
+    title       = StringField("Activity Title")
+    description = StringField("Activity Description")
+    start_date  = DateField("Start Date")
+    end_date    = DateField("End Date")
+    address     = StringField("Address")
+    submit      = SubmitField("Submit")
+
+
 

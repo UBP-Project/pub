@@ -3,8 +3,16 @@
 
 {% block page_content %}
 <div class="page-header">
+    GROUPS
     {% for group in interest_groups %}
         <li>{{ group['name'] }} - {{ group['about'] }}</li>
     {% endfor %}
+
+    ACTIVITIES
+    {% for activity in activities %}
+        <li>{{ activity['title'] }} - {{ activity['description'] }}</li>
+    {% endfor %}
+
+
 </div>
 {% endblock %}

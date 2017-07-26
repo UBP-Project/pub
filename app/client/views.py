@@ -2,12 +2,14 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_user, login_required, logout_user
 from .forms import LoginForm
 from . import client
-from ..models import User, Interest_Group
+from ..models import User, Interest_Group, Activity
 
 @client.route('/', methods=['GET', 'POST'])
 def index():
     interest_groups = Interest_Group.query.all()
-    return render_template("index.html", interest_groups=interest_groups);
+    activities = Activity.query.all()
+    print(activities)
+    return render_template("index.html", interest_groups=interest_groups, activities=activities);
 
 @client.route('/home/')
 def viewHome():

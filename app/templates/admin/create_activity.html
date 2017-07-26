@@ -1,0 +1,38 @@
+{% extends "/layout/base.html" %}
+{% block title %}Admin Page{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <form class="form-group col-md-3" method="post" name="create_activity">
+            <h3>Create Activity</h3>
+            {{ form.hidden_tag() }}
+            {{ form.title(
+                placeholder="Title",
+                class="form-control") }}
+            
+            {{ form.description(
+                placeholder="Description",
+                class="form-control") }}
+
+            <!--
+            {{ form.start_date(
+                placeholder="Start Date",
+                class="form-control")}}
+
+            {{ form.end_date(
+                placeholder="End Date",
+                class="form-control")}}
+            -->
+            
+            {{ form.address(
+                placeholder="Address",
+                class="form-control"
+            )}}
+
+            {{ form.submit(
+                placeholder="Submit",
+                class="form-control btn-success"
+            )}}
+        </form>
+    </div>
+{% endblock %}
