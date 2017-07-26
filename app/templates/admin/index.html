@@ -2,26 +2,5 @@
 {% block title %}Admin Page{% endblock %}
 
 {% block page_content %}
-    <div class="row">
-        <form class="form-group col-md-3" method="post" name="create_user">
-            <h3>Create User</h3>
-            {{ create_user_form.hidden_tag() }}
-            {{ create_user_form.firstname(
-                placeholder="First name",
-                class="form-control") }}
-            
-            {{ create_user_form.email(
-                placeholder="Email",
-                class="form-control") }}
-
-            {{ create_user_form.password(
-                placeholder="Password",
-                class="form-control")}}
-            
-            {{ create_user_form.submit(
-                placeholder="Submit",
-                class="form-control btn-success"
-            )}}
-        </form>
-    </div>
+    
 {% endblock %}

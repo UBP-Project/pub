@@ -2,10 +2,9 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_user, login_required, logout_user
 from .forms import LoginForm
 from . import client
-from ..models import User
+from ..models import User, Interest_Group
 
 @client.route('/', methods=['GET', 'POST'])
-@login_required
 def index():
     return render_template("index.html");
 
