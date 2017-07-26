@@ -40,3 +40,9 @@ nosetests.xml
 
 # Virtual environment
 venv
+pub
+
+# Temporary in Red's Environment
+app/api_1_0/authentication.py
+app/api_1_0/crud.py
+app/api_1_0/errors.py
