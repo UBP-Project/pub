@@ -8,6 +8,10 @@ from ..models import User, Interest_Group
 def index():
     return render_template("index.html");
 
+@client.route('/home/')
+def viewHome():
+	return render_template('views/home.html')
+
 @client.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -16,7 +20,7 @@ def login():
         if user is not  None and user.verify_password(form.password.data):
             login_user(user)
             return redirect(request.args.get('next') or url_for('client.index'))
-    return render_template("login.html", form=form)
+    return render_template("/views/login.html", form=form)
 
 @client.route('/logout')
 @login_required
