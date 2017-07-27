@@ -1,47 +1,41 @@
-{% extends "bootstrap/base.html" %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block title %}Flasky{% endblock %}
+<head>
 
-{% block head %}
-{{ super() }}
-<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
-<link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
-{% endblock %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <title>PUB | {% block title %}{% endblock title %}</title>
 
-{% block navbar %}
-<div class="navbar navbar-inverse" role="navigation">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="{{ url_for('client.index') }}">Flasky</a>
-        </div>
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li><a href="{{ url_for('client.index') }}">Home</a></li>
-            </ul>
-        </div>
-    </div>
-</div>
-{% endblock %}
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
 
-{% block content %}
-<div class="container">
+</head>
+
+<body>
+
     {% for message in get_flashed_messages() %}
-    <div class="alert alert-warning">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        {{ message }}
-    </div>
+        <div class="alert alert-warning">
+            {{ message }}
+            <button type="button" class="close pull-right" data-dismiss="alert">&times;</button>
+        </div>
     {% endfor %}
+    
+    {% block navigation %}
+    {% endblock navigation %}
 
-    {% block page_content %}{% endblock %}
-</div>
-{% endblock %}
+    {% block content %}
+    {% endblock content %}
 
-{% block scripts %}
-{{ super() }}
-{% endblock %}
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+    {% block scripts %}
+    {% endblock scripts %}
+
+</body>
+
+</html>
