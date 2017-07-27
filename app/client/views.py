@@ -9,13 +9,9 @@ def index():
     interest_groups = Interest_Group.query.all()
     activities = Activity.query.all()
     print(activities)
-    return render_template("index.html", interest_groups=interest_groups, activities=activities);
+    return render_template("views/home.html", interest_groups=interest_groups, activities=activities);
 
-@client.route('/home/')
-def viewHome():
-	return render_template('views/home.html')
-
-@client.route('/login', methods=['GET', 'POST'])
+@client.route('/login/', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -23,7 +19,7 @@ def login():
         if user is not  None and user.verify_password(form.password.data):
             login_user(user)
             return redirect(request.args.get('next') or url_for('client.index'))
-    return render_template("/views/login.html", form=form)
+    return render_template("views/login.html", form=form)
 
 @client.route('/logout')
 @login_required

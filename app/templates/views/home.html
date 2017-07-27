@@ -1,10 +1,50 @@
-<html>
-	<head>
-		<meta charset="utf-8">
-		<title>Sample Home</title>
-	</head>
-	<body>
-		<img src="{{ url_for('static',filename='favicon.ico') }}" alt="">
-		<h1>Hi!</h1>
-	</body>
-</html>
+{% extends "layout/base.html" %}
+
+{% block title %} Home {% endblock title %}
+
+{% block navigation %}
+
+		<div class="navbar" role="navigation" id="navigation" style="background: url('{{ url_for('static', filename='images/ubp-bg.jpg') }}');">
+		    <div class="container">
+		        <div class="navbar-header">
+		            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		                <span class="sr-only">Toggle navigation</span>
+		                <span class="icon-bar"></span>
+		                <span class="icon-bar"></span>
+		                <span class="icon-bar"></span>
+		            </button>
+		            <a class="navbar-brand" href="#">PUB</a>
+		        </div>
+		        <div class="navbar-collapse collapse">
+		            <ul class="nav navbar-nav">
+		                <li><a href="#">Home</a></li>
+		            </ul>
+		        </div>
+		    </div>
+		</div>
+
+{% endblock navigation %}
+
+{% block content %}
+
+	<h1>HOME Page</h1>
+	<br/>
+
+	GROUPS
+	<hr>
+	<ul>
+    {% for group in interest_groups %}
+        <li>{{ group['name'] }} - {{ group['about'] }}</li>
+    {% endfor %}
+    </ul>
+    <br/>
+    <br/>
+    ACTIVITIES
+    <hr>
+    <ul>
+    {% for activity in activities %}
+        <li>{{ activity['title'] }} - {{ activity['description'] }}</li>
+    {% endfor %}
+    </ul>
+
+{% endblock content %}
