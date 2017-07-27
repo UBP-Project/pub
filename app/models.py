@@ -14,7 +14,6 @@ class User(UserMixin, db.Model):
     department    = db.Column(db.String(200))
     position      = db.Column(db.String(200))
     birthday      = db.Column(db.Date)
-    # comments      = db.relationship('Comment', backref='user')
 
     @property
     def password(self):
@@ -27,42 +26,41 @@ class User(UserMixin, db.Model):
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
 
     def to_json(self):
         json_post = {
-            'id'        : self.id,
-            'firstname' : self.firstname,
-            'middlename': self.middlename,
-            'lastname'  : self.lastname,
-            'email'     : self.email,
-            'password'  : self.password,
-            'department': self.department,
-            'position'  : self.position,
-            'birthday'  : self.birthday
+            'id'            : self.id,
+            'firstname'     : self.firstname,
+            'middlename'    : self.middlename,
+            'lastname'      : self.lastname,
+            'email'         : self.email,
+            'password_hash' : self.password,
+            'department'    : self.department,
+            'position'      : self.position,
+            'birthday'      : self.birthday
         }
         return json_post
 
     @staticmethod
     def from_json(json_user):
-        firstname   = json_user.get('firstname')
-        middlename  = json_user.get('middlename')
-        lastname    = json_user.get('lastname')
-        email       = json_user.get('email')
-        password    = json_user.get('password')
-        department  = json_user.get('department')
-        position    = json_user.get('position')
-        birthday    = json_user.get('birthday')
+        firstname       = json_user.get('firstname')
+        middlename      = json_user.get('middlename')
+        lastname        = json_user.get('lastname')
+        email           = json_user.get('email')
+        password        = json_user.get('password')
+        department      = json_user.get('department')
+        position        = json_user.get('position')
+        birthday        = json_user.get('birthday')
 
         return User(
             firstname=firstname,
             middlename=middlename,
             lastname=lastname,
             email=email,
-            password=password,
+            password_hash=password,
             department=department,
             position=position,
             birthday=birthday
@@ -81,7 +79,7 @@ class Interest_Group(db.Model):
     __tablename__ = 'interest_group'
     id            = db.Column(db.Integer, primary_key=True)
     name          = db.Column(db.String(200), unique=True, index=True)
-    about         = db.Column(db.String(1000))
+    about         = db.Column(db.String(600))
     cover_photo   = db.Column(db.String(200))
     group_icon    = db.Column(db.String(100))
 
@@ -121,15 +119,16 @@ class Activity(db.Model):
     description   = db.Column(db.String(200))
     start_date    = db.Column(db.Date)
     end_date      = db.Column(db.Date)
-    address       = db.Column(db.String(200))
-
+    group_id      = db.Column(db.Integer, nullable=True)
+   
     def to_json(self):
         json_post = {
             'id'         : self.id,
             'title'      : self.title,
             'description': self.description,
             'start_date' : self.start_date,
-            'end_date'   : self.end_date
+            'end_date'   : self.end_date,
+            'group_id'   : self.group_id
         }
         return json_post
 
@@ -139,15 +138,17 @@ class Activity(db.Model):
         description = json_activity.get('description')
         start_date  = json_activity.get('start_date')
         end_date    = json_activity.get('end_date')
-        return Activity(title=title, description=description, start_date=start_date, end_date=end_date)
+        group_id    = json_activity.get('group_id')
+        
+        return Activity(title=title, description=description, start_date=start_date, end_date=end_date, group_id=group_id)
 
 
-class User_Activity(db.Model):
-    __tablename__ = 'user_activity'
+class User_Request(db.Model):
+    __tablename__ = 'user_request'
     id            = db.Column(db.Integer, primary_key=True)
     user_id       = db.Column(db.Integer)
     activity_id   = db.Column(db.Integer)
-    status        = db.Column(db.String(50))
+    status        = db.Column(db.Integer) #0 - pending #1 - approved #2 - declined #for database optimization
 
 
 class Activity_Schedule(db.Model):
@@ -157,10 +158,11 @@ class Activity_Schedule(db.Model):
     time          = db.Column(db.Time)
     location      = db.Column(db.String(200))
 
+
 class Comment(db.Model):
     __tablename__ = 'comment'
     id            = db.Column(db.Integer, primary_key=True)
     text          = db.Column(db.String(300))
     timestamp     = db.Column(db.Time) #set default to system's current time
-    user_id       = db.column(db.Integer, db.ForeignKey('user.id'))
+    user_id       = db.column(db.Integer)
     activity_id   = db.column(db.Integer) 
