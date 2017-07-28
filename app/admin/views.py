@@ -6,7 +6,7 @@ from ..models import User, Interest_Group, Activity
 
 @admin.route('/', methods=['GET'])
 def index():
-    return render_template('admin/index.html');
+    return render_template('admin_index.html');
 
 @admin.route('/users/create', methods=['GET', 'POST'])
 def create_user():
@@ -19,7 +19,16 @@ def create_user():
         db.session.commit()
         flash("Success creating user")
         return render_template('admin/index.html')
-    return render_template('users/create.html', form=form)
+    return render_template('user/create.html', form=form)
+
+
+# group management
+@admin.route('/groups/<int:id>')
+def view_group(id):
+    group = Interest_Group.query.filter_by(id=id).first()
+    if group is not None:
+        return render_template("group/view_group.html", group=group)
+    return redirect(url_for("admin.index"))
 
 @admin.route('/groups/create', methods=['GET', 'POST'])
 def create_interest_group():
@@ -34,7 +43,15 @@ def create_interest_group():
         db.session.commit()
         flash("Success creating group")
         return render_template('admin/index.html')
-    return render_template('groups/create.html', form=form)
+    return render_template('group/create.html', form=form)
+
+# activity management
+@admin.route('/activities/<int:id>')
+def view_activity(id):
+    activity = Activity.query.filter_by(id=id).first()
+    if activity is not None:
+        return render_template("activity/view_activity.html", activity=activity)
+    return redirect(url_for("admin.index"))
 
 @admin.route('/activities/create', methods=['GET', 'POST'])
 def create_activity():
@@ -51,7 +68,7 @@ def create_activity():
         db.session.commit()
         flash("Success Creating Activity")
         return render_template('admin/index.html')
-    return render_template('activities/create.html', form=form)
+    return render_template('activity/create.html', form=form)
 
 
 
