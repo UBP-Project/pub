@@ -1,0 +1,27 @@
+{% extends "/layout/base.html" %}
+{% block title %}Admin Page{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <form class="form-group col-md-3" method="post" name="create_user">
+            <h3>Create User</h3>
+            {{ form.hidden_tag() }}
+            {{ form.firstname(
+                placeholder="First name",
+                class="form-control") }}
+            
+            {{ form.email(
+                placeholder="Email",
+                class="form-control") }}
+
+            {{ form.password(
+                placeholder="Password",
+                class="form-control")}}
+            
+            {{ form.submit(
+                placeholder="Submit",
+                class="form-control btn-success"
+            )}}
+        </form>
+    </div>
+{% endblock %}

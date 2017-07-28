@@ -1,0 +1,32 @@
+{% extends "/layout/base.html" %}
+{% block title %}Admin Page{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <form class="form-group col-md-3" method="post" name="create_interest_group">
+            <h3>Create Interest Group</h3>
+            {{ form.hidden_tag() }}
+            {{ form.name(
+                placeholder="Group name",
+                class="form-control") }}
+            
+            {{ form.about(
+                placeholder="About",
+                class="form-control") }}
+
+            {{ form.cover_photo(
+                placeholder="Cover Photo",
+                class="form-control")}}
+            
+            {{ form.group_icon(
+                placeholder="Group Icon",
+                class="form-control"
+            )}}
+
+            {{ form.submit(
+                placeholder="Submit",
+                class="form-control btn-success"
+            )}}
+        </form>
+    </div>
+{% endblock %}

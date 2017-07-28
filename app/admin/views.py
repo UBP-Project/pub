@@ -8,7 +8,7 @@ from ..models import User, Interest_Group, Activity
 def index():
     return render_template('admin/index.html');
 
-@admin.route('/create_user', methods=['GET', 'POST'])
+@admin.route('/users/create', methods=['GET', 'POST'])
 def create_user():
     form = CreateUserForm()
     if form.validate_on_submit():
@@ -19,9 +19,9 @@ def create_user():
         db.session.commit()
         flash("Success creating user")
         return render_template('admin/index.html')
-    return render_template('admin/create_user.html', form=form)
+    return render_template('users/create.html', form=form)
 
-@admin.route('/create_interest_group', methods=['GET', 'POST'])
+@admin.route('/groups/create', methods=['GET', 'POST'])
 def create_interest_group():
     form = CreateInterestGroupForm()
     if form.validate_on_submit():
@@ -34,9 +34,9 @@ def create_interest_group():
         db.session.commit()
         flash("Success creating group")
         return render_template('admin/index.html')
-    return render_template('admin/create_interest_group.html', form=form)
+    return render_template('groups/create.html', form=form)
 
-@admin.route('/create_activity', methods=['GET', 'POST'])
+@admin.route('/activities/create', methods=['GET', 'POST'])
 def create_activity():
     form = CreateActivityForm()
     if form.validate_on_submit():
@@ -51,7 +51,7 @@ def create_activity():
         db.session.commit()
         flash("Success Creating Activity")
         return render_template('admin/index.html')
-    return render_template('admin/create_activity.html', form=form)
+    return render_template('activities/create.html', form=form)
 
 
 
