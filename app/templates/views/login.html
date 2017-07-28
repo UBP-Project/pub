@@ -1,19 +1,57 @@
-{% extends "layout/base.html" %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block title %} Login {% endblock title %}
+<head>
 
-{% block content %}
-<div class="col-md-4 col-md-offset-4 text-center">
-  <h1>Sign In</h1>
-  <form action="" method="post" name="login">
-      {{ form.hidden_tag() }}
-      {{ form.email(class="form-control") }}
-      <br />
-      {{ form.password(class="form-control") }}
-      <br />
-      {{ form.submit(class="btn btn-success btn-block") }}
-      <br />
-      </p>
-  </form>
-</div>
-{% endblock %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <title>PUB | Login</title>
+
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
+
+</head>
+
+<body>
+
+    <div style="height: 100%; width: 100%; background-color: rgba(0,0,0,0.7);">
+
+    <div class="row"  style="margin: 0;">
+        {% for message in get_flashed_messages() %}
+            <div class="alert alert-warning">
+                {{ message }}
+                <button type="button" class="close pull-right" data-dismiss="alert">&times;</button>
+            </div>
+        {% endfor %}
+          
+        <div class="col-md-4 col-md-offset-4 col-sm-4 col-sm-offset-4 text-center" style="margin-top: 10%; background-color: #fff; padding: 20px 30px;">
+
+            <h1>SIGN IN</h1>
+            <br>
+            <form action="" method="post" name="login">
+                <p>
+                    {{ form.hidden_tag() }}
+                    {{ form.email(class="form-control") }}
+                    <br />
+                    {{ form.password(class="form-control") }}
+                    <br />
+                    {{ form.submit(class="btn btn-success btn-block") }}
+                    <br />
+                </p>
+            </form>
+        </div>
+
+    </div>
+
+    </div>
+
+
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,95 @@
+// main: main.less
+
+.card {
+
+	height: @card-md-height;
+	margin: @card-margin;
+	background-color: @white;
+	border-radius: @card-radius;
+	padding: 0;
+	box-shadow: none;
+
+	.card-img {
+
+		height: 70%; 
+		overflow: hidden; 
+		border-radius: @card-top-radius;
+
+		img {
+			 min-width: 100%; 
+			 min-height: 100%;
+		}
+
+	}
+
+	.card-desc {
+
+		height: 30%; 
+		overflow: hidden; 
+		border-radius: @card-bottom-radius; 
+		padding: 4px 7px;
+
+		h4 {
+			color: @black;
+		}
+
+		p {
+			text-overflow: ellipsis;
+			/* word-break: break-all; */
+			white-space: nowrap;
+			overflow: hidden; 
+		}
+
+	}
+
+}
+
+
+
+@media (max-width: 320px) {
+	.card {
+		height: @card-lg-height;
+	}
+}
+
+@media (max-width: 768px) {
+	.card {
+		height: @card-sm-height;
+	}
+}
+
+@media (max-width: 1024px) {
+	.card {
+		height: @card-md-height;
+	}
+}
+
+@media (max-width: 1440px) {
+	.card {
+		height: @card-md-height;
+	}
+}
+
+.zoomify {
+	box-shadow: @base-shadow;
+
+	-webkit-transition: all 200ms ease-in;
+	   -moz-transition: all 200ms ease-in;
+	    -ms-transition: all 200ms ease-in;
+	        transition: all 200ms ease-in;
+
+	-webkit-transform: scale(1);   
+	   -moz-transform: scale(1);
+	    -ms-transform: scale(1);
+			transform: scale(1);
+}
+
+.zoomify:hover {
+	box-shadow: @hover-shadow;
+	z-index: 2;
+
+	-webkit-transform: scale(1.5);  
+	   -moz-transform: scale(1.5);
+	    -ms-transform: scale(1.5); 
+	        transform: scale(1.1);
+}

@@ -9,4 +9,4 @@ class NameForm(FlaskForm):
 class LoginForm(FlaskForm):
     email = StringField("Email or Username", validators=[Required()])
     password = PasswordField("Password")
-    submit = SubmitField("Submit")
+    submit = SubmitField("SUBMIT")

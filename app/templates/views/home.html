@@ -1,10 +1,10 @@
-{% extends "layout/base.html" %}
+{% extends "./layout/base.html" %}
 
 {% block title %} Home {% endblock title %}
 
 {% block navigation %}
 
-		<div class="navbar" role="navigation" id="navigation" style="background: url('{{ url_for('static', filename='images/ubp-bg.jpg') }}');">
+		<div class="navbar" role="navigation" id="navigation">
 		    <div class="container">
 		        <div class="navbar-header">
 		            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -13,11 +13,12 @@
 		                <span class="icon-bar"></span>
 		                <span class="icon-bar"></span>
 		            </button>
-		            <a class="navbar-brand" href="#">PUB</a>
+		            <a href="/"><img src="{{ url_for('static', filename='../../static/images/ubp-logo.jpg') }}" alt="UBP LOGO" style="padding: 0;"></a>
 		        </div>
 		        <div class="navbar-collapse collapse">
-		            <ul class="nav navbar-nav">
-		                <li><a href="#">Home</a></li>
+		            <ul class="nav navbar-nav pull-right">
+		                <li><a href="/">HOME</a></li>
+		                <li><a href="/logout">LOGOUT</a></li>
 		            </ul>
 		        </div>
 		    </div>
@@ -27,24 +28,85 @@
 
 {% block content %}
 
-	<h1>HOME Page</h1>
-	<br/>
+	<div class="row">
 
-	GROUPS
-	<hr>
-	<ul>
-    {% for group in interest_groups %}
-        <li>{{ group['name'] }} - {{ group['about'] }}</li>
-    {% endfor %}
-    </ul>
-    <br/>
-    <br/>
-    ACTIVITIES
-    <hr>
-    <ul>
-    {% for activity in activities %}
-        <li>{{ activity['title'] }} - {{ activity['description'] }}</li>
-    {% endfor %}
-    </ul>
+			<div class="col-md-10 col-md-offset-1 col-sm-12 box-header box-style-1">
+				<span>ACTIVITIES</span>
+			</div>
+
+			<div class="col-md-10 col-md-offset-1 col-sm-12 box-content border-bottom-1">
+
+				<div class="row">
+
+					{% if activities %}
+
+						{% for activity in activities %}
+							<div class="col-md-3 col-sm-4">
+								<div class="card zoomify">
+									<div class="card-img">
+										<img src="{{ url_for('static', filename='../../static/images/activity1.jpg') }}" class="img-responsive" />
+									</div>
+									<div class="card-desc">
+										<h4 class="text-center">{{ activity['title'] }}</h4>
+										<p>{{ activity['description'] }}</p>
+									</div>
+								</div>
+							</div>
+						{% endfor %}
+
+					{% else %}
+
+						<div class="no-content-box text-center">
+							<h2>NO ACTIVITIES YET</h2>
+						</div>
+
+					{% endif %}
+
+				</div>
+
+			</div>
+
+	</div>
+
+
+	<div class="row">
+
+			<div class="col-md-10 col-md-offset-1 col-sm-12 box-header box-style-2">
+				<span>INTEREST GROUPS</span>
+			</div>
+
+			<div class="col-md-10 col-md-offset-1 col-sm-12 box-content border-bottom-2">
+
+				<div class="row">
+
+					{% if interest_groups %}
+
+						{% for group in interest_groups %}
+							<div class="col-md-3 col-sm-4">
+								<div class="card zoomify">
+									<div class="card-img">
+										<img src="{{ url_for('static', filename='../../static/images/activity1.jpg') }}" class="img-responsive" />
+									</div>
+									<div class="card-desc">
+										<h4 class="text-center">{{ group['name'] }}</h4>
+										<p>{{ group['about'] }}</p>
+									</div>
+								</div>
+							</div>
+						{% endfor %}
+
+					{% else %}
+
+						<div class="no-content-box text-center">
+							<h2>NO INTEREST GROUPS TO SHOW</h2>
+						</div>
+
+					{% endif %}
+
+				</div>
+
+			</div>
+
+	</div>
 
 {% endblock content %}

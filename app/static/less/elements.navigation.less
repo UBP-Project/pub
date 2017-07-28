@@ -1,0 +1,59 @@
+// main: main.less
+
+body {
+	background-color: @mystic;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: @heading-font;
+}
+
+p{
+	font-family: @body-font;
+}
+
+a {
+	text-decoration: none;
+	transition: color 5s ease;
+}
+
+.row {
+	margin: 0;
+	padding: 0;
+}
+
+.navbar {
+	background-image: url('../images/header.jpg');
+}
+
+.nav {
+
+	>li {
+		
+		background-color: none;
+
+		>a {
+
+			color: @white;
+			font-family: @heading-font;
+			font-size: 18px;
+			background-color: none;
+			transition: color 0.3s ease;
+
+			&:hover {
+
+				color: @mystic;
+				background-color: rgba(0, 0, 0, 0);
+
+			}
+
+		}
+
+	}
+
+}
