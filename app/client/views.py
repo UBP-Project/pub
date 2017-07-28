@@ -8,6 +8,7 @@ from ..models import User, Interest_Group, Activity
 def index():
     interest_groups = Interest_Group.query.all()
     activities = Activity.query.all()
+    print(activities)
     return render_template("views/home.html", interest_groups=interest_groups, activities=activities);
 
 @client.route('/login/', methods=['GET', 'POST'])
