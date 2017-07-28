@@ -1,6 +1,6 @@
 from flask import render_template, flash
 from . import admin
-from .forms import CreateUserForm, CreateInterestGroupForm, CreateActivity
+from .forms import CreateUserForm, CreateInterestGroupForm, CreateActivityForm
 from app import db
 from ..models import User, Interest_Group, Activity
 
@@ -38,15 +38,15 @@ def create_interest_group():
 
 @admin.route('/create_activity', methods=['GET', 'POST'])
 def create_activity():
-    form = CreateActivity()
+    form = CreateActivityForm()
     if form.validate_on_submit():
         activity = Activity(
             title = form.title.data,
             description = form.title.data,
             start_date = form.start_date.data,
             end_date = form.start_date.data,
-            address = form.address.data)
-        print(activity)
+            address = form.address.data,
+            group_id=form.address.data)
         db.session.add(activity)
         db.session.commit()
         flash("Success Creating Activity")

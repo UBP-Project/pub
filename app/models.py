@@ -169,12 +169,12 @@ class Activity(db.Model):
     schedule    = db.relationship('Schedule', backref=db.backref('schedule', lazy='joined'), lazy="dynamic", passive_deletes=True, passive_updates=True)
     assignment  = db.relationship('Assignment', backref=db.backref('assignment', lazy='joined'), lazy='dynamic', passive_deletes=True, passive_updates=True)
 
-    def __init__(self, title, description, start_date, end_date, venue, group_id=None):
+    def __init__(self, title, description, start_date, end_date, address, group_id=None):
         self.title          = title
         self.description    = description
         self.start_date     = start_date
         self.end_date       = end_date
-        self.venue          = venue
+        self.address        = address
         self.group_id       = group_id
 
     def __repr__(self):
