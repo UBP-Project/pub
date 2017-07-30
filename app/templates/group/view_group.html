@@ -1,0 +1,8 @@
+{% extends "layout/base.html" %}
+
+{% block title %} {{ group["name"] }} {% endblock %}
+
+{% block content %}
+    <h1>Name: {{ group["name"] }}</h1>
+    <h1>About: {{ group["about"] }}</h1>
+{% endblock %}

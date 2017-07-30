@@ -22,6 +22,14 @@ def login():
             return redirect(request.args.get('next') or url_for('client.index'))
     return render_template("views/login.html", form=form)
 
+@client.route('/profile/<int:id>')
+@login_required
+def profile(id):
+    user = User.query.filter_by(id=id).first()
+    if user is not None:
+        return render_template("users/profile.html", user=user)
+    return rendirect(url_for("client.index"))
+
 @client.route('/logout')
 @login_required
 def logout():

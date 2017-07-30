@@ -3,6 +3,7 @@
 {% block title %} Admin Page {% endblock %}
 
 {% block content %}
+<div class="col-md-12">
     <a href="{{ url_for('admin.create_user') }}" class="btn btn-info">
         Create User
     </a>
@@ -12,4 +13,5 @@
     <a href="{{ url_for('admin.create_activity') }}" class="btn btn-info">
         Create Activity
     </a>
+</div>
 {% endblock %}

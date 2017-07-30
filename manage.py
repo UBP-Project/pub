@@ -8,8 +8,9 @@ from flask_migrate import Migrate, MigrateCommand
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 manager = Manager(app)
 
-# customise server
-server = Server(host="0.0.0.0", port=9000)
+# customise server for development only
+server = Server(host="0.0.0.0", port=5000
+	)
 manager.add_command("runserver", server)
 
 def make_shell_context():
