@@ -1,4 +1,4 @@
-from flask import render_template, flash
+from flask import render_template, flash, redirect, url_for
 from . import admin
 from .forms import CreateUserForm, CreateInterestGroupForm, CreateActivity
 from app import db
@@ -18,7 +18,7 @@ def create_user():
         db.session.add(user)
         db.session.commit()
         flash("Success creating user")
-        return render_template('admin/index.html')
+        return redirect(url_for("admin.index"))
     return render_template('user/create.html', form=form)
 
 
@@ -42,7 +42,7 @@ def create_interest_group():
         db.session.add(interest_group)
         db.session.commit()
         flash("Success creating group")
-        return render_template('admin/index.html')
+        return redirect(url_for("admin.index"))
     return render_template('group/create.html', form=form)
 
 # activity management
@@ -67,7 +67,7 @@ def create_activity():
         db.session.add(activity)
         db.session.commit()
         flash("Success Creating Activity")
-        return render_template('admin/index.html')
+        return redirect(url_for("admin.index"))
     return render_template('activity/create.html', form=form)
 
 

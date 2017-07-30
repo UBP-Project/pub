@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, DateField
+from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import Required
+from wtforms.fields.html5 import EmailField, DateField
 
 
 class CreateInterestGroupForm(FlaskForm):
@@ -11,7 +12,7 @@ class CreateUserForm(FlaskForm):
     firstname  = StringField("First name", validators=[Required()])
     middlename = StringField("Middle name")
     lastname   = StringField("Last name")
-    email      = StringField("Email")
+    email      = EmailField("Email")
     password   = PasswordField("Password")
     department = StringField("Department")
     position   = StringField("Position")

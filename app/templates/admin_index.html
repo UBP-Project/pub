@@ -1,17 +1,9 @@
-{% extends "layout/base.html" %}
+{% extends "layout/admin_base.html" %}
 
 {% block title %} Admin Page {% endblock %}
 
 {% block content %}
 <div class="col-md-12">
-    <a href="{{ url_for('admin.create_user') }}" class="btn btn-info">
-        Create User
-    </a>
-    <a href="{{ url_for('admin.create_interest_group') }}" class="btn btn-info">
-        Create Interest Group
-    </a>
-    <a href="{{ url_for('admin.create_activity') }}" class="btn btn-info">
-        Create Activity
-    </a>
+    <p id="dashboard">Administrator Dashboard.</p>
 </div>
 {% endblock %}

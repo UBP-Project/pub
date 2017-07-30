@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <title>PUB | {% block title %}{% endblock title %}</title>
+
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/temp-admin.css') }}">
+
+</head>
+
+<body class="container">
+
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+            {{ message }}
+            <button type="button" class="close pull-right" data-dismiss="alert">&times;</button>
+        </div>
+    {% endfor %}
+
+    <br /><br /><br /><br />
+    
+    <div class="row">
+        <div class="col-md-3">
+            <h3>Administrator</h3>
+            <a class="btn btn-default btn-block" href={{url_for('admin.create_user')}}>Create User</a>
+            <a class="btn btn-default btn-block" href={{url_for('admin.create_activity')}}>Create Activity</a>
+            <a class="btn btn-default btn-block" href={{url_for('admin.create_interest_group')}}>Create Interest Group</a>
+        </div>
+        <div class="col-md-9">
+            {% block content %}
+            {% endblock content %}
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+    {% block scripts %}
+    {% endblock scripts %}
+
+</body>
+
+</html>
