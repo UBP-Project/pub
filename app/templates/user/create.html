@@ -1,27 +1,57 @@
-{% extends "/layout/base.html" %}
+{% if request.path == url_for("admin.create_user") %}
+    {% extends "/layout/admin_base.html" %}
+{% endif %}
 {% block title %}Admin Page{% endblock %}
 
 {% block content %}
     <div class="row">
-        <form class="form-group col-md-3" method="post" name="create_user">
-            <h3>Create User</h3>
+        <form class="form-group col-md-12" method="post" name="create_user">
+            <h3><span class="fa fa-user-circle"></span>Create User</h3>
             {{ form.hidden_tag() }}
-            {{ form.firstname(
-                placeholder="First name",
-                class="form-control") }}
-            
-            {{ form.email(
-                placeholder="Email",
-                class="form-control") }}
 
-            {{ form.password(
-                placeholder="Password",
-                class="form-control")}}
-            
-            {{ form.submit(
-                placeholder="Submit",
-                class="form-control btn-success"
-            )}}
+            <div class="row">
+                <div class="col-md-4">
+                    <label>Firstname</label>
+                    {{ form.firstname(
+                    placeholder="First name",
+                    class="form-control") }}
+                </div>
+                <div class="col-md-4">
+                    <label>Middlename</label>
+                    {{ form.firstname(
+                    placeholder="Middle name",
+                    class="form-control") }}
+                </div>
+                <div class="col-md-4">
+                    <label>Lastname</label>
+                    {{ form.firstname(
+                    placeholder="Last name",
+                    class="form-control") }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Email</label>
+                    {{ form.email(
+                        placeholder="Email",
+                        class="form-control") }}
+                </div>
+                <div class="col-md-6">
+                    <label>Password</label>
+                    {{ form.password(
+                        placeholder="Password",
+                        class="form-control")}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                {{ form.submit(
+                    placeholder="Submit",
+                    class="form-control btn-success"
+                )}}
+                </div>
+            </div>
         </form>
     </div>
 {% endblock %}

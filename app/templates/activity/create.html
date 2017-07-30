@@ -1,38 +1,59 @@
-{% extends "/layout/base.html" %}
+{% if request.path == url_for("admin.create_activity") %}
+    {% extends "/layout/admin_base.html" %}
+{% else %}
+    {% extends "/layout/base.html" %}
+{% endif %}
 {% block title %}Admin Page{% endblock %}
 
 {% block content %}
     <div class="row">
-        <form class="form-group col-md-3" method="post" name="create_activity">
+        <form class="form-group col-md-12" method="post" name="create_activity">
             <h3>Create Activity</h3>
-            {{ form.hidden_tag() }}
-            {{ form.title(
-                placeholder="Title",
-                class="form-control") }}
-            
-            {{ form.description(
-                placeholder="Description",
-                class="form-control") }}
+            <div class="row">
+                {{ form.hidden_tag() }}
+                <div class="col-md-12">
+                    <label>Title</label>
+                    {{ form.title(
+                        placeholder="Title",
+                        class="form-control") }}
+                </div>
+                
+                <div class="col-md-12">
+                    <label>Description</label>
+                    {{ form.description(
+                        placeholder="Description",
+                        class="form-control") }}
+                </div>
 
-            <!--
-            {{ form.start_date(
-                placeholder="Start Date",
-                class="form-control")}}
+                <div class="col-md-12">
+                    <label>Address</label>
+                    {{ form.address(
+                        placeholder="Address",
+                        class="form-control"
+                    )}}
+                </div>
 
-            {{ form.end_date(
-                placeholder="End Date",
-                class="form-control")}}
-            -->
-            
-            {{ form.address(
-                placeholder="Address",
-                class="form-control"
-            )}}
+                <div class="col-md-6">
+                    <label>Start Date</label>
+                    {{ form.start_date(
+                        placeholder="Start Date",
+                        class="form-control")}}
+                </div>
 
-            {{ form.submit(
-                placeholder="Submit",
-                class="form-control btn-success"
-            )}}
+                <div class="col-md-6">
+                    <label>End Date</label>
+                    {{ form.end_date(
+                        placeholder="End Date",
+                        class="form-control")}}
+                </div>
+
+                <div class="col-md-12">
+                    {{ form.submit(
+                        placeholder="Submit",
+                        class="form-control btn-success"
+                    )}}
+                </div>
+            </div>
         </form>
     </div>
 {% endblock %}

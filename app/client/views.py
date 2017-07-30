@@ -1,5 +1,5 @@
 from flask import render_template, flash, redirect, url_for, request
-from flask_login import login_user, login_required, logout_user
+from flask_login import login_user, login_required, logout_user, current_user
 from .forms import LoginForm
 from . import client
 from ..models import User, Interest_Group, Activity
@@ -22,12 +22,18 @@ def login():
             return redirect(request.args.get('next') or url_for('client.index'))
     return render_template("views/login.html", form=form)
 
+
+@client.route('/profile/')
+@login_required
+def profile():
+    return render_template("user/profile.html", user=current_user)
+
 @client.route('/profile/<int:id>')
 @login_required
-def profile(id):
+def profile_id(id):
     user = User.query.filter_by(id=id).first()
     if user is not None:
-        return render_template("users/profile.html", user=user)
+        return render_template("user/profile.html", user=user)
     return rendirect(url_for("client.index"))
 
 @client.route('/logout')
