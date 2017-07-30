@@ -1,0 +1,133 @@
+{# {% macro activity_modal(activity_id) %} #}
+{% macro activity_modal(activity_id, activity_title, activity_desc) %}
+    <div class="modal fade" id="{{activity_id}}" role="dialog">
+
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- HEADER -->
+                <div class="modal-header">
+                    <span><b>ACTIVITY</b></span>
+                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                </div>
+
+                <!-- BODY -->
+                <div class="modal-body">
+
+                    <div class="img-container">
+                        <img src="{{ url_for('static', filename='../../static/images/pub-default-head-img.jpg') }}" />
+                    </div>
+
+                    <h2 class="text-center">{{ activity_title | upper}}</h2>
+
+                    <div class="content">
+
+                        <ul class="nav nav-tabs" role="tablist">
+
+                            <li role="presentation" class="active">
+                                <a href="#desc" role="tab" data-toggle="tab">Description</a>
+                            </li>
+
+                            <li role="presentation">
+                                <a href="#sched" role="tab" data-toggle="tab">Schedule</a>
+                            </li>
+
+                            <li role="presentation">
+                                <a href="#interested" role="tab" data-toggle="tab">Interested</a>
+                            </li>
+
+                            <li role="presentation">
+                                <a href="#going" role="tab" data-toggle="tab">Going</a>
+                            </li>
+
+                        </ul>
+
+                        <div class="tab-content">
+
+                            <div role="tabpanel" class="tab-pane active" id="desc">{{ activity_desc }}</div>
+                            <div role="tabpanel" class="tab-pane" id="sched">No schedule to show</div>
+                            <div role="tabpanel" class="tab-pane" id="interested">No one interested</div>
+                            <div role="tabpanel" class="tab-pane" id="goind">No one is going</div>
+                    
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- FOOTER -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-style-2">INTERESTED</button>
+                    <button type="button" class="btn btn-style-1">JOIN ACTIVITY</button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+{% endmacro %}
+
+
+{% macro group_modal(group_id, group_name, group_desc) %}
+    <div class="modal fade" id="{{group_id}}" role="dialog">
+
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- HEADER -->
+                <div class="modal-header">
+                    <span><b>INTEREST GROUP</b></span>
+                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                </div>
+
+                <!-- BODY -->
+                <div class="modal-body">
+
+                    <div class="img-container">
+                        <img src="{{ url_for('static', filename='../../static/images/pub-default-head-img.jpg') }}" />
+                    </div>
+
+                    <h2 class="text-center">{{ group_name | upper}}</h2>
+
+                    <div class="content">
+
+                        <ul class="nav nav-tabs" role="tablist">
+
+                            <li role="presentation" class="active">
+                                <a href="#desc" role="tab" data-toggle="tab">Description</a>
+                            </li>
+
+                            <li role="presentation">
+                                <a href="#members" role="tab" data-toggle="tab">Members</a>
+                            </li>
+
+                            <li role="presentation">
+                                <a href="#activities" role="tab" data-toggle="tab">Activities</a>
+                            </li>
+
+                        </ul>
+
+                        <div class="tab-content">
+
+                            <div role="tabpanel" class="tab-pane active" id="desc">{{ group_desc }}</div>
+                            <div role="tabpanel" class="tab-pane" id="members">No members to show</div>
+                            <div role="tabpanel" class="tab-pane" id="activities">No activities</div>
+                    
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- FOOTER -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-style-1">JOIN GROUP</button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+{% endmacro %}

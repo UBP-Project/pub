@@ -1,0 +1,37 @@
+// main: main.less
+
+.row {
+	margin: 0;
+	padding: 0;
+}
+
+.navbar {
+	background-image: url('../images/header.jpg');
+}
+
+.nav {
+
+	>li {
+		
+		background-color: none;
+
+		>a {
+
+			color: @white;
+			font-family: @heading-font;
+			font-size: 18px;
+			background-color: none;
+			transition: color 0.3s ease;
+
+			&:hover, &:active {
+
+				color: @mystic;
+				background-color: rgba(0, 0, 0, 0);
+
+			}
+
+		}
+
+	}
+
+}

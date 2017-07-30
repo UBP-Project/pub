@@ -1,0 +1,57 @@
+// main: main.less
+
+button:focus {
+	outline: none !important;
+}
+
+.btn-style-1 {
+
+	background-color: @stratos;
+	border: 2px solid @stratos;
+	color: @white;
+	transition: all 0.5s ease;
+
+	&:hover {
+		background-color: @victoria;
+		border-color: @victoria;
+		color: @white;
+	}
+
+	&:active {
+		background-color: @victoria;
+		border-color: @victoria;
+		color: @white;
+	}
+
+	&:focus {
+		background-color: @victoria;
+		border-color: @victoria;
+		color: @white;
+	}
+
+
+}
+
+.btn-style-2 {
+
+	background-color: @white;
+	border: 2px solid @stratos;
+	color: @stratos;
+	transition: all 0.5s ease;
+
+	&:hover {
+		border-color: @victoria;
+		color: @victoria;;
+	}
+
+	&:active {
+		border-color: @victoria;
+		color: @victoria;;
+	}
+
+	&:focus {
+		border-color: @victoria;
+		color: @victoria;;
+	}
+
+}

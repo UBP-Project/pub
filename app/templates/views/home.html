@@ -1,4 +1,5 @@
 {% extends "./layout/base.html" %}
+{% from "./utils/modal.html" import activity_modal, group_modal %}
 
 {% block title %} Home {% endblock title %}
 
@@ -13,7 +14,7 @@
 		                <span class="icon-bar"></span>
 		                <span class="icon-bar"></span>
 		            </button>
-		            <a href="/"><img src="{{ url_for('static', filename='../../static/images/ubp-logo.jpg') }}" alt="UBP LOGO" style="padding: 0;"></a>
+		            <a href="/"><img src="{{ url_for('static', filename='../../static/images/ubp-logo.jpg') }}" alt="UBP LOGO"></a>
 		        </div>
 		        <div class="navbar-collapse collapse">
 		            <ul class="nav navbar-nav pull-right">
@@ -41,17 +42,22 @@
 					{% if activities %}
 
 						{% for activity in activities %}
-							<div class="col-md-3 col-sm-4">
+
+							<div class="col-md-3 col-sm-4" data-toggle="modal" data-target="#{{ activity['id'] }}">
 								<div class="card zoomify">
 									<div class="card-img">
 										<img src="{{ url_for('static', filename='../../static/images/pub-default-img.jpg') }}" class="img-responsive" />
 									</div>
 									<div class="card-desc">
-										<h4 class="text-center">{{ activity['title'] }}</h4>
+										<h4 class="text-center">{{ activity['title'] | upper }}</h4>
 										<p>{{ activity['description'] }}</p>
 									</div>
 								</div>
 							</div>
+
+							{# {{ activity_modal(activity.id) }} #}
+							{{ activity_modal(activity.id, activity.title, activity.description) }}
+
 						{% endfor %}
 
 					{% else %}
@@ -82,17 +88,22 @@
 					{% if interest_groups %}
 
 						{% for group in interest_groups %}
-							<div class="col-md-3 col-sm-4">
-								<div class="card zoomify">
-									<div class="card-img">
-										<img src="{{ url_for('static', filename='../../static/images/pub-default-img.jpg') }}" class="img-responsive" />
+
+							<div class="col-md-3 col-sm-4 text-center">
+								<div class="group-icon">
+									<div class="group-img">
+										<img src="{{ url_for('static', filename='../../static/images/pub-default-img.jpg') }}" class="img-circle zoomify" />
 									</div>
-									<div class="card-desc">
-										<h4 class="text-center">{{ group['name'] }}</h4>
-										<p>{{ group['about'] }}</p>
+									<div class="group-desc">
+										<h4>{{ group['name'] | upper }}</h4>
+										<p><i class="fa fa-user"></i> 10</p>
 									</div>
 								</div>
 							</div>
+
+							{# {{ group_modal(group.id) }} #}
+							{{ group_modal(group.id, group.name, group.desc) }}
+
 						{% endfor %}
 
 					{% else %}
