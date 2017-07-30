@@ -28,7 +28,7 @@ $ python manage.py runserver
 ```
 
 ### API
-Access API's example (Todo API documentation)
+Access API's documentation
 ```sh
-https://[host]/api/v1.0/interest_groups/
+https://[host]/apidocs
 ```
