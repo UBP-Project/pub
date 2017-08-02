@@ -8,13 +8,11 @@
 
 {% block content %}
     <div class="row">
-        <h5>Groups</h5>
-        {% for group in groups %}
-            <a href="{{
-            url_for('admin.view_group', id=group.id) if 'admin' in request.path else url_for('client.group', id=group.id)
-             }}">
+        <h5>User</h5>
+        {% for user in users %}
+            <a href="{{ url_for('admin.profile', id=user.id) }}">
                 <h4><span class="fa fa-user"></span>
-                    {{ group['name'] }}
+                    {{ user['firstname'] }} {{ user['lastname'] }}
                 </h5>
             </a>
         {% endfor %}

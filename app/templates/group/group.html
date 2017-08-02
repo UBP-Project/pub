@@ -15,6 +15,17 @@
         </div>
 
         <div class="col-md-4">
+            {% if 'admin' not in request.path %}
+                <form method="post">
+                {{ form.hidden_tag() }}
+                {% if isMember %}
+                    <input class="btn btn-warning" type="submit" name="leave_group" value="Leave Group">
+                {% else %}
+                    <input class="btn btn-primary" type="submit" name="join_group" value="Join Group">
+                {% endif %}
+                </form>
+            {% endif %}
+
             <h4>Members</h4>
             {% for member in members %}
                 <a class="">
