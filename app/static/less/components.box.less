@@ -1,5 +1,11 @@
 // main: main.less
 
+.title {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden; 
+}
+
 .box-header {
 
 	margin-top: 50px;
@@ -9,7 +15,7 @@
 	color: @white;
 	font-family: @heading-font;
 
-	>span {
+	> span {
 		  display: inline-block;
 		  vertical-align: middle;
 		  line-height: normal;
@@ -17,6 +23,10 @@
 		  letter-spacing: 5px;
 	}
 
+}
+
+.box-footer {
+	margin-bottom: 40px;
 }
 
 .box-style-1 {

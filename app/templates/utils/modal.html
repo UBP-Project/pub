@@ -1,6 +1,6 @@
 {# {% macro activity_modal(activity_id) %} #}
 {% macro activity_modal(activity_id, activity_title, activity_desc) %}
-    <div class="modal fade" id="{{activity_id}}" role="dialog">
+    <div class="modal fade" id="activity-{{activity_id}}" role="dialog">
 
         <div class="modal-dialog">
             <div class="modal-content">
@@ -24,19 +24,19 @@
 
                         <ul class="nav nav-tabs" role="tablist">
 
-                            <li role="presentation" class="active">
+                            <li role="presentation" class="active act-li">
                                 <a href="#desc" role="tab" data-toggle="tab">Description</a>
                             </li>
 
-                            <li role="presentation">
+                            <li role="presentation" class="act-li">
                                 <a href="#sched" role="tab" data-toggle="tab">Schedule</a>
                             </li>
 
-                            <li role="presentation">
+                            <li role="presentation" class="act-li">
                                 <a href="#interested" role="tab" data-toggle="tab">Interested</a>
                             </li>
 
-                            <li role="presentation">
+                            <li role="presentation" class="act-li">
                                 <a href="#going" role="tab" data-toggle="tab">Going</a>
                             </li>
 
@@ -44,10 +44,21 @@
 
                         <div class="tab-content">
 
-                            <div role="tabpanel" class="tab-pane active" id="desc">{{ activity_desc }}</div>
-                            <div role="tabpanel" class="tab-pane" id="sched">No schedule to show</div>
-                            <div role="tabpanel" class="tab-pane" id="interested">No one interested</div>
-                            <div role="tabpanel" class="tab-pane" id="goind">No one is going</div>
+                            <div role="tabpanel" class="tab-pane active" id="desc">
+                                <p>{{ activity_desc }}</p>
+                            </div>
+
+                            <div role="tabpanel" class="tab-pane" id="sched">
+                                <p>No schedule to show</p>
+                            </div>
+
+                            <div role="tabpanel" class="tab-pane" id="interested">
+                                <p>No one interested</p>
+                            </div>
+
+                            <div role="tabpanel" class="tab-pane" id="going">
+                                <p>No one is going</p>
+                            </div>
                     
                         </div>
 
@@ -70,7 +81,7 @@
 
 
 {% macro group_modal(group_id, group_name, group_desc) %}
-    <div class="modal fade" id="{{group_id}}" role="dialog">
+    <div class="modal fade" id="group-{{group_id}}" role="dialog">
 
         <div class="modal-dialog">
             <div class="modal-content">
@@ -88,21 +99,21 @@
                         <img src="{{ url_for('static', filename='../../static/images/pub-default-head-img.jpg') }}" />
                     </div>
 
-                    <h2 class="text-center">{{ group_name | upper}}</h2>
+                    <h2 class="text-center">{{ group_name | upper }}</h2>
 
                     <div class="content">
 
                         <ul class="nav nav-tabs" role="tablist">
 
-                            <li role="presentation" class="active">
+                            <li role="presentation" class="active grp-li">
                                 <a href="#desc" role="tab" data-toggle="tab">Description</a>
                             </li>
 
-                            <li role="presentation">
+                            <li role="presentation" class="grp-li">
                                 <a href="#members" role="tab" data-toggle="tab">Members</a>
                             </li>
 
-                            <li role="presentation">
+                            <li role="presentation" class="grp-li">
                                 <a href="#activities" role="tab" data-toggle="tab">Activities</a>
                             </li>
 
@@ -110,9 +121,17 @@
 
                         <div class="tab-content">
 
-                            <div role="tabpanel" class="tab-pane active" id="desc">{{ group_desc }}</div>
-                            <div role="tabpanel" class="tab-pane" id="members">No members to show</div>
-                            <div role="tabpanel" class="tab-pane" id="activities">No activities</div>
+                            <div role="tabpanel" class="tab-pane active" id="desc">
+                                <p>{{ group_desc }}</p>
+                            </div>
+
+                            <div role="tabpanel" class="tab-pane" id="members">
+                                <p>No members to show</p>
+                            </div>
+
+                            <div role="tabpanel" class="tab-pane" id="activities">
+                                <p>No activities</p>
+                            </div>
                     
                         </div>
 

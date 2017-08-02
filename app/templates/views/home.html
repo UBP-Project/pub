@@ -43,13 +43,13 @@
 
 						{% for activity in activities %}
 
-							<div class="col-md-3 col-sm-4" data-toggle="modal" data-target="#{{ activity['id'] }}">
+							<div class="col-md-3 col-sm-4" data-toggle="modal" data-target="#activity-{{ activity['id'] }}">
 								<div class="card zoomify">
 									<div class="card-img">
 										<img src="{{ url_for('static', filename='../../static/images/pub-default-img.jpg') }}" class="img-responsive" />
 									</div>
 									<div class="card-desc">
-										<h4 class="text-center">{{ activity['title'] | upper }}</h4>
+										<h4 class="text-center title">{{ activity['title'] | upper }}</h4>
 										<p>{{ activity['description'] }}</p>
 									</div>
 								</div>
@@ -59,6 +59,10 @@
 							{{ activity_modal(activity.id, activity.title, activity.description) }}
 
 						{% endfor %}
+
+						<div class="col-md-12 text-center box-footer">
+							<button type="button" class="btn btn-style-4" >View All Activities</button>
+						</div>
 
 					{% else %}
 
@@ -92,19 +96,23 @@
 							<div class="col-md-3 col-sm-4 text-center">
 								<div class="group-icon">
 									<div class="group-img">
-										<img src="{{ url_for('static', filename='../../static/images/pub-default-img.jpg') }}" class="img-circle zoomify" />
+										<img src="{{ url_for('static', filename='../../static/images/pub-default-img.jpg') }}" class="img-circle zoomify" data-toggle="modal" data-target="#group-{{ group['id'] }}" />
 									</div>
 									<div class="group-desc">
-										<h4>{{ group['name'] | upper }}</h4>
+										<h4 class="title">{{ group['name'] | upper }}</h4>
 										<p><i class="fa fa-user"></i> 10</p>
 									</div>
 								</div>
 							</div>
 
 							{# {{ group_modal(group.id) }} #}
-							{{ group_modal(group.id, group.name, group.desc) }}
+							{{ group_modal(group.id, group.name, group.description) }}
 
 						{% endfor %}
+
+						<div class="col-md-12 text-center box-footer">
+							<button type="button" class="btn btn-style-2">View All Groups</button>
+						</div>
 
 					{% else %}
 

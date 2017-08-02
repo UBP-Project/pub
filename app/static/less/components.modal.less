@@ -21,18 +21,40 @@
 
 	}
 
+	h2 {
+		padding: 20px 15px 10px 15px;
+		margin: 0;
+	}
+
 	.content {
 
-		padding: 0 20px;
+		padding: 0 15px;
 		width: 100%;
 
-		.nav-tabs {
-			border-bottom: 2px solid #DDD;
+		li {
+
+			text-align: center;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden; 
+
+			&.act-li {
+				width: 25%;
+			}
+
+			&.grp-li {
+				width: 33%;
+			}
+
 		}
 
-		.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+		.nav-tabs {
+			border-bottom: 2px solid @alto;
+		}
+
+		/*.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
 			border-width: 0;
-        }
+        }*/
 
 	    .nav-tabs > li > a { 
 			border: none; 
@@ -48,7 +70,7 @@
 		.nav-tabs > li > a::after { 
 			content: ""; 
 			background: @stratos; 
-			height: 2px; 
+			height: 3px; 
 			position: absolute; 
 			width: 100%; 
 			left: 0px; 
@@ -62,15 +84,17 @@
 		}
 
 		.tab-nav > li > a::after { 
-			color: #fff; 
+			color: @white; 
 		}
 
 		.tab-pane { 
-            padding: 15px 0; 
+            padding: 0;
         }
 
         .tab-content{
-			padding:20px;
+			padding: 15px;
+			height: 200px;
+			overflow: auto;
 		}
 
 	}

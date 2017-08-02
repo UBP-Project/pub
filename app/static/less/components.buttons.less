@@ -4,6 +4,10 @@ button:focus {
 	outline: none !important;
 }
 
+.btn {
+	border-radius: 0;
+}
+
 .btn-style-1 {
 
 	background-color: @stratos;
@@ -29,7 +33,6 @@ button:focus {
 		color: @white;
 	}
 
-
 }
 
 .btn-style-2 {
@@ -41,17 +44,74 @@ button:focus {
 
 	&:hover {
 		border-color: @victoria;
-		color: @victoria;;
+		background-color: @victoria;
+		color: @white;
 	}
 
 	&:active {
 		border-color: @victoria;
-		color: @victoria;;
+		background-color: @victoria;
+		color: @white;
 	}
 
 	&:focus {
 		border-color: @victoria;
-		color: @victoria;;
+		background-color: @victoria;
+		color: @white;
+	}
+
+}
+
+.btn-style-3 {
+
+	background-color: @jaffa;
+	border: 2px solid @jaffa;
+	color: @white;
+	transition: all 0.5s ease;
+
+	&:hover {
+		background-color: @pizazz;
+		border-color: @pizazz;
+		color: @white;
+	}
+
+	&:active {
+		background-color: @pizazz;
+		border-color: @pizazz;
+		color: @white;
+	}
+
+	&:focus {
+		background-color: @pizazz;
+		border-color: @pizazz;
+		color: @white;
+	}
+
+}
+
+.btn-style-4 {
+
+	background-color: @white;
+	border: 2px solid @jaffa;
+	color: @jaffa;
+	transition: all 0.5s ease;
+
+	&:hover {
+		border-color: @pizazz;
+		background-color: @pizazz;
+		color: @white;
+	}
+
+	&:active {
+		border-color: @pizazz;
+		background-color: @pizazz;
+		color: @white;
+	}
+
+	&:focus {
+		border-color: @pizazz;
+		background-color: @pizazz;
+		color: @white;
 	}
 
 }
