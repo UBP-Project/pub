@@ -7,64 +7,135 @@ import json
 @api.route('/activities')
 def get_activities():
     """
-    This is the language awesomeness API
-    Call this api passing a language name and get back its features
+    Get all Activities
     ---
     tags:
-      - sample API Documentation
-    parameters:
-      - name: language
-        in: path
-        type: string
-        required: true
-        description: The language name
-      - name: size
-        in: query
-        type: integer
-        description: size of awesomeness
+      - activities
     responses:
-      500:
-        description: Error The language is not awesome!
       200:
-        description: A language with its awesomeness
+        description: OK
         schema:
-          id: awesome
+          id: activities
           properties:
-            language:
-              type: string
-              description: The language name
-              default: Lua
-            features:
-              type: array
-              description: The awesomeness list
-              items:
+            id:
+                type: integer
+                example: 1
+            description:
                 type: string
-              default: ["perfect", "simple", "lovely"]
-
+                example: Pa zumba ni president :)
+            start_date:
+                type: string
+                format: date 
+            end_date:
+                type: string
+                format: date 
+            address:
+                type: string
+                example: Luneta Park
+            group_id:
+                type: integer
+                default: None
+                descripton: In case event is associated with some group
     """
     activities = Activity.query.all()
     return jsonify([
         activity.to_json() for activity in activities
     ])
 
-@api.route('/activities/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+# @api.route('/activities/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+# def activities(id):
+#     """
+#     Read, Update, and Delete
+#     ---
+#     tags:
+#         - activities
+
+#     responses:
+#         200:
+#             description: OK
+#         500:
+#             description: Internal Server Error
+#     """
+#     if request.method == 'GET':
+#         activity = Activity.query.get_or_404(id)
+#         return jsonify(activity.to_json())
+
+#     elif request.method == 'PUT':
+#         activity = Activity.query.filter_by(id=id).update(request.form.to_dict())
+#         db.session.commit()
+#         return "Updated" # change this to better message format
+
+#     else:
+#         activity = Activity.query.filter_by(id=id).delete()
+#         db.session.commit()
+#         return "Deleted"
+
+@api.route('/activities/<int:id>', methods=['DELETE'])
 def activities(id):
-    if request.method == 'GET':
-        activity = Activity.query.get_or_404(id)
-        return jsonify(activity.to_json())
-
-    elif request.method == 'PUT':
-        activity = Activity.query.filter_by(id=id).update(request.form.to_dict())
-        db.session.commit()
-        return "Updated" # change this to better message format
-
-    else:
-        activity = Activity.query.filter_by(id=id).delete()
-        db.session.commit()
-        return "Deleted"
+    """
+    Delete Activity by id
+    ---
+    tags:
+        - activities
+    parameters:
+      - in: paramater
+        name: id
+        type: integer
+        required: true
+        description: activity reference
+    responses:
+        200:
+            description: Success!
+        404:
+            description: Not Found!
+        500:
+            description: Internal Server Error
+    """
+    activity = Activity.query.filter_by(id=id).delete()
+    db.session.commit()
+    return "Deleted"
 
 @api.route('/activities', methods=['POST'])
 def new_activity():
+    """
+    Create Activity
+    ---
+    tags:
+        - activities
+    parameters:
+      - in: body
+        name: body
+        description: JSON parameters.
+        schema:
+          properties:
+            title:
+              type: string
+              description: Name of the Activity
+              example: UHAC Manila
+            description:
+              type: string
+              description: Description of Activity.
+              example: Hackathon for Digital Innovation
+            start_date:
+              type: string
+              format: date
+              description: Starting When?
+              example: 2017-07-31
+            end_date:
+              type: string
+              format: date
+              description: Ending When?
+              example: 2017-08-01
+            group_id:
+              type: integer
+              description: If an acitivity is associated with a group
+              example: 1
+    responses:
+        200:
+            description: Success!
+        500:
+            description: Internal Server Error
+    """
     data = request.form.to_dict()
     activity = Activity.from_json(data)
     db.session.add(activity)

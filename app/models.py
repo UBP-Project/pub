@@ -48,6 +48,7 @@ class User(UserMixin, db.Model):
     comments            = db.relationship('Comment', backref=db.backref('commented', lazy='joined'), lazy='dynamic', passive_deletes=True, passive_updates=True)
     initated_activity   = db.relationship('Assignment', foreign_keys=[Assignment.initiated_by], backref=db.backref('initiated'), lazy='dynamic', passive_deletes=True, passive_updates=True)
     assigned_activity   = db.relationship('Assignment', foreign_keys=[Assignment.assigned_to], backref=db.backref('assigned'), lazy='dynamic', passive_deletes=True, passive_updates=True)
+    activity            = db.relationship('User_Activity', uselist = False, back_populates='user')
 
     def __repr__(self):
         return '<User %r>' % self.email
@@ -181,6 +182,8 @@ class Activity(db.Model):
     comments    = db.relationship('Comment', backref=db.backref('comments', lazy='joined'), lazy="dynamic", passive_deletes=True, passive_updates=True)
     schedule    = db.relationship('Schedule', backref=db.backref('schedule', lazy='joined'), lazy="dynamic", passive_deletes=True, passive_updates=True)
     assignment  = db.relationship('Assignment', backref=db.backref('assignment', lazy='joined'), lazy='dynamic', passive_deletes=True, passive_updates=True)
+    guests    = db.relationship('User_Activity', uselist = False, back_populates='activity')
+
 
     def __init__(self, title, description, start_date, end_date, address, group_id=None):
         self.title          = title
@@ -200,7 +203,7 @@ class Activity(db.Model):
             'description': self.description,
             'start_date' : self.start_date,
             'end_date'   : self.end_date,
-            'venue'      : self.venue,
+            'address'    : self.address,
             'group_id'   : self.group_id
         }
         return json_post
@@ -211,10 +214,26 @@ class Activity(db.Model):
         description = json_activity.get('description')
         start_date  = json_activity.get('start_date')
         end_date    = json_activity.get('end_date')
-        venue       = json_activity.get('venue')
+        address     = json_activity.get('address')
         group_id    = json_activity.get('group_id')
         
-        return Activity(title=title, description=description, start_date=start_date, end_date=end_date, venue=venue, group_id=group_id)
+        return Activity(title=title, description=description, start_date=start_date, end_date=end_date, address=address, group_id=group_id)
+
+class User_Activity(db.Model):
+    __tablename__ = 'user_activity'
+    user_id     = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
+    activity_id = db.Column(db.Integer, db.ForeignKey('activity.id', ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
+    status      = db.Column(db.Integer) #0 interested #1 going
+
+    user = db.relationship('User', back_populates='user_activity')
+    activity = db.relationship('Activity', back_populates='user_activity')
+
+    def __init__(self, user_id, activity_id, status = 0):
+        self.user_id = user_id
+        self.activity_id = activity_id
+        self.status = status #going by default
+
+
 
 class Schedule(db.Model):
     __tablename__ = 'schedule'

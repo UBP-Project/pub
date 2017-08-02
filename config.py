@@ -5,10 +5,42 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    # SWAGGER_UI_DOC_EXPANSION = 'list'     # TODO: Implement RESTPLUS for swagger
-    # RESTPLUS_VALIDATE = True
-    # RESTPLUS_MASK_SWAGGER = False
-    # RESTPLUS_ERROR_404_HELP = False
+    
+    swagger_template = {
+      "swagger": "2.0",
+      "info": {
+        "title": "UBP: PUB",
+        "description": "API for UnionBank's PUB",
+        "contact": {
+          "responsibleOrganization": "UBP: Pub"
+        },
+        "version": "1.0.0"
+      },
+      "host": "localhost:5000",  # overrides localhost:500
+      "basePath": "/",  # base bash for blueprint registration
+      "schemes": [
+        "http",
+        "https"
+      ],
+      "operationId": "getmyData"
+    }
+
+    swagger_config = {
+        "headers": [
+        ],
+        "specs": [
+            {
+                "endpoint": 'apispec',
+                "route": '/apispec',
+                "rule_filter": lambda rule: True,  # all in
+                "model_filter": lambda tag: True,  # all in
+            }
+        ],
+        "static_url_path": "/flasgger_static",
+        # "static_folder": "static",  # must be set by user
+        "swagger_ui": True,
+        "specs_route": "/apidocs/"
+    }
 
     @staticmethod
     def init_app(app):
