@@ -1,4 +1,8 @@
-{% extends "layout/base.html" %}
+{% if 'admin' in request.path %}
+    {% extends "/layout/admin_base.html" %}
+{% else %}
+    {% extends "/layout/base.html" %}
+{% endif %}
 
 {% block title %} {{ activity["title"] }} {% endblock %}
 

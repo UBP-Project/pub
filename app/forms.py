@@ -4,6 +4,11 @@ from wtforms.validators import Required
 from wtforms.fields.html5 import EmailField, DateField
 
 
+class LoginForm(FlaskForm):
+    email = StringField("Email or Username", validators=[Required()])
+    password = PasswordField("Password")
+    submit = SubmitField("SUBMIT")
+
 class CreateInterestGroupForm(FlaskForm):
     name = StringField('Group name', validators=[Required()])
     submit = SubmitField('Submit')
@@ -33,6 +38,10 @@ class CreateActivity(FlaskForm):
     end_date    = DateField("End Date")
     address     = StringField("Address")
     submit      = SubmitField("Submit")
+
+class GroupMembershipForm(FlaskForm):
+    join_group = SubmitField("Join Group")
+    leave_group = SubmitField("Leave Group")
 
 
 

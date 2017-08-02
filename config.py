@@ -58,7 +58,7 @@ class TestingConfig(Config):
 
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'mysql+pymysql://root:@localhost/pub_prod'
+        'mysql+pymysql://root:ubp-pub@localhost/pub_prod'
 
 
 config = {
