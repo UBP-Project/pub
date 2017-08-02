@@ -48,7 +48,7 @@ class User(UserMixin, db.Model):
     comments            = db.relationship('Comment', backref=db.backref('commented', lazy='joined'), lazy='dynamic', passive_deletes=True, passive_updates=True)
     initated_activity   = db.relationship('Assignment', foreign_keys=[Assignment.initiated_by], backref=db.backref('initiated'), lazy='dynamic', passive_deletes=True, passive_updates=True)
     assigned_activity   = db.relationship('Assignment', foreign_keys=[Assignment.assigned_to], backref=db.backref('assigned'), lazy='dynamic', passive_deletes=True, passive_updates=True)
-    activity            = db.relationship('User_Activity', uselist = False, back_populates='user')
+    activity            = db.relationship('User_Activity', backref=db.backref('guest', lazy='joined'), lazy='dynamic', passive_deletes=True, passive_updates=True)
 
     def __repr__(self):
         return '<User %r>' % self.email
@@ -182,9 +182,8 @@ class Activity(db.Model):
     comments    = db.relationship('Comment', backref=db.backref('comments', lazy='joined'), lazy="dynamic", passive_deletes=True, passive_updates=True)
     schedule    = db.relationship('Schedule', backref=db.backref('schedule', lazy='joined'), lazy="dynamic", passive_deletes=True, passive_updates=True)
     assignment  = db.relationship('Assignment', backref=db.backref('assignment', lazy='joined'), lazy='dynamic', passive_deletes=True, passive_updates=True)
-    guests    = db.relationship('User_Activity', uselist = False, back_populates='activity')
-
-
+    guests      = db.relationship('User_Activity', backref=db.backref('user_activity', lazy='joined'), lazy='dynamic', passive_deletes=True, passive_updates=True)
+    
     def __init__(self, title, description, start_date, end_date, address, group_id=None):
         self.title          = title
         self.description    = description
@@ -221,19 +220,14 @@ class Activity(db.Model):
 
 class User_Activity(db.Model):
     __tablename__ = 'user_activity'
-    user_id     = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
-    activity_id = db.Column(db.Integer, db.ForeignKey('activity.id', ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
+    user_id     = db.Column(db.Integer, db.ForeignKey('user.id', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
+    activity_id = db.Column(db.Integer, db.ForeignKey('activity.id', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
     status      = db.Column(db.Integer) #0 interested #1 going
-
-    user = db.relationship('User', back_populates='user_activity')
-    activity = db.relationship('Activity', back_populates='user_activity')
 
     def __init__(self, user_id, activity_id, status = 0):
         self.user_id = user_id
         self.activity_id = activity_id
         self.status = status #going by default
-
-
 
 class Schedule(db.Model):
     __tablename__ = 'schedule'

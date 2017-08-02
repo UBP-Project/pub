@@ -38,7 +38,9 @@ def view_group(id):
 
 @admin.route('/groups/create', methods=['GET', 'POST'])
 def create_interest_group():
+    print('point 1')
     form = CreateInterestGroupForm()
+    print('point 2')
     if form.validate_on_submit():
         interest_group = Interest_Group(
             name=form.name.data,
