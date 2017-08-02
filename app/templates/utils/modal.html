@@ -1,5 +1,12 @@
+{# =====================
+
+    ACTIVITY MODAL 
+
+   ===================== #}
+
 {# {% macro activity_modal(activity_id) %} #}
 {% macro activity_modal(activity_id, activity_title, activity_desc) %}
+
     <div class="modal fade" id="activity-{{activity_id}}" role="dialog">
 
         <div class="modal-dialog">
@@ -80,7 +87,15 @@
 {% endmacro %}
 
 
+
+{# =====================
+
+    GROUP MODAL 
+
+   ===================== #}
+
 {% macro group_modal(group_id, group_name, group_about) %}
+
     <div class="modal fade" id="group-{{group_id}}" role="dialog">
 
         <div class="modal-dialog">
@@ -142,6 +157,167 @@
                 <!-- FOOTER -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-style-1">JOIN GROUP</button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+{% endmacro %}
+
+
+{# =====================
+
+    VIEW ALL ACTIVITY MODAL 
+
+   ===================== #}
+
+
+{% macro view_all_activity(activities) %}
+
+    <div class="modal fade" id="all-activities" role="dialog">
+
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- HEADER -->
+                <div class="modal-header">
+                    <span class="pull-left"><b>ALL ACTIVITIES</b></span>
+                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                </div>
+
+                <!-- BODY -->
+                <div class="modal-body">
+
+                    {% if activities %}
+
+                        <div class="search-panel">
+                            <form action="" method="">
+                                {# <input type="text" class="form-control" name="" value="" placeholder="Search" /> #}
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Search activity">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-style-1" type="button"><i class="fa fa-search"></i></button>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="search-content">
+
+                            {% for activity in activities %}
+                                
+                                <div class="search-item">
+
+                                    <div class="item-img">
+                                        <img src="{{ url_for('static', filename='../../static/images/pub-default-head-img.jpg') }}">
+                                    </div>
+
+                                    <div class="item-desc">
+                                        <h4>{{ activity.title }}</h4>
+                                    </div>
+                                
+                                </div>
+                            
+                            {% endfor %}
+            
+                        </div>
+
+                    {% else %}
+
+                        <div class="no-content-box text-center">
+                            <h2>NO ACTIVITIES YET</h2>
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+                <!-- FOOTER -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-style-3" data-dismiss="modal">CLOSE</button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+{% endmacro %}
+
+
+
+{# =====================
+
+    VIEW ALL INTEREST GROUPS MODAL 
+
+   ===================== #}
+
+
+{% macro view_all_groups(groups) %}
+
+    <div class="modal fade" id="all-groups" role="dialog">
+
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- HEADER -->
+                <div class="modal-header">
+                    <span class="pull-left"><b>ALL INTEREST GROUPS</b></span>
+                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                </div>
+
+                <!-- BODY -->
+                <div class="modal-body">
+
+                    {% if groups %}
+
+                        <div class="search-panel">
+                            <form action="" method="">
+                                {# <input type="text" class="form-control" name="" value="" placeholder="Search" /> #}
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Search group">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-style-1" type="button"><i class="fa fa-search"></i></button>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="search-content">
+
+                            {% for group in groups %}
+                                
+                                <div class="search-item">
+
+                                    <div class="item-img">
+                                        <img src="{{ url_for('static', filename='../../static/images/pub-default-head-img.jpg') }}">
+                                    </div>
+
+                                    <div class="item-desc">
+                                        <h4>{{ group.name }}</h4>
+                                    </div>
+                                
+                                </div>
+                            
+                            {% endfor %}
+            
+                        </div>
+
+                    {% else %}
+
+                        <div class="no-content-box text-center">
+                            <h2>NO GROUPS YET</h2>
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+                <!-- FOOTER -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-style-3" data-dismiss="modal">CLOSE</button>
                 </div>
 
             </div>
