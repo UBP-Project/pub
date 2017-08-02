@@ -19,7 +19,7 @@ def create_app(config_name):
     bootstrap.init_app(app)
     db.init_app(app)
     login_manager.init_app(app)
-    Swagger(app)
+    Swagger(app, template=config[config_name].swagger_template, config=config[config_name].swagger_config)
 
     from app.client import client as client_blueprint
     app.register_blueprint(client_blueprint)
