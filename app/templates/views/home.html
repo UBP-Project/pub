@@ -55,13 +55,13 @@
 								</div>
 							</div>
 
-							{# {{ activity_modal(activity.id) }} #}
 							{{ activity_modal(activity.id, activity.title, activity.description) }}
+							{# {{ activity_modal(activity.id) }} #}
 
 						{% endfor %}
 
 						<div class="col-md-12 text-center box-footer">
-							<button type="button" class="btn btn-style-4" >View All Activities</button>
+							<button type="button" class="btn btn-style-4">View All Activities</button>
 						</div>
 
 					{% else %}
@@ -106,7 +106,7 @@
 							</div>
 
 							{# {{ group_modal(group.id) }} #}
-							{{ group_modal(group.id, group.name, group.description) }}
+							{{ group_modal(group.id, group.name, group.about) }}
 
 						{% endfor %}
 

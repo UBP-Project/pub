@@ -25,38 +25,38 @@
                         <ul class="nav nav-tabs" role="tablist">
 
                             <li role="presentation" class="active act-li">
-                                <a href="#desc" role="tab" data-toggle="tab">Description</a>
+                                <a href="#act-desc" role="tab" data-toggle="tab">Description</a>
                             </li>
 
                             <li role="presentation" class="act-li">
-                                <a href="#sched" role="tab" data-toggle="tab">Schedule</a>
+                                <a href="#act-sched" role="tab" data-toggle="tab">Schedule</a>
                             </li>
 
                             <li role="presentation" class="act-li">
-                                <a href="#interested" role="tab" data-toggle="tab">Interested</a>
+                                <a href="#act-interested" role="tab" data-toggle="tab">Interested</a>
                             </li>
 
                             <li role="presentation" class="act-li">
-                                <a href="#going" role="tab" data-toggle="tab">Going</a>
+                                <a href="#act-going" role="tab" data-toggle="tab">Going</a>
                             </li>
 
                         </ul>
 
                         <div class="tab-content">
 
-                            <div role="tabpanel" class="tab-pane active" id="desc">
+                            <div role="tabpanel" class="tab-pane active" id="act-desc">
                                 <p>{{ activity_desc }}</p>
                             </div>
 
-                            <div role="tabpanel" class="tab-pane" id="sched">
+                            <div role="tabpanel" class="tab-pane" id="act-sched">
                                 <p>No schedule to show</p>
                             </div>
 
-                            <div role="tabpanel" class="tab-pane" id="interested">
+                            <div role="tabpanel" class="tab-pane" id="act-interested">
                                 <p>No one interested</p>
                             </div>
 
-                            <div role="tabpanel" class="tab-pane" id="going">
+                            <div role="tabpanel" class="tab-pane" id="act-going">
                                 <p>No one is going</p>
                             </div>
                     
@@ -80,7 +80,7 @@
 {% endmacro %}
 
 
-{% macro group_modal(group_id, group_name, group_desc) %}
+{% macro group_modal(group_id, group_name, group_about) %}
     <div class="modal fade" id="group-{{group_id}}" role="dialog">
 
         <div class="modal-dialog">
@@ -106,30 +106,30 @@
                         <ul class="nav nav-tabs" role="tablist">
 
                             <li role="presentation" class="active grp-li">
-                                <a href="#desc" role="tab" data-toggle="tab">Description</a>
+                                <a href="#grp-desc" role="tab" data-toggle="tab">Description</a>
                             </li>
 
                             <li role="presentation" class="grp-li">
-                                <a href="#members" role="tab" data-toggle="tab">Members</a>
+                                <a href="#grp-members" role="tab" data-toggle="tab">Members</a>
                             </li>
 
                             <li role="presentation" class="grp-li">
-                                <a href="#activities" role="tab" data-toggle="tab">Activities</a>
+                                <a href="#grp-activities" role="tab" data-toggle="tab">Activities</a>
                             </li>
 
                         </ul>
 
                         <div class="tab-content">
 
-                            <div role="tabpanel" class="tab-pane active" id="desc">
-                                <p>{{ group_desc }}</p>
+                            <div role="tabpanel" class="tab-pane active" id="grp-desc">
+                                <p>{{ group_about }}</p>
                             </div>
 
-                            <div role="tabpanel" class="tab-pane" id="members">
+                            <div role="tabpanel" class="tab-pane" id="grp-members">
                                 <p>No members to show</p>
                             </div>
 
-                            <div role="tabpanel" class="tab-pane" id="activities">
+                            <div role="tabpanel" class="tab-pane" id="grp-activities">
                                 <p>No activities</p>
                             </div>
                     
