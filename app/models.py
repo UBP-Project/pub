@@ -157,6 +157,17 @@ class Membership(db.Model):
         self.status = status
         self.level = level
 
+    def to_json(self):
+        json_post = {
+            'id'         : self.id,
+            'user_id'    : self.user_id,
+            'group_id'   : self.group_id,
+            'date_joined': self.date_joined,
+            'status'     : self.status,
+            'level'      : self.level
+        }
+        return json_post
+
 class Activity(db.Model):
     __tablename__ = 'activity'
     id            = db.Column(db.Integer, primary_key=True)

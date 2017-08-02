@@ -1,8 +1,29 @@
-{% extends "layout/base.html" %}
+{% if 'admin' in request.path %}
+    {% extends "/layout/admin_base.html" %}
+{% else %}
+    {% extends "/layout/base.html" %}
+{% endif %}
 
 {% block title %} {{ group["name"] }} {% endblock %}
 
 {% block content %}
-    <h1>Name: {{ group["name"] }}</h1>
-    <h1>About: {{ group["about"] }}</h1>
+    <div class="row">
+        <div class="col-md-8">
+            <h6>Group name</h6>
+            <h1>{{ group["name"] }}</h1>
+            <h5>About Group: {{ group["about"] }}</h5>
+        </div>
+
+        <div class="col-md-4">
+            <h4>Members</h4>
+            {% for member in members %}
+                <a class="">
+                    <h6><span class="fa fa-user"></span>
+                        {{ member['firstname'] }} {{ member['lastname'] }}
+                    </h6>
+                </a>
+            {% endfor %}
+        </div>
+        </div>
+    </div>
 {% endblock %}

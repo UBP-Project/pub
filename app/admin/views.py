@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for
 from . import admin
 from .forms import CreateUserForm, CreateInterestGroupForm, CreateActivity
 from app import db
-from ..models import User, Interest_Group, Activity
+from ..models import User, Interest_Group, Activity, Membership
 
 @admin.route('/', methods=['GET'])
 def index():
@@ -23,12 +23,18 @@ def create_user():
 
 
 # group management
-@admin.route('/groups/<int:id>')
+@admin.route('/groups')
+def groups():
+    groups = Interest_Group.query.all()
+    return render_template('group/groups.html', groups=groups)
+
+@admin.route('/groups/<int:id>', methods=['GET', 'POST'])
 def view_group(id):
-    group = Interest_Group.query.filter_by(id=id).first()
-    if group is not None:
-        return render_template("group/view_group.html", group=group)
-    return redirect(url_for("admin.index"))
+    group = Interest_Group.query.get_or_404(id)
+    members = User.query \
+        .join(Membership, User.id==Membership.user_id) \
+        .filter(Membership.group_id==id, Membership.status != 0)
+    return render_template('group/view_group.html', group=group, members=members)
 
 @admin.route('/groups/create', methods=['GET', 'POST'])
 def create_interest_group():
@@ -44,6 +50,7 @@ def create_interest_group():
         flash("Success creating group")
         return redirect(url_for("admin.index"))
     return render_template('group/create.html', form=form)
+
 
 # activity management
 @admin.route('/activities/<int:id>')

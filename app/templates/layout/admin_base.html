@@ -31,8 +31,16 @@
     <div class="row">
         <div class="col-md-3">
             <h3>Administrator</h3>
-            <a class="btn btn-default btn-block" href={{url_for('admin.create_user')}}>Create User</a>
+
+            <h5>Users</h5>
+            <a class="btn btn-default btn-block" href={{url_for('admin.create_user')}}>
+            Create User</a>
+
+            <h5>Activities</h5>
             <a class="btn btn-default btn-block" href={{url_for('admin.create_activity')}}>Create Activity</a>
+
+            <h5>Groups</h5>
+            <a class="btn btn-default btn-block" href={{url_for('admin.groups')}}>View Interest Groups</a>
             <a class="btn btn-default btn-block" href={{url_for('admin.create_interest_group')}}>Create Interest Group</a>
         </div>
         <div class="col-md-9">

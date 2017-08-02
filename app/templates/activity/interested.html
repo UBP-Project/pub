@@ -1,0 +1,15 @@
+{% if request.path == url_for("admin.create_interest_group") %}
+    {% extends "/layout/admin_base.html" %}
+{% else %}
+    {% extends "/layout/base.html" %}
+{% endif %}
+{% block title %}Admin Page{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Show Interested Members </h3>
+        </div>
+            
+    </div>
+{% endblock %}
