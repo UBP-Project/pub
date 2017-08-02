@@ -1,0 +1,21 @@
+// main: main.less
+
+input[type=text], input[type=password], input[type=email], input[type=date], input[type=number] textarea {
+	
+	font-family: @body-font;	
+	border-radius: 4px;
+	transition: all 200ms ease;
+
+	&:hover {
+		border: 1px solid @kimberly;
+	}
+
+	&:active {
+		border: 1px solid @stratos;
+	}
+
+	&:focus {
+		border: 1px solid @stratos;
+	}
+
+}

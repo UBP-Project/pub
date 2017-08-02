@@ -1,5 +1,5 @@
 {% extends "./layout/base.html" %}
-{% from "./utils/modal.html" import activity_modal, group_modal %}
+{% from "./utils/modal.html" import activity_modal, group_modal, view_all_activity, view_all_groups %}
 
 {% block title %} Home {% endblock title %}
 
@@ -43,8 +43,8 @@
 
 						{% for activity in activities %}
 
-							<div class="col-md-3 col-sm-4" data-toggle="modal" data-target="#activity-{{ activity['id'] }}">
-								<div class="card zoomify">
+							<div class="col-md-3 col-sm-4">
+								<div class="card zoomify" data-toggle="modal" data-target="#activity-{{ activity['id'] }}">
 									<div class="card-img">
 										<img src="{{ url_for('static', filename='../../static/images/pub-default-img.jpg') }}" class="img-responsive" />
 									</div>
@@ -61,7 +61,8 @@
 						{% endfor %}
 
 						<div class="col-md-12 text-center box-footer">
-							<button type="button" class="btn btn-style-4">View All Activities</button>
+							<button type="button" class="btn btn-style-4" data-toggle="modal" data-target="#all-activities">VIEW &nbsp; ALL &nbsp; ACTIVITIES</button>
+							{{ view_all_activity(activities) }}
 						</div>
 
 					{% else %}
@@ -111,7 +112,8 @@
 						{% endfor %}
 
 						<div class="col-md-12 text-center box-footer">
-							<button type="button" class="btn btn-style-2">View All Groups</button>
+							<button type="button" class="btn btn-style-2" data-toggle="modal" data-target="#all-groups">VIEW &nbsp; ALL &nbsp; GROUPS</button>
+							{{ view_all_groups(interest_groups) }}
 						</div>
 
 					{% else %}

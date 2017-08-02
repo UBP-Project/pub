@@ -4,6 +4,10 @@
 	color: @shaft;
 }
 
+.modal-content {
+	border-radius: 0;
+}
+
 .modal-body {
 
 	margin: 0;
@@ -99,6 +103,71 @@
 
 	}
 
+	.search-panel {
+		
+		background-color: @white;
+		/*border-top: 2px @kimberly solid;*/
+		border-bottom: 2px @alto solid;
+		padding: 15px;
+
+		input[type=text] {
+			height: 36px;
+			line-height: 26px;
+			font-size: 15px;
+		}
+
+	}
+
+	.search-content {
+		
+		height: 400px;
+		overflow: auto;
+
+		.search-item {
+
+			background-color: @white;
+			height: 100px;
+			border-bottom: 1px @alto solid;
+			padding: 10px;
+			transition: background-color 200ms ease;
+			width: 100%;
+			cursor: pointer;
+
+			&:hover {
+				background-color: @mystic;
+			}
+
+			.item-img {
+
+				margin:0;
+				width: 20%;
+				height: 80px;
+				overflow: hidden;
+				float: left;
+
+				img {
+					max-height: 100%;
+				}
+
+			}
+
+			.item-desc {
+
+				text-align: left;
+				width: 70%;
+				float: left;
+				padding: 20px 0 0 20px;
+
+				h4 {
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					overflow: hidden; 
+				}
+
+			}
+
+		}
+
+	}
+
 }
-
-
