@@ -144,9 +144,8 @@ class Interest_Group(db.Model):
 
 class Membership(db.Model):
     __tablename__     = 'membership'
-    id          = db.Column(db.Integer, primary_key=True)
-    user_id     = db.Column(db.Integer, db.ForeignKey('user.id', onupdate='CASCADE', ondelete='CASCADE'))
-    group_id    = db.Column(db.Integer, db.ForeignKey('interest_group.id', onupdate='CASCADE', ondelete='CASCADE'))
+    user_id     = db.Column(db.Integer, db.ForeignKey('user.id', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
+    group_id    = db.Column(db.Integer, db.ForeignKey('interest_group.id', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
     date_joined = db.Column(db.Date)
     status      = db.String(db.Integer) #0 'pending', #1'accepted', #3'declined'
     level       = db.Column(db.Integer) #0 'regular' or #1'leader' member
@@ -160,7 +159,6 @@ class Membership(db.Model):
 
     def to_json(self):
         json_post = {
-            'id'         : self.id,
             'user_id'    : self.user_id,
             'group_id'   : self.group_id,
             'date_joined': self.date_joined,

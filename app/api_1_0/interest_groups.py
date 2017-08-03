@@ -39,10 +39,10 @@ def delete_interest_group(id):
     db.session.commit()
     return jsonify(interest_group.to_json()), 200
 
-@api.route('/interest_groups/join/<int:group_id>', methods=['POST'])
+@api.route('/interest_groups/<int:group_id>/join/', methods=['GET', 'POST'])
 @login_required
 def join_interest_group(group_id):
-    user_id = current_user['id']
+    user_id = current_user.get_id()
     membership = Membership(
         user_id=user_id,
         group_id=group_id,

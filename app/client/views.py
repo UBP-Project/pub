@@ -1,3 +1,4 @@
+import json
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_user, login_required, logout_user, current_user
 from ..forms import LoginForm, GroupMembershipForm
@@ -8,8 +9,10 @@ from ..models import User, Interest_Group, Activity, Membership
 @client.route('/', methods=['GET', 'POST'])
 def index():
     interest_groups = Interest_Group.query.all()
+    print(json.dumps(interest_groups))
+    # interest_groups[1].isMember = True
     activities = Activity.query.all()
-    print(activities)
+    # print(activities)
     return render_template("views/home.html", interest_groups=interest_groups, activities=activities)
 
 @client.route('/login/', methods=['GET', 'POST'])

@@ -1,0 +1,63 @@
+{% macro groups(interest_groups) %}
+
+	{% from "components/group-modal.html" import group_modal %}
+	{% from "components/groups-modal.html" import view_all_groups %}
+
+	<div class="row">
+
+		<div class="col-md-10 col-md-offset-1 col-sm-12 box-header box-style-2">
+			<span>INTEREST GROUPS</span>
+		</div>
+
+		<div class="col-md-10 col-md-offset-1 col-sm-12 box-content border-bottom-2">
+
+			<div class="row">
+
+				{% if interest_groups %}
+
+					{% for group in interest_groups %}
+
+						{{ group_modal(group) }}
+
+					{% endfor %}
+
+					<div class="col-md-12 text-center box-footer">
+						<button type="button" class="btn btn-style-2" data-toggle="modal" data-target="#all-groups">VIEW &nbsp; ALL &nbsp; GROUPS</button>
+						{{ view_all_groups(interest_groups) }}
+					</div>
+
+				{% else %}
+
+					<div class="no-content-box text-center">
+						<h2>NO INTEREST GROUPS TO SHOW</h2>
+					</div>
+
+				{% endif %}
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<script>
+        function join_group(group_id){
+	        $.ajax({
+	            url: '/api/v1.0/interest_groups/'+ group_id + '/join/',
+	            type: 'POST'
+	        })
+	        .done(function(data) {
+	            console.log(data);
+	            console.log("success");
+	            $(".modal-item .modal-footer button").text("LEAVE GROUP")
+	        })
+	        .fail(function() {
+	            console.log("error");
+	        })
+	        .always(function() {
+	            console.log("complete");
+	        });
+        }         
+    </script>
+
+{% endmacro %}

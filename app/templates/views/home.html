@@ -1,6 +1,7 @@
 {% extends "./layout/base.html" %}
-{% from "./utils/modal.html" import activity_modal, group_modal, view_all_activity, view_all_groups %}
-
+{% from "containers/groups.html" import groups as groups_container %}
+{% from "components/activity-modal.html" import activity_modal %}
+{% from "components/activities-modal.html" import view_all_activity %}
 {% block title %} Home {% endblock title %}
 
 {% block navigation %}
@@ -80,54 +81,7 @@
 	</div>
 
 
-	<div class="row">
+	{{ groups_container(interest_groups) }}
 
-			<div class="col-md-10 col-md-offset-1 col-sm-12 box-header box-style-2">
-				<span>INTEREST GROUPS</span>
-			</div>
-
-			<div class="col-md-10 col-md-offset-1 col-sm-12 box-content border-bottom-2">
-
-				<div class="row">
-
-					{% if interest_groups %}
-
-						{% for group in interest_groups %}
-
-							<div class="col-md-3 col-sm-4 text-center">
-								<div class="group-icon">
-									<div class="group-img">
-										<img src="{{ url_for('static', filename='../../static/images/pub-default-img.jpg') }}" class="img-circle zoomify" data-toggle="modal" data-target="#group-{{ group['id'] }}" />
-									</div>
-									<div class="group-desc">
-										<h4 class="title">{{ group['name'] | upper }}</h4>
-										<p><i class="fa fa-user"></i> 10</p>
-									</div>
-								</div>
-							</div>
-
-							{# {{ group_modal(group.id) }} #}
-							{{ group_modal(group.id, group.name, group.about) }}
-
-						{% endfor %}
-
-						<div class="col-md-12 text-center box-footer">
-							<button type="button" class="btn btn-style-2" data-toggle="modal" data-target="#all-groups">VIEW &nbsp; ALL &nbsp; GROUPS</button>
-							{{ view_all_groups(interest_groups) }}
-						</div>
-
-					{% else %}
-
-						<div class="no-content-box text-center">
-							<h2>NO INTEREST GROUPS TO SHOW</h2>
-						</div>
-
-					{% endif %}
-
-				</div>
-
-			</div>
-
-	</div>
 
 {% endblock content %}

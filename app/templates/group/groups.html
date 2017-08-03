@@ -11,7 +11,7 @@
         <h5>Groups</h5>
         {% for group in groups %}
             <a href="{{
-            url_for('admin.view_group', id=group.id) if 'admin' in request.path else url_for('client.group', id=group.id)
+            url_for('admin.group', id=group.id) if 'admin' in request.path else url_for('client.group', id=group.id)
              }}">
                 <h4><span class="fa fa-user"></span>
                     {{ group['name'] }}
