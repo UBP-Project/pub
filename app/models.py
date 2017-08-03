@@ -93,7 +93,7 @@ class User(UserMixin, db.Model):
         department      = json_user.get('department')
         position        = json_user.get('position')
         birthday        = json_user.get('birthday')
-        role        = json_user.get('role')
+        role            = json_user.get('role')
 
         return User(
             firstname=firstname,
@@ -147,7 +147,7 @@ class Membership(db.Model):
     user_id     = db.Column(db.Integer, db.ForeignKey('user.id', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
     group_id    = db.Column(db.Integer, db.ForeignKey('interest_group.id', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
     date_joined = db.Column(db.Date)
-    status      = db.String(db.Integer) #0 'pending', #1'accepted', #3'declined'
+    status      = db.Column(db.Integer) #0 'pending', #1'accepted', #3'declined'
     level       = db.Column(db.Integer) #0 'regular' or #1'leader' member
 
     def __init__(self, user_id, group_id, status = 0, level = 0):

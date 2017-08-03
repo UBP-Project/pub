@@ -52,6 +52,3 @@ def join_interest_group(group_id):
     db.session.commit()
     return jsonify(membership.to_json()), 201, \
         {'Location': url_for('api.join_interest_group', group_id=group_id, _external=True)}
-
-
-

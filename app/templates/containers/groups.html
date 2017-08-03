@@ -53,11 +53,22 @@
 	        })
 	        .fail(function() {
 	            console.log("error");
-	        })
-	        .always(function() {
-	            console.log("complete");
 	        });
-        }         
+        }
+
+        function leave_group(group_id){
+	        $.ajax({
+	            url: '/api/v1.0/interest_groups/'+ group_id + '/leave/',
+	            type: 'DELETE'
+	        })
+	        .done(function(data) {
+	            console.log(data);
+	            console.log("success");
+	        })
+	        .fail(function() {
+	            console.log("error");
+	        });
+        }    
     </script>
 
 {% endmacro %}

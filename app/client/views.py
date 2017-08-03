@@ -8,11 +8,17 @@ from ..models import User, Interest_Group, Activity, Membership
 
 @client.route('/', methods=['GET', 'POST'])
 def index():
-    interest_groups = Interest_Group.query.all()
-    print(json.dumps(interest_groups))
-    # interest_groups[1].isMember = True
+    interest_groups = Interest_Group.query  \
+        .with_entities(                     \
+            Interest_Group.id,              \
+            Interest_Group.name,            \
+            Interest_Group.about,           \
+            Interest_Group.cover_photo,     \
+            Interest_Group.group_icon,      \
+            Membership.status )             \
+        .outerjoin(Membership)
+
     activities = Activity.query.all()
-    # print(activities)
     return render_template("views/home.html", interest_groups=interest_groups, activities=activities)
 
 @client.route('/login/', methods=['GET', 'POST'])
