@@ -73,16 +73,16 @@ class Assignment(db.Model):
 
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
-    id                  = db.Column(db.Integer, primary_key=True)
-    firstname           = db.Column(db.String(64))
-    middlename          = db.Column(db.String(64), nullable=True)
-    lastname            = db.Column(db.String(64))
-    email               = db.Column(db.String(64), unique=True)
-    password_hash       = db.Column(db.String(128))
-    department          = db.Column(db.String(100))
-    position            = db.Column(db.String(100))
-    birthday            = db.Column(db.Date)
-    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    id            = db.Column(db.Integer, primary_key=True)
+    firstname     = db.Column(db.String(64))
+    middlename    = db.Column(db.String(64), nullable=True)
+    lastname      = db.Column(db.String(64))
+    email         = db.Column(db.String(64), unique=True)
+    password_hash = db.Column(db.String(128))
+    department    = db.Column(db.String(100))
+    position      = db.Column(db.String(100))
+    birthday      = db.Column(db.Date)
+    role_id       = db.Column(db.Integer, db.ForeignKey('roles.id'))
     # role                = db.Column(db.Integer) #0 user #1 admin
 
     # followed            = db.relationship('Follow', foreign_keys=[Follow.follower_id], backref=db.backref('follower', lazy='joined'), lazy='dynamic', passive_deletes=True, passive_updates=True)
@@ -152,7 +152,7 @@ class User(UserMixin, db.Model):
         department      = json_user.get('department')
         position        = json_user.get('position')
         birthday        = json_user.get('birthday')
-        role        = json_user.get('role')
+        role            = json_user.get('role')
 
         return User(
             firstname=firstname,
@@ -210,11 +210,10 @@ class Interest_Group(db.Model):
 
 class Membership(db.Model):
     __tablename__     = 'membership'
-    id          = db.Column(db.Integer, primary_key=True)
-    user_id     = db.Column(db.Integer, db.ForeignKey('user.id', onupdate='CASCADE', ondelete='CASCADE'))
-    group_id    = db.Column(db.Integer, db.ForeignKey('interest_group.id', onupdate='CASCADE', ondelete='CASCADE'))
+    user_id     = db.Column(db.Integer, db.ForeignKey('user.id', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
+    group_id    = db.Column(db.Integer, db.ForeignKey('interest_group.id', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
     date_joined = db.Column(db.Date)
-    status      = db.String(db.Integer) #0 'pending', #1'accepted', #3'declined'
+    status      = db.Column(db.Integer) #0 'pending', #1'accepted', #3'declined'
     level       = db.Column(db.Integer) #0 'regular' or #1'leader' member
 
     def __init__(self, user_id, group_id, status = 0, level = 0):
@@ -226,7 +225,6 @@ class Membership(db.Model):
 
     def to_json(self):
         json_post = {
-            'id'         : self.id,
             'user_id'    : self.user_id,
             'group_id'   : self.group_id,
             'date_joined': self.date_joined,
@@ -245,11 +243,11 @@ class Activity(db.Model):
     address       = db.Column(db.String(100))
     group_id      = db.Column(db.Integer, nullable=True)
 
-    comments   = db.relationship('Comment', backref=db.backref('comments', lazy='joined'), lazy="dynamic", passive_deletes=True, passive_updates=True)
-    schedule   = db.relationship('Schedule', backref=db.backref('schedule', lazy='joined'), lazy="dynamic", passive_deletes=True, passive_updates=True)
-    assignment = db.relationship('Assignment', backref=db.backref('assignment', lazy='joined'), lazy='dynamic', passive_deletes=True, passive_updates=True)
-    # guests     = db.relationship('User_Activity', uselist = False, back_populates='activity')
-
+    comments    = db.relationship('Comment', backref=db.backref('comments', lazy='joined'), lazy="dynamic", passive_deletes=True, passive_updates=True)
+    schedule    = db.relationship('Schedule', backref=db.backref('schedule', lazy='joined'), lazy="dynamic", passive_deletes=True, passive_updates=True)
+    assignment  = db.relationship('Assignment', backref=db.backref('assignment', lazy='joined'), lazy='dynamic', passive_deletes=True, passive_updates=True)
+    guests      = db.relationship('User_Activity', backref=db.backref('user_activity', lazy='joined'), lazy='dynamic', passive_deletes=True, passive_updates=True)
+    
     def __init__(self, title, description, start_date, end_date, address, group_id=None):
         self.title          = title
         self.description    = description
@@ -293,13 +291,11 @@ class User_Activity(db.Model):
 
     # user = db.relationship('User', back_populates='user_activity')
     # activity = db.relationship('Activity', back_populates='user_activity')
-
+    
     def __init__(self, user_id, activity_id, status = 0):
         self.user_id = user_id
         self.activity_id = activity_id
         self.status = status #going by default
-
-
 
 class Schedule(db.Model):
     __tablename__ = 'schedule'

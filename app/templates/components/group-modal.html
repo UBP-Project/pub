@@ -1,0 +1,90 @@
+{% macro group_modal(group) %}
+
+    <div class="modal-item">
+
+        <div class="col-md-3 col-sm-4 text-center">
+            <div class="group-icon">
+                <div class="group-img">
+                    <img src="{{ url_for('static', filename='../../static/images/pub-default-img.jpg') }}" class="img-circle zoomify" data-toggle="modal" data-target="#group-{{ group.id }}" />
+                </div>
+                <div class="group-desc">
+                    <h4 class="title">{{ group.name | upper }}</h4>
+                    <p><i class="fa fa-user"></i> 10</p>
+                </div>
+            </div>
+       </div>
+
+        <div class="modal fade" id="group-{{group.id}}" role="dialog">
+
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- HEADER -->
+                    <div class="modal-header">
+                        <span><b>INTEREST GROUP</b></span>
+                        <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                    </div>
+
+                    <!-- BODY -->
+                    <div class="modal-body">
+
+                        <div class="img-container">
+                            <img src="{{ url_for('static', filename='../../static/images/pub-default-head-img.jpg') }}" />
+                        </div>
+
+                        <h2 class="text-center">{{ group.name | upper }}</h2>
+
+                        <div class="content">
+
+                            <ul class="nav nav-tabs" role="tablist">
+
+                                <li role="presentation" class="active grp-li">
+                                    <a href="#grp-desc" role="tab" data-toggle="tab">Description</a>
+                                </li>
+
+                                <li role="presentation" class="grp-li">
+                                    <a href="#grp-members" role="tab" data-toggle="tab">Members</a>
+                                </li>
+
+                                <li role="presentation" class="grp-li">
+                                    <a href="#grp-activities" role="tab" data-toggle="tab">Activities</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content">
+
+                                <div role="tabpanel" class="tab-pane active" id="grp-desc">
+                                    <p>{{ group.about }}</p>
+                                </div>
+
+                                <div role="tabpanel" class="tab-pane" id="grp-members">
+                                    <p>No members to show</p>
+                                </div>
+
+                                <div role="tabpanel" class="tab-pane" id="grp-activities">
+                                    <p>No activities</p>
+                                </div>
+                        
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- FOOTER -->
+                    <div class="modal-footer">
+                    {% if group.status == 1 %}
+                        <button type="button" class="btn btn-warning" onclick="leave_group({{group.id}})">LEAVE GROUP</button>
+                    {% else %}
+                        <button type="button" class="btn btn-style-1" onclick="join_group({{group.id}})">JOIN GROUP</button>
+                    {% endif %}
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{% endmacro %}
