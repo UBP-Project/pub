@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField
+from wtforms import StringField, SubmitField, PasswordField, SelectField
 from wtforms.validators import Required
 from wtforms.fields.html5 import EmailField, DateField
 
@@ -22,6 +22,7 @@ class CreateUserForm(FlaskForm):
     department = StringField("Department")
     position   = StringField("Position")
     birthday   = DateField("Birthday")
+    role       = SelectField('Programming Language', choices=[('2', 'Default'), ('3', 'Manager')])
     submit     = SubmitField("Submit")
 
 class CreateInterestGroupForm(FlaskForm):

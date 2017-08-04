@@ -3,28 +3,34 @@ from .. import admin
 from ...forms import CreateUserForm
 from app import db
 from ...models import User
+from ...decorators import admin_required
 
 @admin.route('/users')
+@admin_required
 def users():
     users = User.query.all()
     return render_template('user/users.html', users=users)
 
 @admin.route('/users/<int:id>')
+@admin_required
 def profile(id):
     user = User.query.get_or_404(id)
     return render_template('user/profile.html', user=user)
 
 @admin.route('/users/create', methods=['GET', 'POST'])
+@admin_required
 def create_user():
     form = CreateUserForm()
     if form.validate_on_submit():
+        # print('SELECTED', form.role.selected)
         user = User(firstname=form.firstname.data,
             middlename=form.middlename.data,
             lastname=form.lastname.data, 
             email=form.email.data,
             department=form.department.data,
             position=form.position.data,
-            birthday=form.birthday.data)
+            birthday=form.birthday.data,
+            role_id=dict(form.role.choices).get(form.role.data))
         user.password = form.password.data
         db.session.add(user)
         db.session.commit()

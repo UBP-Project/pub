@@ -2,7 +2,8 @@ from flask import render_template, flash, redirect, url_for
 from .. import admin
 from ...forms import CreateActivity
 from app import db
-from ...models import User, Activity
+from ...models import User, Activity, Permission
+from ...decorators import admin_required, permission_required
 
 @admin.route('/activities/<int:id>')
 def view_activity(id):
@@ -12,6 +13,7 @@ def view_activity(id):
     return redirect(url_for("admin.index"))
 
 @admin.route('/activities/create', methods=['GET', 'POST'])
+@permission_required(Permission.CREATE_ACTIVITY)
 def create_activity():
     form = CreateActivity()
     if form.validate_on_submit():
