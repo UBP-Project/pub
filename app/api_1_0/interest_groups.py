@@ -6,12 +6,18 @@ from . import api
 from flask_login import login_required, current_user
 import datetime
 
-@api.route('/interest_groups/')
+@api.route('/interest_groups')
 def get_interest_groups():
-    interest_groups = Interest_Group.query.all()
-    return jsonify({
-        'interest_groups': [interest_group.to_json() for interest_group in interest_groups]
-    }), 200
+
+    if 'limit' in request.args:
+        limit = request.args.get('limit')
+        interest_groups = Interest_Group.query.limit(limit)
+    else:
+        interest_groups = Interest_Group.query.all()
+    
+    return jsonify([
+        interest_group.to_json() for interest_group in interest_groups
+    ]), 200
 
 @api.route('/interest_groups/<int:id>')
 def get_interest_group(id):
