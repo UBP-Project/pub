@@ -86,3 +86,20 @@ def get_request_status(id):
             return jsonify({'membership_status': 'None'})
     else:
         return jsonify({'status': 'error'}), 404
+
+@api.route('/interest_groups/<int:id>/role')
+def get_role(id):
+    if 'user_id' in request.args:
+        user_id = request.args.get('user_id')
+
+        status_code = Membership.query\
+            .filter(Membership.group_id == id)\
+            .filter(Membership.user_id == user_id)\
+            .first()
+
+        if(status_code != None):
+            return jsonify({'role': 'regular' if status_code.level == 0 else 'leader'})
+        else:
+            return jsonify({'role': 'None'})
+    else:
+        return jsonify({'status': 'error'}), 404
