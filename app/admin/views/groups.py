@@ -7,7 +7,7 @@ from ...models import User, Interest_Group, Membership
 @admin.route('/groups')
 def groups():
     groups = Interest_Group.query.all()
-    return render_template('group/groups.html', groups=groups)
+    return render_template('admin/group/groups.html', groups=groups)
 
 @admin.route('/groups/<int:id>', methods=['GET', 'POST'])
 def group(id):
@@ -15,7 +15,7 @@ def group(id):
     members = User.query \
         .join(Membership, User.id==Membership.user_id) \
         .filter(Membership.group_id==id, Membership.status != 0)
-    return render_template('group/group.html', group=group, members=members)
+    return render_template('admin/group/group.html', group=group, members=members)
 
 @admin.route('/groups/create', methods=['GET', 'POST'])
 def create_interest_group():
@@ -30,4 +30,4 @@ def create_interest_group():
         db.session.commit()
         flash("Success creating group")
         return redirect(url_for("admin.index"))
-    return render_template('group/create.html', form=form)
+    return render_template('admin/group/create.html', form=form)

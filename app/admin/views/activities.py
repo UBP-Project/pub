@@ -9,11 +9,11 @@ from ...decorators import admin_required, permission_required
 def view_activity(id):
     activity = Activity.query.get_or_404(id)
     if activity is not None:
-        return render_template("activity/view_activity.html", activity=activity)
+        return render_template("admin/activity/view_activity.html", activity=activity)
     return redirect(url_for("admin.index"))
 
 @admin.route('/activities/create', methods=['GET', 'POST'])
-@permission_required(Permission.CREATE_ACTIVITY)
+# @permission_required(Permission.CREATE_ACTIVITY)
 def create_activity():
     form = CreateActivity()
     if form.validate_on_submit():
@@ -28,4 +28,4 @@ def create_activity():
         db.session.commit()
         flash("Success Creating Activity")
         return redirect(url_for("admin.index"))
-    return render_template('activity/create.html', form=form)
+    return render_template('admin/activity/create.html', form=form)

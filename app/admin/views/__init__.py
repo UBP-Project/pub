@@ -4,6 +4,6 @@ from ...decorators import admin_required
 from . import activities, groups, users
 
 @admin.route('/', methods=['GET'])
-@admin_required
+# @admin_required
 def index():
-    return render_template('admin_index.html');
+    return render_template('admin/index.html');

@@ -19,7 +19,7 @@ def index():
         .outerjoin(Membership)
 
     activities = Activity.query.all()
-    return render_template("views/home.html", interest_groups=interest_groups, activities=activities)
+    return render_template("client/views/home.html", interest_groups=interest_groups, activities=activities)
 
 @client.route('/login/', methods=['GET', 'POST'])
 def login():
@@ -29,7 +29,7 @@ def login():
         if user is not  None and user.verify_password(form.password.data):
             login_user(user)
             return redirect(request.args.get('next') or url_for('client.index'))
-    return render_template("views/login.html", form=form)
+    return render_template("client/views/login.html", form=form)
 
 @client.route('/profile/')
 @login_required
