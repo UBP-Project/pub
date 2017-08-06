@@ -76,6 +76,8 @@
                     <div class="modal-footer">
                     {% if group.status == 1 %}
                         <button type="button" class="btn btn-warning" onclick="leave_group({{group.id}})">LEAVE GROUP</button>
+                    {% elif group.status == 0 %}
+                        <button type="button" class="btn btn-warning" onclick="cancel_join_group({{group.id}})">CANCEL JOIN REQUEST</button>
                     {% else %}
                         <button type="button" class="btn btn-style-1" onclick="join_group({{group.id}})">JOIN GROUP</button>
                     {% endif %}

@@ -8,15 +8,22 @@ from ..models import User, Interest_Group, Activity, Membership
 
 @client.route('/', methods=['GET', 'POST'])
 def index():
+
+    #problem still exist in this query
     interest_groups = Interest_Group.query  \
-        .with_entities(                     \
+        .outerjoin(Membership) \
+        .outerjoin(User) \
+        .with_entities(
             Interest_Group.id,              \
             Interest_Group.name,            \
             Interest_Group.about,           \
             Interest_Group.cover_photo,     \
             Interest_Group.group_icon,      \
-            Membership.status )             \
-        .outerjoin(Membership)
+            Membership.status
+            )  \
+        .all()    
+
+    print(interest_groups)
 
     activities = Activity.query.all()
     return render_template("client/views/home.html", interest_groups=interest_groups, activities=activities)

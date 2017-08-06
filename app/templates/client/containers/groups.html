@@ -43,7 +43,7 @@
 	<script>
         function join_group(group_id){
 	        $.ajax({
-	            url: '/api/v1.0/interest_groups/'+ group_id + '/join/',
+	            url: '/api/v1.0/interest_groups/'+ group_id + '/join',
 	            type: 'POST'
 	        })
 	        .done(function(data) {
