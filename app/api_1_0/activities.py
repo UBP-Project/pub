@@ -1,5 +1,5 @@
 from flask import jsonify, request, current_app, url_for
-from app.models import Activity
+from app.models import Activity, User, User_Activity
 from app.api_1_0 import api
 from app import db
 import json
@@ -75,6 +75,32 @@ def activities(id):
         activity = Activity.query.filter_by(id=id).delete()
         db.session.commit()
         return "Deleted"
+
+@api.route('/activities/<int:id>/going', methods=['GET'])
+def get_going(id):
+    going = User.query                      \
+        .join(User_Activity)                \
+        .join(Activity)                     \
+        .filter(Activity.id == id)          \
+        .filter(User_Activity.status == 1)  \
+        .order_by(User.lastname)
+
+    return jsonify([
+        user.to_json() for user in going
+    ])
+
+@api.route('/activities/<int:id>/interested', methods=['GET'])
+def get_interested(id):
+    interested = User.query                 \
+        .join(User_Activity)                \
+        .join(Activity)                     \
+        .filter(Activity.id == id)          \
+        .filter(User_Activity.status == 0)  \
+        .order_by(User.lastname)
+
+    return jsonify([
+        user.to_json() for user in interested
+    ])
 
 @api.route('/activities', methods=['POST'])
 def new_activity():

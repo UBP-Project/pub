@@ -134,7 +134,7 @@ class User(UserMixin, db.Model):
             'middlename'    : self.middlename,
             'lastname'      : self.lastname,
             'email'         : self.email,
-            'password_hash' : self.password,
+            'password_hash' : self.password_hash,
             'department'    : self.department,
             'position'      : self.position,
             'birthday'      : self.birthday,
@@ -148,7 +148,7 @@ class User(UserMixin, db.Model):
         middlename      = json_user.get('middlename')
         lastname        = json_user.get('lastname')
         email           = json_user.get('email')
-        password        = json_user.get('password')
+        password        = json_user.get('password_hash')
         department      = json_user.get('department')
         position        = json_user.get('position')
         birthday        = json_user.get('birthday')
