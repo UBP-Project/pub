@@ -1,7 +1,7 @@
 from flask import jsonify, request, url_for
 from .. import db
 import json
-from ..models import Interest_Group, Membership
+from ..models import Interest_Group, Membership, User
 from . import api
 from flask_login import login_required, current_user
 import datetime
@@ -45,7 +45,7 @@ def delete_interest_group(id):
     db.session.commit()
     return jsonify(interest_group.to_json()), 200
 
-@api.route('/interest_groups/<int:group_id>/join/', methods=['GET', 'POST'])
+@api.route('/interest_groups/<int:group_id>/join', methods=['GET', 'POST'])
 @login_required
 def join_interest_group(group_id):
     user_id = current_user.get_id()
@@ -58,3 +58,14 @@ def join_interest_group(group_id):
     db.session.commit()
     return jsonify(membership.to_json()), 201, \
         {'Location': url_for('api.join_interest_group', group_id=group_id, _external=True)}
+
+@api.route('/interest_groups/<int:group_id>/members', methods=['GET'])
+def get_members(group_id):
+    members = User.query\
+        .join(Membership)\
+        .join(Interest_Group)\
+        .filter(Interest_Group.id == group_id)
+
+    return jsonify([
+        user.to_json() for user in members
+    ])
