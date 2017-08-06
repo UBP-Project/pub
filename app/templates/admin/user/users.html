@@ -7,14 +7,28 @@
 {% block title %} Groups {% endblock %}
 
 {% block content %}
-    <div class="row">
-        <h5>User</h5>
-        {% for user in users %}
-            <a href="{{ url_for('admin.profile', id=user.id) }}">
-                <h4><span class="fa fa-user"></span>
-                    {{ user['firstname'] }} {{ user['lastname'] }}
-                </h5>
-            </a>
-        {% endfor %}
+    <div class="row admin-page user-list">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Users</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            {% for user in users %}
+                <div class="col-md-3">
+                    <div class="user-card">
+                        <a href="{{ url_for('admin.profile', id=user.id) }}">
+                            <h4><span class="fa fa-user-circle"></span>
+                                {{ user['firstname'] }} {{ user['lastname'] }}
+                            </h4>
+                        </a>
+                        <p><i>{{ user['department'] }} <br />
+                        {{ user['position'] }}</i><p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
     </div>
 {% endblock %}

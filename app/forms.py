@@ -2,16 +2,13 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, SelectField
 from wtforms.validators import Required
 from wtforms.fields.html5 import EmailField, DateField
+from wtforms.widgets import TextArea
 
 
 class LoginForm(FlaskForm):
     email = StringField("Email or Username", validators=[Required()])
     password = PasswordField("Password")
     submit = SubmitField("SUBMIT")
-
-class CreateInterestGroupForm(FlaskForm):
-    name = StringField('Group name', validators=[Required()])
-    submit = SubmitField('Submit')
 
 class CreateUserForm(FlaskForm):
     firstname  = StringField("First name", validators=[Required()])
@@ -22,23 +19,23 @@ class CreateUserForm(FlaskForm):
     department = StringField("Department")
     position   = StringField("Position")
     birthday   = DateField("Birthday")
-    role       = SelectField('Programming Language', choices=[('2', 'Default'), ('3', 'Manager')])
-    submit     = SubmitField("Submit")
+    role       = SelectField('Role', choices=[('1', 'Default'), ('2', 'Manager')])
+    submit     = SubmitField("Create User")
 
 class CreateInterestGroupForm(FlaskForm):
     name        = StringField("Group Name")
     about       = StringField("About Group")
     cover_photo = StringField("Cover Photo")
     group_icon  = StringField("Group Icon")
-    submit      = SubmitField("Submit")
+    submit      = SubmitField("Create Interest Group")
 
 class CreateActivity(FlaskForm):
     title       = StringField("Activity Title")
-    description = StringField("Activity Description")
+    description = StringField("Activity Description", widget=TextArea())
     start_date  = DateField("Start Date")
     end_date    = DateField("End Date")
     address     = StringField("Address")
-    submit      = SubmitField("Submit")
+    submit      = SubmitField("Create Activity")
 
 class GroupMembershipForm(FlaskForm):
     join_group = SubmitField("Join Group")

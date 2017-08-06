@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     
-    <title>PUB | {% block title %}{% endblock title %}</title>
+    <title>PUB | {% block title %} Administrator {% endblock title %}</title>
 
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
@@ -17,7 +17,29 @@
 
 </head>
 
-<body class="container">
+<body>
+
+
+    {%  set user_links = [
+            ('Create User', url_for('admin.create_user')),
+            ('View users', url_for('admin.users')),
+            ('Manager', url_for('admin.managers')),
+        ]
+    %}
+
+    {%  set activity_links = [
+            ('Create Activity', url_for('admin.create_activity')),
+            ('View Activities', url_for('admin.activities'))
+        ]
+    %}
+
+    {% set group_links = [
+            ('Create Group', url_for('admin.create_group')),
+            ('View Groups', url_for('admin.groups'))
+        ]
+    %}
+
+
 
     {% for message in get_flashed_messages() %}
         <div class="alert alert-warning">
@@ -26,26 +48,56 @@
         </div>
     {% endfor %}
 
-    <br /><br /><br /><br />
+    {% for link in links %}
+        <h3>{{ link[0] }}</h3>
+    {% endfor %}
     
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-2 side-bar">
+
+            <img class="pub-logo" src="{{ url_for('static', filename='images/pub-sm-logo.png')}}" />
+
             <h3>Administrator</h3>
 
+            {% if request.path == url_for('admin.index') %}
+                <a class="btb btn-sidebar active" href={{url_for('admin.index')}}>Dashboard</a>
+            {% else %}
+                <a class="btb btn-sidebar" href={{url_for('admin.index')}}>Dashboard</a>
+            {% endif %}
+
             <h5>Users</h5>
-            <a class="btn btn-default btn-block" href={{url_for('admin.create_user')}}>
-            Create User</a>
-            <a class="btn btn-default btn-block" href={{url_for('admin.users')}}>
-            View Users</a>
+            {% for link in user_links %}
+                {% if request.path == link[1] %}
+                    <a class="btb btn-sidebar active" href={{link[1]}}>{{ link[0] }}</a>
+                {% else %}
+                    <a class="btb btn-sidebar" href={{link[1]}}>{{ link[0] }}</a>
+                {% endif %}
+            {% endfor %}
+
 
             <h5>Activities</h5>
-            <a class="btn btn-default btn-block" href={{url_for('admin.create_activity')}}>Create Activity</a>
+            {% for link in activity_links %}
+                {% if request.path == link[1] %}
+                    <a class="btb btn-sidebar active" href={{link[1]}}>{{ link[0] }}</a>
+                {% else %}
+                    <a class="btb btn-sidebar" href={{link[1]}}>{{ link[0] }}</a>
+                {% endif %}
+            {% endfor %}
+
 
             <h5>Groups</h5>
-            <a class="btn btn-default btn-block" href={{url_for('admin.groups')}}>View Interest Groups</a>
-            <a class="btn btn-default btn-block" href={{url_for('admin.create_interest_group')}}>Create Interest Group</a>
+            {% for link in group_links %}
+                {% if request.path == link[1] %}
+                    <a class="btb btn-sidebar active" href={{link[1]}}>{{ link[0] }}</a>
+                {% else %}
+                    <a class="btb btn-sidebar" href={{link[1]}}>{{ link[0] }}</a>
+                {% endif %}
+            {% endfor %}
         </div>
-        <div class="col-md-9">
+        <div class="col-md-10" style="padding: 0px">
+            <div class="row admin-header">
+                <a href="{{ url_for('client.logout') }}" class="btn btn-warning pull-right">Sign out</a>
+            </div>
             {% block content %}
             {% endblock content %}
         </div>

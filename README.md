@@ -18,6 +18,13 @@ Create the tables by executing
 ```sh
 $ python manage.py shell
 >>> db.create_all() 
+>>> Role.insert_roles()
+```
+
+Drop the Tables
+```sh
+$ python manage.py shell
+>>> db.drop_all() 
 ```
 
 ### Development

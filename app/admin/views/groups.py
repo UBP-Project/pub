@@ -18,7 +18,7 @@ def group(id):
     return render_template('admin/group/group.html', group=group, members=members)
 
 @admin.route('/groups/create', methods=['GET', 'POST'])
-def create_interest_group():
+def create_group():
     form = CreateInterestGroupForm()
     if form.validate_on_submit():
         interest_group = Interest_Group(

@@ -19,7 +19,7 @@ def create_activity():
     if form.validate_on_submit():
         activity = Activity(
             title = form.title.data,
-            description = form.title.data,
+            description = form.description.data,
             start_date = form.start_date.data,
             end_date = form.start_date.data,
             address = form.address.data)
@@ -29,3 +29,7 @@ def create_activity():
         flash("Success Creating Activity")
         return redirect(url_for("admin.index"))
     return render_template('admin/activity/create.html', form=form)
+
+@admin.route('/activities')
+def activities():
+    return "Activities";

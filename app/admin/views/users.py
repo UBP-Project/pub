@@ -22,7 +22,7 @@ def profile(id):
 def create_user():
     form = CreateUserForm()
     if form.validate_on_submit():
-        # print('SELECTED', form.role.selected)
+        print(form.role.data)
         user = User(firstname=form.firstname.data,
             middlename=form.middlename.data,
             lastname=form.lastname.data, 
@@ -30,10 +30,14 @@ def create_user():
             department=form.department.data,
             position=form.position.data,
             birthday=form.birthday.data,
-            role_id=dict(form.role.choices).get(form.role.data))
+            role_id=int(form.role.data))
         user.password = form.password.data
         db.session.add(user)
         db.session.commit()
         flash("Success creating user")
         return redirect(url_for("admin.index"))
     return render_template('admin/user/create.html', form=form)
+
+@admin.route('/managers')
+def managers():
+    return "Managers";

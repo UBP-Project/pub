@@ -7,8 +7,14 @@
 
 {% block content %}
     <div class="row">
-        <form class="form-group col-md-12" method="post" name="create_activity">
-            <h3>Create Activity</h3>
+        <form class="form-group col-md-9 admin-form" method="post" name="create_activity">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>Create Activity</h1>
+                </div>
+            </div>
+
             <div class="row">
                 {{ form.hidden_tag() }}
                 <div class="col-md-12">
@@ -47,10 +53,14 @@
                         class="form-control")}}
                 </div>
 
+
+
                 <div class="col-md-12">
+                    <br /><br />
+                    <input class="btn btn-default" type="reset">
                     {{ form.submit(
                         placeholder="Submit",
-                        class="form-control btn-success"
+                        class="btn btn-style-1"
                     )}}
                 </div>
             </div>
