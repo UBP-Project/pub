@@ -4,10 +4,10 @@ from app.api_1_0 import api
 from app import db
 import json
 
-@api.route('/activities')
+@api.route('/activities', methods=['GET'])
 def get_activities():
     """
-    Get all Activities
+    Get list of Activities
     ---
     tags:
       - activities
@@ -37,63 +37,44 @@ def get_activities():
                 default: None
                 descripton: In case event is associated with some group
     """
-    activities = Activity.query.all()
+
+    if 'limit' in request.args:
+        limit = request.args.get('limit')
+        activities = Activity.query.limit(limit)
+    else:
+        activities = Activity.query.all()
+
     return jsonify([
         activity.to_json() for activity in activities
     ])
 
-# @api.route('/activities/<int:id>', methods=['GET', 'PUT', 'DELETE'])
-# def activities(id):
-#     """
-#     Read, Update, and Delete
-#     ---
-#     tags:
-#         - activities
-
-#     responses:
-#         200:
-#             description: OK
-#         500:
-#             description: Internal Server Error
-#     """
-#     if request.method == 'GET':
-#         activity = Activity.query.get_or_404(id)
-#         return jsonify(activity.to_json())
-
-#     elif request.method == 'PUT':
-#         activity = Activity.query.filter_by(id=id).update(request.form.to_dict())
-#         db.session.commit()
-#         return "Updated" # change this to better message format
-
-#     else:
-#         activity = Activity.query.filter_by(id=id).delete()
-#         db.session.commit()
-#         return "Deleted"
-
-@api.route('/activities/<int:id>', methods=['DELETE'])
+@api.route('/activities/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def activities(id):
     """
-    Delete Activity by id
+    Read, Update, and Delete
     ---
     tags:
         - activities
-    parameters:
-      - in: paramater
-        name: id
-        type: integer
-        required: true
-        description: activity reference
+
     responses:
         200:
-            description: Success!
-        404:
-            description: Not Found!
+            description: OK
         500:
             description: Internal Server Error
     """
-    activity = Activity.query.filter_by(id=id).delete()
-    db.session.commit()
-    return "Deleted"
+    if request.method == 'GET':
+        activity = Activity.query.get_or_404(id)
+        return jsonify(activity.to_json())
+
+    elif request.method == 'PUT':
+        activity = Activity.query.filter_by(id=id).update(request.form.to_dict())
+        db.session.commit()
+        return "Updated" # change this to better message format
+
+    else:
+        activity = Activity.query.filter_by(id=id).delete()
+        db.session.commit()
+        return "Deleted"
 
 @api.route('/activities', methods=['POST'])
 def new_activity():
