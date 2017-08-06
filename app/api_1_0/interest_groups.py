@@ -117,3 +117,14 @@ def get_request_status(id):
             return jsonify({'membership_status': 'None'})
     else:
         return jsonify({'status': 'error'}), 404
+
+@api.route('/interest_groups/<int:id>/leave', methods=['DELETE'])
+def leave_group(id):
+        membership = Membership.query.filter(\
+            Membership.user_id==1,
+            Membership.group_id==id).delete()
+
+        if membership == 1:
+            return jsonify({'message': 'Success'}), 200
+        else:
+            return jsonify({'message': 'Not Found'}), 404
