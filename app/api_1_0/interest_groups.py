@@ -91,7 +91,7 @@ def get_role(id):
 def join_group(id):
     try:
         membership = Membership(
-            user_id=3,
+            user_id=current_user.get_id(),
             group_id=id)
         db.session.add(membership)
         db.session.commit()
