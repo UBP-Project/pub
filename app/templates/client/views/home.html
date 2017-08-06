@@ -1,7 +1,10 @@
 {% extends "./layout/base.html" %}
-{% from "client/containers/groups.html" import groups as groups_container %}
+
+{% from "client/components/group-modal.html" import group_modal %}
+{% from "client/components/groups-modal.html" import view_all_groups %}
 {% from "client/components/activity-modal.html" import activity_modal %}
 {% from "client/components/activities-modal.html" import view_all_activity %}
+
 {% block title %} Home {% endblock title %}
 
 {% block navigation %}
@@ -44,26 +47,16 @@
 
 						{% for activity in activities %}
 
-							<div class="col-md-3 col-sm-4">
-								<div class="card zoomify" data-toggle="modal" data-target="#activity-{{ activity['id'] }}">
-									<div class="card-img">
-										<img src="{{ url_for('static', filename='../../static/images/pub-default-img.jpg') }}" class="img-responsive" />
-									</div>
-									<div class="card-desc">
-										<h4 class="text-center title">{{ activity['title'] | upper }}</h4>
-										<p>{{ activity['description'] }}</p>
-									</div>
-								</div>
-							</div>
-
-							{{ activity_modal(activity.id, activity.title, activity.description) }}
-							{# {{ activity_modal(activity.id) }} #}
+							{{ activity_modal(activity) }}
 
 						{% endfor %}
 
 						<div class="col-md-12 text-center box-footer">
+
 							<button type="button" class="btn btn-style-4" data-toggle="modal" data-target="#all-activities">VIEW &nbsp; ALL &nbsp; ACTIVITIES</button>
+
 							{{ view_all_activity(activities) }}
+
 						</div>
 
 					{% else %}
@@ -80,8 +73,44 @@
 
 	</div>
 
+	<div class="row">
 
-	{{ groups_container(interest_groups) }}
+		<div class="col-md-10 col-md-offset-1 col-sm-12 box-header box-style-2">
+			<span>INTEREST GROUPS</span>
+		</div>
 
+		<div class="col-md-10 col-md-offset-1 col-sm-12 box-content border-bottom-2">
+
+			<div class="row">
+
+				{% if interest_groups %}
+
+					{% for group in interest_groups %}
+
+						{{ group_modal(group) }}
+
+					{% endfor %}
+
+					<div class="col-md-12 text-center box-footer">
+
+						<button type="button" class="btn btn-style-2" data-toggle="modal" data-target="#all-groups">VIEW &nbsp; ALL &nbsp; GROUPS</button>
+
+						{{ view_all_groups(interest_groups) }}
+						
+					</div>
+
+				{% else %}
+
+					<div class="no-content-box text-center">
+						<h2>NO INTEREST GROUPS TO SHOW</h2>
+					</div>
+
+				{% endif %}
+
+			</div>
+
+		</div>
+
+	</div>
 
 {% endblock content %}

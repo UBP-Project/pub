@@ -1,8 +1,4 @@
-{% macro groups(interest_groups) %}
-
-	<script>
-
-        function join_group(group_id){
+function join_group(group_id){
 	        $.ajax({
 	            url: '/api/v1.0/interest_groups/'+ group_id + '/join',
 	            type: 'POST'
@@ -29,8 +25,4 @@
 	        .fail(function() {
 	            console.log("error");
 	        });
-        } 
-
-    </script>
-
-{% endmacro %}
+        }

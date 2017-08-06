@@ -1,7 +1,18 @@
-{# {% macro activity_modal(activity_id) %} #}
-{% macro activity_modal(activity_id, activity_title, activity_desc) %}
+{% macro activity_modal(activity) %}
 
-    <div class="modal fade" id="activity-{{activity_id}}" role="dialog">
+    <div class="col-md-3 col-sm-4">
+        <div class="card zoomify" data-toggle="modal" data-target="#activity-{{ activity.id }}">
+            <div class="card-img">
+                <img src="{{ url_for('static', filename='../../static/images/pub-default-img.jpg') }}" class="img-responsive" />
+            </div>
+            <div class="card-desc">
+                <h4 class="text-center title">{{ activity.title | upper }}</h4>
+                <p>{{ activity.description }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="activity-{{activity.id}}" role="dialog">
 
         <div class="modal-dialog">
             <div class="modal-content">
@@ -19,45 +30,45 @@
                         <img src="{{ url_for('static', filename='../../static/images/pub-default-head-img.jpg') }}" />
                     </div>
 
-                    <h2 class="text-center">{{ activity_title | upper}}</h2>
+                    <h2 class="text-center">{{ activity.title | upper}}</h2>
 
                     <div class="content">
 
                         <ul class="nav nav-tabs" role="tablist">
 
                             <li role="presentation" class="active act-li">
-                                <a href="#act-desc" role="tab" data-toggle="tab">Description</a>
+                                <a href="#act-desc-{{activity.id}}" role="tab" data-toggle="tab">Description</a>
                             </li>
 
                             <li role="presentation" class="act-li">
-                                <a href="#act-sched" role="tab" data-toggle="tab">Schedule</a>
+                                <a href="#act-sched-{{activity.id}}" role="tab" data-toggle="tab">Schedule</a>
                             </li>
 
                             <li role="presentation" class="act-li">
-                                <a href="#act-interested" role="tab" data-toggle="tab">Interested</a>
+                                <a href="#act-interested-{{activity.id}}" role="tab" data-toggle="tab">Interested</a>
                             </li>
 
                             <li role="presentation" class="act-li">
-                                <a href="#act-going" role="tab" data-toggle="tab">Going</a>
+                                <a href="#act-going-{{activity.id}}" role="tab" data-toggle="tab">Going</a>
                             </li>
 
                         </ul>
 
                         <div class="tab-content">
 
-                            <div role="tabpanel" class="tab-pane active" id="act-desc">
-                                <p>{{ activity_desc }}</p>
+                            <div role="tabpanel" class="tab-pane active" id="act-desc-{{activity.id}}">
+                                <p>{{ activity.description }}</p>
                             </div>
 
-                            <div role="tabpanel" class="tab-pane" id="act-sched">
+                            <div role="tabpanel" class="tab-pane" id="act-sched-{{activity.id}}">
                                 <p>No schedule to show</p>
                             </div>
 
-                            <div role="tabpanel" class="tab-pane" id="act-interested">
+                            <div role="tabpanel" class="tab-pane" id="act-interested-{{activity.id}}">
                                 <p>No one interested</p>
                             </div>
 
-                            <div role="tabpanel" class="tab-pane" id="act-going">
+                            <div role="tabpanel" class="tab-pane" id="act-going-{{activity.id}}">
                                 <p>No one is going</p>
                             </div>
                     
@@ -71,247 +82,6 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-style-2">INTERESTED</button>
                     <button type="button" class="btn btn-style-1">JOIN ACTIVITY</button>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
-
-{% endmacro %}
-
-
-
-{# =====================
-
-    GROUP MODAL 
-
-   ===================== #}
-
-{% macro group_modal(group_id, group_name, group_about) %}
-
-    <div class="modal fade" id="group-{{group_id}}" role="dialog">
-
-        <div class="modal-dialog">
-            <div class="modal-content">
-
-                <!-- HEADER -->
-                <div class="modal-header">
-                    <span><b>INTEREST GROUP</b></span>
-                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
-                </div>
-
-                <!-- BODY -->
-                <div class="modal-body">
-
-                    <div class="img-container">
-                        <img src="{{ url_for('static', filename='../../static/images/pub-default-head-img.jpg') }}" />
-                    </div>
-
-                    <h2 class="text-center">{{ group_name | upper }}</h2>
-
-                    <div class="content">
-
-                        <ul class="nav nav-tabs" role="tablist">
-
-                            <li role="presentation" class="active grp-li">
-                                <a href="#grp-desc" role="tab" data-toggle="tab">Description</a>
-                            </li>
-
-                            <li role="presentation" class="grp-li">
-                                <a href="#grp-members" role="tab" data-toggle="tab">Members</a>
-                            </li>
-
-                            <li role="presentation" class="grp-li">
-                                <a href="#grp-activities" role="tab" data-toggle="tab">Activities</a>
-                            </li>
-
-                        </ul>
-
-                        <div class="tab-content">
-
-                            <div role="tabpanel" class="tab-pane active" id="grp-desc">
-                                <p>{{ group_about }}</p>
-                            </div>
-
-                            <div role="tabpanel" class="tab-pane" id="grp-members">
-                                <p>No members to show</p>
-                            </div>
-
-                            <div role="tabpanel" class="tab-pane" id="grp-activities">
-                                <p>No activities</p>
-                            </div>
-                    
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <!-- FOOTER -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-style-1">JOIN GROUP</button>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
-
-{% endmacro %}
-
-
-{# =====================
-
-    VIEW ALL ACTIVITY MODAL 
-
-   ===================== #}
-
-
-{% macro view_all_activity(activities) %}
-
-    <div class="modal fade" id="all-activities" role="dialog">
-
-        <div class="modal-dialog">
-            <div class="modal-content">
-
-                <!-- HEADER -->
-                <div class="modal-header">
-                    <span class="pull-left"><b>ALL ACTIVITIES</b></span>
-                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
-                </div>
-
-                <!-- BODY -->
-                <div class="modal-body">
-
-                    {% if activities %}
-
-                        <div class="search-panel">
-                            <form action="" method="">
-                                {# <input type="text" class="form-control" name="" value="" placeholder="Search" /> #}
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Search activity">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-style-1" type="button"><i class="fa fa-search"></i></button>
-                                    </span>
-                                </div>
-                            </form>
-                        </div>
-
-                        <div class="search-content">
-
-                            {% for activity in activities %}
-                                
-                                <div class="search-item">
-
-                                    <div class="item-img">
-                                        <img src="{{ url_for('static', filename='../../static/images/pub-default-head-img.jpg') }}">
-                                    </div>
-
-                                    <div class="item-desc">
-                                        <h4>{{ activity.title }}</h4>
-                                    </div>
-                                
-                                </div>
-                            
-                            {% endfor %}
-            
-                        </div>
-
-                    {% else %}
-
-                        <div class="no-content-box text-center">
-                            <h2>NO ACTIVITIES YET</h2>
-                        </div>
-
-                    {% endif %}
-
-                </div>
-
-                <!-- FOOTER -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-style-3" data-dismiss="modal">CLOSE</button>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
-
-{% endmacro %}
-
-
-
-{# =====================
-
-    VIEW ALL INTEREST GROUPS MODAL 
-
-   ===================== #}
-
-
-{% macro view_all_groups(groups) %}
-
-    <div class="modal fade" id="all-groups" role="dialog">
-
-        <div class="modal-dialog">
-            <div class="modal-content">
-
-                <!-- HEADER -->
-                <div class="modal-header">
-                    <span class="pull-left"><b>ALL INTEREST GROUPS</b></span>
-                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
-                </div>
-
-                <!-- BODY -->
-                <div class="modal-body">
-
-                    {% if groups %}
-
-                        <div class="search-panel">
-                            <form action="" method="">
-                                {# <input type="text" class="form-control" name="" value="" placeholder="Search" /> #}
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Search group">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-style-1" type="button"><i class="fa fa-search"></i></button>
-                                    </span>
-                                </div>
-                            </form>
-                        </div>
-
-                        <div class="search-content">
-
-                            {% for group in groups %}
-                                
-                                <div class="search-item">
-
-                                    <div class="item-img">
-                                        <img src="{{ url_for('static', filename='../../static/images/pub-default-head-img.jpg') }}">
-                                    </div>
-
-                                    <div class="item-desc">
-                                        <h4>{{ group.name }}</h4>
-                                    </div>
-                                
-                                </div>
-                            
-                            {% endfor %}
-            
-                        </div>
-
-                    {% else %}
-
-                        <div class="no-content-box text-center">
-                            <h2>NO GROUPS YET</h2>
-                        </div>
-
-                    {% endif %}
-
-                </div>
-
-                <!-- FOOTER -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-style-3" data-dismiss="modal">CLOSE</button>
                 </div>
 
             </div>
