@@ -180,7 +180,7 @@ class Interest_Group(db.Model):
     cover_photo   = db.Column(db.String(200))
     group_icon    = db.Column(db.String(100))
 
-    def __init__(self, name, about, cover_photo, group_icon):
+    def __init__(self, name, about, cover_photo = "", group_icon = ""):
         self.name           = name
         self.about          = about
         self.cover_photo    = cover_photo
