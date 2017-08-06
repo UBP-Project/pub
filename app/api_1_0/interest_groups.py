@@ -45,27 +45,44 @@ def delete_interest_group(id):
     db.session.commit()
     return jsonify(interest_group.to_json()), 200
 
-@api.route('/interest_groups/<int:group_id>/join', methods=['GET', 'POST'])
+@api.route('/interest_groups/<int:id>/join', methods=['GET', 'POST'])
 @login_required
-def join_interest_group(group_id):
+def join_interest_group(id):
     user_id = current_user.get_id()
     membership = Membership(
         user_id=user_id,
-        group_id=group_id,
+        id=id,
         status=1,
         level='regular')
     db.session.add(membership)
     db.session.commit()
     return jsonify(membership.to_json()), 201, \
-        {'Location': url_for('api.join_interest_group', group_id=group_id, _external=True)}
+        {'Location': url_for('api.join_interest_group', id=id, _external=True)}
 
-@api.route('/interest_groups/<int:group_id>/members', methods=['GET'])
-def get_members(group_id):
+@api.route('/interest_groups/<int:id>/members')
+def get_members(id):
     members = User.query\
         .join(Membership)\
         .join(Interest_Group)\
-        .filter(Interest_Group.id == group_id)
+        .filter(Interest_Group.id == id)
 
     return jsonify([
         user.to_json() for user in members
     ])
+
+@api.route('/interest_groups/<int:id>/join_request')
+def get_request_status(id):
+    if 'user_id' in request.args:
+        user_id = request.args.get('user_id')
+
+        status_code = Membership.query\
+            .filter(Membership.group_id == id)\
+            .filter(Membership.user_id == user_id)\
+            .first()
+
+        if(status_code != None):
+            return jsonify({'membership_status': 'pending'} if status_code.status == 0 else {'membership_status': 'accepted', 'membership_level': 'regular' if status_code.level == 0 else 'leader'})
+        else:
+            return jsonify({'membership_status': 'None'})
+    else:
+        return jsonify({'status': 'error'}), 404
