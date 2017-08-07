@@ -3,50 +3,60 @@
 {% else %}
     {% extends "/layout/base.html" %}
 {% endif %}
+{% block title %}Admin Page{% endblock %}
 
 {% block content %}
     <div class="row">
-        <form class="form-group col-md-9 admin-form" method="post" name="create_interest_group">
+        <form class="form-group col-md-9 admin-form" method="post" name="create_activity">
 
             <div class="row">
                 <div class="col-md-12">
-                    <h1>Create Interest Group</h1>
-                </div>  
+                    <h1>Create Activity</h1>
+                </div>
             </div>
 
-            
             <div class="row">
                 {{ form.hidden_tag() }}
                 <div class="col-md-12">
-                    <label>Group name</label>
-                    {{ form.name(
-                        placeholder="Group name",
+                    <label>Title</label>
+                    {{ form.title(
+                        placeholder="Title",
                         class="form-control") }}
                 </div>
                 
                 <div class="col-md-12">
-                    <label>About this Group</label>
-                    {{ form.about(
-                        placeholder="About",
+                    <label>Description</label>
+                    {{ form.description(
+                        placeholder="Description",
                         class="form-control") }}
                 </div>
 
-                <div class="col-md-6">
-                    <label>Group Cover Photo</label>
-                    {{ form.cover_photo(
-                        placeholder="Cover Photo",
-                        class="form-control")}}
-                </div>
-                
-                <div class="col-md-6">
-                    <label>Group Icon</label>
-                    {{ form.group_icon(
-                        placeholder="Group Icon",
+                <div class="col-md-12">
+                    <label>Address</label>
+                    {{ form.address(
+                        placeholder="Address",
                         class="form-control"
                     )}}
                 </div>
 
+                <div class="col-md-6">
+                    <label>Start Date</label>
+                    {{ form.start_date(
+                        placeholder="Start Date",
+                        class="form-control")}}
+                </div>
+
+                <div class="col-md-6">
+                    <label>End Date</label>
+                    {{ form.end_date(
+                        placeholder="End Date",
+                        class="form-control")}}
+                </div>
+
+
+
                 <div class="col-md-12">
+                    <br /><br />
                     <input class="btn btn-default" type="reset">
                     {{ form.submit(
                         placeholder="Submit",

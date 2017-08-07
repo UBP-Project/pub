@@ -7,34 +7,77 @@
 {% block title %} {{ group["name"] }} {% endblock %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-md-8">
-            <h6>Group name</h6>
-            <h1>{{ group["name"] }}</h1>
-            <h5>About Group: {{ group["about"] }}</h5>
-        </div>
+    <div class="row admin-page">
+        <div class="row">
+            <div class="col-md-8">
+                <h1>Groups > {{ group["name"] }}</h1>
+                <h5>About Group: {{ group["about"] }}</h5>
 
-        <div class="col-md-4">
-            {% if 'admin' not in request.path %}
-                <form method="post">
-                {{ form.hidden_tag() }}
-                {% if isMember %} 
-                    <input class="btn btn-warning" type="submit" name="leave_group" value="Leave Group">
-                {% else %}
-                    <input class="btn btn-primary" type="submit" name="join_group" value="Join Group">
+                <br /><br /><br />
+
+                <div class="row">
+
+                    <h3>Group Activities</h3>
+
+                    {% for activity in activities %}
+                        <div class="col-md-4">
+                            <div class="activity-card">
+                                <img src="{{ url_for('static', filename='images/pub-default-img.jpg') }} "/>
+                                <div>
+                                    <h3>{{ activity['title'] }}</h3>
+                                    <h6>{{ activity['description'] }}</h6>
+                                </div>
+                                <a class="btn btn-block btn-style-1" href="{{ url_for('admin.edit_activity', id=activity['id']) }}">
+                                    Edit Activity
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                {% if 'admin' not in request.path %}
+                    <form method="post">
+                    {{ form.hidden_tag() }}
+                    {% if isMember %} 
+                        <input class="btn btn-warning" type="submit" name="leave_group" value="Leave Group">
+                    {% else %}
+                        <input class="btn btn-primary" type="submit" name="join_group" value="Join Group">
+                    {% endif %}
+                    </form>
                 {% endif %}
-                </form>
-            {% endif %}
 
-            <h4>Members</h4>
-            {% for member in members %}
-                <a class="">
-                    <h6><span class="fa fa-user"></span>
-                        {{ member['firstname'] }} {{ member['lastname'] }}
-                    </h6>
-                </a>
-            {% endfor %}
-        </div>
+
+                <h4>Leaders</h4>
+                {% for leader in leaders %}
+                    <div class="user-card">
+                        <a href="{{ url_for('admin.profile', id=leader.id) }}">
+                            <h4><span class="fa fa-user-circle"></span>
+                                {{ leader['firstname'] }} {{ leader['lastname'] }}
+                            </h4>
+                        </a>
+                        </a>
+                        <a href="{{ url_for('admin.removeleader', group_id=group['id'],
+                        user_id =leader['id'])}}">Remove Leader</a>
+                    </div>
+                {% endfor %}
+
+                <br /><br />
+
+                <h4>Members</h4>
+                {% for member in members %}
+                    <div class="user-card">
+                        <a href="{{ url_for('admin.profile', id=member.id) }}">
+                            <h4><span class="fa fa-user-circle"></span>
+                                {{ member['firstname'] }} {{ member['lastname'] }}
+                            </h4>
+                        </a>
+                        <a href="{{ url_for('admin.setleader', group_id=group['id'],
+                        user_id =member['id'])}}">Set as Leader</a>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 {% endblock %}

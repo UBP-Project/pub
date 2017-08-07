@@ -7,28 +7,29 @@
 {% block title %} Groups {% endblock %}
 
 {% block content %}
-    <div class="row admin-page">
+    <div class="row admin-page user-list">
         <div class="row">
             <div class="col-md-12">
-                <h1>Groups</h1>
+                <h1>Activities</h1>
             </div>
         </div>
 
         <div class="row">
-            {% for group in groups %}
+            {% for activity in activities %}
                 <div class="col-md-3">
-                    <div class="group-card">
+                    <div class="activity-card">
                         <img src="{{ url_for('static', filename='images/pub-default-img.jpg') }} "/>
                         <div>
-                            <h3>{{ group['name'] }}</h3>
-                            <h6>{{ group['about'] }}</h6>
+                            <h3>{{ activity['title'] }}</h3>
+                            <h6>{{ activity['description'] }}</h6>
                         </div>
-                        <a class="btn btn-block btn-style-1" href="{{ url_for('admin.group', id=group['id']) }}">
-                            Edit Group
+                        <a class="btn btn-block btn-style-1" href="{{ url_for('admin.edit_activity', id=activity['id']) }}">
+                            Edit Activity
                         </a>
                     </div>
                 </div>
             {% endfor %}
-        </h4>
+        </div>
+
     </div>
 {% endblock %}

@@ -27,6 +27,16 @@ $ python manage.py shell
 >>> db.drop_all() 
 ```
 
+### Create Administrator
+```sh
+$ python manage.py shell
+>>> email = '<admin email>'
+>>> password = '<password>'
+>>> admin = User(email=email, password=password, role_id=3)
+>>> db.session.add(admin)
+>>> db.session.commit()
+```
+
 ### Development
 
 Run the development server
