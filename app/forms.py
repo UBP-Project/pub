@@ -9,18 +9,18 @@ from .models import Interest_Group
 
 class LoginForm(FlaskForm):
     email = StringField("Email or Username", validators=[Required()])
-    password = PasswordField("Password")
+    password = PasswordField("Password", validators=[Required()])
     submit = SubmitField("SUBMIT")
 
 class UserFormMixin():
     firstname  = StringField("First name", validators=[Required()])
-    middlename = StringField("Middle name")
-    lastname   = StringField("Last name")
-    email      = EmailField("Email")
-    password   = PasswordField("Password")
-    department = StringField("Department")
-    position   = StringField("Position")
-    birthday   = DateField("Birthday")
+    middlename = StringField("Middle name", validators=[Required()])
+    lastname   = StringField("Last name", validators=[Required()])
+    email      = EmailField("Email", validators=[Required()])
+    password   = PasswordField("Password", validators=[Required()])
+    department = StringField("Department", validators=[Required()])
+    position   = StringField("Position", validators=[Required()])
+    birthday   = DateField("Birthday", validators=[Required()])
     role       = SelectField('Role', choices=[('1', 'Default'), ('2', 'Manager')])
 
 class CreateUserForm(FlaskForm, UserFormMixin):
@@ -30,10 +30,10 @@ class UpdateUserForm(FlaskForm, UserFormMixin):
     submit     = SubmitField("Update User")
 
 class InterestGroupMixin():
-    name        = StringField("Group Name")
-    about       = StringField("About Group")
-    cover_photo = FileField("Cover Photo")
-    group_icon  = FileField("Group Icon")
+    name        = StringField("Group Name", validators=[Required()])
+    about       = StringField("About Group", validators=[Required()])
+    cover_photo = FileField("Cover Photo", validators=[Required()])
+    group_icon  = FileField("Group Icon", validators=[Required()])
 
 class CreateInterestGroupForm(FlaskForm, InterestGroupMixin):
     submit      = SubmitField("Create Interest Group")
@@ -42,11 +42,11 @@ class UpdateInterestGroupForm(FlaskForm, InterestGroupMixin):
     submit = SubmitField("Save Changes")
 
 class ActivityMixin():
-    title       = StringField("Activity Title")
-    description = StringField("Activity Description", widget=TextArea())
-    start_date  = DateField("Start Date")
-    end_date    = DateField("End Date")
-    address     = StringField("Address")
+    title       = StringField("Activity Title", validators=[Required()])
+    description = StringField("Activity Description", widget=TextArea(), validators=[Required()])
+    start_date  = DateField("Start Date", validators=[Required()])
+    end_date    = DateField("End Date", validators=[Required()])
+    address     = StringField("Address", validators=[Required()])
     group       = SelectField('Group', choices=[], coerce=int)
 
 class CreateActivityForm(FlaskForm, ActivityMixin):
