@@ -32,7 +32,7 @@
 
                             {% for activity in activities %}
                                 
-                                <div class="search-item">
+                                <div class="search-item" onclick="choose_item({{activity.id}})">
 
                                     <div class="item-img">
                                         <img src="{{ url_for('static', filename='../../static/images/pub-default-head-img.jpg') }}">
@@ -67,5 +67,17 @@
         </div>
 
     </div>
+
+    <script>
+        
+    function choose_item(group_id) {
+        
+        $('#all-activities').modal('hide');
+        $('#activity-' + group_id).modal('show');
+        $('#activity-' + group_id).modal('handleUpdate');
+    }
+
+
+    </script>
 
 {% endmacro %}

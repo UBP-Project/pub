@@ -12,7 +12,7 @@
                     <p><i class="fa fa-user"></i> 10</p>
                 </div>
             </div>
-       </div>
+        </div>
 
         <div class="modal fade" id="group-{{group.id}}" role="dialog">
 
@@ -39,30 +39,30 @@
                             <ul class="nav nav-tabs" role="tablist">
 
                                 <li role="presentation" class="active grp-li">
-                                    <a href="#grp-desc" role="tab" data-toggle="tab">Description</a>
+                                    <a href="#grp-desc-{{group.id}}" role="tab" data-toggle="tab">Description</a>
                                 </li>
 
                                 <li role="presentation" class="grp-li">
-                                    <a href="#grp-members" role="tab" data-toggle="tab">Members</a>
+                                    <a href="#grp-members-{{group.id}}" role="tab" data-toggle="tab">Members</a>
                                 </li>
 
                                 <li role="presentation" class="grp-li">
-                                    <a href="#grp-activities" role="tab" data-toggle="tab">Activities</a>
+                                    <a href="#grp-activities-{{group.id}}" role="tab" data-toggle="tab">Activities</a>
                                 </li>
 
                             </ul>
 
                             <div class="tab-content">
 
-                                <div role="tabpanel" class="tab-pane active" id="grp-desc">
+                                <div role="tabpanel" class="tab-pane active" id="grp-desc-{{group.id}}">
                                     <p>{{ group.about }}</p>
                                 </div>
 
-                                <div role="tabpanel" class="tab-pane" id="grp-members">
+                                <div role="tabpanel" class="tab-pane" id="grp-members-{{group.id}}">
                                     <p>No members to show</p>
                                 </div>
 
-                                <div role="tabpanel" class="tab-pane" id="grp-activities">
+                                <div role="tabpanel" class="tab-pane" id="grp-activities-{{group.id}}">
                                     <p>No activities</p>
                                 </div>
                         
