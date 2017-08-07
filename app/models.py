@@ -3,6 +3,7 @@ from app import db
 from . import login_manager
 from flask_login import UserMixin, AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+import getpass
 
 class Permission:
     FOLLOW               = 0x01
@@ -101,6 +102,23 @@ class User(UserMixin, db.Model):
     #             self.role = Role.query.filter_by(permissions=0xffff).first()
     #         if self.role is None:
     #             self.role = Role.query.filter_by(default=True).first()
+    #             
+    
+    @staticmethod
+    def create_admin():
+        email = input('Admin Email: ')
+        password = getpass.getpass('Password:  ')
+        admin_role = Role.query.filter(Role.name == "Administrator").first()
+        admin = User(email=email, password=password, role_id=admin_role.id)
+        try:
+            db.session.add(admin)
+            db.session.commit()
+            print("Administrator account created.")
+            print("You can login on https://[host]/login")
+            print("and view admin pages in https://[host]/admin")
+        except:
+            print("Unable to created administrator account.")
+            print("Make sure that the database is connected and the tables are present.")
 
     def can(self, permissions):
         return self.role is not None and \

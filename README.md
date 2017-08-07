@@ -30,11 +30,7 @@ $ python manage.py shell
 ### Create Administrator
 ```sh
 $ python manage.py shell
->>> email = '<admin email>'
->>> password = '<password>'
->>> admin = User(email=email, password=password, role_id=3)
->>> db.session.add(admin)
->>> db.session.commit()
+>>> User.create_admin()
 ```
 
 ### Development
