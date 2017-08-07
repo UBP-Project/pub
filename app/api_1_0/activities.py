@@ -4,6 +4,7 @@ from app.api_1_0 import api
 from app import db
 import json
 from flask_login import login_required
+from ..auth import manager_or_leader_only
 
 @api.route('/activities', methods=['GET'])
 @login_required
@@ -150,6 +151,8 @@ def new_activity():
             description: Internal Server Error
     """
     data = request.form.to_dict()
+    print(data.group_id)
+    manager_or_leader_only(data.group_id)
     activity = Activity.from_json(data)
     db.session.add(activity)
     db.session.commit()
