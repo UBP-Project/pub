@@ -7,6 +7,7 @@ from app import db
 from ..models import User, Interest_Group, Activity, Membership
 
 @client.route('/', methods=['GET', 'POST'])
+@login_required
 def index():
 
     #problem still exist in this query

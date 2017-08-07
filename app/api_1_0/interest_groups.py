@@ -8,6 +8,7 @@ import datetime
 from sqlalchemy import exc
 
 @api.route('/interest_groups')
+@login_required
 def get_interest_groups():
 
     if 'limit' in request.args:
@@ -21,11 +22,13 @@ def get_interest_groups():
     ]), 200
 
 @api.route('/interest_groups/<int:id>')
+@login_required
 def get_interest_group(id):
     interest_group = Interest_Group.query.get_or_404(id)
     return jsonify(interest_group.to_json()), 200
 
 @api.route('/interest_groups/', methods=['POST'])
+@login_required
 def new_interest_group():
     data = request.form.to_dict()
     interest_group = Interest_Group.from_json(data)
@@ -39,12 +42,14 @@ def new_interest_group():
         return jsonify({'message': 'Name already taken'}), 409
 
 @api.route('/interest_groups/<int:id>', methods=['PUT'])
+@login_required
 def edit_interest_group(id):
     interest_group = Interest_Group.query.filter_by(id=id).update(request.form.to_dict())
     db.session.commit()
     return jsonify(interest_group.to_json()) # change this to better message format
 
 @api.route('/interest_groups/<int:id>', methods=['DELETE'])
+@login_required
 def delete_interest_group(id):
     interest_group = Interest_Group.query.filter_by(id=id).delete()
     db.session.commit()
@@ -65,6 +70,7 @@ def delete_interest_group(id):
 #         {'Location': url_for('api.join_interest_group', id=id, _external=True)}
 
 @api.route('/interest_groups/<int:id>/members')
+@login_required
 def get_members(id):
     members = User.query\
         .join(Membership)\
@@ -76,6 +82,7 @@ def get_members(id):
     ])
 
 @api.route('/interest_groups/<int:id>/role')
+@login_required
 def get_role(id):
     if 'user_id' in request.args:
         user_id = request.args.get('user_id')
@@ -92,6 +99,7 @@ def get_role(id):
         return jsonify({'status': 'error'}), 404
 
 @api.route('/interest_groups/<int:id>/join', methods=['POST'])
+@login_required
 def join_group(id):
     try:
         membership = Membership(
@@ -106,6 +114,7 @@ def join_group(id):
         return jsonify({'message': 'Record exists'}), 409
 
 @api.route('/interest_groups/<int:id>/join/status')
+@login_required
 def get_request_status(id):
     if 'user_id' in request.args:
         user_id = request.args.get('user_id')
@@ -123,6 +132,7 @@ def get_request_status(id):
         return jsonify({'status': 'error'}), 404
 
 @api.route('/interest_groups/<int:id>/leave', methods=['DELETE'])
+@login_required
 def leave_group(id):
         membership = Membership.query.filter(\
             Membership.user_id==1,

@@ -3,8 +3,10 @@ from app.models import Activity, User, User_Activity
 from app.api_1_0 import api
 from app import db
 import json
+from flask_login import login_required
 
 @api.route('/activities', methods=['GET'])
+@login_required
 def get_activities():
     """
     Get list of Activities
@@ -49,6 +51,7 @@ def get_activities():
     ])
 
 @api.route('/activities/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+@login_required
 def activities(id):
     """
     Read, Update, and Delete
@@ -77,6 +80,7 @@ def activities(id):
         return "Deleted"
 
 @api.route('/activities/<int:id>/going', methods=['GET'])
+@login_required
 def get_going(id):
     going = User.query                      \
         .join(User_Activity)                \
@@ -90,6 +94,7 @@ def get_going(id):
     ])
 
 @api.route('/activities/<int:id>/interested', methods=['GET'])
+@login_required
 def get_interested(id):
     interested = User.query                 \
         .join(User_Activity)                \
@@ -103,6 +108,7 @@ def get_interested(id):
     ])
 
 @api.route('/activities', methods=['POST'])
+@login_required
 def new_activity():
     """
     Create Activity
