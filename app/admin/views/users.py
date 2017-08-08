@@ -49,7 +49,8 @@ def change_password(id):
     if form.validate_on_submit():
         user.password = form.password.data
         db.session.commit()
-    return render_template('admin/user/change-password.html', form=form)
+        return redirect(url_for('admin.profile', id=id))
+    return render_template('admin/user/change-password.html', user=user, form=form)
 
 
 @admin.route('/users/create', methods=['GET', 'POST'])
