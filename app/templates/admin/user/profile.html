@@ -1,0 +1,103 @@
+{% if 'admin' in request.path %}
+    {% extends "/layout/admin_base.html" %}
+{% else %}
+    {% extends "/layout/base.html" %}
+{% endif %}
+
+{% block title %} Admin Page {% endblock %}
+
+{% block content %}
+    <form class="row admin-form" method="post" name="update_user">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Users > {{ user['id'] }}</h1>
+            </div>
+        </div>
+
+        {{ form.hidden_tag() }}
+            
+        <div class="row">
+            <div class="col-md-3">
+                <label>Firstname</label>
+                {{ form.firstname(
+                placeholder="First name",
+                class="form-control") }}
+            </div>
+            <div class="col-md-3">
+                <label>Middlename</label>
+                {{ form.middlename(
+                placeholder="Middle name",
+                class="form-control") }}
+            </div>
+            <div class="col-md-3">
+                <label>Lastname</label>
+                {{ form.lastname(
+                placeholder="Last name",
+                class="form-control") }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-5">
+                <label>Department</label>
+                {{ form.department(
+                    placeholder="Department",
+                    class="form-control"
+                )}}
+            </div>
+            <div class="col-md-4">
+                <label>Position</label>
+                {{ form.position(
+                    placeholder="Position",
+                    class="form-control"
+                )}}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-5">
+                <label>Email</label>
+                {{ form.email(
+                    placeholder="Email",
+                    class="form-control") }}
+            </div>
+            <div class="col-md-4">
+                <label>Birthday</label>
+                {{ form.birthday(
+                    placeholder="Birthday",
+                    class="form-control")}}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2">
+                <label>Role</label>
+                {{ form.role(
+                    placeholder="Role",
+                    class="form-control")}}
+            </div>
+        </div>
+
+        <br />
+
+        <div class="row">
+            <div class="col-md-12">
+            <input class="btn btn-default" type="reset">
+            {{ form.submit(
+                class="btn btn-style-1"
+            )}}
+            </div>
+        </div>
+
+        <br />
+
+        <div class="row">
+            <div class="col-md-3">
+                <a href="{{ url_for('admin.change_password', id=user.id) }}">
+                    Change password
+                </a>
+            </div>
+        </div>
+
+    </form>
+{% endblock %}

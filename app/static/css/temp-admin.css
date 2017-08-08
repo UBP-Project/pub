@@ -1,0 +1,157 @@
+html, body {
+    height: 100% !important;
+}
+
+.admin-header {
+    background-color: #ef7c3d;
+}
+
+.row {
+    width: 100%;
+    height: 100%;
+}
+
+.side-bar {
+    background-color: #0e0058;
+    color: white;
+    min-height: 100vh;
+    height: 100%;
+    font-family: "Lato";
+    padding: 5px;
+    padding-right: 0px;
+}
+
+.form-control {
+    margin-bottom: 10px;
+}
+
+label {
+    font-family: 'Lato';
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Lato";
+}
+
+.btn-sidebar {
+    background-color: #0e0058;
+    width: 100%;
+    height: 40px;
+    text-align: left;
+    font-size: 16px;
+    padding: 5px;
+    display: flex;
+    align-items: center; /* align vertical */
+    transition: none;
+    text-decoration: none !important;
+}
+
+.side-bar h5 {
+    color: #ef7c3d;
+    font-weight: bold;
+    margin-left: 5px;
+    margin-bottom: 5px;
+    margin-top: 15px;
+}
+
+.btn-sidebar:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white !important;
+    transition: none;
+}
+
+.btn-sidebar.active {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    color: white !important;
+    transition: 0s;
+    font-weight: bold;
+
+}
+
+.side-bar .pub-logo {
+    height: 50px;
+    margin-bottom: 0px;
+}
+
+.admin-form {
+    /* 
+    background-color: white;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    border-top: 2px solid #ef7c3d;
+    border-radius: 2px;
+    */
+    padding: 0px 20px;
+}
+
+.admin-form h1 {
+    font-family: "Francois One";
+    color: #ef7c3d;
+}
+
+.admin-form input[type=reset] {
+    padding: 8px 15px !important;
+    margin-right: 10px;
+}
+
+/* ----------------------------- */
+.admin-page .user-card {
+    margin: 5px;
+    background-color: white;
+    height: 100px;
+    padding: 5px 10px;
+    border-radius: 3px;
+    border-right: 3px solid #ef7c3d;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.admin-page .user-card:hover {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+.admin-page h1 {
+    font-family: "Francois One";
+    color: #ef7c3d;
+}
+
+.user-list .col-md-3 {
+    margin: 0px;
+    padding: 0px;
+}
+
+.admin-page .activity-card {
+    margin: 5px;
+    background-color: white;
+    height: 300px;
+    padding: 5px 10px;
+    border-radius: 3px;
+    border-right: 3px solid #ef7c3d;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.admin-page .activity-card img {
+    width: 100%;
+    height: 150px;
+}
+
+.admin-page .activity-card div {
+    height: 75px;
+}
+
+.admin-page .group-card {
+    margin: 5px;
+    background-color: white;
+    height: 300px;
+    padding: 5px 10px;
+    border-radius: 3px;
+    border-right: 3px solid #ef7c3d;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.admin-page .group-card img {
+    width: 100%;
+    height: 150px;
+}
+
+.admin-page .group-card div {
+    height: 75px;
+}

@@ -1,0 +1,76 @@
+{% if 'admin' in request.path %}
+    {% extends "/layout/admin_base.html" %}
+{% else %}
+    {% extends "/layout/base.html" %}
+{% endif %}
+{% block title %}Admin Page{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <form class="form-group col-md-9 admin-form" method="post" name="create_activity">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>Create Activity</h1>
+                </div>
+            </div>
+
+            <div class="row">
+                {{ form.hidden_tag() }}
+                <div class="col-md-12">
+                    <label>Title</label>
+                    {{ form.title(
+                        placeholder="Title",
+                        class="form-control") }}
+                </div>
+                
+                <div class="col-md-12">
+                    <label>Description</label>
+                    {{ form.description(
+                        placeholder="Description",
+                        class="form-control") }}
+                </div>
+
+                <div class="col-md-12">
+                    <label>Address</label>
+                    {{ form.address(
+                        placeholder="Address",
+                        class="form-control"
+                    )}}
+                </div>
+
+                <div class="col-md-6">
+                    <label>Start Date</label>
+                    {{ form.start_date(
+                        placeholder="Start Date",
+                        class="form-control")}}
+                </div>
+
+                <div class="col-md-6">
+                    <label>End Date</label>
+                    {{ form.end_date(
+                        placeholder="End Date",
+                        class="form-control")}}
+                </div>
+
+                <div class="col-md-6">
+                    <label>Assign to Group</label>
+                    {{ form.group(
+                        class="form-control")
+                    }}
+                </div>
+
+                <br /><br />
+        
+                <div class="col-md-12">
+                    <br /><br />
+                    <input class="btn btn-default" type="reset">
+                    {{ form.submit(
+                        placeholder="Submit",
+                        class="btn btn-style-1"
+                    )}}
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

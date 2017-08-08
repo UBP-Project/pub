@@ -1,0 +1,34 @@
+{% if 'admin' in request.path %}
+    {% extends "/layout/admin_base.html" %}
+{% else %}
+    {% extends "/layout/base.html" %}
+{% endif %}
+
+{% block title %} Groups {% endblock %}
+
+{% block content %}
+    <div class="row admin-page">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Groups</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            {% for group in groups %}
+                <div class="col-md-3">
+                    <div class="group-card">
+                        <img src="{{ url_for('static', filename='images/pub-default-img.jpg') }} "/>
+                        <div>
+                            <h3>{{ group['name'] }}</h3>
+                            <h6>{{ group['about'] }}</h6>
+                        </div>
+                        <a class="btn btn-block btn-style-1" href="{{ url_for('admin.group', id=group['id']) }}">
+                            Edit Group
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </h4>
+    </div>
+{% endblock %}

@@ -3,8 +3,10 @@ from app.models import User
 from app.api_1_0 import api
 from app import db
 import json
+from flask_login import login_required
 
 @api.route('/users')
+@login_required
 def get_users():
     users = User.query.all()
     return jsonify([
@@ -12,6 +14,7 @@ def get_users():
     ])
 
 @api.route('/users/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+@login_required
 def user(id):
     if request.method == 'GET':
         users = User.query.get_or_404(id)
@@ -28,6 +31,7 @@ def user(id):
         return "Deleted"
 
 @api.route('/users', methods=['POST'])
+@login_required
 def new_user():
     data = request.form.to_dict()
     user = User.from_json(data)

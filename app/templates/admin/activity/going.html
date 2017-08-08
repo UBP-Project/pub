@@ -1,0 +1,15 @@
+{% if 'admin' in request.path %}
+    {% extends "/layout/admin_base.html" %}
+{% else %}
+    {% extends "/layout/base.html" %}
+{% endif %}
+{% block title %}Admin Page{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Show Going Members List</h3>
+        </div>
+            
+    </div>
+{% endblock %}

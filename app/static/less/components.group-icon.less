@@ -1,0 +1,72 @@
+// main: main.less
+
+.group-icon {
+
+	height: @group-xs-height;
+	margin: @group-margin;
+	background: rgba(0, 0, 0, 0);
+	padding: 0;
+	box-shadow: none;
+
+	.group-img {
+
+		height: 70%;
+
+		img {
+			 max-width: 100%;
+			 max-height: 100%;
+		}
+
+	}
+
+	.group-desc {
+
+		height: 30%; 
+		overflow: hidden; 
+		padding: 7px;
+		background: rgba(0, 0, 0, 0);
+
+		h4 {
+			color: @black;
+			padding-left: 20px;
+			padding-right: 20px;
+
+		}
+
+		p {
+			color: @shaft;
+			text-overflow: ellipsis;
+			/* word-break: break-all; */
+			white-space: nowrap;
+			overflow: hidden; 
+		}
+
+	}
+
+}
+
+
+/*
+@media (max-width: 320px) {
+	.group {
+		height: @group-lg-height;
+	}
+}
+
+@media (max-width: 768px) {
+	.group {
+		height: @group-sm-height;
+	}
+}
+
+@media (max-width: 1024px) {
+	.group {
+		height: @group-md-height;
+	}
+}
+
+@media (max-width: 1440px) {
+	.group {
+		height: @group-md-height;
+	}
+}*/

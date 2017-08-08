@@ -1,0 +1,62 @@
+// main: main.less
+
+#sign-in-box {
+	width: 300px;
+	background-color: #fff;
+	position: relative;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -140px;
+	margin-left: -150px;
+	padding: 10px 30px 10px;
+
+	border-bottom: 5px solid #ef7c3d;
+}
+
+#login-bg {
+	width: 100%; 
+	height: 100%; 
+	background-image: url('../../static/images/login-bg.jpg'); 
+	background-repeat: no-repeat; 
+	background-size: cover; 
+	background-position: top center; 
+}
+
+.black-filter {
+	height: 100%; 
+	width: 100%; 
+	background-color: rgba(0,0,0,0.8);
+}
+
+.pub-logo {
+    width: 50px; 
+    height: 50px; 
+    margin-top: 13px; 
+    margin-bottom: 15px;
+}
+
+#reveal {
+
+	color: @stratos;
+	background-color: transparent;
+	border-radius: 0 5px 5px 0;
+	outline: 0;
+	/*transition: all 200ms ease;*/
+
+	&:hover {
+		color: @jaffa;
+		border-color: @silver;
+	}
+
+	&:active, &:focus {
+		color: @stratos;
+		border-color: @silver;	
+	}
+
+}
+
+#error {
+	margin: 60px 0 15px 0;
+	color: red;
+}

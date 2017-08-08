@@ -1,0 +1,56 @@
+{% if 'admin' in request.path %}
+    {% extends "/layout/admin_base.html" %}
+{% else %}
+    {% extends "/layout/base.html" %}
+{% endif %}
+
+{% block title %} Groups {% endblock %}
+
+{% block content %}
+    <div class="row admin-page user-list">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Managers</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            {% for manager in managers %}
+                <div class="col-md-3">
+                    <div class="user-card">
+                        <a href="{{ url_for('admin.profile', id=manager.id) }}">
+                            <h4><span class="fa fa-user-circle"></span>
+                                {{ manager['firstname'] }} {{ manager['lastname'] }}
+                            </h4>
+                        </a>
+                        <p><i>{{ manager['department'] }} <br />
+                        {{ manager['position'] }}</i><p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Users</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            {% for user in users %}
+                <div class="col-md-3">
+                    <div class="user-card">
+                        <a href="{{ url_for('admin.profile', id=user.id) }}">
+                            <h4><span class="fa fa-user-circle"></span>
+                                {{ user['firstname'] }} {{ user['lastname'] }}
+                            </h4>
+                        </a>
+                        <p><i>{{ user['department'] }} <br />
+                        {{ user['position'] }}</i><p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+{% endblock %}
