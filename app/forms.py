@@ -4,7 +4,7 @@ from wtforms.validators import Required
 from wtforms.fields.html5 import EmailField, DateField
 from wtforms.widgets import TextArea
 from flask_wtf.file import FileField
-from .models import Interest_Group
+from .models import Interest_Group, Role
 
 
 class LoginForm(FlaskForm):
@@ -17,17 +17,30 @@ class UserFormMixin():
     middlename = StringField("Middle name", validators=[Required()])
     lastname   = StringField("Last name", validators=[Required()])
     email      = EmailField("Email", validators=[Required()])
-    password   = PasswordField("Password", validators=[Required()])
     department = StringField("Department", validators=[Required()])
     position   = StringField("Position", validators=[Required()])
     birthday   = DateField("Birthday", validators=[Required()])
-    role       = SelectField('Role', choices=[('1', 'Default'), ('2', 'Manager')])
+    role       = SelectField('Role', choices=[], coerce=int)
 
 class CreateUserForm(FlaskForm, UserFormMixin):
+    password   = PasswordField("Password", validators=[Required()])
     submit     = SubmitField("Create User")
+
+    def __init__(self, *args, **kwargs):
+        super(CreateUserForm, self).__init__(*args, **kwargs)
+        self.role.choices = [(role.id, role.name) for role in Role.query.all() if role.name != 'Administrator']
 
 class UpdateUserForm(FlaskForm, UserFormMixin):
     submit     = SubmitField("Update User")
+
+    def __init__(self, *args, **kwargs):
+        super(UpdateUserForm, self).__init__(*args, **kwargs)
+        self.role.choices = [(role.id, role.name) for role in Role.query.all() if role.name != 'Administrator']
+
+class PasswordForm(FlaskForm):
+    password = PasswordField("Password")
+    submit   = SubmitField("Change Password")
+
 
 class InterestGroupMixin():
     name        = StringField("Group Name", validators=[Required()])

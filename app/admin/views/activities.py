@@ -52,6 +52,20 @@ def activities():
 @admin.route('/activities/<int:id>/edit')
 @admin_required
 def edit_activity(id):
-    form = UpdateActivityForm()
-    activity = Activity.query.get_or_404(id)
+    form                  = UpdateActivityForm()
+    activity              = Activity.query.get_or_404(id)
+    form.title.data       = activity.title
+    form.description.data = activity.description
+    form.start_date.data  = activity.start_date
+    form.end_date.data    = activity.end_date
+    form.address.data     = activity.address
+    form.group.data       = activity.group
+    if form.validate_on_submit():
+        activity.title       = form.title.data      
+        activity.description = form.description.data
+        activity.start_date  = form.start_date.data 
+        activity.end_date    = form.end_date.data   
+        activity.address     = form.address.data    
+        activity.group       = form.group.data
+        db.session.commit()
     return render_template('admin/activity/edit.html', form=form, activity=activity)

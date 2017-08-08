@@ -1,9 +1,10 @@
 from flask import render_template, flash, redirect, url_for
 from .. import admin
-from ...forms import CreateUserForm, UpdateUserForm
+from ...forms import CreateUserForm, UpdateUserForm, PasswordForm
 from app import db
 from ...models import User
 from ...decorators import admin_required
+from ...utils import flash_errors
 
 @admin.route('/users')
 @admin_required
@@ -17,16 +18,7 @@ def users():
 def profile(id):
     form = UpdateUserForm()
     user = User.query.get_or_404(id)
-    form.firstname.data  = user.firstname
-    form.lastname.data   = user.lastname
-    form.email.data      = user.email
-    form.department.data = user.department
-    form.position.data   = user.position
-    form.birthday.data   = user.birthday
-    form.role.data       = user.role_id
-    form.submit.data     = "Save Changes"
     if form.validate_on_submit():
-        print(form.role.data)
         user.firstname  = form.firstname.data,
         user.middlename = form.middlename.data,
         user.lastname   = form.lastname.data, 
@@ -35,10 +27,30 @@ def profile(id):
         user.position   = form.position.data,
         user.birthday   = form.birthday.data,
         user.role_id    = int(form.role.data)
-        user.password   = form.password.data
-        db.session.add(user)
+        flash("Validated")
         db.session.commit()
+
+    # load the current user info to the form
+    form.firstname.data  = user.firstname
+    form.middlename.data = user.middlename
+    form.lastname.data   = user.lastname
+    form.email.data      = user.email
+    form.department.data = user.department
+    form.position.data   = user.position
+    form.birthday.data   = user.birthday
+    form.role.data       = user.role_id
     return render_template('admin/user/profile.html', user=user, form=form)
+
+@admin.route('/users/<int:id>/change-password', methods=['GET', 'POST'])
+@admin_required
+def change_password(id):
+    form = PasswordForm()
+    user = User.query.get_or_404(id)
+    if form.validate_on_submit():
+        user.password = form.password.data
+        db.session.commit()
+    return render_template('admin/user/change-password.html', form=form)
+
 
 @admin.route('/users/create', methods=['GET', 'POST'])
 @admin_required
