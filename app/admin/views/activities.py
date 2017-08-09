@@ -20,7 +20,7 @@ def flash_errors(form):
 
 @admin.route('/activities/<int:id>')
 @admin_required
-def view_activity(id):
+def activity(id):
     activity = Activity.query.get_or_404(id)
     if activity is not None:
         return render_template("admin/activity/view_activity.html", activity=activity)
@@ -66,13 +66,22 @@ def edit_activity(id):
     form                  = UpdateActivityForm()
     activity              = Activity.query.get_or_404(id)
     if form.validate_on_submit():
+        if form.image.data is not None:
+            image                 = form.image.data
+            image_filename        = secure_filename(image.filename)
+            extension             = image_filename.rsplit('.', 1)[1].lower()
+            image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
+            file_path             = os.path.join('app/static/uploads/activity_images', image_hashed_filename)
+            image.save(file_path)
+            activity.image   = image_hashed_filename
         activity.title       = form.title.data      
         activity.description = form.description.data
         activity.start_date  = form.start_date.data 
         activity.end_date    = form.end_date.data   
         activity.address     = form.address.data    
-        activity.group_id       = form.group.data
+        activity.group_id    = form.group.data
         db.session.commit()
+        return redirect(url_for('admin.activity', id=id))
 
     # load activity data to the form
     form.title.data       = activity.title
@@ -81,4 +90,5 @@ def edit_activity(id):
     form.end_date.data    = activity.end_date
     form.address.data     = activity.address
     form.group.data       = activity.group_id
+    flash_errors(form)
     return render_template('admin/activity/edit.html', form=form, activity=activity)

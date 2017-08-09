@@ -71,11 +71,12 @@ class CreateActivityForm(FlaskForm, ActivityMixin):
         self.group.choices = [(0, "None")] + [(group.id, group.name) for group in Interest_Group.query.all()]
 
 class UpdateActivityForm(FlaskForm, ActivityMixin):
+    image       = FileField("Activity Image")
     submit      = SubmitField("Save Changes")
 
     def __init__(self, *args, **kwargs):
         super(UpdateActivityForm, self).__init__(*args, **kwargs)
-        self.group.choices = [(None, "None")] + [(group.id, group.name) for group in Interest_Group.query.all()]
+        self.group.choices = [(0, "None")] + [(group.id, group.name) for group in Interest_Group.query.all()]
 
 class GroupMembershipForm(FlaskForm):
     join_group = SubmitField("Join Group")

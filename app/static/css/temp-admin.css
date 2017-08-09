@@ -19,6 +19,8 @@ html, body {
     font-family: "Lato";
     padding: 5px;
     padding-right: 0px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+
 }
 
 .form-control {
@@ -26,7 +28,14 @@ html, body {
 }
 
 label {
-    font-family: 'Lato';
+    font-family: 'Lato Light';
+    font-size: 16px;
+    color: #0e0058;
+}
+
+.input-lg {
+    font-size: 24px;
+    padding: 10px;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -154,4 +163,21 @@ h1, h2, h3, h4, h5, h6 {
 
 .admin-page .group-card div {
     height: 75px;
+}
+
+.edit-activity img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 2px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.img-container {
+    height: 300px;
+    width: 300px;
+}
+
+.title {
+    color: #ef7c3d;
 }
