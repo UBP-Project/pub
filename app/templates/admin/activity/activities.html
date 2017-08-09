@@ -7,7 +7,7 @@
 {% block title %} Groups {% endblock %}
 
 {% block content %}
-    <div class="row admin-page user-list">
+    <div class="row admin-page">
         <div class="row">
             <div class="col-md-12">
                 <h1>Activities</h1>
@@ -17,13 +17,14 @@
         <div class="row">
             {% for activity in activities %}
                 <div class="col-md-3">
-                    <div class="activity-card">
-                        <img src="{{ url_for('static', filename='images/pub-default-img.jpg') }} "/>
+                    <div class="activity-card"
+                    style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{url_for('static',filename='uploads/activity_images/' + activity.image) }})">
                         <div>
-                            <h3>{{ activity['title'] }}</h3>
+                            <h3><strong>{{ activity['title'] }}</strong></h3>
                             <h6>{{ activity['description'] }}</h6>
+                            <h6><i>{{ activity['start_date']}} - {{ activity['end_date']}}</i></h6>
                         </div>
-                        <a class="btn btn-block btn-style-1" href="{{ url_for('admin.edit_activity', id=activity['id']) }}">
+                        <a class="btn btn-block btn-style-3" href="{{ url_for('admin.edit_activity', id=activity['id']) }}">
                             Edit Activity
                         </a>
                     </div>

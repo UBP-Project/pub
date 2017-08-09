@@ -7,3 +7,8 @@ def flash_errors(form):
                 getattr(form, field).label.text,
                 error
             ))
+
+def is_valid_extension(filename):
+    valid_extensions = ['png', 'jpg']
+    extension = filename.rsplit('.', 1)[1].lower()
+    return extension in valid_extensions

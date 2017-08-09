@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for
 from .. import admin
 from ...forms import CreateUserForm, UpdateUserForm, PasswordForm
 from app import db
-from ...models import User
+from app.models import User
 from ...decorators import admin_required
 from ...utils import flash_errors
 

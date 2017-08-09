@@ -4,7 +4,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 from ..forms import LoginForm, GroupMembershipForm
 from . import client
 from app import db
-from ..models import User, Interest_Group, Activity, Membership
+from app.models import User, Interest_Group, Activity, Membership, Role
 
 @client.route('/', methods=['GET', 'POST'])
 @login_required
@@ -32,10 +32,15 @@ def login():
     form = LoginForm()
     hasError = False
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
+        user = User.query.filter_by(email = form.email.data).first()
         if user is not  None and user.verify_password(form.password.data):
             login_user(user)
-            return redirect(request.args.get('next') or url_for('client.index'))
+
+            if(user.is_administrator):
+                return redirect(url_for('admin.index'))
+            else:
+                return redirect(request.args.get('next') or url_for('client.index'))
+                
         hasError = True
     return render_template("client/views/login.html", form=form, hasError=hasError)
 
