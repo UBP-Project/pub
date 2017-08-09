@@ -4,6 +4,10 @@ from ...forms import CreateInterestGroupForm
 from app import db
 from ...models import User, Interest_Group, Membership, Activity
 from ...decorators import admin_required
+from ...utils import flash_errors
+from werkzeug.utils import secure_filename
+import os
+import uuid
 
 @admin.route('/groups')
 @admin_required
@@ -29,14 +33,29 @@ def group(id):
 def create_group():
     form = CreateInterestGroupForm()
     if form.validate_on_submit():
+        # handle upload group cover
+        cover                 = form.cover_photo.data
+        cover_filename        = secure_filename(cover.filename)
+        extension             = cover_filename.rsplit('.', 1)[1].lower()
+        cover_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
+        file_path             = os.path.join('app/static/uploads/covers', cover_hashed_filename)
+        cover.save(file_path)
+
+        # handle upload user icon
+        icon                 = form.group_icon.data
+        icon_filename        = secure_filename(icon.filename)
+        extension            = icon_filename.rsplit('.', 1)[1].lower()
+        icon_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
+        file_path            = os.path.join('app/static/uploads/group_icons', icon_hashed_filename)
+        icon.save(file_path)
+
         interest_group = Interest_Group(
             name=form.name.data,
             about=form.about.data,
-            cover_photo=form.cover_photo.data,
-            group_icon=form.group_icon.data)
+            cover_photo=cover_hashed_filename,
+            group_icon=icon_hashed_filename)
         db.session.add(interest_group)
         db.session.commit()
-        flash("Success creating group")
         return redirect(url_for("admin.index"))
     return render_template('admin/group/create.html', form=form)
 

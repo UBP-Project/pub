@@ -46,3 +46,9 @@ pub
 app/api_1_0/authentication.py
 app/api_1_0/crud.py
 app/api_1_0/errors.py
+
+# Uploads
+app/static/uploads/activity_images/*
+app/static/uploads/covers/*
+app/static/uploads/group_icons/*
+app/static/uploads/profile_pictures/*

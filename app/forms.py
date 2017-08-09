@@ -3,7 +3,7 @@ from wtforms import StringField, SubmitField, PasswordField, SelectField
 from wtforms.validators import Required
 from wtforms.fields.html5 import EmailField, DateField
 from wtforms.widgets import TextArea
-from flask_wtf.file import FileField
+from flask_wtf.file import FileField, FileRequired
 from .models import Interest_Group, Role
 
 
@@ -45,8 +45,8 @@ class PasswordForm(FlaskForm):
 class InterestGroupMixin():
     name        = StringField("Group Name", validators=[Required()])
     about       = StringField("About Group", validators=[Required()])
-    cover_photo = FileField("Cover Photo", validators=[Required()])
-    group_icon  = FileField("Group Icon", validators=[Required()])
+    cover_photo = FileField("Cover Photo", validators=[FileRequired()])
+    group_icon  = FileField("Group Icon", validators=[FileRequired()])
 
 class CreateInterestGroupForm(FlaskForm, InterestGroupMixin):
     submit      = SubmitField("Create Interest Group")
