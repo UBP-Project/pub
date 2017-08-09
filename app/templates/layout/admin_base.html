@@ -52,7 +52,7 @@
     {% endfor %}
     
     <div class="row">
-        <div class="col-md-2 side-bar">
+        <div class="col-md-2 side-bar" id="admin-sidebar">
 
             <img class="pub-logo" src="{{ url_for('static', filename='images/pub-sm-logo.png')}}" />
 
@@ -104,6 +104,13 @@
 
     <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+    <script>
+        $(document).ready(function() {
+            console.log($(document).height());
+            $("#admin-sidebar").height($(document).height());
+        })
+    </script>
 
     {% block scripts %}
     {% endblock scripts %}
