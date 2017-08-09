@@ -4,7 +4,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 from ..forms import LoginForm, GroupMembershipForm
 from . import client
 from app import db
-from ..models import User, Interest_Group, Activity, Membership, Role
+from app.models import User, Interest_Group, Activity, Membership, Role
 
 @client.route('/', methods=['GET', 'POST'])
 @login_required

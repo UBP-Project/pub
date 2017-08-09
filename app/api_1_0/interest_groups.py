@@ -1,7 +1,7 @@
 from flask import jsonify, request, url_for
 from .. import db
 import json
-from ..models import Interest_Group, Membership, User
+from app.models import Interest_Group, Membership, User
 from . import api
 from flask_login import login_required, current_user
 import datetime

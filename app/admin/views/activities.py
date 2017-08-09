@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for
 from .. import admin
 from ...forms import CreateActivityForm, UpdateActivityForm
 from app import db
-from ...models import User, Activity, Permission, Interest_Group
+from app.models import User, Activity, Permission, Interest_Group
 from ...decorators import admin_required, permission_required
 from ...utils import flash_errors, is_valid_extension
 from werkzeug.utils import secure_filename

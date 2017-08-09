@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, request
 from .. import admin
 from ...forms import CreateInterestGroupForm, UpdateInterestGroupForm
 from app import db
-from ...models import User, Interest_Group, Membership, Activity
+from app.models import User, Interest_Group, Membership, Activity
 from ...decorators import admin_required
 from ...utils import flash_errors, is_valid_extension
 from werkzeug.utils import secure_filename
