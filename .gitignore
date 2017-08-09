@@ -52,3 +52,8 @@ app/static/uploads/activity_images/*
 app/static/uploads/covers/*
 app/static/uploads/group_icons/*
 app/static/uploads/profile_pictures/*
+
+!app/static/uploads/activity_images/.gitkeep
+!app/static/uploads/covers/.gitkeep
+!app/static/uploads/group_icons/.gitkeep
+!app/static/uploads/profile_pictures/.gitkeep
