@@ -44,11 +44,11 @@ class PasswordForm(FlaskForm):
 
 class InterestGroupMixin():
     name        = StringField("Group Name", validators=[Required()])
-    about       = StringField("About Group", validators=[Required()])
-    cover_photo = FileField("Cover Photo", validators=[FileRequired()])
-    group_icon  = FileField("Group Icon", validators=[FileRequired()])
+    about       = StringField("About Group", widget=TextArea(), validators=[Required()])
 
 class CreateInterestGroupForm(FlaskForm, InterestGroupMixin):
+    cover_photo = FileField("Cover Photo", validators=[FileRequired()])
+    group_icon  = FileField("Group Icon", validators=[FileRequired()])
     submit      = SubmitField("Create Interest Group")
 
 class UpdateInterestGroupForm(FlaskForm, InterestGroupMixin):
@@ -63,6 +63,7 @@ class ActivityMixin():
     group       = SelectField('Group', choices=[], coerce=int)
 
 class CreateActivityForm(FlaskForm, ActivityMixin):
+    image = FileField("Activity Image", validators=[FileRequired()])
     submit      = SubmitField("Create Activity")
 
     def __init__(self, *args, **kwargs):

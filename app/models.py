@@ -259,19 +259,21 @@ class Activity(db.Model):
     end_date      = db.Column(db.Date)  
     address       = db.Column(db.String(100))
     group_id      = db.Column(db.Integer, nullable=True)
+    image = db.Column(db.String(200))
 
     comments    = db.relationship('Comment', backref=db.backref('comments', lazy='joined'), lazy="dynamic", passive_deletes=True, passive_updates=True)
     schedule    = db.relationship('Schedule', backref=db.backref('schedule', lazy='joined'), lazy="dynamic", passive_deletes=True, passive_updates=True)
     assignment  = db.relationship('Assignment', backref=db.backref('assignment', lazy='joined'), lazy='dynamic', passive_deletes=True, passive_updates=True)
     guests      = db.relationship('User_Activity', backref=db.backref('user_activity', lazy='joined'), lazy='dynamic', passive_deletes=True, passive_updates=True)
     
-    def __init__(self, title, description, start_date, end_date, address, group_id=None):
-        self.title          = title
-        self.description    = description
-        self.start_date     = start_date
-        self.end_date       = end_date
-        self.address        = address
-        self.group_id       = group_id
+    def __init__(self, title, description, start_date, end_date, address, image, group_id=None):
+        self.title       = title
+        self.description = description
+        self.start_date  = start_date
+        self.end_date    = end_date
+        self.address     = address
+        self.group_id    = group_id
+        self.image       = image
 
     def __repr__(self):
         return '<Activity %r>' % self.title

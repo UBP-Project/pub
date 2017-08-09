@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request
 from .. import admin
-from ...forms import CreateInterestGroupForm
+from ...forms import CreateInterestGroupForm, UpdateInterestGroupForm
 from app import db
 from ...models import User, Interest_Group, Membership, Activity
 from ...decorators import admin_required
@@ -59,6 +59,22 @@ def create_group():
         return redirect(url_for("admin.index"))
     return render_template('admin/group/create.html', form=form)
 
+@admin.route('/groups/<int:id>/edit', methods=['GET', 'POST'])
+@admin_required
+def update_group(id):
+    form = UpdateInterestGroupForm()
+    group = Interest_Group.query.get_or_404(id)
+    if form.validate_on_submit():
+        group.name = form.name.data
+        group.about = form.about.data
+        db.session.commit()
+        return redirect(url_for('admin.group', id=id))
+    form.name.data = group.name
+    form.about.data = group.about
+    return render_template('admin/group/edit.html', form=form, group=group)
+
+
+# Actions
 @admin.route('/groups/setleader/<int:group_id>/<int:user_id>')
 @admin_required
 def setleader(group_id, user_id):

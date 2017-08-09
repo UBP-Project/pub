@@ -7,7 +7,7 @@
 
 {% block content %}
     <div class="row">
-        <form class="form-group col-md-9 admin-form" method="post" name="create_activity">
+        <form class="form-group col-md-9 admin-form" method="post" enctype="multipart/form-data" name="create_activity">
 
             <div class="row">
                 <div class="col-md-12">
@@ -51,6 +51,14 @@
                     {{ form.end_date(
                         placeholder="End Date",
                         class="form-control")}}
+                </div>
+
+                <div class="col-md-6">
+                    <label>Image</label>
+                    {{ form.image(
+                        placeholder="Activity Image",
+                        class="form-control"
+                        )}}
                 </div>
 
                 <div class="col-md-6">

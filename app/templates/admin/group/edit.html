@@ -1,0 +1,52 @@
+{% if 'admin' in request.path %}
+    {% extends "/layout/admin_base.html" %}
+{% else %}
+    {% extends "/layout/base.html" %}
+{% endif %}
+
+{% block title %} Admin Page {% endblock %}
+
+{% block content %}
+    <form class="row admin-form" method="post" name="change_password">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Group / {{ group['id'] }} / Edit </h1>
+            </div>
+        </div>
+
+        {{ form.hidden_tag() }}
+
+        <div class="row">
+            <div class="col-md-12">
+                <label>Group Name</label>
+                {{ form.name(
+                    placeholder="Group Name",
+                    class="form-control")}}
+            </div>
+            <div class="col-md-12">
+                <label>About this Group</label>
+                {{ form.about(
+                    placeholder="About this Group",
+                    class="form-control")}}
+            </div>
+        </div>
+
+        <br />
+
+        <div class="row">
+            <div class="col-md-12">
+            <input class="btn btn-default" type="reset">
+            {{ form.submit(
+                class="btn btn-style-1"
+            )}}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Group Images</h3>
+            </div>
+        </div>
+
+    </form>
+{% endblock %}
