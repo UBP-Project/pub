@@ -6,10 +6,10 @@
 }
 
 .fa {
-	transition: all 0.5s ease;
+	transition: all 200ms ease;
 }
 
-.navbar {
+/*.navbar {
 	background-image: url('../images/header.jpg');
 }
 
@@ -38,4 +38,97 @@
 
 	}
 
+}*/
+
+.nav {
+
+	>li {
+		
+		background-color: none;
+
+		>a {
+
+			font-family: @heading-font;
+			font-size: 17px;
+			background-color: none;
+			transition: color 0.3s ease;
+
+		}
+
+	}
+
 }
+
+.sidebar {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+ 	background-color: @white;
+	width: 223px;
+	z-index: 1;
+	position: fixed;
+	border-bottom: 5px solid @pizazz;
+}
+
+.main {
+	position: absolute;
+	top: 0;
+	left: 223px;
+}
+
+nav .side-nav {
+	display: block;
+}
+
+.side-nav li a {
+	color: gray;
+	border-left: 7px solid gray;
+ 	margin: 5px 0;
+}
+
+.side-nav li a:hover {
+	color: @kimberly;
+	background-color: @alto;
+	border-left: 7px solid @kimberly;
+}
+
+.project-bg {
+	width: 100%;
+	text-align: center;
+	background-image: url('../../static/images/building.png');
+	background-size: cover;
+	background-position: top;
+	border-bottom: 5px solid @pizazz;
+}
+
+.project-logo {
+	padding: 50px 0;
+}
+
+.content {
+	padding: 20px;
+}
+
+.sign-out {
+	position: absolute; 
+ 	bottom: 0; 
+	width: 100%;
+}
+
+#sign-out:hover {
+	color: @pizazz;
+	border-left: 7px solid @pizazz;
+}
+
+.white-filter {
+	background-color: rgba(255, 255, 255, 0.6);
+}
+
+
+/*
+
+UL Active state
+border-left: 7px solid #0e0058; background-color: #fff; color: #0e0058;
+
+*/

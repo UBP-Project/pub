@@ -1,4 +1,4 @@
-{% extends "./layout/base2.html" %}
+{% extends "./layout/base.html" %}
 
 {% from "client/components/group-modal.html" import group_modal %}
 {% from "client/components/groups-modal.html" import view_all_groups %}
@@ -7,15 +7,39 @@
 
 {% block title %} Home {% endblock title %}
 
+{% block navigation %}
+
+		<div class="navbar" role="navigation" id="navigation">
+		    <div class="container">
+		        <div class="navbar-header">
+		            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		                <span class="sr-only">Toggle navigation</span>
+		                <span class="icon-bar"></span>
+		                <span class="icon-bar"></span>
+		                <span class="icon-bar"></span>
+		            </button>
+		            <a href="/"><img src="{{ url_for('static', filename='../../static/images/ubp-logo.jpg') }}" alt="UBP LOGO"></a>
+		        </div>
+		        <div class="navbar-collapse collapse">
+		            <ul class="nav navbar-nav pull-right">
+		                <li><a href="/">HOME</a></li>
+		                <li><a href="/logout">LOGOUT</a></li>
+		            </ul>
+		        </div>
+		    </div>
+		</div>
+
+{% endblock navigation %}
+
 {% block content %}
 
 	<div class="row">
 
-			<div class="col-md-12 col-sm-12 box-header box-style-1">
+			<div class="col-md-10 col-md-offset-1 col-sm-12 box-header box-style-1">
 				<span>ACTIVITIES</span>
 			</div>
 
-			<div class="col-md-12 col-sm-12 box-content border-bottom-1">
+			<div class="col-md-10 col-md-offset-1 col-sm-12 box-content border-bottom-1">
 
 				<div class="row">
 
@@ -51,11 +75,11 @@
 
 	<div class="row">
 
-		<div class="col-md-12 col-sm-12 box-header box-style-2">
+		<div class="col-md-10 col-md-offset-1 col-sm-12 box-header box-style-2">
 			<span>INTEREST GROUPS</span>
 		</div>
 
-		<div class="col-md-12 col-sm-12 box-content border-bottom-2">
+		<div class="col-md-10 col-md-offset-1 col-sm-12 box-content border-bottom-2">
 
 			<div class="row">
 

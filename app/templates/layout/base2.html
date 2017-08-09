@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <title>PUB | {% block title %}{% endblock title %}</title>
+
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.min.css') }}">
+
+</head>
+
+<body>
+
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+            {{ message }}
+            <button type="button" class="close pull-right" data-dismiss="alert">&times;</button>
+        </div>
+    {% endfor %}
+    
+    {% block sidebar %}
+
+        <div class="sidebar">
+
+            <div>
+                <a href="/"><img src="{{ url_for('static', filename='../../static/images/ubp-logo.jpg') }}" alt="UBP LOGO"></a>
+            </div>
+
+            <div class="project-bg">
+                <div class="white-filter">
+                    <div class="project-logo">
+                        <a href="/"><img src="{{ url_for('static', filename='../../static/images/pub-sm-logo.png') }}" alt="PUB LOGO"></a>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="nav navbar side-nav">
+                <li><a href="/" class="active">Home</a></li>
+                <li><a href="#">Activities</a></li>
+                <li><a href="#">Interest Groups</a></li>
+                <li><a href="#">Notifications</a></li>
+                <li><a href="/logout" id="sign-out">Log Out <i class="fa fa-sign-out pull-right"></i></a></li>
+            </ul>
+
+        </div>
+
+    {% endblock sidebar %}
+
+    <div class="main">
+
+        <div style="height: 50px; width: 100%; background-image: url('{{ url_for('static', filename='../../static/images/header.jpg') }}');"></div>
+
+        <div class="content">
+            {% block content %}
+            {% endblock content %}
+        </div>
+
+    </div>
+
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+    {% block scripts %}
+    {% endblock scripts %}
+
+</body>
+
+</html>
