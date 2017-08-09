@@ -1,4 +1,5 @@
 from app import db
+from . import Permission
 
 class Role(db.Model):
 	__tablename__ = 'roles'
