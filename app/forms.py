@@ -52,6 +52,8 @@ class CreateInterestGroupForm(FlaskForm, InterestGroupMixin):
     submit      = SubmitField("Create Interest Group")
 
 class UpdateInterestGroupForm(FlaskForm, InterestGroupMixin):
+    cover_photo = FileField("Cover Photo")
+    group_icon  = FileField("Group Icon")
     submit = SubmitField("Save Changes")
 
 class ActivityMixin():

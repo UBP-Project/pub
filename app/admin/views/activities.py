@@ -4,7 +4,7 @@ from ...forms import CreateActivityForm, UpdateActivityForm
 from app import db
 from ...models import User, Activity, Permission, Interest_Group
 from ...decorators import admin_required, permission_required
-from ...utils import flash_errors
+from ...utils import flash_errors, is_valid_extension
 from werkzeug.utils import secure_filename
 import os
 import uuid
@@ -69,11 +69,12 @@ def edit_activity(id):
         if form.image.data is not None:
             image                 = form.image.data
             image_filename        = secure_filename(image.filename)
-            extension             = image_filename.rsplit('.', 1)[1].lower()
-            image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
-            file_path             = os.path.join('app/static/uploads/activity_images', image_hashed_filename)
-            image.save(file_path)
-            activity.image   = image_hashed_filename
+            if is_valid_extension(image_filename):
+                extension             = image_filename.rsplit('.', 1)[1].lower()
+                image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
+                file_path             = os.path.join('app/static/uploads/activity_images', image_hashed_filename)
+                image.save(file_path)
+                activity.image   = image_hashed_filename
         activity.title       = form.title.data      
         activity.description = form.description.data
         activity.start_date  = form.start_date.data 
