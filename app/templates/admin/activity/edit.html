@@ -1,60 +1,67 @@
-{% if 'admin' in request.path %}
-    {% extends "/layout/admin_base.html" %}
-{% else %}
-    {% extends "/layout/base.html" %}
-{% endif %}
-{% block title %}Admin Page{% endblock %}
+{% extends "/layout/admin_base.html" %}
 
 {% block content %}
-    <div class="row">
-        <form class="form-group col-md-9 admin-form" method="post" name="create_activity">
+    <form class="form-group row edit-activity" method="post" enctype="multipart/form-data" name="edit_activity">
 
-            <div class="row">
-                <div class="col-md-12">
-                    <h1>Create Activity</h1>
-                </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="title">Edit Activity</h1>
             </div>
+        </div>
 
+        <div class="col-md-6" style="padding: 0px">
             <div class="row">
-                {{ form.hidden_tag() }}
-                <div class="col-md-12">
+                <div class="col-md-12 admin-card">
+                    {{ form.hidden_tag() }}
                     <label>Title</label>
                     {{ form.title(
                         placeholder="Title",
-                        class="form-control") }}
-                </div>
-                
-                <div class="col-md-12">
+                        class="form-control input-lg") }}
+                    
                     <label>Description</label>
                     {{ form.description(
                         placeholder="Description",
                         class="form-control") }}
                 </div>
+            </div>
 
-                <div class="col-md-12">
-                    <label>Address</label>
-                    {{ form.address(
-                        placeholder="Address",
-                        class="form-control"
-                    )}}
-                </div>
-
-                <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-6 admin-card">
                     <label>Start Date</label>
                     {{ form.start_date(
                         placeholder="Start Date",
                         class="form-control")}}
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-6 admin-card">
                     <label>End Date</label>
                     {{ form.end_date(
                         placeholder="End Date",
                         class="form-control")}}
                 </div>
+            </div>
 
+            <div class="row">
+                <div class="col-md-12 admin-card">
+                    <label>Address</label>
+                    {{ form.address(
+                        placeholder="Address",
+                        class="form-control"
+                    )}}
+                </div>
+            </div>
 
+            <div class="row">
+                <div class="col-md-12 admin-card">
+                    <label>Assign to Group</label>
+                    {{ form.group(
+                        placeholder="Select Group",
+                        class="form-control"
+                    )}}
+                </div>
+            </div>
 
+            <div class="row">
                 <div class="col-md-12">
                     <br /><br />
                     <input class="btn btn-default" type="reset">
@@ -64,6 +71,15 @@
                     )}}
                 </div>
             </div>
-        </form>
-    </div>
+        </div>
+
+        <div class="col-md-6">
+            <label>Image:</label>
+            <div class="img-container">
+                <img src="{{ url_for('static', filename='uploads/activity_images/' + activity.image)}}" />
+            </div>
+            {{ form.image() }}
+        </div>
+
+    </form>
 {% endblock %}
