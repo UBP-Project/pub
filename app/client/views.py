@@ -22,11 +22,9 @@ def index():
             Interest_Group.group_icon,      \
             Membership.status
             )  \
-        .all()    
+        .limit(14)    
 
-    print(interest_groups)
-
-    activities = Activity.query.all()
+    activities = Activity.query.limit(7)
     return render_template("client/views/home.html", interest_groups=interest_groups, activities=activities)
 
 @client.route('/login/', methods=['GET', 'POST'])
