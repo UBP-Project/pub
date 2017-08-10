@@ -1,4 +1,4 @@
-"""empty message
+"""Database version 0.0
 
 Revision ID: bac01ce1f333
 Revises: 
