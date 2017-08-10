@@ -2,15 +2,19 @@ from flask import render_template, flash, redirect, url_for
 from .. import admin
 from ...forms import CreateUserForm, UpdateUserForm, PasswordForm
 from app import db
-from app.models import User
+from app.models import User, Role
 from ...decorators import admin_required
 from ...utils import flash_errors
 
 @admin.route('/users')
 @admin_required
 def users():
-    users = User.query.filter(User.role_id != 2).all()
-    managers = User.query.filter(User.role_id == 2).all()
+    users = User.query\
+        .join(Role, Role.id == User.role_id)\
+        .filter(Role.name == 'User').all()
+    managers = User.query\
+        .join(Role, Role.id == User.role_id)\
+        .filter(Role.name == 'Manager').all()
     return render_template('admin/user/users.html', users=users, managers=managers)
 
 @admin.route('/users/<int:id>', methods=['GET', 'POST'])
@@ -27,8 +31,8 @@ def profile(id):
         user.position   = form.position.data,
         user.birthday   = form.birthday.data,
         user.role_id    = int(form.role.data)
-        flash("Validated")
         db.session.commit()
+        return redirect(url_for('admin.users'))
 
     # load the current user info to the form
     form.firstname.data  = user.firstname
@@ -70,7 +74,7 @@ def create_user():
         user.password = form.password.data
         db.session.add(user)
         db.session.commit()
-        flash("Success creating user")
+        # flash("Success creating user")
         return redirect(url_for("admin.index"))
     return render_template('admin/user/create.html', form=form)
 

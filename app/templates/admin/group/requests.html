@@ -56,39 +56,28 @@
                     </form>
                 {% endif %}
 
-
-
-                {% if leaders|length > 0 %}
-                    <h4>Leaders</h4>
-                    {% for leader in leaders %}
+    
+                {% if membership_requests|length > 0 %}
+                    <h4>Membership Requests</h4>
+                    {% for request in membership_requests %}
                         <div class="user-card">
-                            <a href="{{ url_for('admin.profile', id=leader.id) }}">
+                            <a href="{{ url_for('admin.profile', id=request.id) }}">
                                 <h4><span class="fa fa-user-circle"></span>
-                                    {{ leader['firstname'] }} {{ leader['lastname'] }}
+                                    {{ request['firstname'] }} {{ request['lastname'] }}
                                 </h4>
                             </a>
                             </a>
-                            <a class="btn btn-sm btn-style-3" href="{{ url_for('admin.removeleader', group_id=group['id'],
-                            user_id =leader['id'])}}">Remove Leader</a>
+                            <a class="btn btn-sm btn-default" href="{{ url_for('admin.decline_request', group_id=group['id'],
+                            user_id =request['id'])}}">Decline</a>
+                            <a class="btn btn-sm btn-style-1" href="{{ url_for('admin.accept_request', group_id=group['id'],
+                            user_id =request['id'])}}">Accept</a>
                         </div>
                     {% endfor %}
+                {% else %}
+                    <h4>No membership requests.</h4>
                 {% endif %}
 
-
-                {% if members|length > 0 %}
-                    <h4>Members</h4>
-                    {% for member in members %}
-                        <div class="user-card">
-                            <a href="{{ url_for('admin.profile', id=member.id) }}">
-                                <h4><span class="fa fa-user-circle"></span>
-                                    {{ member['firstname'] }} {{ member['lastname'] }}
-                                </h4>
-                            </a>
-                            <a class="btn btn-sm btn-style-2" href="{{ url_for('admin.setleader', group_id=group['id'],
-                            user_id =member['id'])}}">Set as Leader</a>
-                        </div>
-                    {% endfor %}
-                {% endif %}
+                <br /><br />
             </div>
         </div>
     </div>

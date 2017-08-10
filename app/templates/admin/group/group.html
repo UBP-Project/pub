@@ -25,18 +25,21 @@
             <div class="col-md-6">
                 <h1>{{ group["name"] }}</h1>
                 <h5><i>{{ group["about"] }}</i></h5>
+                <a class="btn btn-sm btn-style-1" href="{{url_for('admin.update_group', id=group.id)}}">Edit this Group</a>
                 <br /><br /><br />
             </div>
             <div class="col-md-6 text-right group-controls">
-                <button class="btn btn-sm btn-style-3">
+                <a href="{{ url_for('admin.group_requests', id=group.id) }}" class="btn btn-sm btn-style-3">
                     Requests
-                </button>
-                <button class="btn btn-sm btn-style-3">
+                </a>
+                <a href="{{ url_for('admin.group_members', id=group.id) }}" class="btn btn-sm btn-style-3">
                     Members
-                </button>
+                </a>
+                <!-- 
                 <button class="btn btn-sm btn-style-3">
                     Leaders
                 </button>
+                -->
             </div>
         </div>
 
