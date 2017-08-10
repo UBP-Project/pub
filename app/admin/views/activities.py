@@ -49,8 +49,8 @@ def create_activity():
         print(activity)
         db.session.add(activity)
         db.session.commit()
-        flash("Success Creating Activity")
-        return redirect(url_for("admin.index"))
+        # flash("Success Creating Activity")
+        return redirect(url_for("admin.activities"))
     flash_errors(form)
     return render_template('admin/activity/create.html', form=form, groups=groups)
 

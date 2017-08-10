@@ -56,7 +56,7 @@ def create_group():
             group_icon=icon_hashed_filename)
         db.session.add(interest_group)
         db.session.commit()
-        return redirect(url_for("admin.index"))
+        return redirect(url_for("admin.groups"))
     return render_template('admin/group/create.html', form=form)
 
 @admin.route('/groups/<int:id>/edit', methods=['GET', 'POST'])
@@ -104,7 +104,7 @@ def setleader(group_id, user_id):
     membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
     membership.level = 1
     db.session.commit()
-    return redirect(url_for("admin.group", id=group_id))
+    return redirect(url_for("admin.group_members", id=group_id))
 
 @admin.route('/removeleader/<int:group_id>/<int:user_id>')
 @admin_required
@@ -112,4 +112,41 @@ def removeleader(group_id, user_id):
     membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
     membership.level = 0
     db.session.commit()
-    return redirect(url_for("admin.group", id=group_id))
+    return redirect(url_for("admin.group_members", id=group_id))
+
+@admin.route('/groups/<int:id>/members', methods=['GET', 'POST'])
+@admin_required
+def group_members(id):
+    group = Interest_Group.query.get_or_404(id)
+    leaders = User.query \
+        .join(Membership, User.id==Membership.user_id) \
+        .filter(Membership.group_id==id, Membership.status != 0, Membership.level == 1).all()
+    members = User.query \
+        .join(Membership, User.id==Membership.user_id) \
+        .filter(Membership.group_id==id, Membership.status != 0, Membership.level == 0).all()
+    return render_template('admin/group/members.html', group=group, leaders=leaders, members=members)
+
+@admin.route('/groups/<int:id>/requests', methods=['GET', 'POST'])
+@admin_required
+def group_requests(id):
+    group = Interest_Group.query.get_or_404(id)
+    membership_requests = User.query \
+        .join(Membership, User.id==Membership.user_id) \
+        .filter(Membership.group_id==id, Membership.status == 0, Membership.level == 0).all()
+    return render_template('admin/group/requests.html', group=group, membership_requests=membership_requests)
+
+@admin.route('/accept_request/<int:group_id>/<int:user_id>')
+@admin_required
+def accept_request(group_id, user_id):
+    membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
+    membership.status = 1
+    db.session.commit()
+    return redirect(url_for("admin.group_requests", id=group_id))
+
+@admin.route('/decline_request/<int:group_id>/<int:user_id>')
+@admin_required
+def decline_request(group_id, user_id):
+    membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
+    membership.status = 3
+    db.session.commit()
+    return redirect(url_for("admin.group_requests", id=group_id))
