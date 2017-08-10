@@ -49,12 +49,17 @@ def login():
 def profile():
     return render_template("user/profile.html", user=current_user)
 
+@client.route('/activities/')
+@login_required
+def activities():
+    activities = Activity.query.all()
+    return render_template("client/views/activities.html", activities=activities)
 
 @client.route('/groups/')
 @login_required
 def groups():
     groups = Interest_Group.query.all()
-    return render_template("group/groups.html", groups=groups)
+    return render_template("client/views/groups.html", groups=groups)
 
 @client.route('/groups/<int:id>', methods=['POST', 'GET'])
 @login_required
@@ -94,6 +99,11 @@ def profile_id(id):
     if user is not None:
         return render_template("user/profile.html", user=user)
     return rendirect(url_for("client.index"))
+
+@client.route('/notifications/')
+@login_required
+def notifications():
+    return render_template("client/views/notifications.html")
 
 @client.route('/logout')
 @login_required

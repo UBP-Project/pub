@@ -18,13 +18,6 @@
 </head>
 
 <body>
-
-    {% for message in get_flashed_messages() %}
-        <div class="alert alert-warning">
-            {{ message }}
-            <button type="button" class="close pull-right" data-dismiss="alert">&times;</button>
-        </div>
-    {% endfor %}
     
     {% block sidebar %}
 
@@ -42,13 +35,15 @@
                 </div>
             </div>
 
-            <ul class="nav navbar side-nav">
-                <li><a href="/" class="active">Home</a></li>
-                <li><a href="#">Activities</a></li>
-                <li><a href="#">Interest Groups</a></li>
-                <li><a href="#">Notifications</a></li>
-                <li><a href="/logout" id="sign-out">Log Out <i class="fa fa-sign-out pull-right"></i></a></li>
-            </ul>
+            <div class="navbar" role="navigation" id="navigation">
+                <ul class="nav navbar side-nav">
+                    <li><a href="/" style="color: #fff; background-color: #0e0058; border-left: 7px solid #ff8b00;">Home</a></li>
+                    <li><a href="/activities">Activities</a></li>
+                    <li><a href="/groups">Interest Groups</a></li>
+                    <li><a href="/notifications">Notifications</a></li>
+                    <li><a href="/logout" id="sign-out">Log Out <i class="fa fa-sign-out pull-right" style="margin-top: 3px;"></i></a></li>
+                </ul>
+            </div>
 
         </div>
 

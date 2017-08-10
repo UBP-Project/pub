@@ -20,10 +20,10 @@
 <body>
 
     {% for message in get_flashed_messages() %}
-        <div class="alert alert-warning">
+        <!-- <div class="alert alert-warning">
             {{ message }}
             <button type="button" class="close pull-right" data-dismiss="alert">&times;</button>
-        </div>
+        </div> -->
     {% endfor %}
     
     {% block navigation %}
