@@ -101,13 +101,33 @@ def get_role(id):
 @api.route('/interest_groups/<int:id>/join', methods=['POST'])
 @login_required
 def join_group(id):
-    try:
-        membership = Membership(
-            user_id=current_user.get_id(),
-            group_id=id)
-        db.session.add(membership)
-        db.session.commit()
+    """
+    Joining Group
+    ---
+    tags:
+        - groups
+    parameters:
+        - name: id
+          in: path
+          type: int
+          example: 1
+          description: Group ID
 
+    responses:
+        200:
+            description: Success
+        409:
+            description: Record Exists
+        500:
+            description: Internal Server Error
+    """    
+    membership = Membership(
+        user_id=current_user.get_id(),
+        group_id=id)
+    db.session.add(membership)
+
+    try:
+        db.session.commit()
         return jsonify({'message': 'Success'}), 201
     except exc.IntegrityError as e:
         db.session().rollback()
