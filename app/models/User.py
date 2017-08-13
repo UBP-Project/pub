@@ -16,16 +16,6 @@ class User(UserMixin, db.Model):
     position      = db.Column(db.String(100))
     birthday      = db.Column(db.Date)
     role_id       = db.Column(db.Integer, db.ForeignKey('roles.id'))
-    # role                = db.Column(db.Integer) #0 user #1 admin
-
-    # followed            = db.relationship('Follow', foreign_keys=[Follow.follower_id], backref=db.backref('follower', lazy='joined'), lazy='dynamic', passive_deletes=True, passive_updates=True)
-    # followers           = db.relationship('Follow', foreign_keys=[Follow.following_id], backref=db.backref('followed', lazy='joined'), passive_deletes=True, passive_updates=True)
-    membership          = db.relationship('Membership', backref=db.backref('membership', lazy='joined'), lazy='dynamic', passive_deletes=True, passive_updates=True)
-    # comments            = db.relationship('Comment', backref=db.backref('commented', lazy='joined'), lazy='dynamic', passive_deletes=True, passive_updates=True)
-    # initated_activity   = db.relationship('Assignment', foreign_keys=[Assignment.initiated_by], backref=db.backref('initiated'), lazy='dynamic', passive_deletes=True, passive_updates=True)
-    # assigned_activity   = db.relationship('Assignment', foreign_keys=[Assignment.assigned_to], backref=db.backref('assigned'), lazy='dynamic', passive_deletes=True, passive_updates=True)
-    # user_activity            = db.relationship('User_Activity', uselist = False, back_populates='user')
-
 
     # def __init__(self, **kwargs):
     #     super(User, self).__init__(**kwargs)
@@ -36,22 +26,6 @@ class User(UserMixin, db.Model):
     #             self.role = Role.query.filter_by(default=True).first()
     #             
     
-    @staticmethod
-    def create_admin():
-        email = input('Admin Email: ')
-        password = getpass.getpass('Password:  ')
-        admin_role = Role.query.filter(Role.name == "Administrator").first()
-        admin = User(email=email, password=password, role_id=admin_role.id)
-        try:
-            db.session.add(admin)
-            db.session.commit()
-            print("Administrator account created.")
-            print("You can login on https://[host]/login")
-            print("and view admin pages in https://[host]/admin")
-        except:
-            print("Unable to created administrator account.")
-            print("Make sure that the database is connected and the tables are present.")
-
     def can(self, permissions):
         return self.role is not None and \
             (self.role.permissions & permissions) == permissions
@@ -102,16 +76,16 @@ class User(UserMixin, db.Model):
         department      = json_user.get('department')
         position        = json_user.get('position')
         birthday        = json_user.get('birthday')
-        role            = json_user.get('role')
+        role_id         = json_user.get('role')
 
         return User(
-            firstname=firstname,
-            middlename=middlename,
-            lastname=lastname,
-            email=email,
-            password_hash=password,
-            department=department,
-            position=position,
-            birthday=birthday,
-            role=role
+            firstname       = firstname,
+            middlename      = middlename,
+            lastname        = lastname,
+            email           = email,
+            password_hash   = password,
+            department      = department,
+            position        = position,
+            birthday        = birthday,
+            role_id         = role_id
         )
