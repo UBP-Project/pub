@@ -5,6 +5,7 @@ from ..forms import LoginForm, GroupMembershipForm
 from . import client
 from app import db
 from app.models import User, Interest_Group, Activity, Membership, Role
+from ..auth import manager_or_leader_only
 
 @client.route('/', methods=['GET', 'POST'])
 @login_required
@@ -89,8 +90,18 @@ def group(id):
         current_user.get_id()==Membership.user_id,\
         id==Membership.group_id).first() \
         else False
-    return render_template('group/group.html', group=group, members=members, user=current_user,\
+    return render_template('client/views/group.html', group=group, members=members, user=current_user,\
         isMember=isMember, form=form)
+
+@client.route('/groups/<int:id>/requests', methods=['POST', 'GET'])
+@login_required
+def group_requests(id):
+    manager_or_leader_only(id) # check if the current user is a manager or leader
+    group = Interest_Group.query.get_or_404(id)
+    membership_requests = User.query \
+        .join(Membership, User.id==Membership.user_id) \
+        .filter(Membership.group_id==id, Membership.status == 0, Membership.level == 0).all()
+    return render_template('client/views/group-requests.html', group=group, membership_requests=membership_requests)
 
 @client.route('/profile/<int:id>')
 @login_required

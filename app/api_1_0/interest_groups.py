@@ -565,3 +565,20 @@ def group_activities_by(id):
     return jsonify([
             activity.to_json() for activity in activities
         ])
+
+@api.route('/interest_groups/<int:group_id>/accept', methods=['POST'])
+def accept_request(group_id):
+    user_id = int(request.form.get('user_id'));
+    membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
+    membership.status = 1
+    db.session.commit()
+    return jsonify({'status': 'Success'}), 200
+
+@api.route('/interest_groups/<int:group_id>/decline', methods=['POST'])
+def decline_request(group_id):
+    user_id = int(request.form.get('user_id'));
+    membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
+    membership.status = 3
+    db.session.commit()
+    return jsonify({'status': 'Success'}), 200
+
