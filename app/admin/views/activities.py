@@ -82,7 +82,7 @@ def edit_activity(id):
         activity.address     = form.address.data    
         activity.group_id    = form.group.data
         db.session.commit()
-        return redirect(url_for('admin.activity', id=id))
+        return redirect(url_for('admin.activities'))
 
     # load activity data to the form
     form.title.data       = activity.title

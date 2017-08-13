@@ -18,20 +18,25 @@
                 <div class="col-md-3">
                     <label>Firstname</label>
                     {{ form.firstname(
-                    placeholder="First name",
-                    class="form-control") }}
+                        placeholder="First name",
+                        class="form-control",
+                        required="true"
+                    )}}
                 </div>
                 <div class="col-md-3">
                     <label>Middlename</label>
                     {{ form.middlename(
-                    placeholder="Middle name",
-                    class="form-control") }}
+                        placeholder="Middle name",
+                        class="form-control"
+                    )}}
                 </div>
                 <div class="col-md-3">
                     <label>Lastname</label>
                     {{ form.lastname(
-                    placeholder="Last name",
-                    class="form-control") }}
+                        placeholder="Last name",
+                        class="form-control",
+                        required="true"
+                    )}}
                 </div>
             </div>
 
@@ -40,14 +45,16 @@
                     <label>Department</label>
                     {{ form.department(
                         placeholder="Department",
-                        class="form-control"
+                        class="form-control",
+                        required="true"
                     )}}
                 </div>
                 <div class="col-md-4">
                     <label>Position</label>
                     {{ form.position(
                         placeholder="Position",
-                        class="form-control"
+                        class="form-control",
+                        required="true"
                     )}}
                 </div>
             </div>
@@ -57,13 +64,17 @@
                     <label>Email</label>
                     {{ form.email(
                         placeholder="Email",
-                        class="form-control") }}
+                        class="form-control",
+                        required="true"
+                    ) }}
                 </div>
                 <div class="col-md-4">
                     <label>Birthday</label>
                     {{ form.birthday(
                         placeholder="Birthday",
-                        class="form-control")}}
+                        class="form-control",
+                        required="true"
+                    )}}
                 </div>
             </div>
 
@@ -72,12 +83,15 @@
                     <label>Password</label>
                     {{ form.password(
                         placeholder="Password",
-                        class="form-control")}}
+                        class="form-control",
+                        required="true"
+                    )}}
                 </div>
                 <!-- Used JS to check if password matches -->
                 <div class="col-md-4">
                     <label>Confirm Password</label>
-                    <input class="form-control" type="password" placeholder="Confirm password">
+                    <input id="confirm-pass" class="form-control" type="password" placeholder="Confirm password" required>
+                    <h5 id="password-error" style="color: red" hidden><span class="fa fa-times-circle"></span> Passwords don't match.</h5>
                 </div>
             </div>
 
@@ -86,7 +100,9 @@
                     <label>Role</label>
                     {{ form.role(
                         placeholder="Role",
-                        class="form-control")}}
+                        class="form-control",
+                        required="true"
+                    )}}
                 </div>            </div>
 
             <br />
@@ -95,10 +111,30 @@
                 <div class="col-md-12">
                 <input class="btn btn-default" type="reset">
                 {{ form.submit(
-                    class="btn btn-style-1"
+                    class="btn btn-style-1",
+                    disabled="true"
                 )}}
                 </div>
             </div>
         </form>
     </div>
 {% endblock %}
+{% block scripts %}
+    <script>
+        $('#confirm-pass').change(function() {
+            if ($(this).val() == $('#password').val()) {
+                $('#password-error').hide();
+                $('#submit').prop('disabled', false);
+            } else {
+                $('#password-error').show();
+                $('#submit').prop('disabled', true);
+            }
+        });
+
+        $('#password').change(function() {
+            $('#confirm-pass').val("");
+            $('#password-error').hide();
+            $('#submit').prop('disabled', true);
+        });
+    </script>
+{% endblock scripts %}
