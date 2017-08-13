@@ -17,13 +17,13 @@ class Activity(db.Model):
     # assignment  = db.relationship('Assignment', backref=db.backref('assignment', lazy='joined'), lazy='dynamic', passive_deletes=True, passive_updates=True)
     # guests      = db.relationship('User_Activity', backref=db.backref('user_activity', lazy='joined'), lazy='dynamic', passive_deletes=True, passive_updates=True)
     
-    def __init__(self, title, description, start_date, end_date, address, image, group_id=None):
+    def __init__(self, title, description, start_date, end_date, address, group_id, image):
         self.title       = title
         self.description = description
         self.start_date  = start_date
         self.end_date    = end_date
         self.address     = address
-        self.group_id    = group_id
+        self.group_id    = group_id or None
         self.image       = image
 
     def __repr__(self):
@@ -49,5 +49,6 @@ class Activity(db.Model):
         end_date    = json_activity.get('end_date')
         address     = json_activity.get('address')
         group_id    = json_activity.get('group_id')
+        image       = json_activity.get('image')
         
-        return Activity(title=title, description=description, start_date=start_date, end_date=end_date, address=address, group_id=group_id)
+        return Activity(title=title, description=description, start_date=start_date, end_date=end_date, address=address, group_id=group_id, image=image)

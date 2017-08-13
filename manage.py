@@ -2,6 +2,7 @@
 import os
 from app import create_app, db
 from app.models import Interest_Group, User, Role
+from app.seed import seed
 from flask_script import Manager, Shell, Server
 from flask_migrate import Migrate, MigrateCommand
 
@@ -13,10 +14,7 @@ server = Server(host="0.0.0.0", port=5000)
 manager.add_command("runserver", server)
 
 def make_shell_context():
-    return dict(app=app, db=db,
-            Interest_Group=Interest_Group,
-            User=User,
-            Role=Role)
+    return dict(app=app, db=db, Interest_Group=Interest_Group, User=User, Role=Role, seed=seed)
     
 manager.add_command("shell", Shell(make_context=make_shell_context))
 
