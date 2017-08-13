@@ -151,7 +151,6 @@ def new_activity():
             description: Internal Server Error
     """
     data = request.form.to_dict()
-    print(data.group_id)
     manager_or_leader_only(data.group_id)
     activity = Activity.from_json(data)
     db.session.add(activity)

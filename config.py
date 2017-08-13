@@ -5,7 +5,7 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    PUB_ADMIN = 'ariel.conde1997@gmail.com'
+    PUB_ADMIN = '<admin:email>'
     
     swagger_template = {
       "swagger": "2.0",

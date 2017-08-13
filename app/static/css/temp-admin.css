@@ -16,8 +16,7 @@ html, body {
     min-height: 100vh;
     height: 100%;
     font-family: "Lato";
-    padding: 5px;
-    padding-right: 0px;
+    padding: 5px 0px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
     flex: 1;
 }
@@ -95,7 +94,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .admin-form h1 {
-    font-family: "Francois One";
+    font-family: "Roboto Condensed Bold";
     color: #ef7c3d;
 }
 
@@ -120,7 +119,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .admin-page h1 {
-    font-family: "Francois One";
+    font-family: "Roboto Condensed Bold";
     color: #ef7c3d;
 }
 
@@ -223,4 +222,35 @@ h1, h2, h3, h4, h5, h6 {
 
 .group-controls {
     padding: 10px;
+}
+
+.pagination .current-page {
+    border: 2px solid white;
+    background-color: white;
+}
+
+table.users th {
+    background-color: #ef7c3d;
+    font-family: 'Lato';
+    font-size: 18px;
+    color: white;
+    height: 40px;
+}
+
+table.users td {
+    font-family: 'Lato';
+    font-size: 13px !important;
+    border-bottom: 1px solid white;
+    padding: 8px !important;
+}
+
+.search-form input[type=submit] {
+    background-color: #0e0058;
+    color: white;
+}
+
+.user-item .fa {
+    font-size: 20px;
+    margin: 3px;
+    color: #0e0058;
 }

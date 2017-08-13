@@ -10,7 +10,7 @@
     <div class="row admin-page user-list">
         <div class="row">
             <div class="col-md-12">
-                <h1>Users</h1>
+                <h1>Managers</h1>
             </div>
         </div>
 
@@ -18,7 +18,7 @@
             <div class="col-sm-6" style="padding: 20px 15px">
                 <form>
                     <div class="input-group search-form">
-                      <input type="text" class="form-control" name="query" placeholder="Search Users" value="{{ query }}" required>
+                      <input type="text" class="form-control" name="query" placeholder="Search Managers" value="{{ query }}" required>
                       <span class="input-group-btn">
                         <input type="submit" class="btn" type="button" value="Search" />
                       </span>
@@ -26,9 +26,9 @@
                 </form>
             </div>
             <div class="col-sm-6 text-right pagination">
-                  {%- for page in users.iter_pages(left_edge=1, left_current=2, right_current=2, right_edge=1) %}
+                  {%- for page in managers.iter_pages(left_edge=1, left_current=2, right_current=2, right_edge=1) %}
                     {% if page %}
-                      {% if page != users.page %}
+                      {% if page != managers.page %}
                         <a class="page-link btn btn-style-3" href="{{ url_for('admin.users', page=page, query=request.args.get('query')) }}">{{ page }}</a>
                       {% else %}
                         <strong class="btn current-page">{{ page }}</strong>
@@ -41,7 +41,7 @@
         </div>
 
         
-        {% if users.items|length > 0 %}
+        {% if managers.items|length > 0 %}
         <div class="row">
             <div class="col-md-12">
                 <table class="users table row table-hover table-condensed">
@@ -59,17 +59,17 @@
                     </thead>
 
                     <tbody>
-                        {% for user in users.items %}
+                        {% for manager in managers.items %}
                         <tr class="user-item">
-                            <td>{{ user['id'] }}</td>
-                            <td>{{ user['firstname'] }}</td>  
-                            <td>{{ user['middlename'] }}</td>
-                            <td>{{ user['lastname'] }}</td>
-                            <td>{{ user['email'] }}</td>
-                            <td>{{ user['position'] }}</td>
-                            <td>{{ user['department'] }}</td>
+                            <td>{{ manager['id'] }}</td>
+                            <td>{{ manager['firstname'] }}</td>  
+                            <td>{{ manager['middlename'] }}</td>
+                            <td>{{ manager['lastname'] }}</td>
+                            <td>{{ manager['email'] }}</td>
+                            <td>{{ manager['position'] }}</td>
+                            <td>{{ manager['department'] }}</td>
                             <td>
-                                <a href="{{ url_for('admin.profile', id=user.id)}}"><span class="fa fa-pencil-square-o"></span></a>
+                                <a href="{{ url_for('admin.profile', id=manager.id)}}"><span class="fa fa-pencil-square-o"></span></a>
                             </td>
                         </tr>
                         {% endfor %}
