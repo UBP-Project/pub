@@ -20,6 +20,13 @@ def get_activities():
     ---
     tags:
       - activities
+
+    parameters:
+      - name: limit
+        in: query
+        example: 1
+        default: 7
+
     responses:
       200:
         description: OK
@@ -345,10 +352,80 @@ def delete_activity_by(id):
 @api.route('/activities/<int:id>/going', methods=['GET'])
 @login_required
 def get_going(id):
+    """
+    Get list of Going individuals to an Activity
+    ---
+    tags:
+      - activities
+
+    parameters:
+      - in: path
+        name: id
+        description: Group ID
+    
+    responses:
+      200:
+        description: OK
+        schema:
+          id: users
+          properties:
+
+            id:
+                type: integer
+                example: 1
+
+            firstname:
+                type: string
+                example: Juan
+                description: First Name
+
+            middlename:
+                type: string
+                example: y
+                description: Middle Name
+
+            lastname:
+                type: string
+                example: dela Cruz
+                description: Last Name    
+                
+            email:
+                type: string
+                example: jdc@gmail.com
+                description: User Email
+
+            password_hash:
+                type: string
+                example: pbkdf2:sha1:1000$lnFVjrjG$b8cd6a98d9ab806eb52ca0066d275d59ee18e6f5
+                description: User Password
+
+            department:
+                type: string
+                example: Talen Acquisition
+                description: UnionBank Dept
+
+            position:
+                type: string
+                example: Head
+                descripton: User's Position
+            
+            birthday:
+                type: string
+                format: date
+                example: '1998-02-01'
+                description: User Birthday
+
+            role_id:
+                type: integer
+                example: 1
+                description: Corresponding values for Administrator, Manager, and User
+    """
+    activity = Activity.query.get_or_404(id)
+
     going = User.query                      \
         .join(User_Activity)                \
         .join(Activity)                     \
-        .filter(Activity.id == id)          \
+        .filter(Activity.id == activity.id) \
         .filter(User_Activity.status == 1)  \
         .order_by(User.lastname)
 
@@ -359,6 +436,75 @@ def get_going(id):
 @api.route('/activities/<int:id>/interested', methods=['GET'])
 @login_required
 def get_interested(id):
+    """
+    Get list of Interested individuals to an Activity
+    ---
+    tags:
+      - activities
+
+    parameters:
+      - in: path
+        name: id
+        description: Group ID
+    
+    responses:
+      200:
+        description: OK
+        schema:
+          id: users
+          properties:
+
+            id:
+                type: integer
+                example: 1
+
+            firstname:
+                type: string
+                example: Juan
+                description: First Name
+
+            middlename:
+                type: string
+                example: y
+                description: Middle Name
+
+            lastname:
+                type: string
+                example: dela Cruz
+                description: Last Name    
+                
+            email:
+                type: string
+                example: jdc@gmail.com
+                description: User Email
+
+            password_hash:
+                type: string
+                example: pbkdf2:sha1:1000$lnFVjrjG$b8cd6a98d9ab806eb52ca0066d275d59ee18e6f5
+                description: User Password
+
+            department:
+                type: string
+                example: Talen Acquisition
+                description: UnionBank Dept
+
+            position:
+                type: string
+                example: Head
+                descripton: User's Position
+            
+            birthday:
+                type: string
+                format: date
+                example: '1998-02-01'
+                description: User Birthday
+
+            role_id:
+                type: integer
+                example: 1
+                description: Corresponding values for Administrator, Manager, and User
+    """
+
     interested = User.query                 \
         .join(User_Activity)                \
         .join(Activity)                     \

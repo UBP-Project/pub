@@ -62,7 +62,7 @@ class User(UserMixin, db.Model):
             'department'    : self.department,
             'position'      : self.position,
             'birthday'      : self.birthday,
-            'role'          : self.role
+            'role_id'       : self.role_id
         }
         return json_post
 
