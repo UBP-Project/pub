@@ -25,7 +25,7 @@ def get_activities():
       - name: limit
         in: query
         example: 1
-        default: 7
+        default: 10
 
     responses:
       200:
@@ -331,13 +331,12 @@ def delete_activity_by(id):
       - activities
 
     parameters:
-
-        - name: id
-          in: path
-          description: Event ID
-          type: integer
-          required: true
-          default: 1
+      - name: id
+        in: path
+        description: Event ID
+        type: integer
+        required: true
+        default: 1
 
     responses:
       200:
@@ -351,7 +350,7 @@ def delete_activity_by(id):
 
 @api.route('/activities/<int:id>/going', methods=['GET'])
 @login_required
-def get_going(id):
+def get_going_by(id):
     """
     Get list of Going individuals to an Activity
     ---
