@@ -18,19 +18,26 @@ Create the tables by executing
 ```sh
 $ python manage.py shell
 >>> db.create_all() 
->>> Role.insert_roles()
 ```
 
-Drop the Tables
+Run SEED Script
 ```sh
 $ python manage.py shell
->>> db.drop_all() 
+>>> seed() 
+```
+(!) SEED Script already contains Role, Admin, and Several User Accounts
+(!) It also includes 4 Groups and 5 Activities for Testing
+
+Admin
+```sh
+email: admin@unionbank.com
+password: admin
 ```
 
-### Create Administrator
+User
 ```sh
-$ python manage.py shell
->>> User.create_admin()
+email: test@test.com
+password: 12345
 ```
 
 ### Development
