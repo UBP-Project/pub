@@ -75,7 +75,7 @@ def create_user():
         db.session.add(user)
         db.session.commit()
         # flash("Success creating user")
-        return redirect(url_for("admin.index"))
+        return redirect(url_for("admin.users"))
     return render_template('admin/user/create.html', form=form)
 
 @admin.route('/managers')
