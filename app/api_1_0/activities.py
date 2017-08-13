@@ -4,7 +4,7 @@ from app.models import Activity, User, User_Activity
 from app.api_1_0 import api
 from app import db
 import json
-from flask_login import login_required
+from flask_login import login_required, current_user
 from ..auth import manager_or_leader_only
 
 from app.utils import is_valid_extension
@@ -348,7 +348,7 @@ def delete_activity_by(id):
     db.session.commit()
     return "Deleted"
 
-@api.route('/activities/<int:id>/going', methods=['GET'])
+@api.route('/activities/<int:id>/going')
 @login_required
 def get_going_by(id):
     """
@@ -432,7 +432,7 @@ def get_going_by(id):
         user.to_json() for user in going
     ])
 
-@api.route('/activities/<int:id>/interested', methods=['GET'])
+@api.route('/activities/<int:id>/interested')
 @login_required
 def get_interested(id):
     """
@@ -514,3 +514,91 @@ def get_interested(id):
     return jsonify([
         user.to_json() for user in interested
     ])
+
+@api.route('/activities/<int:id>/going', methods=['POST'])
+@login_required
+def going_to_activity_by(id):
+    """
+    Going to an Activity
+    ---
+    tags:
+        - activities
+    parameters:
+        - name: id
+          in: path
+          type: int
+          example: 1
+          description: Activity ID
+
+    responses:
+        200:
+            description: Success
+        500:
+            description: Internal Server Error
+    """    
+    activity = User_Activity.query.filter_by(user_id=current_user.get_id(), activity_id=id).first()
+
+    if activity is not None:
+        #check if the status is interested
+        if activity.status == 0:
+            #change to going
+            activity.status = 1
+
+    else:
+        activity = User_Activity(
+            user_id=current_user.get_id(),
+            activity_id=id,
+            status = 1 #going
+            )
+        db.session.add(activity)
+
+    try:
+        db.session.commit()
+        return jsonify({'message': 'Success'}), 201
+    except exc.SQLAlchemyError as e:
+        db.session().rollback()
+        return jsonify({'status': 'error'}), 500
+
+@api.route('/activities/<int:id>/interested', methods=['POST'])
+@login_required
+def interested_to_activity_by(id):
+    """
+    Interested to an Activity
+    ---
+    tags:
+        - activities
+    parameters:
+        - name: id
+          in: path
+          type: int
+          example: 1
+          description: Activity ID
+
+    responses:
+        200:
+            description: Success
+        500:
+            description: Internal Server Error
+    """    
+    activity = User_Activity.query.filter_by(user_id=current_user.get_id(), activity_id=id).first()
+
+    if activity is not None:
+        #check if the status is going
+        if activity.status == 1:
+            #change to interested
+            activity.status = 0
+
+    else:
+        activity = User_Activity(
+            user_id=current_user.get_id(),
+            activity_id=id,
+            status = 0 #interested
+            )
+        db.session.add(activity)
+
+    try:
+        db.session.commit()
+        return jsonify({'message': 'Success'}), 201
+    except exc.SQLAlchemyError as e:
+        db.session().rollback()
+        return jsonify({'status': 'error'}), 500

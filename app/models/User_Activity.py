@@ -13,4 +13,4 @@ class User_Activity(db.Model):
     def __init__(self, user_id, activity_id, status = 0):
         self.user_id = user_id
         self.activity_id = activity_id
-        self.status = status #going by default
+        self.status = status
