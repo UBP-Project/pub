@@ -9,7 +9,7 @@ class Activity(db.Model):
     start_date    = db.Column(db.Date)
     end_date      = db.Column(db.Date)  
     address       = db.Column(db.String(100))
-    group_id      = db.Column(db.Integer, nullable=True)
+    group_id      = db.Column(db.Integer, db.ForeignKey('interest_group.id', ondelete="CASCADE", onupdate="CASCADE"), nullable=True)
     image         = db.Column(db.String(200))
 
     # comments    = db.relationship('Comment', backref=db.backref('comments', lazy='joined'), lazy="dynamic", passive_deletes=True, passive_updates=True)

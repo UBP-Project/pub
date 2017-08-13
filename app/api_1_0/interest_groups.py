@@ -1,7 +1,7 @@
 from flask import jsonify, request, url_for
 from app import db
 import json
-from app.models import Interest_Group, Membership, User
+from app.models import Interest_Group, Membership, User, Activity
 from . import api
 from flask_login import login_required, current_user
 import datetime
@@ -532,3 +532,36 @@ def leave_group(id):
         return jsonify({'status': 'Success'}), 200
     else:
         return jsonify({'status': 'Not Found'}), 404
+
+@api.route('/interest_groups/<int:id>/activities')
+@login_required
+def group_activities_by(id):
+    """
+    Activities of a group
+    ---
+    tags:
+      - groups
+
+    parameters:
+      - name: id
+        in: path
+        description: Group ID
+        type: integer
+        required: true
+        default: 1
+
+    responses:
+      200:
+        description: OK
+      404:
+        description: Not Found
+    """
+
+    activities = Activity.query                          \
+                    .join(Interest_Group)                \
+                    .filter(Interest_Group.id == id)   \
+                    .all()
+
+    return jsonify([
+            activity.to_json() for activity in activities
+        ])
