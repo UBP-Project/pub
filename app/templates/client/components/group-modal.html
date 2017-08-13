@@ -5,7 +5,7 @@
         <div class="col-md-3 col-sm-3 text-center">
             <div class="group-icon">
                 <div class="group-img">
-                    <img src="{{ url_for('static', filename='../../static/images/pub-default-img.jpg') }}" class="img-circle zoomify" data-toggle="modal" data-target="#group-{{ group.id }}" />
+                    <img src="{{ url_for('static', filename='uploads/group_icons/' + group.group_icon) }}" class="img-circle zoomify" data-toggle="modal" data-target="#group-{{ group.id }}" />
                 </div>
                 <div class="group-desc">
                     <h4 class="title">{{ group.name | upper }}</h4>
@@ -29,7 +29,7 @@
                     <div class="modal-body">
 
                         <div class="img-container">
-                            <img src="{{ url_for('static', filename='../../static/images/pub-default-head-img.jpg') }}" />
+                            <img src="{{ url_for('static', filename='uploads/covers/' + group.cover_photo) }}" />
                         </div>
 
                         <h2 class="text-center">{{ group.name | upper }}</h2>
@@ -74,13 +74,14 @@
 
                     <!-- FOOTER -->
                     <div class="modal-footer">
-                    {% if group.status == 1 %}
+                    <!-- {% if group.status == 1 %}
                         <button type="button" class="btn btn-warning" onclick="leave_group({{group.id}})">LEAVE GROUP</button>
                     {% elif group.status == 0 %}
                         <button type="button" class="btn btn-warning" onclick="cancel_join_group({{group.id}})">CANCEL JOIN REQUEST</button>
                     {% else %}
                         <button type="button" class="btn btn-style-1" onclick="join_group({{group.id}})">JOIN GROUP</button>
-                    {% endif %}
+                    {% endif %} -->
+                        <button type="button" class="btn btn-style-1" onclick="join_group({{group.id}})">JOIN GROUP</button>
                     </div>
 
                 </div>

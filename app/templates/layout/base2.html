@@ -36,11 +36,11 @@
             </div>
 
             <div class="navbar" role="navigation" id="navigation">
-                <ul class="nav navbar side-nav">
-                    <li><a href="/" style="color: #fff; background-color: #0e0058; border-left: 7px solid #ff8b00;">Home</a></li>
-                    <li><a href="/activities">Activities</a></li>
-                    <li><a href="/groups">Interest Groups</a></li>
-                    <li><a href="/notifications">Notifications</a></li>
+                <ul class="nav side-nav">
+                    <li><a href="/" class="nav-link active">Home <i class="fa fa-home pull-right" style="margin-top: 3px;"></i></a></li><!-- <li><a href="/" style="color: #fff; background-color: #0e0058; border-left: 7px solid #ff8b00;">Home</a></li> -->
+                    <li><a href="/activities" class="nav-link">Activities <i class="fa fa-rocket pull-right" style="margin-top: 3px;"></i></a></li>
+                    <li><a href="/groups" class="nav-link">Interest Groups <i class="fa fa-group pull-right" style="margin-top: 3px;"></i></a></li>
+                    <li><a href="/notifications" class="nav-link">Notifications <i class="fa fa-bell pull-right" style="margin-top: 3px;"></i></a></li>
                     <li><a href="/logout" id="sign-out">Log Out <i class="fa fa-sign-out pull-right" style="margin-top: 3px;"></i></a></li>
                 </ul>
             </div>
@@ -61,6 +61,16 @@
     </div>
 
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script>
+        /*$(document).ready(function() {
+
+            $('.nav-link').click(function(this){
+
+                event.preventDefault();            
+            });
+            
+        });*/
+    </script>
 
     {% block scripts %}
     {% endblock scripts %}
