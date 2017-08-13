@@ -1,10 +1,16 @@
 from flask import jsonify, request, current_app, url_for
+from sqlalchemy import exc
 from app.models import Activity, User, User_Activity
 from app.api_1_0 import api
 from app import db
 import json
 from flask_login import login_required
 from ..auth import manager_or_leader_only
+
+from app.utils import is_valid_extension
+from werkzeug.utils import secure_filename
+import os
+import uuid
 
 @api.route('/activities', methods=['GET'])
 @login_required
@@ -23,22 +29,34 @@ def get_activities():
             id:
                 type: integer
                 example: 1
+            title:
+                type: string
+                example: Temple Run
+                description: Event Title
             description:
                 type: string
-                example: Pa zumba ni president :)
+                example: Run Run Run
             start_date:
                 type: string
                 format: date 
+                example: Sat, 19 Aug 2017 00:00:00 GMT
             end_date:
                 type: string
                 format: date 
+                example: Sat, 19 Aug 2017 00:00:00 GMT
             address:
                 type: string
                 example: Luneta Park
             group_id:
                 type: integer
                 default: None
+                example: 1
                 descripton: In case event is associated with some group
+            image:
+                type: string
+                example: 70a256f3628947508af68343821d78b6.jpg
+                default: None
+                description: File name of image in uploads/activity_image folder
     """
 
     if 'limit' in request.args:
@@ -51,34 +69,278 @@ def get_activities():
         activity.to_json() for activity in activities
     ])
 
-@api.route('/activities/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+@api.route('/activities', methods=['POST'])
 @login_required
-def activities(id):
+def new_activity():
     """
-    Read, Update, and Delete
+    Create Activity
     ---
     tags:
         - activities
+    parameters:
+        - name: title
+          in: formData
+          type: string
+          example: Temple Run
+          description: Event Title
+          default: Temple Run
+
+        - name: description
+          in: formData
+          type: string
+          example: Run Run Run
+          description: Event Description
+          default: Run Run Run
+
+        - name: start_date
+          in: formData
+          type: string
+          format: date
+          example: '2017-08-19'
+          description: Event Starting Date
+          default: '2017-08-19'
+
+        - name: end_date
+          in: formData
+          type: string
+          format: date
+          example: '2017-08-19'
+          description: Event Ending date
+          default: '2017-08-19'
+
+        - name: address
+          in: formData
+          type: string
+          exampe: Luneta Park
+          description: Venue of the Event
+          default: Luneta Park
+
+        - name: group_id
+          in: formData
+          type: int
+          example: 1
+          description: Event Association with groups
+          default: 1
+
+        - name: image
+          in: formData
+          type: file
+          description: File name of image in uploads/activity_image folder
 
     responses:
         200:
-            description: OK
+            description: Success!
         500:
             description: Internal Server Error
     """
-    if request.method == 'GET':
-        activity = Activity.query.get_or_404(id)
-        return jsonify(activity.to_json())
 
-    elif request.method == 'PUT':
-        activity = Activity.query.filter_by(id=id).update(request.form.to_dict())
-        db.session.commit()
-        return "Updated" # change this to better message format
+    image                 = request.files.get('image')
+    image_filename        = secure_filename(image.filename)
 
-    else:
-        activity = Activity.query.filter_by(id=id).delete()
+    if is_valid_extension(image_filename):
+        extension             = image_filename.rsplit('.', 1)[1].lower()
+        image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
+        file_path             = os.path.join('app/static/uploads/activity_images', image_hashed_filename)
+        image.save(file_path)
+        activity = Activity(
+            title       = request.form.get('title'),
+            description = request.form.get('description'),
+            start_date  = request.form.get('start_date'),
+            end_date    = request.form.get('end_date'),
+            address     = request.form.get('address'),
+            group_id    = request.form.get('group_id'),
+            image       = image_hashed_filename
+        )
+        db.session.add(activity)
+
+    try:
         db.session.commit()
-        return "Deleted"
+        return "Success" # change this to better message format
+    except exc.SQLAlchemyError:
+        db.session.rollback()
+        return jsonify({'status':'error'}), 500
+
+@api.route('/activities/<int:id>', methods=['GET'])
+@login_required
+def get_activity_by(id):
+    """
+    Get an Activity by ID
+    ---
+    tags:
+      - activities
+    parameters:
+        - name: id
+          in: path
+          type: integer
+          required: true
+    responses:
+      200:
+        description: OK
+        schema:
+          id: activities
+          properties:
+            id:
+                type: integer
+                example: 1
+            title:
+                type: string
+                example: Temple Run
+                description: Event Title
+            description:
+                type: string
+                example: Run Run Run
+            start_date:
+                type: string
+                format: date 
+                example: Sat, 19 Aug 2017 00:00:00 GMT
+            end_date:
+                type: string
+                format: date 
+                example: Sat, 19 Aug 2017 00:00:00 GMT
+            address:
+                type: string
+                example: Luneta Park
+            group_id:
+                type: integer
+                default: None
+                example: 1
+                descripton: In case event is associated with some group
+            image:
+                type: string
+                example: 70a256f3628947508af68343821d78b6.jpg
+                default: None
+                description: File name of image in uploads/activity_image folder
+    """
+    activity = Activity.query.get_or_404(id)
+    return jsonify(activity.to_json())
+
+@api.route('/activities/<int:id>', methods=['PUT'])
+@login_required
+def edit_activity_by(id):
+    """
+    Edit an Activity by ID
+    ---
+    tags:
+      - activities
+
+    parameters:
+
+        - name: id
+          in: path
+          description: Event ID
+          type: integer
+          required: true
+          default: 1
+
+        - name: title
+          in: formData
+          type: string
+          example: Temple Run
+          description: Event Title
+          default: Temple Run
+
+        - name: description
+          in: formData
+          type: string
+          example: Run Run Run
+          description: Event Description
+          default: Run Run Run
+
+        - name: start_date
+          in: formData
+          type: string
+          format: date
+          example: '2017-08-19'
+          description: Event Starting Date
+          default: '2017-08-19'
+
+        - name: end_date
+          in: formData
+          type: string
+          format: date
+          example: '2017-08-19'
+          description: Event Ending date
+          default: '2017-08-19'
+
+        - name: address
+          in: formData
+          type: string
+          exampe: Luneta Park
+          description: Venue of the Event
+          default: Luneta Park
+
+        - name: group_id
+          in: formData
+          type: int
+          example: 1
+          description: Event Association with groups
+          default: 1
+
+        - name: image
+          in: formData
+          type: file
+          example: 70a256f3628947508af68343821d78b6.jpg
+          description: File name of image in uploads/activity_image folder
+
+    responses:
+      200:
+        description: OK
+      500:
+        description: Error
+    """
+    activity  = Activity.query.get_or_404(id)
+
+    if 'image' in request.files:
+        image                 = request.files.get('image')
+        image_filename        = secure_filename(image.filename)
+        if is_valid_extension(image_filename):
+            extension             = image_filename.rsplit('.', 1)[1].lower()
+            image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
+            file_path             = os.path.join('app/static/uploads/activity_images', image_hashed_filename)
+            image.save(file_path)
+            activity.image   = image_hashed_filename
+            
+    activity.title       = request.form.get('title')      
+    activity.description = request.form.get('description')
+    activity.start_date  = request.form.get('start_date')
+    activity.end_date    = request.form.get('end_date')   
+    activity.address     = request.form.get('address')   
+    activity.group_id    = request.form.get('group_id')
+
+    try:
+        db.session.commit()
+        return "Success" # change this to better message format
+    except exc.SQLAlchemyError:
+        db.session.rollback()
+        return jsonify({'status':'error'}), 500
+
+@api.route('/activities/<int:id>', methods=['DELETE'])
+@login_required
+def delete_activity_by(id):
+    """
+    Delete an Activity by ID
+    ---
+    tags:
+      - activities
+
+    parameters:
+
+        - name: id
+          in: path
+          description: Event ID
+          type: integer
+          required: true
+          default: 1
+
+    responses:
+      200:
+        description: OK
+      404:
+        description: Not Found
+    """
+    activity = Activity.query.filter_by(id=id).delete()
+    db.session.commit()
+    return "Deleted"
 
 @api.route('/activities/<int:id>/going', methods=['GET'])
 @login_required
@@ -107,54 +369,3 @@ def get_interested(id):
     return jsonify([
         user.to_json() for user in interested
     ])
-
-@api.route('/activities', methods=['POST'])
-@login_required
-def new_activity():
-    """
-    Create Activity
-    ---
-    tags:
-        - activities
-    parameters:
-      - in: body
-        name: body
-        description: JSON parameters.
-        schema:
-          properties:
-            title:
-              type: string
-              description: Name of the Activity
-              example: UHAC Manila
-            description:
-              type: string
-              description: Description of Activity.
-              example: Hackathon for Digital Innovation
-            start_date:
-              type: string
-              format: date
-              description: Starting When?
-              example: 2017-07-31
-            end_date:
-              type: string
-              format: date
-              description: Ending When?
-              example: 2017-08-01
-            group_id:
-              type: integer
-              description: If an acitivity is associated with a group
-              example: 1
-    responses:
-        200:
-            description: Success!
-        500:
-            description: Internal Server Error
-    """
-    data = request.form.to_dict()
-    print(data.group_id)
-    manager_or_leader_only(data.group_id)
-    activity = Activity.from_json(data)
-    db.session.add(activity)
-    db.session.commit()
-    return jsonify(activity.to_json()), 201, \
-        {'Location': url_for('api.new_activity', id=activity.id, _external=True)}
