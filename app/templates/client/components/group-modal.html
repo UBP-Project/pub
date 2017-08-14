@@ -9,7 +9,7 @@
                 </div>
                 <div class="group-desc">
                     <h4 class="title">{{ group.name | upper }}</h4>
-                    <p><i class="fa fa-user"></i> 10</p>
+                    <!-- <p><i class="fa fa-user"></i> 10</p> -->
                 </div>
             </div>
         </div>
@@ -47,7 +47,7 @@
                                 </li>
 
                                 <li role="presentation" class="grp-li">
-                                    <a href="#grp-activities-{{group.id}}" role="tab" data-toggle="tab">Activities</a>
+                                    <a href="#grp-activities-{{group.id}}" role="tab" data-toggle="tab" onclick="additional_grpInfo({{group.id}})">Activities</a>
                                 </li>
 
                             </ul>
@@ -55,15 +55,24 @@
                             <div class="tab-content">
 
                                 <div role="tabpanel" class="tab-pane active" id="grp-desc-{{group.id}}">
-                                    <p>{{ group.about }}</p>
+                                
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p>{{ group.about }}</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <img src="{{ url_for('static', filename='uploads/group_icons/' + group.group_icon) }}" class="img-circle pull-right" style="width: 120px; height: 120px; margin-top: 25px;" />
+                                        </div>
+                                    </div>
+                                    
                                 </div>
 
                                 <div role="tabpanel" class="tab-pane" id="grp-members-{{group.id}}">
-                                    <p>No members to show</p>
+                                    <p id="group-members-{{group.id}}"></p>
                                 </div>
 
                                 <div role="tabpanel" class="tab-pane" id="grp-activities-{{group.id}}">
-                                    <p>No activities</p>
+                                    <p id="group-activities-{{group.id}}"></p>
                                 </div>
                         
                             </div>
@@ -74,14 +83,17 @@
 
                     <!-- FOOTER -->
                     <div class="modal-footer">
-                    <!-- {% if group.status == 1 %}
-                        <button type="button" class="btn btn-warning" onclick="leave_group({{group.id}})">LEAVE GROUP</button>
-                    {% elif group.status == 0 %}
-                        <button type="button" class="btn btn-warning" onclick="cancel_join_group({{group.id}})">CANCEL JOIN REQUEST</button>
-                    {% else %}
-                        <button type="button" class="btn btn-style-1" onclick="join_group({{group.id}})">JOIN GROUP</button>
-                    {% endif %} -->
-                        <button type="button" class="btn btn-style-1" onclick="join_group({{group.id}})">JOIN GROUP</button>
+
+                        {% if group.status == 1 %}
+                            <button type="button" id="join-btn-{{group.id}}" class="btn btn-danger" onclick="join_event({{group.status}},{{group.id}})">LEAVE GROUP</button>
+                        {% elif group.status == 0 %}
+                            <button type="button" id="join-btn-{{group.id}}" class="btn btn-warning" onclick="join_event({{group.status}},{{group.id}})">CANCEL JOIN REQUEST</button>
+                        {% else %}
+                            <button type="button" id="join-btn-{{group.id}}" class="btn btn-style-1" onclick="join({{group.id}})">JOIN GROUP</button>
+                        {% endif %}
+
+                        <!-- <button type="button" id="join-btn" class="btn" onclick="join_event({{group.status}},{{group.id}})">JOIN GROUP</button> -->
+
                     </div>
 
                 </div>
@@ -89,5 +101,110 @@
 
         </div>
     </div>
+
+    <script>
+
+        function additional_grpInfo(group_id) {
+
+            var activities = "";
+
+            $.ajax({
+                url: '/api/v1.0/interest_groups/'+ group_id + '/activities',
+                type: 'GET'
+            })
+            .done(function(data) {
+                console.log("success");
+                console.log('Activities for Group ' + group_id);
+
+                $.each(data, function() {
+                    console.log(data);
+                });
+
+                /*document.getElementById('group-activities-'+group_id).innerHTML = data;*/
+
+            
+
+                /*console.log(data);*/
+            })
+            .fail(function() {
+                console.log("error");
+            });
+
+        }
+
+        function join(group_id) {
+            $.ajax({
+                url: '/api/v1.0/interest_groups/'+ group_id + '/join',
+                type: 'POST'
+            })
+            .done(function(data) {
+                $('.modal-item .modal-footer #join-btn-'+group_id).text('CANCEL JOIN REQUEST');
+                $('.modal-item .modal-footer #join-btn-'+group_id).removeClass('btn-style-1');
+                $('.modal-item .modal-footer #join-btn-'+group_id).addClass('btn-warning');
+                console.log("success");
+            })
+            .fail(function() {
+                console.log("error");
+            });
+        }
+
+        function join_event(status, group_id) {
+
+            if(status == 1){
+
+                $.ajax({
+                    url: '/api/v1.0/interest_groups/'+ group_id + '/leave',
+                    type: 'DELETE'
+                })
+                .done(function(data) {
+                    $('.modal-item .modal-footer #join-btn-'+group_id).text('JOIN GROUP');
+                    $('.modal-item .modal-footer #join-btn-'+group_id).removeClass('btn-danger');
+                    $('.modal-item .modal-footer #join-btn-'+group_id).addClass('btn-style-1');
+                    console.log("success");
+                    /*console.log(data);*/
+                })
+                .fail(function() {
+                    console.log("error");
+                });
+
+            } else if (status == 0) {
+                
+                $.ajax({
+                    url: '/api/v1.0/interest_groups/'+ group_id + '/leave',
+                    type: 'DELETE'
+                })
+                .done(function(data) {
+                    $('.modal-item .modal-footer #join-btn-'+group_id).text('JOIN GROUP');
+                    $('.modal-item .modal-footer #join-btn-'+group_id).removeClass('btn-warning');
+                    $('.modal-item .modal-footer #join-btn-'+group_id).addClass('btn-style-1');
+                    console.log("success");
+                    /*console.log(data);*/
+                })
+                .fail(function() {
+                    console.log("error");
+                });
+
+            } else {
+                
+                $.ajax({
+                    url: '/api/v1.0/interest_groups/'+ group_id + '/join',
+                    type: 'POST'
+                })
+                .done(function(data) {
+                    $('.modal-item .modal-footer #join-btn-'+group_id).text('CANCEL JOIN REQUEST');
+                    $('.modal-item .modal-footer #join-btn-'+group_id).removeClass('btn-style-1');
+                    $('.modal-item .modal-footer #join-btn-'+group_id).addClass('btn-warning');
+                    console.log("success");
+                    /*console.log(data);*/
+                })
+                .fail(function() {
+                    console.log("error");
+                });
+
+            }
+
+        } // function join_event(status, group_id)
+
+    </script>
 
 {% endmacro %}

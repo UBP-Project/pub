@@ -61,15 +61,19 @@
                             </div>
 
                             <div role="tabpanel" class="tab-pane" id="act-sched-{{activity.id}}">
-                                <p>No schedule to show</p>
+                                <p>
+                                    <b>Venue</b> : {{ activity.address }} <br/><br/>
+                                    <b>Start Date</b> : {{ activity.start_date }} <br/>
+                                    <b>End Date</b> : {{ activity.end_date }}
+                                </p>
                             </div>
 
                             <div role="tabpanel" class="tab-pane" id="act-interested-{{activity.id}}">
-                                <p>No one interested</p>
+                                <p id="activity-interested-users-{{activity.id}}"></p>
                             </div>
 
                             <div role="tabpanel" class="tab-pane" id="act-going-{{activity.id}}">
-                                <p>No one is going</p>
+                                <p id="activity-going-users-{{activity.id}}"></p>
                             </div>
                     
                         </div>
@@ -80,13 +84,83 @@
 
                 <!-- FOOTER -->
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-style-2">INTERESTED</button>
-                    <button type="button" class="btn btn-style-1">JOIN ACTIVITY</button>
+                   <!--  <button type="button" class="btn btn-style-2" onclick="interested_activity({{activity.id}})">INTERESTED</button>
+                    <button type="button" class="btn btn-style-1" onclick="join_activity({{activity.id}})">JOIN ACTIVITY</button> -->
+                     <button type="button" class="btn btn-style-2" onclick="interested_activity({{activity.id}})">INTERESTED</button>
+                    <button type="button" class="btn btn-style-1" onclick="join_activity({{activity.id}})">JOIN ACTIVITY</button>
                 </div>
 
             </div>
         </div>
 
     </div>
+
+    <script>
+
+        function interested_users(activity_id) {
+            $.ajax({
+                url: '/api/v1.0/activities/'+ activity_id + '/interested',
+                type: 'GET'
+            })
+            .done(function(data) {
+                console.log("success");
+                console.log(data);
+                console.log(data.length);
+                if(data==""){
+                    document.getElementById('activity-interested-users-'+activity_id).innerHTML = 'No one is interested';
+                } else {
+                    document.getElementById('activity-interested-users-'+activity_id).innerHTML = data;    
+                }
+                
+            })
+            .fail(function() {
+                console.log("error");
+            });
+        }
+
+        function going_users(activity_id) {
+            $.ajax({
+                url: '/api/v1.0/activities/'+ activity_id + '/going',
+                type: 'GET'
+            })
+            .done(function(data) {
+                console.log("success");
+                console.log(data);
+                console.log(data.length);
+            })
+            .fail(function() {
+                console.log("error");
+            });
+        }
+
+        function interested_activity(activity_id){
+            $.ajax({
+                url: '/api/v1.0/activities/'+ activity_id + '/interested',
+                type: 'POST'
+            })
+            .done(function(data) {
+                console.log("success");
+                console.log(data);
+            })
+            .fail(function() {
+                console.log("error");
+            });
+        }
+
+        function join_activity(activity_id){
+            $.ajax({
+                url: '/api/v1.0/activities/'+ activity_id + '/going',
+                type: 'POST'
+            })
+            .done(function(data) {
+                console.log("success");
+                console.log(data);
+            })
+            .fail(function() {
+                console.log("error");
+            });
+        }
+
+    </script>
 
 {% endmacro %}
