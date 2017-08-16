@@ -12,18 +12,27 @@
 
     </div>
     <div class="row" width="100%">
-    {% for member in membership_requests %}
-        <div class="col-md-4 btn" id="request-div-{{member['id']}}" style="background-color: white">
-            {{ member.firstname }} {{ member.lastname }}
-            <br />
-            <button class="btn btn-xs btn-default" onclick="decline_request({{ member['id'] }})">
-                Decline
-            </button>
-            <button class="btn btn-xs btn-style-1" onclick="accept_request({{member['id']}})">
-                Accept
-            </button>
-        </div>
-    {% endfor %}
+
+    {% if membership_requests|length > 0 %}
+
+        {% for member in membership_requests %}
+            <div class="col-md-4 btn" id="request-div-{{member['id']}}" style="background-color: white">
+                {{ member.firstname }} {{ member.lastname }}
+                <br />
+                <button class="btn btn-xs btn-default" onclick="decline_request({{ member['id'] }})">
+                    Decline
+                </button>
+                <button class="btn btn-xs btn-style-1" onclick="accept_request({{member['id']}})">
+                    Accept
+                </button>
+            </div>
+        {% endfor %}
+
+    {% else %}
+        <h3>No Membership Request.</h3>
+    {% endif %}
+
+
     </div>
 
 {% endblock content %}

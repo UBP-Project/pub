@@ -1,9 +1,9 @@
 from flask import jsonify, request, current_app, url_for
-from app.models import User
+from app.models import User, Follow
 from app.api_1_0 import api
 from app import db
 import json
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 @api.route('/users')
 @login_required
@@ -39,3 +39,19 @@ def new_user():
     db.session.commit()
     return jsonify(user.to_json()), 201, \
         {'Location': url_for('api.new_user', id=user.id, _external=True)}
+
+@api.route('/users/follow/<int:to_follow_id>', methods=['POST'])
+@login_required
+def follow_user(to_follow_id):
+    follow = Follow(follower_id=current_user.get_id(), following_id=to_follow_id)
+    db.session.add(follow)
+    db.session.commit()
+    return jsonify({'message': 'Success'}), 200
+
+@api.route('/users/unfollow/<int:to_unfollow_id>', methods=['POST'])
+@login_required
+def unfollow_user(to_unfollow_id):
+    follow = Follow.query.filter(Follow.follower_id==current_user.get_id(),\
+        Follow.following_id==to_unfollow_id).delete()
+    db.session.commit()
+    return jsonify({'message': 'Success'}), 200

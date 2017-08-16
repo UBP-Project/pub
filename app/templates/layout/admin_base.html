@@ -106,15 +106,14 @@
             {% endblock content %}
         </div>
     </div>
+    {% block scripts %}
+    {% endblock scripts %}
 
     <script>
         $(document).ready(function() {
             $("#admin-sidebar").height($(document).height());
         })
     </script>
-
-    {% block scripts %}
-    {% endblock scripts %}
 
 </body>
 

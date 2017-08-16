@@ -1,0 +1,21 @@
+{% extends "./layout/base2.html" %}
+
+{% block title %} Interest Groups {% endblock title %}
+
+{% block content %}
+
+    <div class="row">
+
+            {% if membership.level == 1 %}
+                <a class="btn btn-xs btn-style-3" href="{{ url_for('client.group_requests', id=group.id) }}">
+                    Membership Requests
+                </a>
+            {% endif %}
+
+            <div class="col-md-12 col-sm-12 box-header box-style-2">
+                <span>{{ group.name }}</span>
+            </div>
+
+    </div>
+
+{% endblock content %}
