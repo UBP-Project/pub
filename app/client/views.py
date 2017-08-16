@@ -106,10 +106,8 @@ def group_requests(id):
 @client.route('/profile/<int:id>')
 @login_required
 def profile_id(id):
-    user = User.query.filter_by(id=id).first()
-    if user is not None:
-        return render_template("user/profile.html", user=user)
-    return rendirect(url_for("client.index"))
+    user = User.query.filter_by(id=id).get_or_404()
+    return render_template("client/views/profile.html", user=user, current_user=current_user)
 
 @client.route('/notifications/')
 @login_required

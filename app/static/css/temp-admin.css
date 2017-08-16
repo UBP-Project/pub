@@ -254,3 +254,16 @@ table.users td {
     margin: 3px;
     color: #0e0058;
 }
+
+.trumbowyg-box {
+    margin-top: 0px !important;
+}
+
+.wysiwyg-editor {
+    background-color: white;
+
+}
+
+.hidden {
+    display: none;
+}
