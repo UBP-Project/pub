@@ -115,6 +115,29 @@ def profile_id(id):
     print(is_following)
     return render_template("client/views/profile.html", user=user, current_user=current_user, is_following=is_following)
 
+@client.route('/profile/<int:id>/edit')
+@login_required
+def edit_profile(id):
+    print(id, current_user.get_id())
+    if int(id) != int(current_user.get_id()):
+        return redirect(url_for('client.index'))
+    return render_template('client/views/edit-profile.html', user=current_user)
+
+@client.route('/profile/<int:id>/followers')
+@login_required
+def followers(id):
+    return "Followers"
+
+@client.route('/profile/<int:id>/following')
+@login_required
+def following(id):
+    return "Following"
+
+@client.route('/self')
+@login_required
+def self():
+    return current_user.get_id();
+
 @client.route('/notifications/')
 @login_required
 def notifications():
