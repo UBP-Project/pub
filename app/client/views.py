@@ -12,27 +12,7 @@ from ..utils import flash_errors
 @client.route('/', methods=['GET', 'POST'])
 @login_required
 def index():
-
-    #problem still exist in this query
-    interest_groups = Interest_Group.query  \
-        .outerjoin(Membership) \
-        .outerjoin(User) \
-        .with_entities(
-            Interest_Group.id,              \
-            Interest_Group.name,            \
-            Interest_Group.about,           \
-            Interest_Group.cover_photo,     \
-            Interest_Group.group_icon,      \
-            Membership.status
-            )  \
-        .limit(14)    
-
-    activities = Activity.query.limit(7)
-    managed_groups = Interest_Group.query.join(Membership,\
-        Membership.group_id == Interest_Group.id).filter(Membership.level == 1,\
-        Membership.user_id == current_user.get_id()).all()
-    return render_template("client/views/home.html", interest_groups=interest_groups, activities=activities,\
-        managed_groups=managed_groups)
+    return render_template("client/views/home.html")
 
 @client.route('/login/', methods=['GET', 'POST'])
 def login():
@@ -54,14 +34,32 @@ def login():
 @client.route('/activities/')
 @login_required
 def activities():
-    activities = Activity.query.all()
+    activities = Activity.query.limit(7)
     return render_template("client/views/activities.html", activities=activities)
 
 @client.route('/groups/')
 @login_required
 def groups():
-    groups = Interest_Group.query.all()
-    return render_template("client/views/groups.html", groups=groups)
+
+    #problem still exist in this query
+    interest_groups = Interest_Group.query  \
+        .outerjoin(Membership) \
+        .outerjoin(User) \
+        .with_entities(
+            Interest_Group.id,              \
+            Interest_Group.name,            \
+            Interest_Group.about,           \
+            Interest_Group.cover_photo,     \
+            Interest_Group.group_icon,      \
+            Membership.status
+            )  \
+        .limit(14)    
+
+    managed_groups = Interest_Group.query.join(Membership,\
+        Membership.group_id == Interest_Group.id).filter(Membership.level == 1,\
+        Membership.user_id == current_user.get_id()).all()
+
+    return render_template("client/views/groups.html", interest_groups=interest_groups, managed_groups=managed_groups)
 
 @client.route('/groups/<int:id>', methods=['POST', 'GET'])
 @login_required
@@ -175,6 +173,11 @@ def self():
 @login_required
 def notifications():
     return render_template("client/views/notifications.html")
+
+@client.route('/settings/')
+@login_required
+def settings():
+    return render_template("client/views/settings.html")
 
 @client.route('/logout')
 @login_required
