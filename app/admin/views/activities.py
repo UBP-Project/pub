@@ -93,3 +93,7 @@ def edit_activity(id):
     form.group.data       = activity.group_id
     flash_errors(form)
     return render_template('admin/activity/edit.html', form=form, activity=activity)
+
+@admin.route('/wysiwyg')
+def wysiwyg():
+    return render_template('admin/activity/wysiwyg.html')

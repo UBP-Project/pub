@@ -12,4 +12,4 @@ class Follow(db.Model):
         self.follower_id    = follower_id
         self.following_id   = following_id
         self.datetime       = datetime.utcnow()
-        self.status         = 0
+        self.status         = 1

@@ -4,7 +4,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 from ..forms import LoginForm, GroupMembershipForm
 from . import client
 from app import db
-from app.models import User, Interest_Group, Activity, Membership, Role
+from app.models import User, Interest_Group, Activity, Membership, Role, Follow
 from ..auth import manager_or_leader_only
 
 @client.route('/', methods=['GET', 'POST'])
@@ -58,7 +58,11 @@ def groups():
             )  \
         .limit(14)    
 
-    return render_template("client/views/groups.html", interest_groups=interest_groups)
+    managed_groups = Interest_Group.query.join(Membership,\
+        Membership.group_id == Interest_Group.id).filter(Membership.level == 1,\
+        Membership.user_id == current_user.get_id()).all()
+
+    return render_template("client/views/groups.html", interest_groups=interest_groups, managed_groups=managed_groups)
 
 @client.route('/groups/<int:id>', methods=['POST', 'GET'])
 @login_required
@@ -84,12 +88,11 @@ def group(id):
     members = User.query \
         .join(Membership, User.id==Membership.user_id) \
         .filter(Membership.group_id==id, Membership.status != 0)
-    isMember = True if Membership.query.filter( \
+    membership = Membership.query.filter( \
         current_user.get_id()==Membership.user_id,\
-        id==Membership.group_id).first() \
-        else False
+        id==Membership.group_id).first()
     return render_template('client/views/group.html', group=group, members=members, user=current_user,\
-        isMember=isMember, form=form)
+        membership=membership, form=form)
 
 @client.route('/groups/<int:id>/requests', methods=['POST', 'GET'])
 @login_required
@@ -104,10 +107,34 @@ def group_requests(id):
 @client.route('/profile/<int:id>')
 @login_required
 def profile_id(id):
-    user = User.query.filter_by(id=id).first()
-    if user is not None:
-        return render_template("user/profile.html", user=user)
-    return rendirect(url_for("client.index"))
+    user = User.query.get_or_404(id)
+    is_following = True if Follow.query.filter(Follow.follower_id == current_user.get_id(),\
+        Follow.following_id == user.get_id()).first() is not None else False
+    print(is_following)
+    return render_template("client/views/profile.html", user=user, current_user=current_user, is_following=is_following)
+
+@client.route('/profile/<int:id>/edit')
+@login_required
+def edit_profile(id):
+    print(id, current_user.get_id())
+    if int(id) != int(current_user.get_id()):
+        return redirect(url_for('client.index'))
+    return render_template('client/views/edit-profile.html', user=current_user)
+
+@client.route('/profile/<int:id>/followers')
+@login_required
+def followers(id):
+    return "Followers"
+
+@client.route('/profile/<int:id>/following')
+@login_required
+def following(id):
+    return "Following"
+
+@client.route('/self')
+@login_required
+def self():
+    return current_user.get_id();
 
 @client.route('/notifications/')
 @login_required
