@@ -20,9 +20,9 @@ class UserFormMixin():
     department = StringField("Department", validators=[Required()])
     position   = StringField("Position", validators=[Required()])
     birthday   = DateField("Birthday", validators=[Required()])
-    role       = SelectField('Role', choices=[], coerce=int)
 
 class CreateUserForm(FlaskForm, UserFormMixin):
+    role       = SelectField('Role', choices=[], coerce=int)
     password   = PasswordField("Password", validators=[Required()])
     submit     = SubmitField("Create User")
 
@@ -31,16 +31,24 @@ class CreateUserForm(FlaskForm, UserFormMixin):
         self.role.choices = [(role.id, role.name) for role in Role.query.all() if role.name != 'Administrator']
 
 class UpdateUserForm(FlaskForm, UserFormMixin):
-    submit     = SubmitField("Update User")
+    role       = SelectField('Role', choices=[], coerce=int)
+    submit     = SubmitField("Update Information")
 
     def __init__(self, *args, **kwargs):
         super(UpdateUserForm, self).__init__(*args, **kwargs)
         self.role.choices = [(role.id, role.name) for role in Role.query.all() if role.name != 'Administrator']
 
+class UpdateUserFormClient(FlaskForm, UserFormMixin):
+    submit     = SubmitField("Update Information")
+
 class PasswordForm(FlaskForm):
     password = PasswordField("Password")
     submit   = SubmitField("Change Password")
 
+class PasswordFormClient(FlaskForm):
+    old_password = PasswordField("Old Password")
+    new_password = PasswordField("New Password")
+    submit = SubmitField("Change Password")
 
 class InterestGroupMixin():
     name        = StringField("Group Name", validators=[Required()])

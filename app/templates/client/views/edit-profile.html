@@ -30,7 +30,7 @@
                 </a>
 
                 {% if current_user.get_id() == user.get_id() %}
-                    <button id="btn-edit-profile" class="btn btn-style-3" style="width: 100px">Edit Profile</button>
+                    <a href="{{ url_for('client.edit_profile', id=user.id) }}" id="btn-edit-profile" class="btn btn-style-3" style="width: 100px">Edit Profile</a>
                 {% endif %}
 
 
@@ -44,12 +44,75 @@
             </div>
         </div>
 
-        <div class="col-md-offset-3 col-md-9">
+        <form class="col-md-offset-3 col-md-9" method="post" name="update_user">
+            {{ form.hidden_tag() }}
             <br /><br /><br />
             <h4>Edit Profile</h4>
-        </div>
+            <div class="col-md-3">
+                <label>Firstname</label>
+                {{ form.firstname(
+                placeholder="First name",
+                class="form-control") }}
+            </div>
+            <div class="col-md-3">
+                <label>Middlename</label>
+                {{ form.middlename(
+                placeholder="Middle name",
+                class="form-control") }}
+            </div>
+            <div class="col-md-3">
+                <label>Lastname</label>
+                {{ form.lastname(
+                placeholder="Last name",
+                class="form-control") }}
+            </div>
+
+            <div class="col-md-5">
+                <label>Department</label>
+                {{ form.department(
+                    placeholder="Department",
+                    class="form-control"
+                )}}
+            </div>
+            <div class="col-md-4">
+                <label>Position</label>
+                {{ form.position(
+                    placeholder="Position",
+                    class="form-control"
+                )}}
+            </div>
+
+            <div class="col-md-5">
+                <label>Email</label>
+                {{ form.email(
+                    placeholder="Email",
+                    class="form-control") }}
+            </div>
+            <div class="col-md-4">
+                <label>Birthday</label>
+                {{ form.birthday(
+                    placeholder="Birthday",
+                    class="form-control")}}
+            </div>
+
+            <div class="col-md-6">
+                <br />
+                <a href="{{ url_for('client.edit_password', id=user.get_id()) }}">
+                    Change Password
+                </a>
+            </div>
+
+            <div class="col-md-3">
+                <br />
+                {{ form.submit(
+                    class="btn btn-style-1 pull-right"
+                )}}
+            </div>
+        </form>
 
     </div>
+
+    <br /><br /><br />
 
 {% endblock content %}
 
