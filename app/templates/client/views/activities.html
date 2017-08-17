@@ -1,0 +1,30 @@
+{% extends "./layout/base2.html" %}
+{% from "client/components/activity-modal.html" import activity_modal %}
+
+{% block title %} Activities {% endblock title %}
+
+{% block content %}
+
+	<div class="row">
+
+		<div class="col-md-12 col-sm-12 box-header box-style-2">
+			<span>ACTIVITIES</span>
+		</div>
+
+		<div class="col-md-12 col-sm-12 box-content border-bottom-2">
+			<div class="row">
+				{% if activities %}
+					{% for activity in activities %}
+						{{ activity_modal(activity) }}
+					{% endfor %}
+				{% else %}
+					<div class="col-md-12 col-sm-12 no-content-box text-center">
+						<h2>NO ACTIVITIES YET</h2>
+					</div>
+				{% endif %}
+			</div>
+		</div>
+
+	</div>
+
+{% endblock content %}

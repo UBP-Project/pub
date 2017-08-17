@@ -4,32 +4,10 @@
     {% extends "/layout/base.html" %}
 {% endif %}
 
-{% block title %} Groups {% endblock %}
+{% block title %} Users {% endblock %}
 
 {% block content %}
     <div class="row admin-page user-list">
-        <div class="row">
-            <div class="col-md-12">
-                <h1>Managers</h1>
-            </div>
-        </div>
-
-        <div class="row">
-            {% for manager in managers %}
-                <div class="col-md-3">
-                    <div class="user-card">
-                        <a href="{{ url_for('admin.profile', id=manager.id) }}">
-                            <h4><span class="fa fa-user-circle"></span>
-                                {{ manager['firstname'] }} {{ manager['lastname'] }}
-                            </h4>
-                        </a>
-                        <p><i>{{ manager['department'] }} <br />
-                        {{ manager['position'] }}</i><p>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-
         <div class="row">
             <div class="col-md-12">
                 <h1>Users</h1>
@@ -37,20 +15,75 @@
         </div>
 
         <div class="row">
-            {% for user in users %}
-                <div class="col-md-3">
-                    <div class="user-card">
-                        <a href="{{ url_for('admin.profile', id=user.id) }}">
-                            <h4><span class="fa fa-user-circle"></span>
-                                {{ user['firstname'] }} {{ user['lastname'] }}
-                            </h4>
-                        </a>
-                        <p><i>{{ user['department'] }} <br />
-                        {{ user['position'] }}</i><p>
+            <div class="col-sm-6" style="padding: 20px 15px">
+                <form>
+                    <div class="input-group search-form">
+                      <input type="text" class="form-control" name="query" placeholder="Search Users" value="{{ query }}" required>
+                      <span class="input-group-btn">
+                        <input type="submit" class="btn" type="button" value="Search" />
+                      </span>
                     </div>
-                </div>
-            {% endfor %}
+                </form>
+            </div>
+            <div class="col-sm-6 text-right pagination">
+                  {%- for page in users.iter_pages(left_edge=1, left_current=2, right_current=2, right_edge=1) %}
+                    {% if page %}
+                      {% if page != users.page %}
+                        <a class="page-link btn btn-style-3" href="{{ url_for('admin.users', page=page, query=request.args.get('query')) }}">{{ page }}</a>
+                      {% else %}
+                        <strong class="btn current-page">{{ page }}</strong>
+                      {% endif %}
+                    {% else %}
+                      <span class=ellipsis>…</span>
+                    {% endif %}
+                  {%- endfor %}
+            </div>
         </div>
+
+        
+        {% if users.items|length > 0 %}
+        <div class="row">
+            <div class="col-md-12">
+                <table class="users table row table-hover table-condensed">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Firstname</th>
+                            <th>Middlename</th>
+                            <th>Lastname</th>
+                            <th>Email</th>
+                            <th>Position</th>
+                            <th>Department</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for user in users.items %}
+                        <tr class="user-item">
+                            <td>{{ user['id'] }}</td>
+                            <td>{{ user['firstname'] }}</td>  
+                            <td>{{ user['middlename'] }}</td>
+                            <td>{{ user['lastname'] }}</td>
+                            <td>{{ user['email'] }}</td>
+                            <td>{{ user['position'] }}</td>
+                            <td>{{ user['department'] }}</td>
+                            <td>
+                                <a href="{{ url_for('admin.profile', id=user.id)}}"><span class="fa fa-pencil-square-o"></span></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% else %}
+        <div class="row">
+            <div class="col-md-12">
+                <h3>No search results for "{{ query }}".</h3>
+            </div>
+        </div>
+        {% endif %}
 
     </div>
 {% endblock %}

@@ -3,13 +3,93 @@
 {% else %}
     {% extends "/layout/base.html" %}
 {% endif %}
-{% block title %}Admin Page{% endblock %}
+
+{% block title %} {{ group["name"] }} {% endblock %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-md-12">
-            <h3>Show Group members list</h3>
+    <div class="row admin-page">
+
+        <div class="row">
+            <div class="cover-photo">
+                <img src="{{ url_for('static', filename='uploads/covers/' + group.cover_photo) }}" />
+            </div>
         </div>
-            
+
+        <div class="row">
+            <div class="col-md-12 group-icon text-center">
+                <img src="{{ url_for('static', filename='uploads/group_icons/' + group.group_icon) }}" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h1>{{ group["name"] }}</h1>
+                <h5><i>{{ group["about"] }}</i></h5>
+                <a class="btn btn-sm btn-style-1" href="{{url_for('admin.update_group', id=group.id)}}">Edit this Group</a>
+                <br /><br /><br />
+            </div>
+            <div class="col-md-6 text-right group-controls">
+                <a href="{{ url_for('admin.group_requests', id=group.id) }}" class="btn btn-sm btn-style-3">
+                    Requests
+                </a>
+                <a href="{{ url_for('admin.group_members', id=group.id) }}" class="btn btn-sm btn-style-3">
+                    Members
+                </a>
+                <!--
+                <button class="btn btn-sm btn-style-3">
+                    Leaders
+                </button>
+                -->
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                {% if 'admin' not in request.path %}
+                    <form method="post">
+                    {{ form.hidden_tag() }}
+                    {% if isMember %} 
+                        <input class="btn btn-warning" type="submit" name="leave_group" value="Leave Group">
+                    {% else %}
+                        <input class="btn btn-primary" type="submit" name="join_group" value="Join Group">
+                    {% endif %}
+                    </form>
+                {% endif %}
+
+
+
+                {% if leaders|length > 0 %}
+                    <h4>Leaders</h4>
+                    {% for leader in leaders %}
+                        <div class="user-card">
+                            <a href="{{ url_for('admin.profile', id=leader.id) }}">
+                                <h4><span class="fa fa-user-circle"></span>
+                                    {{ leader['firstname'] }} {{ leader['lastname'] }}
+                                </h4>
+                            </a>
+                            </a>
+                            <a class="btn btn-sm btn-style-3" href="{{ url_for('admin.removeleader', group_id=group['id'],
+                            user_id =leader['id'])}}">Remove Leader</a>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+
+                {% if members|length > 0 %}
+                    <h4>Members</h4>
+                    {% for member in members %}
+                        <div class="user-card">
+                            <a href="{{ url_for('admin.profile', id=member.id) }}">
+                                <h4><span class="fa fa-user-circle"></span>
+                                    {{ member['firstname'] }} {{ member['lastname'] }}
+                                </h4>
+                            </a>
+                            <a class="btn btn-sm btn-style-2" href="{{ url_for('admin.setleader', group_id=group['id'],
+                            user_id =member['id'])}}">Set as Leader</a>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
     </div>
 {% endblock %}

@@ -1,0 +1,89 @@
+{% if 'admin' in request.path %}
+    {% extends "/layout/admin_base.html" %}
+{% else %}
+    {% extends "/layout/base.html" %}
+{% endif %}
+
+{% block title %} Users {% endblock %}
+
+{% block content %}
+    <div class="row admin-page user-list">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Managers</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6" style="padding: 20px 15px">
+                <form>
+                    <div class="input-group search-form">
+                      <input type="text" class="form-control" name="query" placeholder="Search Managers" value="{{ query }}" required>
+                      <span class="input-group-btn">
+                        <input type="submit" class="btn" type="button" value="Search" />
+                      </span>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-6 text-right pagination">
+                  {%- for page in managers.iter_pages(left_edge=1, left_current=2, right_current=2, right_edge=1) %}
+                    {% if page %}
+                      {% if page != managers.page %}
+                        <a class="page-link btn btn-style-3" href="{{ url_for('admin.users', page=page, query=request.args.get('query')) }}">{{ page }}</a>
+                      {% else %}
+                        <strong class="btn current-page">{{ page }}</strong>
+                      {% endif %}
+                    {% else %}
+                      <span class=ellipsis>…</span>
+                    {% endif %}
+                  {%- endfor %}
+            </div>
+        </div>
+
+        
+        {% if managers.items|length > 0 %}
+        <div class="row">
+            <div class="col-md-12">
+                <table class="users table row table-hover table-condensed">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Firstname</th>
+                            <th>Middlename</th>
+                            <th>Lastname</th>
+                            <th>Email</th>
+                            <th>Position</th>
+                            <th>Department</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for manager in managers.items %}
+                        <tr class="user-item">
+                            <td>{{ manager['id'] }}</td>
+                            <td>{{ manager['firstname'] }}</td>  
+                            <td>{{ manager['middlename'] }}</td>
+                            <td>{{ manager['lastname'] }}</td>
+                            <td>{{ manager['email'] }}</td>
+                            <td>{{ manager['position'] }}</td>
+                            <td>{{ manager['department'] }}</td>
+                            <td>
+                                <a href="{{ url_for('admin.profile', id=manager.id)}}"><span class="fa fa-pencil-square-o"></span></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% else %}
+        <div class="row">
+            <div class="col-md-12">
+                <h3>No search results for "{{ query }}".</h3>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+{% endblock %}

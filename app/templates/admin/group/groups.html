@@ -18,13 +18,17 @@
             {% for group in groups %}
                 <div class="col-md-3">
                     <div class="group-card">
-                        <img src="{{ url_for('static', filename='images/pub-default-img.jpg') }} "/>
+                        {% if group.group_icon %}
+                            <img src="{{ url_for('static', filename='uploads/group_icons/' + group.group_icon) }} "/>
+                        {% else %}
+                            <img src="{{ url_for('static', filename='images/pub-default-img.jpg') }} "/>
+                        {% endif %}
                         <div>
                             <h3>{{ group['name'] }}</h3>
                             <h6>{{ group['about'] }}</h6>
                         </div>
                         <a class="btn btn-block btn-style-1" href="{{ url_for('admin.group', id=group['id']) }}">
-                            Edit Group
+                            View Group
                         </a>
                     </div>
                 </div>

@@ -5,11 +5,11 @@
 	padding: 0;
 }
 
-.fa {
-	transition: all 0.5s ease;
-}
+/*.fa {
+	transition: all 200ms ease;
+}*/
 
-.navbar {
+/*.navbar {
 	background-image: url('../images/header.jpg');
 }
 
@@ -38,4 +38,152 @@
 
 	}
 
+}*/
+
+.nav {
+
+	>li {
+		
+		background-color: none;
+
+		>a {
+
+			font-family: @heading-font;
+			font-size: 17px;
+			background-color: none;
+			transition: color 0.3s ease;
+
+		}
+
+	}
+
+}
+
+.pub-header {
+	padding-top: 20px; 
+	height: 50px; 
+	width: 100%; 
+	background-image: url('../../static/images/header.jpg');
+}
+
+.sidebar {
+	/*position: absolute;*/
+	top: 0;
+	left: 0;
+	bottom: 0;
+ 	background-color: @white;
+ 	/*background-color: #2a2730;*/
+	/*width: 223px;*/
+	width: 16.3%;
+	z-index: 1;
+	position: fixed;
+	/*border-bottom: 5px solid @pizazz;*/
+
+	.side-ubp-logo {
+		width: 100%; 
+		height: 50px;
+	}
+
+}
+
+.main {
+	/*position: absolute;*/
+	position: relative;
+	/*top: 0;*/
+	/*left: 223px;*/
+	left: 16.3%;
+	width: 83.7%;
+}
+
+nav .side-nav {
+	display: block;
+}
+
+.side-nav li a {
+	color: gray;
+	/*border-left: 3px solid gray;*/
+ 	margin: 5px 0;
+
+ 	i {
+ 		margin-top: 3px;
+ 	}
+
+}
+
+.side-nav li a:hover {
+	color: @kimberly;
+	/*background-color: @alto;*/
+	/*border-left: 3px solid @kimberly;*/
+}
+
+/*.side-nav li a:active {
+	color: @stratos;
+	background-color: @white;
+	border-left: 3px solid @stratos;
+}
+
+.side-nav li a:focus {
+	color: @stratos;
+	background-color: @white;
+	border-left: 3px solid @stratos;
+}
+
+.side-nav li a .active {
+	color: @stratos;
+	background-color: @white;
+	border-left: 3px solid @stratos;
+}*/
+
+.project-bg {
+	width: 100%;
+	text-align: center;
+	background-image: url('../../static/images/building.png');
+	background-size: cover;
+	background-position: top;
+	/*border-bottom: 5px solid @pizazz;*/
+}
+
+.project-logo {
+	padding: 20%;
+}
+
+.content {
+	padding: 20px;
+}
+
+.sign-out {
+	width: 100%;
+}
+
+#sign-out:hover {
+	color: @pizazz;
+	/*border-left: 3px solid @pizazz;*/
+}
+
+.white-filter {
+	background-color: rgba(255, 255, 255, 0.6);
+}
+
+
+/*
+
+UL Active state
+@statros color
+border-left: 7px solid #0e0058; background-color: #fff; color: #0e0058;
+
+*/
+
+/* Logout modal */
+
+.modal-body {
+	p {
+		margin: 0; 
+		padding: 20px;
+	}
+}
+
+.modal-footer {
+	div {
+		width: 50%;
+	}
 }

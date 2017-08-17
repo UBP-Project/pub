@@ -1,0 +1,43 @@
+{% extends "./layout/base2.html" %}
+{% from "client/components/group-modal.html" import group_modal %}
+
+{% block title %} Interest Groups {% endblock title %}
+
+{% block content %}
+
+	<div class="row">
+
+		<div class="col-md-12 col-sm-12 box-header box-style-2">
+			<span>INTEREST GROUPS</span>
+		</div>
+
+		<div class="col-md-12 col-sm-12 box-content border-bottom-2">
+			<div class="row">
+				{% if interest_groups %}
+					{% for group in interest_groups %}
+						{{ group_modal(group) }}
+					{% endfor %}
+				{% else %}
+					<div class="col-md-12 no-content-box text-center">
+						<h2>NO INTEREST GROUPS TO SHOW</h2>
+					</div>
+				{% endif %}
+			</div>
+		</div>
+
+	</div>
+
+	{% if managed_groups|length > 0 %}
+		<h3>@Prince here are the groups where the current user is a leader/manager</h3>
+		{% for group in managed_groups %}
+			<a href="{{ url_for('client.group', id=group.id)}}">
+				{{ group.name }}
+			</a>
+		{% endfor %}
+	{% endif %}
+
+{% endblock content %}
+
+{% block scripts %}
+	<script src="{{ url_for('static', filename='js/client/group.js') }}"></script>
+{% endblock scripts %}

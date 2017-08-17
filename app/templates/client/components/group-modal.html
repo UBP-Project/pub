@@ -2,19 +2,19 @@
 
     <div class="modal-item">
 
-        <div class="col-md-3 col-sm-4 text-center">
+        <div class="col-md-3 col-sm-3 text-center">
             <div class="group-icon">
                 <div class="group-img">
-                    <img src="{{ url_for('static', filename='../../static/images/pub-default-img.jpg') }}" class="img-circle zoomify" data-toggle="modal" data-target="#group-{{ group.id }}" />
+                    <img src="{{ url_for('static', filename='uploads/group_icons/' + group.group_icon) }}" class="img-circle zoomify grp-icon" data-toggle="modal" data-target="#group-{{ group.id }}" id="{{group.id}}" />
                 </div>
                 <div class="group-desc">
                     <h4 class="title">{{ group.name | upper }}</h4>
-                    <p><i class="fa fa-user"></i> 10</p>
+                    <!-- <p><i class="fa fa-user"></i> 10</p> -->
                 </div>
             </div>
         </div>
 
-        <div class="modal fade" id="group-{{group.id}}" role="dialog">
+        <div class="modal fade grp-modal" id="group-{{group.id}}" role="dialog">
 
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -29,7 +29,7 @@
                     <div class="modal-body">
 
                         <div class="img-container">
-                            <img src="{{ url_for('static', filename='../../static/images/pub-default-head-img.jpg') }}" />
+                            <img src="{{ url_for('static', filename='uploads/covers/' + group.cover_photo) }}" />
                         </div>
 
                         <h2 class="text-center">{{ group.name | upper }}</h2>
@@ -55,15 +55,24 @@
                             <div class="tab-content">
 
                                 <div role="tabpanel" class="tab-pane active" id="grp-desc-{{group.id}}">
-                                    <p>{{ group.about }}</p>
+                                
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p>{{ group.about }}</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <img src="{{ url_for('static', filename='uploads/group_icons/' + group.group_icon) }}" class="img-circle pull-right grp-desc-img" />
+                                        </div>
+                                    </div>
+                                    
                                 </div>
 
                                 <div role="tabpanel" class="tab-pane" id="grp-members-{{group.id}}">
-                                    <p>No members to show</p>
+                                    <p id="group-members-{{group.id}}"></p>
                                 </div>
 
                                 <div role="tabpanel" class="tab-pane" id="grp-activities-{{group.id}}">
-                                    <p>No activities</p>
+                                    <p id="group-activities-{{group.id}}"></p>
                                 </div>
                         
                             </div>
@@ -74,13 +83,13 @@
 
                     <!-- FOOTER -->
                     <div class="modal-footer">
-                    {% if group.status == 1 %}
-                        <button type="button" class="btn btn-warning" onclick="leave_group({{group.id}})">LEAVE GROUP</button>
-                    {% elif group.status == 0 %}
-                        <button type="button" class="btn btn-warning" onclick="cancel_join_group({{group.id}})">CANCEL JOIN REQUEST</button>
-                    {% else %}
-                        <button type="button" class="btn btn-style-1" onclick="join_group({{group.id}})">JOIN GROUP</button>
-                    {% endif %}
+                        {% if group.status == 1 %}
+                            <button type="button" id="{{group.id}}" class="btn btn-danger grp-btn" value="leave">LEAVE GROUP</button>
+                        {% elif group.status == 0 %}
+                            <button type="button" id="{{group.id}}" class="btn btn-warning grp-btn" value="cancel">CANCEL JOIN REQUEST</button>
+                        {% else %}
+                            <button type="button" id="{{group.id}}" class="btn btn-style-1 grp-btn" value="join">JOIN GROUP</button>
+                        {% endif %}
                     </div>
 
                 </div>
@@ -88,5 +97,11 @@
 
         </div>
     </div>
+
+    <script type="text/javascript">
+        function groupDetails(group_id) {
+            console.log('Modal item loaded: Group ' + group_id);
+        }
+    </script>
 
 {% endmacro %}

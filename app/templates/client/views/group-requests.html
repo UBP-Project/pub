@@ -1,0 +1,68 @@
+{% extends "./layout/base2.html" %}
+
+{% block title %} Interest Groups {% endblock title %}
+
+{% block content %}
+
+    <div class="row">
+
+            <div class="col-md-12 col-sm-12 box-header box-style-2">
+                <span>INTEREST GROUPS</span>
+            </div>
+
+    </div>
+    <div class="row" width="100%">
+
+    {% if membership_requests|length > 0 %}
+
+        {% for member in membership_requests %}
+            <div class="col-md-4 btn" id="request-div-{{member['id']}}" style="background-color: white">
+                {{ member.firstname }} {{ member.lastname }}
+                <br />
+                <button class="btn btn-xs btn-default" onclick="decline_request({{ member['id'] }})">
+                    Decline
+                </button>
+                <button class="btn btn-xs btn-style-1" onclick="accept_request({{member['id']}})">
+                    Accept
+                </button>
+            </div>
+        {% endfor %}
+
+    {% else %}
+        <h3>No Membership Request.</h3>
+    {% endif %}
+
+
+    </div>
+
+{% endblock content %}
+
+{% block scripts %}
+    <script>
+        group_id = {{ group.id }};
+        function accept_request(user_id) {
+            $.ajax({
+                url: "{{ url_for('api.accept_request', group_id=group.id) }}",
+                type: 'POST',
+                data: {
+                    "user_id": user_id
+                }
+            }).done(function(data) {
+                $("#request-div-"+user_id).hide();
+            });
+        }
+
+        function decline_request(user_id) {
+            $.ajax({
+                url: "{{ url_for('api.decline_request', group_id=group.id) }}",
+                type: 'POST',
+                data: {
+                    "user_id": user_id
+                }
+            }).done(function(data) {
+                $("#request-div-"+user_id).hide();
+            });
+        }
+    </script>
+
+{% endblock scripts %}

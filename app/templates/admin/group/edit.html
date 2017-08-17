@@ -1,0 +1,59 @@
+{% extends "/layout/admin_base.html" %}
+
+{% block content %}
+    <form class="form-group row edit-group" method="post" enctype="multipart/form-data" name="edit_group">
+
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="title">Edit Group</h1>
+            </div>
+        </div>
+
+        <div class="col-md-6" style="padding: 0px">
+            <div class="row">
+                <div class="col-md-12 ">
+                    {{ form.hidden_tag() }}
+                    <label>Group name</label>
+                    {{ form.name(
+                        placeholder="Group name",
+                        class="form-control input-lg lead") }}
+                    
+                    <label>About</label>
+                    {{ form.about(
+                        placeholder="About this Group",
+                        class="form-control input-md") }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <label>Group Cover:</label>
+                    <div class="cover-container">
+                        <img src="{{ url_for('static', filename='uploads/covers/' + group.cover_photo)}}" />
+                    </div>
+                    {{ form.cover_photo() }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <br /><br />
+                    <input class="btn btn-default" type="reset">
+                    {{ form.submit(
+                        placeholder="Submit",
+                        class="btn btn-style-1"
+                    )}}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <label>Group Icon:</label>
+            <div class="img-container">
+                <img src="{{ url_for('static', filename='uploads/group_icons/' + group.group_icon)}}" />
+            </div>
+            {{ form.group_icon() }}
+        </div>
+
+    </form>
+{% endblock %}

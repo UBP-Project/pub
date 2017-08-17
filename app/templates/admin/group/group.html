@@ -8,34 +8,66 @@
 
 {% block content %}
     <div class="row admin-page">
+
         <div class="row">
-            <div class="col-md-8">
-                <h1>Groups > {{ group["name"] }}</h1>
-                <h5>About Group: {{ group["about"] }}</h5>
+            <div class="cover-photo">
+                <img src="{{ url_for('static', filename='uploads/covers/' + group.cover_photo) }}" />
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-md-12 group-icon text-center">
+                <img src="{{ url_for('static', filename='uploads/group_icons/' + group.group_icon) }}" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h1>{{ group["name"] }}</h1>
+                <h5><i>{{ group["about"] }}</i></h5>
+                <a class="btn btn-sm btn-style-1" href="{{url_for('admin.update_group', id=group.id)}}">Edit this Group</a>
                 <br /><br /><br />
+            </div>
+            <div class="col-md-6 text-right group-controls">
+                <a href="{{ url_for('admin.group_requests', id=group.id) }}" class="btn btn-sm btn-style-3">
+                    Requests
+                </a>
+                <a href="{{ url_for('admin.group_members', id=group.id) }}" class="btn btn-sm btn-style-3">
+                    Members
+                </a>
+                <!-- 
+                <button class="btn btn-sm btn-style-3">
+                    Leaders
+                </button>
+                -->
+            </div>
+        </div>
 
-                <div class="row">
-
-                    <h3>Group Activities</h3>
-
-                    {% for activity in activities %}
-                        <div class="col-md-4">
-                            <div class="activity-card">
-                                <img src="{{ url_for('static', filename='images/pub-default-img.jpg') }} "/>
-                                <div>
-                                    <h3>{{ activity['title'] }}</h3>
-                                    <h6>{{ activity['description'] }}</h6>
-                                </div>
-                                <a class="btn btn-block btn-style-1" href="{{ url_for('admin.edit_activity', id=activity['id']) }}">
-                                    Edit Activity
-                                </a>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <h2>Group Activities</h2>
             </div>
 
+            {% for activity in activities %}
+                <div class="col-md-3">
+                    <div class="activity-card"
+                    style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{url_for('static',filename='uploads/activity_images/' + activity.image) }})">
+                        <div>
+                            <h3><strong>{{ activity['title'] }}</strong></h3>
+                            <h6>{{ activity['description'] }}</h6>
+                            <h6><i>{{ activity['start_date']}} - {{ activity['end_date']}}</i></h6>
+                        </div>
+                        <a class="btn btn-block btn-style-3" href="{{ url_for('admin.edit_activity', id=activity['id']) }}">
+                            Edit Activity
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!--
+        <div class="row">
             <div class="col-md-4">
                 {% if 'admin' not in request.path %}
                     <form method="post">
@@ -79,5 +111,6 @@
                 {% endfor %}
             </div>
         </div>
+        -->
     </div>
 {% endblock %}

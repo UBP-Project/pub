@@ -1,76 +1,102 @@
-{% if 'admin' in request.path %}
-    {% extends "/layout/admin_base.html" %}
-{% else %}
-    {% extends "/layout/base.html" %}
-{% endif %}
+{% extends "/layout/admin_base.html" %}
 {% block title %}Admin Page{% endblock %}
 
 {% block content %}
-    <div class="row">
-        <form class="form-group col-md-9 admin-form" method="post" name="create_activity">
+    <form class="row admin-form" style="padding: 0px" method="post" enctype="multipart/form-data" name="create_activity">
+        {{ form.hidden_tag() }}
 
-            <div class="row">
-                <div class="col-md-12">
-                    <h1>Create Activity</h1>
-                </div>
+        <div class="col-md-12">
+            <h1 class="pull-left">Create Activity</h1>
+            <div style="margin-top: 25px;">
+                {{ form.submit(
+                    class="btn btn-style-1 pull-right"
+                )}}
+            </div>
+        </div>
+
+        <div class="col-md-6" style="padding: 0px;">
+            <div class="col-md-12">
+                <label>Title</label>
+                {{ form.title(
+                    placeholder="Title",
+                    class="form-control") }}
+            </div>
+            <div class="col-md-6">
+                <label>Start Date</label>
+                {{ form.start_date(
+                    placeholder="Start Date",
+                    class="form-control")}}
             </div>
 
-            <div class="row">
-                {{ form.hidden_tag() }}
-                <div class="col-md-12">
-                    <label>Title</label>
-                    {{ form.title(
-                        placeholder="Title",
-                        class="form-control") }}
-                </div>
-                
-                <div class="col-md-12">
-                    <label>Description</label>
-                    {{ form.description(
-                        placeholder="Description",
-                        class="form-control") }}
-                </div>
-
-                <div class="col-md-12">
-                    <label>Address</label>
-                    {{ form.address(
-                        placeholder="Address",
-                        class="form-control"
-                    )}}
-                </div>
-
-                <div class="col-md-6">
-                    <label>Start Date</label>
-                    {{ form.start_date(
-                        placeholder="Start Date",
-                        class="form-control")}}
-                </div>
-
-                <div class="col-md-6">
-                    <label>End Date</label>
-                    {{ form.end_date(
-                        placeholder="End Date",
-                        class="form-control")}}
-                </div>
-
-                <div class="col-md-6">
-                    <label>Assign to Group</label>
-                    {{ form.group(
-                        class="form-control")
-                    }}
-                </div>
-
-                <br /><br />
-        
-                <div class="col-md-12">
-                    <br /><br />
-                    <input class="btn btn-default" type="reset">
-                    {{ form.submit(
-                        placeholder="Submit",
-                        class="btn btn-style-1"
-                    )}}
-                </div>
+            <div class="col-md-6">
+                <label>End Date</label>
+                {{ form.end_date(
+                    placeholder="End Date",
+                    class="form-control")}}
             </div>
-        </form>
-    </div>
+            <div class="col-md-12">
+                <label>Address</label>
+                {{ form.address(
+                    placeholder="Address",
+                    class="form-control"
+                )}}
+            </div>
+            <div class="col-md-12">
+                <label>Assign to Group</label>
+                {{ form.group(
+                    class="form-control")
+                }}
+            </div>
+
+            <div class="col-md-12">
+                <label>Description</label>
+                <div id="description-editor" class="wysiwyg-editor">
+
+                </div>
+                {{ form.description(
+                    placeholder="Description",
+                    class="none",   
+                    hidden="true") }}
+            </div>
+
+            
+
+        </div>
+
+        <div class="col-md-6" style="padding: 0px;">
+            <div class="col-md-12">
+                <label>Image</label>
+                {{ form.image(
+                    placeholder="Activity Image",
+                    class="form-control"
+                    )}}
+            </div>
+            <div class="col-md-12">
+                <img src="{{ url_for('static', filename='images/pub-default-img.jpg') }}" width="100%" height="200px"
+                    style="border: 1px solid rgba(0, 0, 0, 0.2)"/>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(document).ready(function() {
+            $('#description-editor').trumbowyg({
+                btns: [
+                    'btnGrp-semantic',
+                    ['superscript', 'subscript'],
+                    ['link'],
+                    // ['insertImage'],
+                    'btnGrp-lists',
+                    ['fullscreen']
+                ]
+            });
+
+            $("#submit").on('click', function(e) {
+                $("#description").text($("#description-editor").html());
+            });
+        });
+    </script>
 {% endblock %}

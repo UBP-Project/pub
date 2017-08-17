@@ -1,9 +1,13 @@
 from flask import render_template, flash, redirect, url_for, request
 from .. import admin
-from ...forms import CreateInterestGroupForm
+from ...forms import CreateInterestGroupForm, UpdateInterestGroupForm
 from app import db
-from ...models import User, Interest_Group, Membership, Activity
+from app.models import User, Interest_Group, Membership, Activity
 from ...decorators import admin_required
+from ...utils import flash_errors, is_valid_extension
+from werkzeug.utils import secure_filename
+import os
+import uuid
 
 @admin.route('/groups')
 @admin_required
@@ -29,24 +33,78 @@ def group(id):
 def create_group():
     form = CreateInterestGroupForm()
     if form.validate_on_submit():
+        # handle upload group cover
+        cover                 = form.cover_photo.data
+        cover_filename        = secure_filename(cover.filename)
+        extension             = cover_filename.rsplit('.', 1)[1].lower()
+        cover_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
+        file_path             = os.path.join('app/static/uploads/covers', cover_hashed_filename)
+        cover.save(file_path)
+
+        # handle upload user icon
+        icon                 = form.group_icon.data
+        icon_filename        = secure_filename(icon.filename)
+        extension            = icon_filename.rsplit('.', 1)[1].lower()
+        icon_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
+        file_path            = os.path.join('app/static/uploads/group_icons', icon_hashed_filename)
+        icon.save(file_path)
+
         interest_group = Interest_Group(
             name=form.name.data,
             about=form.about.data,
-            cover_photo=form.cover_photo.data,
-            group_icon=form.group_icon.data)
+            cover_photo=cover_hashed_filename,
+            group_icon=icon_hashed_filename)
         db.session.add(interest_group)
         db.session.commit()
-        flash("Success creating group")
-        return redirect(url_for("admin.index"))
+        return redirect(url_for("admin.groups"))
     return render_template('admin/group/create.html', form=form)
 
+@admin.route('/groups/<int:id>/edit', methods=['GET', 'POST'])
+@admin_required
+def update_group(id):
+    form = UpdateInterestGroupForm()
+    group = Interest_Group.query.get_or_404(id)
+    if form.validate_on_submit():
+
+        # handle upload group cover
+        if form.cover_photo.data is not None:
+            cover                 = form.cover_photo.data
+            cover_filename        = secure_filename(cover.filename)
+            if is_valid_extension(cover_filename):
+                extension             = cover_filename.rsplit('.', 1)[1].lower()
+                cover_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
+                file_path             = os.path.join('app/static/uploads/covers', cover_hashed_filename)
+                cover.save(file_path)
+                group.cover_photo = cover_hashed_filename
+
+        # handle upload user icon
+        if form.group_icon.data is not None:
+            icon                 = form.group_icon.data
+            icon_filename        = secure_filename(icon.filename)
+            if is_valid_extension(icon_filename):
+                extension            = icon_filename.rsplit('.', 1)[1].lower()
+                icon_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
+                file_path            = os.path.join('app/static/uploads/group_icons', icon_hashed_filename)
+                icon.save(file_path)
+                group.group_icon = icon_hashed_filename
+
+        group.name = form.name.data
+        group.about = form.about.data
+        db.session.commit()
+        return redirect(url_for('admin.group', id=id))
+    form.name.data = group.name
+    form.about.data = group.about
+    return render_template('admin/group/edit.html', form=form, group=group)
+
+
+# Actions
 @admin.route('/groups/setleader/<int:group_id>/<int:user_id>')
 @admin_required
 def setleader(group_id, user_id):
     membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
     membership.level = 1
     db.session.commit()
-    return redirect(url_for("admin.group", id=group_id))
+    return redirect(url_for("admin.group_members", id=group_id))
 
 @admin.route('/removeleader/<int:group_id>/<int:user_id>')
 @admin_required
@@ -54,4 +112,41 @@ def removeleader(group_id, user_id):
     membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
     membership.level = 0
     db.session.commit()
-    return redirect(url_for("admin.group", id=group_id))
+    return redirect(url_for("admin.group_members", id=group_id))
+
+@admin.route('/groups/<int:id>/members', methods=['GET', 'POST'])
+@admin_required
+def group_members(id):
+    group = Interest_Group.query.get_or_404(id)
+    leaders = User.query \
+        .join(Membership, User.id==Membership.user_id) \
+        .filter(Membership.group_id==id, Membership.status != 0, Membership.level == 1).all()
+    members = User.query \
+        .join(Membership, User.id==Membership.user_id) \
+        .filter(Membership.group_id==id, Membership.status != 0, Membership.level == 0).all()
+    return render_template('admin/group/members.html', group=group, leaders=leaders, members=members)
+
+@admin.route('/groups/<int:id>/requests', methods=['GET', 'POST'])
+@admin_required
+def group_requests(id):
+    group = Interest_Group.query.get_or_404(id)
+    membership_requests = User.query \
+        .join(Membership, User.id==Membership.user_id) \
+        .filter(Membership.group_id==id, Membership.status == 0, Membership.level == 0).all()
+    return render_template('admin/group/requests.html', group=group, membership_requests=membership_requests)
+
+@admin.route('/accept_request/<int:group_id>/<int:user_id>')
+@admin_required
+def accept_request(group_id, user_id):
+    membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
+    membership.status = 1
+    db.session.commit()
+    return redirect(url_for("admin.group_requests", id=group_id))
+
+@admin.route('/decline_request/<int:group_id>/<int:user_id>')
+@admin_required
+def decline_request(group_id, user_id):
+    membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
+    membership.status = 3
+    db.session.commit()
+    return redirect(url_for("admin.group_requests", id=group_id))

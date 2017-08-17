@@ -42,7 +42,30 @@ nosetests.xml
 venv
 pub
 
-# Temporary in Red's Environment
-app/api_1_0/authentication.py
-app/api_1_0/crud.py
-app/api_1_0/errors.py
+# Uploads
+app/static/uploads/activity_images/*
+app/static/uploads/covers/*
+app/static/uploads/group_icons/*
+app/static/uploads/profile_pictures/*
+
+!app/static/uploads/activity_images/.gitkeep
+!app/static/uploads/covers/.gitkeep
+!app/static/uploads/group_icons/.gitkeep
+!app/static/uploads/profile_pictures/.gitkeep
+
+#Seeds
+!app/static/uploads/covers/c94f84619ce845f3b6398a30aa99c720.bmp
+!app/static/uploads/covers/c0b5cfd73486428ba70fddd88f045035.jpg
+!app/static/uploads/covers/00771563eb6748b284b713294905777e.jpg
+!app/static/uploads/covers/5e7a66a709234aed9f690b80de8434e2.jpg
+
+!app/static/uploads/group_icons/d167f8ec77194efc8319e3455da9920f.jpg
+!app/static/uploads/group_icons/ee7c6819aa804255a2a3f1a9bd5732d3.jpg
+!app/static/uploads/group_icons/1c4cd4954e14555808e5649653c7666.jpg
+!app/static/uploads/group_icons/fbb59b05434d461c932f031029b66562.jpg
+
+!app/static/uploads/activity_images/70a256f3628947508af68343821d78b6.jpg
+!app/static/uploads/activity_images/56946b7fb0f64255af220a34664fd5a7.png
+!app/static/uploads/activity_images/8fc972debdde43568ab712730eb9f963.jpg
+!app/static/uploads/activity_images/b31da3d4eaf54ed8a71a686f04c71ed0.jpg
+!app/static/uploads/activity_images/402e8ec51b344f94b8c21f555f973004.png
