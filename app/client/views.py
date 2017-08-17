@@ -31,11 +31,6 @@ def login():
         hasError = True
     return render_template("client/views/login.html", form=form, hasError=hasError)
 
-@client.route('/profile/')
-@login_required
-def profile():
-    return render_template("client/views/profile.html", user=current_user)
-
 @client.route('/activities/')
 @login_required
 def activities():
