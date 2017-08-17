@@ -566,6 +566,14 @@ def group_activities_by(id):
             activity.to_json() for activity in activities
         ])
 
+@api.route('/interest_groups/<int:group_id>/leaders', methods=['POST', 'GET'])
+def get_group_leaders(group_id):
+    leaders = User.query.join(Membership, User.id == Membership.user_id)\
+        .filter(Membership.level == 1).all()
+    return jsonify([
+        leader.to_json() for leader in leaders
+    ])
+
 @api.route('/interest_groups/<int:group_id>/accept', methods=['POST'])
 def accept_request(group_id):
     user_id = int(request.form.get('user_id'));
