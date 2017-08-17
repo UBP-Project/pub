@@ -108,7 +108,7 @@ def group_requests(id):
 
 @client.route('/profile/<int:id>')
 @login_required
-def profile(id):
+def view_profile(id):
     user = User.query.get_or_404(id)
     is_following = True if Follow.query.filter(Follow.follower_id == current_user.get_id(),\
         Follow.following_id == user.get_id()).first() is not None else False
@@ -129,7 +129,7 @@ def edit_profile(id):
         user.position   = form.position.data,
         user.birthday   = form.birthday.data,
         db.session.commit()
-        return redirect(url_for('client.profile', id=current_user.get_id()))
+        return redirect(url_for('client.view_profile', id=current_user.get_id()))
     # load the current user info to the form
     form.firstname.data  = user.firstname
     form.middlename.data = user.middlename
@@ -153,7 +153,7 @@ def edit_password(id):
         if user.verify_password(form.old_password.data):
             user.password = form.new_password.data
             db.session.commit()
-            return redirect(url_for('client.profile', id=current_user.get_id()))
+            return redirect(url_for('client.view_profile', id=current_user.get_id()))
 
     if int(id) != int(current_user.get_id()):
         return redirect(url_for('client.index'))
