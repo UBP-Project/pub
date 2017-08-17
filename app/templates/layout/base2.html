@@ -35,12 +35,13 @@
 
             <div class="navbar" role="navigation" id="navigation">
                 <ul class="nav side-nav">
+                    <li><a href="/profile/{{user.get_id()}}" class="nav-link">{{user.firstname}} {{user.lastname}}<i class="fa fa-user pull-right"></i></a></li>
                     <li><a href="/" class="nav-link active">Home <i class="fa fa-home pull-right"></i></a></li>
                     <li><a href="/activities" class="nav-link">Activities <i class="fa fa-rocket pull-right"></i></a></li>
                     <li><a href="/groups" class="nav-link">Interest Groups <i class="fa fa-group pull-right"></i></a></li>
                     <li><a href="/notifications" class="nav-link">Notifications <i class="fa fa-bell pull-right"></i></a></li>
                     <li><hr/></li>
-                    <li><a href="/settings" class="nav-link">Settings <i class="fa fa-gear pull-right"></i></a></li>
+                    <!-- <li><a href="/settings" class="nav-link">Settings <i class="fa fa-gear pull-right"></i></a></li> -->
                     <li><a href="#" id="sign-out" data-toggle="modal" data-target="#logout-modal">Log Out <i class="fa fa-sign-out pull-right"></i></a></li>
                 </ul>
             </div>

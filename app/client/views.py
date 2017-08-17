@@ -12,7 +12,7 @@ from ..utils import flash_errors
 @client.route('/', methods=['GET', 'POST'])
 @login_required
 def index():
-    return render_template("client/views/home.html")
+    return render_template("client/views/home.html", user=current_user)
 
 @client.route('/login/', methods=['GET', 'POST'])
 def login():
@@ -31,11 +31,16 @@ def login():
         hasError = True
     return render_template("client/views/login.html", form=form, hasError=hasError)
 
+@client.route('/profile/')
+@login_required
+def profile():
+    return render_template("client/views/profile.html", user=current_user)
+
 @client.route('/activities/')
 @login_required
 def activities():
     activities = Activity.query.limit(7)
-    return render_template("client/views/activities.html", activities=activities)
+    return render_template("client/views/activities.html", activities=activities, user=current_user)
 
 @client.route('/groups/')
 @login_required
@@ -59,7 +64,7 @@ def groups():
         Membership.group_id == Interest_Group.id).filter(Membership.level == 1,\
         Membership.user_id == current_user.get_id()).all()
 
-    return render_template("client/views/groups.html", interest_groups=interest_groups, managed_groups=managed_groups)
+    return render_template("client/views/groups.html", interest_groups=interest_groups, managed_groups=managed_groups, user=current_user)
 
 @client.route('/groups/<int:id>', methods=['POST', 'GET'])
 @login_required
@@ -172,12 +177,12 @@ def self():
 @client.route('/notifications/')
 @login_required
 def notifications():
-    return render_template("client/views/notifications.html")
+    return render_template("client/views/notifications.html", user=current_user)
 
 @client.route('/settings/')
 @login_required
 def settings():
-    return render_template("client/views/settings.html")
+    return render_template("client/views/settings.html", user=current_user)
 
 @client.route('/logout')
 @login_required

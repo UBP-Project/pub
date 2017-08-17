@@ -27,14 +27,14 @@
 
 	</div>
 
-		{% if managed_groups|length > 0 %}
+	{% if managed_groups|length > 0 %}
 		<h3>@Prince here are the groups where the current user is a leader/manager</h3>
 		{% for group in managed_groups %}
 			<a href="{{ url_for('client.group', id=group.id)}}">
 				{{ group.name }}
 			</a>
 		{% endfor %}
-		{% endif %}
+	{% endif %}
 
 {% endblock content %}
 
