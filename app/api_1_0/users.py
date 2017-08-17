@@ -13,7 +13,7 @@ def get_users():
         user.to_json() for user in users
     ])
 
-@api.route('/users/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+@api.route('/users/<string:id>', methods=['GET', 'PUT', 'DELETE'])
 @login_required
 def user(id):
     if request.method == 'GET':

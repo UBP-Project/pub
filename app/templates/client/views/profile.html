@@ -29,16 +29,16 @@
                     <h4>99</h4>
                 </a>
 
-                {% if current_user.get_id() == user.get_id() %}
+                {% if current_user['id'] == user['id'] %}
                     <a href="{{ url_for('client.edit_profile', id=user.id) }}" id="btn-edit-profile" class="btn btn-style-3" style="width: 100px">Edit Profile</a>
                 {% endif %}
 
 
-                {% if current_user.get_id() != user.get_id() and is_following != True %}
+                {% if current_user['id'] != user['id'] and is_following != True %}
                     <a id="btn-follow" class="btn btn-style-2" style="width: 100px">Follow</a>
                 {% endif %}
 
-                {% if current_user.get_id() != user.get_id() and is_following == True %}
+                {% if current_user['id'] != user['id'] and is_following == True %}
                     <a id="btn-unfollow" class="btn btn-style-1" style="width: 100px">Following</a>
                 {% endif %}
             </div>
@@ -53,7 +53,7 @@
         function set_buttons() {
             $("#btn-follow").on('click', function() {
                 $.ajax({
-                    'url': "{{ url_for('api.follow_user', to_follow_id=user.get_id())}}",
+                    'url': '{{ url_for('api.follow_user', to_follow_id=user["id"]) }}',
                     'type': 'POST'
                 }).done(function(data) {
                     $("#btn-follow").remove();
@@ -64,7 +64,7 @@
 
             $("#btn-unfollow").on('click', function() {
                 $.ajax({
-                    'url': "{{ url_for('api.unfollow_user', to_unfollow_id=user.get_id())}}",
+                    'url': '{{ url_for('api.unfollow_user', to_unfollow_id=user["id"]) }}',
                     'type': 'POST'
                 }).done(function(data) {
                     $("#btn-unfollow").remove();

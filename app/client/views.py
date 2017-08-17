@@ -61,7 +61,7 @@ def groups():
 
     return render_template("client/views/groups.html", interest_groups=interest_groups, managed_groups=managed_groups, user=current_user)
 
-@client.route('/groups/<int:id>', methods=['POST', 'GET'])
+@client.route('/groups/<string:id>', methods=['POST', 'GET'])
 @login_required
 def group(id):
     form = GroupMembershipForm()
@@ -91,7 +91,7 @@ def group(id):
     return render_template('client/views/group.html', group=group, members=members, user=current_user,\
         membership=membership, form=form)
 
-@client.route('/groups/<int:id>/requests', methods=['POST', 'GET'])
+@client.route('/groups/<string:id>/requests', methods=['POST', 'GET'])
 @login_required
 def group_requests(id):
     manager_or_leader_only(id) # check if the current user is a manager or leader
@@ -101,7 +101,7 @@ def group_requests(id):
         .filter(Membership.group_id==id, Membership.status == 0, Membership.level == 0).all()
     return render_template('client/views/group-requests.html', group=group, membership_requests=membership_requests)
 
-@client.route('/profile/<int:id>')
+@client.route('/profile/<string:id>')
 @login_required
 def view_profile(id):
     user = User.query.get_or_404(id)
@@ -109,7 +109,7 @@ def view_profile(id):
         Follow.following_id == user.get_id()).first() is not None else False
     return render_template("client/views/profile.html", user=user, current_user=current_user, is_following=is_following)
 
-@client.route('/profile/<int:id>/edit', methods=['POST', 'GET'])
+@client.route('/profile/<string:id>/edit', methods=['POST', 'GET'])
 @login_required
 def edit_profile(id):
     form = UpdateUserFormClient()
@@ -135,11 +135,11 @@ def edit_profile(id):
     form.birthday.data   = user.birthday
     # flash_errors(form)
 
-    if int(id) != int(current_user.get_id()):
+    if id != current_user.get_id():
         return redirect(url_for('client.index'))
     return render_template('client/views/edit-profile.html', user=current_user, form=form)
 
-@client.route('/profile/<int:id>/edit-password', methods=['POST', 'GET'])
+@client.route('/profile/<string:id>/edit-password', methods=['POST', 'GET'])
 @login_required
 def edit_password(id):
     form = PasswordFormClient()
@@ -150,16 +150,16 @@ def edit_password(id):
             db.session.commit()
             return redirect(url_for('client.view_profile', id=current_user.get_id()))
 
-    if int(id) != int(current_user.get_id()):
+    if id != current_user.get_id():
         return redirect(url_for('client.index'))
     return render_template('client/views/edit-password.html', user=current_user, form=form)
 
-@client.route('/profile/<int:id>/followers')
+@client.route('/profile/<string:id>/followers')
 @login_required
 def followers(id):
     return "Followers"
 
-@client.route('/profile/<int:id>/following')
+@client.route('/profile/<string:id>/following')
 @login_required
 def following(id):
     return "Following"

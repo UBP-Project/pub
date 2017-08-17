@@ -68,7 +68,7 @@ def get_interest_groups():
         interest_group.to_json() for interest_group in interest_groups
     ]), 200
 
-@api.route('/interest_groups/<int:id>')
+@api.route('/interest_groups/<string:id>')
 @login_required
 def get_interest_group_by(id):
     """
@@ -187,7 +187,7 @@ def new_interest_group():
         db.session.rollback()
         return jsonify({'message': 'Name already taken'}), 409
 
-@api.route('/interest_groups/<int:id>', methods=['PUT'])
+@api.route('/interest_groups/<string:id>', methods=['PUT'])
 @login_required
 def edit_interest_group_by(id):
     """
@@ -265,7 +265,7 @@ def edit_interest_group_by(id):
     db.session.commit()
     return jsonify(group.to_json()) # change this to better message format
 
-@api.route('/interest_groups/<int:id>', methods=['DELETE'])
+@api.route('/interest_groups/<string:id>', methods=['DELETE'])
 @login_required
 def delete_interest_group(id):
     """
@@ -298,7 +298,7 @@ def delete_interest_group(id):
         db.session.rollback()
         return jsonify({'status': 'error'}), 404
 
-@api.route('/interest_groups/<int:id>/members')
+@api.route('/interest_groups/<string:id>/members')
 @login_required
 def get_members(id):
     """
@@ -382,7 +382,7 @@ def get_members(id):
         user.to_json() for user in members
     ])
 
-@api.route('/interest_groups/<int:id>/role')
+@api.route('/interest_groups/<string:id>/role')
 @login_required
 def get_role_by_group(id):
     """
@@ -420,7 +420,7 @@ def get_role_by_group(id):
     else:
         return jsonify({'role': 'None'})
 
-@api.route('/interest_groups/<int:id>/join', methods=['POST'])
+@api.route('/interest_groups/<string:id>/join', methods=['POST'])
 @login_required
 def join_group(id):
     """
@@ -455,7 +455,7 @@ def join_group(id):
         db.session().rollback()
         return jsonify({'message': 'Record exists'}), 409
 
-@api.route('/interest_groups/<int:id>/join/status')
+@api.route('/interest_groups/<string:id>/join/status')
 @login_required
 def get_request_status(id):
     """
@@ -501,7 +501,7 @@ def get_request_status(id):
     else:
         return jsonify({'membership_status': 'None'})
 
-@api.route('/interest_groups/<int:id>/leave', methods=['DELETE'])
+@api.route('/interest_groups/<string:id>/leave', methods=['DELETE'])
 @login_required
 def leave_group(id):
     """
@@ -533,7 +533,7 @@ def leave_group(id):
     else:
         return jsonify({'status': 'Not Found'}), 404
 
-@api.route('/interest_groups/<int:id>/activities')
+@api.route('/interest_groups/<string:id>/activities')
 @login_required
 def group_activities_by(id):
     """

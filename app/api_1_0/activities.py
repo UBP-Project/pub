@@ -167,7 +167,7 @@ def new_activity():
         db.session.rollback()
         return jsonify({'status':'error'}), 500
 
-@api.route('/activities/<int:id>', methods=['GET'])
+@api.route('/activities/<string:id>', methods=['GET'])
 @login_required
 def get_activity_by(id):
     """
@@ -221,7 +221,7 @@ def get_activity_by(id):
     activity = Activity.query.get_or_404(id)
     return jsonify(activity.to_json())
 
-@api.route('/activities/<int:id>', methods=['PUT'])
+@api.route('/activities/<string:id>', methods=['PUT'])
 @login_required
 def edit_activity_by(id):
     """
@@ -321,7 +321,7 @@ def edit_activity_by(id):
         db.session.rollback()
         return jsonify({'status':'error'}), 500
 
-@api.route('/activities/<int:id>', methods=['DELETE'])
+@api.route('/activities/<string:id>', methods=['DELETE'])
 @login_required
 def delete_activity_by(id):
     """
@@ -348,7 +348,7 @@ def delete_activity_by(id):
     db.session.commit()
     return "Deleted"
 
-@api.route('/activities/<int:id>/going')
+@api.route('/activities/<string:id>/going')
 @login_required
 def get_going_by(id):
     """
@@ -432,7 +432,7 @@ def get_going_by(id):
         user.to_json() for user in going
     ])
 
-@api.route('/activities/<int:id>/interested')
+@api.route('/activities/<string:id>/interested')
 @login_required
 def get_interested(id):
     """
@@ -515,7 +515,7 @@ def get_interested(id):
         user.to_json() for user in interested
     ])
 
-@api.route('/activities/<int:id>/going', methods=['POST'])
+@api.route('/activities/<string:id>/going', methods=['POST'])
 @login_required
 def going_to_activity_by(id):
     """
@@ -559,7 +559,7 @@ def going_to_activity_by(id):
         db.session().rollback()
         return jsonify({'status': 'error'}), 500
 
-@api.route('/activities/<int:id>/interested', methods=['POST'])
+@api.route('/activities/<string:id>/interested', methods=['POST'])
 @login_required
 def interested_to_activity_by(id):
     """

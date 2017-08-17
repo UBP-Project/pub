@@ -1,10 +1,12 @@
 from app import db
+# from app.models.guid import GUID
+from sqlalchemy_utils import UUIDType
 from datetime import datetime
 
 class Membership(db.Model):
     __tablename__     = 'membership'
-    user_id     = db.Column(db.Integer, db.ForeignKey('user.id', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
-    group_id    = db.Column(db.Integer, db.ForeignKey('interest_group.id', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
+    user_id     = db.Column(UUIDType(binary=False), db.ForeignKey('user.id', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
+    group_id    = db.Column(UUIDType(binary=False), db.ForeignKey('interest_group.id', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
     date_joined = db.Column(db.Date)
     status      = db.Column(db.Integer) #0 'pending', #1'accepted', #3'declined'
     level       = db.Column(db.Integer) #0 'regular' or #1'leader' member

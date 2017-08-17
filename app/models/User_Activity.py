@@ -1,10 +1,13 @@
 from app import db
+# from app.models.guid import GUID
+from sqlalchemy_utils import UUIDType
+import uuid
 
 class User_Activity(db.Model):
     __tablename__ = 'user_activity'
-    id          = db.Column(db.Integer, primary_key=True)
-    user_id     = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
-    activity_id = db.Column(db.Integer, db.ForeignKey('activity.id', ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
+    id          = db.Column(UUIDType(binary=False), default=uuid.uuid4, primary_key=True)
+    user_id     = db.Column(UUIDType(binary=False), db.ForeignKey('user.id', ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
+    activity_id = db.Column(UUIDType(binary=False), db.ForeignKey('activity.id', ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
     status      = db.Column(db.Integer) #0 interested #1 going
 
     # user = db.relationship('User', back_populates='user_activity')

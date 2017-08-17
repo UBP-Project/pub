@@ -7,7 +7,6 @@ from ...decorators import admin_required
 from ...utils import flash_errors
 from sqlalchemy import or_
 
-
 USERS_PER_PAGE = 10
 
 @admin.route('/users')
@@ -63,11 +62,12 @@ def managers():
     return render_template('admin/user/managers.html', managers=managers, query=query)
 
 
-@admin.route('/users/<int:id>', methods=['GET', 'POST'])
+@admin.route('/users/<string:id>', methods=['GET', 'POST'])
 @admin_required
 def profile(id):
     form = UpdateUserForm()
     user = User.query.get_or_404(id)
+
     if form.validate_on_submit():
         user.firstname  = form.firstname.data,
         user.middlename = form.middlename.data,
@@ -76,7 +76,8 @@ def profile(id):
         user.department = form.department.data,
         user.position   = form.position.data,
         user.birthday   = form.birthday.data,
-        user.role_id    = int(form.role.data)
+        user.role_id    = form.role.data
+
         db.session.commit()
         return redirect(url_for('admin.users'))
 
@@ -91,7 +92,7 @@ def profile(id):
     form.role.data       = user.role_id
     return render_template('admin/user/profile.html', user=user, form=form)
 
-@admin.route('/users/<int:id>/change-password', methods=['GET', 'POST'])
+@admin.route('/users/<string:id>/change-password', methods=['GET', 'POST'])
 @admin_required
 def change_password(id):
     form = PasswordForm()
@@ -108,15 +109,15 @@ def change_password(id):
 def create_user():
     form = CreateUserForm()
     if form.validate_on_submit():
-        print(form.role.data)
-        user = User(firstname=form.firstname.data,
+        user = User(
+            firstname=form.firstname.data,
             middlename=form.middlename.data,
             lastname=form.lastname.data, 
             email=form.email.data,
             department=form.department.data,
             position=form.position.data,
             birthday=form.birthday.data,
-            role_id=int(form.role.data))
+            role_id=form.role.data)
         user.password = form.password.data
         db.session.add(user)
         db.session.commit()
