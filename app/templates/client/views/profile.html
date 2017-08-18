@@ -65,7 +65,7 @@
             $("#btn-unfollow").on('click', function() {
                 $.ajax({
                     'url': '{{ url_for('api.unfollow_user', to_unfollow_id=user["id"]) }}',
-                    'type': 'POST'
+                    'type': 'DELETE'
                 }).done(function(data) {
                     $("#btn-unfollow").remove();
                     $("#profile-btns").append('<button id="btn-follow" class="btn btn-style-2" style="width: 100px">Follow</button>');
