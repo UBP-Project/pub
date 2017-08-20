@@ -15,7 +15,7 @@ def groups():
     groups = Interest_Group.query.all()
     return render_template('admin/group/groups.html', groups=groups)
 
-@admin.route('/groups/<int:id>', methods=['GET', 'POST'])
+@admin.route('/groups/<string:id>', methods=['GET', 'POST'])
 @admin_required
 def group(id):
     group = Interest_Group.query.get_or_404(id)
@@ -59,7 +59,7 @@ def create_group():
         return redirect(url_for("admin.groups"))
     return render_template('admin/group/create.html', form=form)
 
-@admin.route('/groups/<int:id>/edit', methods=['GET', 'POST'])
+@admin.route('/groups/<string:id>/edit', methods=['GET', 'POST'])
 @admin_required
 def update_group(id):
     form = UpdateInterestGroupForm()
@@ -114,7 +114,7 @@ def removeleader(group_id, user_id):
     db.session.commit()
     return redirect(url_for("admin.group_members", id=group_id))
 
-@admin.route('/groups/<int:id>/members', methods=['GET', 'POST'])
+@admin.route('/groups/<string:id>/members', methods=['GET', 'POST'])
 @admin_required
 def group_members(id):
     group = Interest_Group.query.get_or_404(id)
@@ -126,7 +126,7 @@ def group_members(id):
         .filter(Membership.group_id==id, Membership.status != 0, Membership.level == 0).all()
     return render_template('admin/group/members.html', group=group, leaders=leaders, members=members)
 
-@admin.route('/groups/<int:id>/requests', methods=['GET', 'POST'])
+@admin.route('/groups/<string:id>/requests', methods=['GET', 'POST'])
 @admin_required
 def group_requests(id):
     group = Interest_Group.query.get_or_404(id)

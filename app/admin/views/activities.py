@@ -18,7 +18,7 @@ def flash_errors(form):
                 error
             ))
 
-@admin.route('/activities/<int:id>')
+@admin.route('/activities/<string:id>')
 @admin_required
 def activity(id):
     activity = Activity.query.get_or_404(id)
@@ -60,7 +60,7 @@ def activities():
     activities = Activity.query.all()
     return render_template('admin/activity/activities.html', activities=activities);
 
-@admin.route('/activities/<int:id>/edit', methods=['GET', 'POST'])
+@admin.route('/activities/<string:id>/edit', methods=['GET', 'POST'])
 @admin_required
 def edit_activity(id):
     form                  = UpdateActivityForm()

@@ -34,8 +34,8 @@ def get_activities():
           id: activities
           properties:
             id:
-                type: integer
-                example: 1
+                type: string
+                example: 0f5b5ff8-afa2-43f7-8066-8ec3075c4c0c
             title:
                 type: string
                 example: Temple Run
@@ -55,9 +55,9 @@ def get_activities():
                 type: string
                 example: Luneta Park
             group_id:
-                type: integer
+                type: string
                 default: None
-                example: 1
+                example: 0f5b5ff8-afa2-43f7-8066-8ec3075c4c0c
                 descripton: In case event is associated with some group
             image:
                 type: string
@@ -124,8 +124,8 @@ def new_activity():
 
         - name: group_id
           in: formData
-          type: int
-          example: 1
+          type: string
+          example: 0f5b5ff8-afa2-43f7-8066-8ec3075c4c0c
           description: Event Association with groups
           default: 1
 
@@ -136,7 +136,7 @@ def new_activity():
 
     responses:
         200:
-            description: Success!
+            description: OK
         500:
             description: Internal Server Error
     """
@@ -167,7 +167,7 @@ def new_activity():
         db.session.rollback()
         return jsonify({'status':'error'}), 500
 
-@api.route('/activities/<int:id>', methods=['GET'])
+@api.route('/activities/<string:id>', methods=['GET'])
 @login_required
 def get_activity_by(id):
     """
@@ -178,7 +178,7 @@ def get_activity_by(id):
     parameters:
         - name: id
           in: path
-          type: integer
+          type: string
           required: true
     responses:
       200:
@@ -187,8 +187,8 @@ def get_activity_by(id):
           id: activities
           properties:
             id:
-                type: integer
-                example: 1
+                type: string
+                example: 0f5b5ff8-afa2-43f7-8066-8ec3075c4c0c
             title:
                 type: string
                 example: Temple Run
@@ -208,9 +208,9 @@ def get_activity_by(id):
                 type: string
                 example: Luneta Park
             group_id:
-                type: integer
+                type: string
                 default: None
-                example: 1
+                example: 0f5b5ff8-afa2-43f7-8066-8ec3075c4c0c
                 descripton: In case event is associated with some group
             image:
                 type: string
@@ -221,7 +221,7 @@ def get_activity_by(id):
     activity = Activity.query.get_or_404(id)
     return jsonify(activity.to_json())
 
-@api.route('/activities/<int:id>', methods=['PUT'])
+@api.route('/activities/<string:id>', methods=['PUT'])
 @login_required
 def edit_activity_by(id):
     """
@@ -235,9 +235,9 @@ def edit_activity_by(id):
         - name: id
           in: path
           description: Event ID
-          type: integer
+          type: string
           required: true
-          default: 1
+          default: 04cb8787-fe54-4e73-80d4-c17bf56537ee
 
         - name: title
           in: formData
@@ -278,8 +278,8 @@ def edit_activity_by(id):
 
         - name: group_id
           in: formData
-          type: int
-          example: 1
+          type: string
+          example: 04cb8787-fe54-4e73-80d4-c17bf56537ee
           description: Event Association with groups
           default: 1
 
@@ -321,7 +321,7 @@ def edit_activity_by(id):
         db.session.rollback()
         return jsonify({'status':'error'}), 500
 
-@api.route('/activities/<int:id>', methods=['DELETE'])
+@api.route('/activities/<string:id>', methods=['DELETE'])
 @login_required
 def delete_activity_by(id):
     """
@@ -334,9 +334,9 @@ def delete_activity_by(id):
       - name: id
         in: path
         description: Event ID
-        type: integer
+        type: string
         required: true
-        default: 1
+        default: 04cb8787-fe54-4e73-80d4-c17bf56537ee
 
     responses:
       200:
@@ -348,7 +348,7 @@ def delete_activity_by(id):
     db.session.commit()
     return "Deleted"
 
-@api.route('/activities/<int:id>/going')
+@api.route('/activities/<string:id>/going')
 @login_required
 def get_going_by(id):
     """
@@ -368,56 +368,58 @@ def get_going_by(id):
         schema:
           id: users
           properties:
-
             id:
-                type: integer
-                example: 1
+                type: string
+                example: 0f5b5ff8-afa2-43f7-8066-8ec3075c4c0c
+                required: true
 
             firstname:
                 type: string
-                example: Juan
-                description: First Name
+                example: John
+                required: true
 
             middlename:
                 type: string
-                example: y
-                description: Middle Name
-
+                example: Clinton
+            
             lastname:
                 type: string
                 example: dela Cruz
-                description: Last Name    
-                
+                required: true
+
             email:
                 type: string
-                example: jdc@gmail.com
-                description: User Email
+                example: juandelacruz@gmail.com
+                required: true
 
             password_hash:
                 type: string
-                example: pbkdf2:sha1:1000$lnFVjrjG$b8cd6a98d9ab806eb52ca0066d275d59ee18e6f5
-                description: User Password
+                example: pbkdf2:sha1:1000$bK0Jvvl7$974df4129556a5bdb11b7892b09275c6ed595f76             
+                description: Hashed password
+                required: true
 
             department:
                 type: string
-                example: Talen Acquisition
-                description: UnionBank Dept
+                example: Business Analytics
+                description: Department where the employee belong
+                required: true
 
             position:
                 type: string
-                example: Head
-                descripton: User's Position
-            
+                example: Project Hire
+                description: Job position
+                required: true
+
             birthday:
                 type: string
                 format: date
-                example: '1998-02-01'
-                description: User Birthday
+                example: 1997-09-07
 
             role_id:
-                type: integer
-                example: 1
-                description: Corresponding values for Administrator, Manager, and User
+                type: string
+                example: 0f5b5ff8-afa2-43f7-8066-8ec3075c4c0c
+                description: Flag for user's role
+                required: true
     """
     activity = Activity.query.get_or_404(id)
 
@@ -432,7 +434,7 @@ def get_going_by(id):
         user.to_json() for user in going
     ])
 
-@api.route('/activities/<int:id>/interested')
+@api.route('/activities/<string:id>/interested')
 @login_required
 def get_interested(id):
     """
@@ -452,10 +454,9 @@ def get_interested(id):
         schema:
           id: users
           properties:
-
             id:
-                type: integer
-                example: 1
+                type: string
+                example: 04cb8787-fe54-4e73-80d4-c17bf56537ee
 
             firstname:
                 type: string
@@ -499,8 +500,8 @@ def get_interested(id):
                 description: User Birthday
 
             role_id:
-                type: integer
-                example: 1
+                type: string
+                example: 04cb8787-fe54-4e73-80d4-c17bf56537ee
                 description: Corresponding values for Administrator, Manager, and User
     """
 
@@ -515,7 +516,7 @@ def get_interested(id):
         user.to_json() for user in interested
     ])
 
-@api.route('/activities/<int:id>/going', methods=['POST'])
+@api.route('/activities/<string:id>/going', methods=['POST'])
 @login_required
 def going_to_activity_by(id):
     """
@@ -526,8 +527,8 @@ def going_to_activity_by(id):
     parameters:
         - name: id
           in: path
-          type: int
-          example: 1
+          type: string
+          example: 04cb8787-fe54-4e73-80d4-c17bf56537ee
           description: Activity ID
 
     responses:
@@ -559,17 +560,10 @@ def going_to_activity_by(id):
         db.session().rollback()
         return jsonify({'status': 'error'}), 500
 
-@api.route('/activities/<int:id>/interested', methods=['POST'])
+@api.route('/activities/<string:id>/interested', methods=['POST'])
 @login_required
 def interested_to_activity_by(id):
     """
-    data = request.form.to_dict()
-    manager_or_leader_only(data.group_id)
-    activity = Activity.from_json(data)
-    db.session.add(activity)
-    db.session.commit()
-    return jsonify(activity.to_json()), 201, \
-        {'Location': url_for('api.new_activity', id=activity.id, _external=True)}
     Interested to an Activity
     ---
     tags:
@@ -577,8 +571,8 @@ def interested_to_activity_by(id):
     parameters:
         - name: id
           in: path
-          type: int
-          example: 1
+          type: string
+          example: 04cb8787-fe54-4e73-80d4-c17bf56537ee
           description: Activity ID
 
     responses:

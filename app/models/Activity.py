@@ -1,15 +1,18 @@
 from app import db
+# from app.models.guid import GUID
+from sqlalchemy_utils import UUIDType
+import uuid
 
 
 class Activity(db.Model):
     __tablename__ = 'activity'
-    id            = db.Column(db.Integer, primary_key=True)
+    id            = db.Column(UUIDType(binary=False), default=uuid.uuid4, primary_key=True)
     title         = db.Column(db.String(200), unique=True)
     description   = db.Column(db.String(200))
     start_date    = db.Column(db.Date)
     end_date      = db.Column(db.Date)  
     address       = db.Column(db.String(100))
-    group_id      = db.Column(db.Integer, db.ForeignKey('interest_group.id', ondelete="CASCADE", onupdate="CASCADE"), nullable=True)
+    group_id      = db.Column(UUIDType(binary=False), db.ForeignKey('interest_group.id', ondelete="CASCADE", onupdate="CASCADE"), nullable=True)
     image         = db.Column(db.String(200))
 
     # comments    = db.relationship('Comment', backref=db.backref('comments', lazy='joined'), lazy="dynamic", passive_deletes=True, passive_updates=True)

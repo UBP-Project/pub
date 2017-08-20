@@ -1,12 +1,16 @@
-from app import db, login_manager
-from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-import getpass
+from app import db, login_manager
 from app.models import Role, Permission
+# from app.models.guid import GUID
+from sqlalchemy_utils import UUIDType
+from flask_login import UserMixin
+import uuid
+import getpass
+
 
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
-    id            = db.Column(db.Integer, primary_key=True)
+    id            = db.Column(UUIDType(binary=False), default=uuid.uuid4, primary_key=True)
     firstname     = db.Column(db.String(64))
     middlename    = db.Column(db.String(64), nullable=True)
     lastname      = db.Column(db.String(64))
@@ -15,16 +19,19 @@ class User(UserMixin, db.Model):
     department    = db.Column(db.String(100))
     position      = db.Column(db.String(100))
     birthday      = db.Column(db.Date)
-    role_id       = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    role_id       = db.Column(UUIDType(binary=False), db.ForeignKey('roles.id'))
 
-    # def __init__(self, **kwargs):
-    #     super(User, self).__init__(**kwargs)
-    #     if self.role is None:
-    #         if self.email == 'admin@ubppub.com': # admin
-    #             self.role = Role.query.filter_by(permissions=0xffff).first()
-    #         if self.role is None:
-    #             self.role = Role.query.filter_by(default=True).first()
-    #             
+    # def __init__(self, firstname, middlename, lastname, email, password_hash, department, position, birthday, role_id):
+    #     self.firstname = firstname
+    #     self.middlename = middlename
+    #     self.lastname = lastname
+    #     self.email = email
+    #     self.password_hash = password_hash
+    #     self.department = department
+    #     self.position = position
+    #     self.birthday = birthday
+    #     self.role_id = role_id
+                     
     
     def can(self, permissions):
         return self.role is not None and \
@@ -49,7 +56,7 @@ class User(UserMixin, db.Model):
 
     @login_manager.user_loader
     def load_user(user_id):
-        return User.query.get(int(user_id))
+        return User.query.get(user_id)
 
     def to_json(self):
         json_post = {

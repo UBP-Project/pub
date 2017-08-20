@@ -1,8 +1,11 @@
 from app import db
+# from app.models.guid import GUID
+from sqlalchemy_utils import UUIDType
+import uuid
 
 class Interest_Group(db.Model):
     __tablename__ = 'interest_group'
-    id            = db.Column(db.Integer, primary_key=True)
+    id            = db.Column(UUIDType(binary=False), default=uuid.uuid4, primary_key=True)
     name          = db.Column(db.String(200), unique=True)
     about         = db.Column(db.String(600))
     cover_photo   = db.Column(db.String(200))
