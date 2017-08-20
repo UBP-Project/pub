@@ -6,6 +6,7 @@ from sqlalchemy_utils import UUIDType
 from flask_login import UserMixin
 import uuid
 import getpass
+from uuid import UUID
 
 
 class User(UserMixin, db.Model):
@@ -54,9 +55,8 @@ class User(UserMixin, db.Model):
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    @login_manager.user_loader
-    def load_user(user_id):
-        return User.query.get(user_id)
+    def get_id(self):
+        return self.id
 
     def to_json(self):
         json_post = {
@@ -96,3 +96,10 @@ class User(UserMixin, db.Model):
             birthday        = birthday,
             role_id         = role_id
         )
+
+@login_manager.user_loader
+def load_user(user_id):
+    if type(user_id) is str:
+        print("Is STR")
+        return None
+    return User.query.get(user_id)

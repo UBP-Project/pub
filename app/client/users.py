@@ -9,7 +9,7 @@ from ..auth import manager_or_leader_only
 from ..forms import UpdateUserFormClient, PasswordFormClient
 from ..utils import flash_errors
 
-@client.route('/profile/<int:id>')
+@client.route('/profile/<uuid(strict=False):id>')
 @login_required
 def view_profile(id):
     user = User.query.get_or_404(id)
@@ -17,7 +17,7 @@ def view_profile(id):
         Follow.following_id == user.get_id()).first() is not None else False
     return render_template("client/views/profile.html", user=user, current_user=current_user, is_following=is_following)
 
-@client.route('/profile/<int:id>/edit', methods=['POST', 'GET'])
+@client.route('/profile/<uuid(strict=False):id>/edit', methods=['POST', 'GET'])
 @login_required
 def edit_profile(id):
     form = UpdateUserFormClient()
@@ -47,7 +47,7 @@ def edit_profile(id):
         return redirect(url_for('client.index'))
     return render_template('client/views/edit-profile.html', user=current_user, form=form)
 
-@client.route('/profile/<int:id>/edit-password', methods=['POST', 'GET'])
+@client.route('/profile/<uuid(strict=False):id>/edit-password', methods=['POST', 'GET'])
 @login_required
 def edit_password(id):
     form = PasswordFormClient()
@@ -62,12 +62,12 @@ def edit_password(id):
         return redirect(url_for('client.index'))
     return render_template('client/views/edit-password.html', user=current_user, form=form)
 
-@client.route('/profile/<int:id>/followers')
+@client.route('/profile/<uuid(strict=False):id>/followers')
 @login_required
 def followers(id):
     return "Followers"
 
-@client.route('/profile/<int:id>/following')
+@client.route('/profile/<uuid(strict=False):id>/following')
 @login_required
 def following(id):
     return "Following"
@@ -75,4 +75,4 @@ def following(id):
 @client.route('/self')
 @login_required
 def self():
-    return current_user.get_id();
+    return str(current_user.get_id());

@@ -14,8 +14,15 @@
         </div>
 
         <div class="col-md-12 text-right" style="background-color: white; padding: 0px;">
+
+            <!-- Check if user has set cover photo
             <img src="{{ url_for('static', filename='images/building.png') }}"
-                style="width: 100%; height: 250px; z-index: 1;"/>
+                style="width: 100%; height: 250px; z-index: 1;"/> -->
+
+            <!-- hold the trianlify cover photo -->
+            <div id="trianglify-cover" class="col-md-12 text-right" style="height: 250px; background-color: white; padding: 0px;">
+            </div>
+
             <div id="profile-btns" style="padding: 0px 20px;">
 
 
@@ -49,42 +56,14 @@
 {% endblock content %}
 
 {% block scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/trianglify/0.4.0/trianglify.min.js"></script>
     <script>
-        function set_buttons() {
-            $("#btn-follow").on('click', function() {
-                $.ajax({
-                    'url': '{{ url_for('api.follow_user', to_follow_id=user["id"]) }}',
-                    'type': 'POST'
-                }).done(function(data) {
-                    $("#btn-follow").remove();
-                    $("#profile-btns").append('<button id="btn-unfollow" class="btn btn-style-1" style="width: 100px">Following</button>');
-                    set_buttons();
-                });
-            });
-
-            $("#btn-unfollow").on('click', function() {
-                $.ajax({
-                    'url': '{{ url_for('api.unfollow_user', to_unfollow_id=user["id"]) }}',
-                    'type': 'DELETE'
-                }).done(function(data) {
-                    $("#btn-unfollow").remove();
-                    $("#profile-btns").append('<button id="btn-follow" class="btn btn-style-2" style="width: 100px">Follow</button>');
-                    set_buttons();
-                });
-            });
-
-            $("#btn-unfollow")
-                .mouseover(function() {
-                    $(this).text("Unfollow");
-                })
-                .mouseout(function() {
-                    $(this).text("Following");
-                });
-
-        }
-        // initialize buttons
-        set_buttons();
+        var pattern = Trianglify({
+            width: $("#trianglify-cover").width(),
+            height: $("#trianglify-cover").height(),
+            seed: "{{ user['id'] }}"
+        });
+        $("#trianglify-cover").append(pattern.svg())
     </script>
-
-
+    <script src="{{ url_for('static', filename='js/client/profile.js') }}"></script>
 {% endblock scripts %}

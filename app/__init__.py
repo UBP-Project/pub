@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flasgger import Swagger
 from config import config
 from flask_login import LoginManager
+from flask_uuid import FlaskUUID
 
 bootstrap = Bootstrap()
 db = SQLAlchemy()
@@ -20,6 +21,8 @@ def create_app(config_name):
     db.init_app(app)
     login_manager.init_app(app)
     Swagger(app, template=config[config_name].swagger_template, config=config[config_name].swagger_config)
+
+    FlaskUUID(app) # for handling uuid in urls
 
     from app.client import client as client_blueprint
     app.register_blueprint(client_blueprint)

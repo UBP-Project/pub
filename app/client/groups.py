@@ -28,7 +28,7 @@ def groups():
         Membership.user_id == current_user.get_id()).all()
     return render_template("client/views/groups.html", interest_groups=interest_groups, managed_groups=managed_groups, user=current_user)
 
-@client.route('/groups/<int:id>', methods=['POST', 'GET'])
+@client.route('/groups/<uuid(strict=False):id>', methods=['POST', 'GET'])
 @login_required
 def group(id):
     form = GroupMembershipForm()
@@ -57,7 +57,7 @@ def group(id):
     return render_template('client/views/group.html', group=group, members=members, user=current_user,\
         membership=membership, form=form)
 
-@client.route('/groups/<int:id>/requests', methods=['POST', 'GET'])
+@client.route('/groups/<uuid(strict=False):id>/requests', methods=['POST', 'GET'])
 @login_required
 def group_requests(id):
     manager_or_leader_only(id) # check if the current user is a manager or leader
