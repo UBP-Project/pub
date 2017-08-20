@@ -167,7 +167,7 @@ def new_activity():
         db.session.rollback()
         return jsonify({'status':'error'}), 500
 
-@api.route('/activities/<string:id>', methods=['GET'])
+@api.route('/activities/<uuid(strict=False):id>', methods=['GET'])
 @login_required
 def get_activity_by(id):
     """
@@ -221,7 +221,7 @@ def get_activity_by(id):
     activity = Activity.query.get_or_404(id)
     return jsonify(activity.to_json())
 
-@api.route('/activities/<string:id>', methods=['PUT'])
+@api.route('/activities/<uuid(strict=False):id>', methods=['PUT'])
 @login_required
 def edit_activity_by(id):
     """
@@ -321,7 +321,7 @@ def edit_activity_by(id):
         db.session.rollback()
         return jsonify({'status':'error'}), 500
 
-@api.route('/activities/<string:id>', methods=['DELETE'])
+@api.route('/activities/<uuid(strict=False):id>', methods=['DELETE'])
 @login_required
 def delete_activity_by(id):
     """
@@ -348,7 +348,7 @@ def delete_activity_by(id):
     db.session.commit()
     return "Deleted"
 
-@api.route('/activities/<string:id>/going')
+@api.route('/activities/<uuid(strict=False):id>/going')
 @login_required
 def get_going_by(id):
     """
@@ -434,7 +434,7 @@ def get_going_by(id):
         user.to_json() for user in going
     ])
 
-@api.route('/activities/<string:id>/interested')
+@api.route('/activities/<uuid(strict=False):id>/interested')
 @login_required
 def get_interested(id):
     """
@@ -516,7 +516,7 @@ def get_interested(id):
         user.to_json() for user in interested
     ])
 
-@api.route('/activities/<string:id>/going', methods=['POST'])
+@api.route('/activities/<uuid(strict=False):id>/going', methods=['POST'])
 @login_required
 def going_to_activity_by(id):
     """
@@ -534,33 +534,33 @@ def going_to_activity_by(id):
     responses:
         200:
             description: Success
+        409:
+            description: Record already exists
         500:
             description: Internal Server Error
     """    
-    activity = User_Activity.query.filter_by(user_id=current_user.get_id(), activity_id=id).first()
+    activity = User_Activity.query.filter_by(user_id=current_user.get_id(), activity_id=id, status=1).first()
 
     if activity is not None:
-        #check if the status is interested
-        if activity.status == 0:
-            #change to going
-            activity.status = 1
-
+        #check if the status is going
+        return jsonify({'status': 'Record already exists'}), 201
     else:
-        activity = User_Activity(
-            user_id=current_user.get_id(),
-            activity_id=id,
-            status = 1 #going
-            )
-        db.session.add(activity)
+      activity = User_Activity(
+        user_id=current_user.get_id(),
+        activity_id=id,
+        status = 1 #going
+        )
+      db.session.add(activity)
 
-    try:
-        db.session.commit()
-        return jsonify({'message': 'Success'}), 201
-    except exc.SQLAlchemyError as e:
-        db.session().rollback()
-        return jsonify({'status': 'error'}), 500
+      try:
+          db.session.commit()
+          return jsonify({'status': 'Success'}), 200        
+      except exc.SQLAlchemyError as e:
+          print(e)
+          db.session().rollback()
+          return jsonify({'status': 'error'}), 500
 
-@api.route('/activities/<string:id>/interested', methods=['POST'])
+@api.route('/activities/<uuid(strict=False):id>/interested', methods=['POST'])
 @login_required
 def interested_to_activity_by(id):
     """
@@ -578,28 +578,27 @@ def interested_to_activity_by(id):
     responses:
         200:
             description: Success
+        409:
+            description: Record already exists
         500:
             description: Internal Server Error
     """    
-    activity = User_Activity.query.filter_by(user_id=current_user.get_id(), activity_id=id).first()
+    activity = User_Activity.query.filter_by(user_id=current_user.get_id(), activity_id=id, status=0).first()
 
     if activity is not None:
         #check if the status is going
-        if activity.status == 1:
-            #change to interested
-            activity.status = 0
-
+        return jsonify({'status': 'Record already exists'}), 201
     else:
-        activity = User_Activity(
-            user_id=current_user.get_id(),
-            activity_id=id,
-            status = 0 #interested
-            )
-        db.session.add(activity)
+      activity = User_Activity(
+        user_id=current_user.get_id(),
+        activity_id=id,
+        status = 0 #interested
+        )
+      db.session.add(activity)
 
-    try:
-        db.session.commit()
-        return jsonify({'message': 'Success'}), 201
-    except exc.SQLAlchemyError as e:
-        db.session().rollback()
-        return jsonify({'status': 'error'}), 500
+      try:
+          db.session.commit()
+          return jsonify({'status': 'Success'}), 200
+      except exc.SQLAlchemyError as e:
+          db.session().rollback()
+          return jsonify({'status': 'error'}), 500

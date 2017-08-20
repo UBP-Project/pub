@@ -1,6 +1,5 @@
 from app import db
 from app.models import Permission
-# from app.models.guid import GUID
 from sqlalchemy_utils import UUIDType
 import uuid
 

@@ -1,9 +1,11 @@
 from flask import jsonify, request, current_app, url_for
-from app.models import User, Follow
+from flask_login import login_required, current_user
+from sqlalchemy import exc
+from app.models import User, Follow, Notification
 from app.api_1_0 import api
+from app.api_1_0.decorators import follow_notif
 from app import db
 import json
-from flask_login import login_required, current_user
 
 @api.route('/users')
 @login_required
@@ -85,12 +87,12 @@ def get_users():
         users = User.query.limit(limit)
     else:
         users = User.query.all()
-    
+    print('returning result')
     return jsonify([
         user.to_json() for user in users
     ]), 200
 
-@api.route('/users/<string:id>')
+@api.route('/users/<uuid(strict=False):id>')
 @login_required
 def get_user_by(id):
     """
@@ -170,7 +172,7 @@ def get_user_by(id):
     users = User.query.get_or_404(id)
     return jsonify(users.to_json())
 
-@api.route('/users/<string:id>', methods=['PUT'])
+@api.route('/users/<uuid(strict=False):id>', methods=['PUT'])
 @login_required
 def edit_user_by(id):
     """
@@ -229,10 +231,16 @@ def edit_user_by(id):
             description: Internal Server Error
     """
     user = User.query.filter_by(id=id).update(request.form.to_dict())
-    db.session.commit()
-    return "Updated" # change this to better message format
 
-@api.route('/users/<string:id>', methods=['DELETE'])
+    try:
+        db.session.commit()
+        return "Updated" # change this to better message format
+    except exc.SQLAlchemyError as e:
+        db.session.rollback()
+        print(e)
+        return jsonify({'error': 'Internal Server Error'}), 500
+
+@api.route('/users/<uuid(strict=False):id>', methods=['DELETE'])
 @login_required
 def delete_user_by(id):
     """
@@ -256,8 +264,15 @@ def delete_user_by(id):
             description: Internal Server Error
     """
     user = User.query.filter_by(id=id).delete()
-    db.session.commit()
-    return "Deleted"
+
+    
+    try:
+        db.session.commit()
+        return "Deleted"
+    except exc.SQLAlchemyError as e:
+        db.session.rollback()
+        print(e)
+        return jsonify({'error': 'Internal Server Error'}), 500
 
 @api.route('/users', methods=['POST'])
 @login_required
@@ -328,11 +343,17 @@ def new_user():
     data = request.form.to_dict()
     user = User.from_json(data)
     db.session.add(user)
-    db.session.commit()
-    return jsonify(user.to_json()), 201, \
-        {'Location': url_for('api.new_user', id=user.id, _external=True)}
 
-@api.route('/users/<string:to_follow_id>/follow/', methods=['POST'])
+    try:
+        db.session.commit()
+        return jsonify(user.to_json()), 201, \
+            {'Location': url_for('api.new_user', id=user.id, _external=True)}
+    except exc.SQLAlchemyError as e:
+        db.session.rollback()
+        print(e)
+        return jsonify({'error': 'Internal Server Error'}), 500
+
+@api.route('/users/<uuid(strict=False):to_follow_id>/follow', methods=['POST'])
 @login_required
 def follow_user(to_follow_id):
     """
@@ -343,7 +364,7 @@ def follow_user(to_follow_id):
 
     parameters:
       - name: to_follow_id
-        in: formData
+        in: path
         type: string
         example: 38409e73-d561-4589-954c-cbfd9f7a7f97
         required: true
@@ -354,12 +375,23 @@ def follow_user(to_follow_id):
         500:
             description: Internal Server Error
     """
+
     follow = Follow(follower_id=current_user.get_id(), following_id=to_follow_id)
     db.session.add(follow)
-    db.session.commit()
-    return jsonify({'status': 'Success'}), 200
 
-@api.route('/users/<string:to_unfollow_id>/unfollow/', methods=['DELETE'])
+    print(current_user)
+    #follows you notification
+    
+
+    try:
+        db.session.commit()
+        return jsonify({'status': 'Success'}), 200
+    except exc.SQLAlchemyError as e:
+        db.session.rollback()
+        print(e)
+        return jsonify({'error': 'Internal Server Error'}), 500
+    
+@api.route('/users/<uuid(strict=False):to_unfollow_id>/unfollow', methods=['DELETE'])
 @login_required
 def unfollow_user(to_unfollow_id):
     """
@@ -370,7 +402,7 @@ def unfollow_user(to_unfollow_id):
 
     parameters:
       - name: to_unfollow_id
-        in: formData
+        in: path
         type: string
         example: 38409e73-d561-4589-954c-cbfd9f7a7f97
         required: true
