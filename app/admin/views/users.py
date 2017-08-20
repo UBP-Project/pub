@@ -6,6 +6,7 @@ from app.models import User, Role
 from ...decorators import admin_required
 from ...utils import flash_errors
 from sqlalchemy import or_
+import uuid
 
 USERS_PER_PAGE = 10
 
@@ -89,7 +90,7 @@ def profile(id):
     form.department.data = user.department
     form.position.data   = user.position
     form.birthday.data   = user.birthday
-    form.role.data       = user.role_id
+    form.role.data       = str(user.role_id)
     return render_template('admin/user/profile.html', user=user, form=form)
 
 @admin.route('/users/<string:id>/change-password', methods=['GET', 'POST'])
@@ -117,10 +118,11 @@ def create_user():
             department=form.department.data,
             position=form.position.data,
             birthday=form.birthday.data,
-            role_id=form.role.data)
+            role_id=uuid.UUID(form.role.data).hex)
         user.password = form.password.data
         db.session.add(user)
         db.session.commit()
         # flash("Success creating user")
         return redirect(url_for("admin.users"))
+    flash_errors(form)
     return render_template('admin/user/create.html', form=form)

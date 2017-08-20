@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, SelectField
-from wtforms.validators import Required
+from wtforms.validators import Required, UUID
 from wtforms.fields.html5 import EmailField, DateField
 from wtforms.widgets import TextArea
 from flask_wtf.file import FileField, FileRequired
@@ -22,21 +22,21 @@ class UserFormMixin():
     birthday   = DateField("Birthday", validators=[Required()])
 
 class CreateUserForm(FlaskForm, UserFormMixin):
-    role       = SelectField('Role', choices=[], coerce=int)
+    role       = SelectField('Role', choices=[], validators=[UUID()])
     password   = PasswordField("Password", validators=[Required()])
     submit     = SubmitField("Create User")
 
     def __init__(self, *args, **kwargs):
         super(CreateUserForm, self).__init__(*args, **kwargs)
-        self.role.choices = [(role.id, role.name) for role in Role.query.all() if role.name != 'Administrator']
+        self.role.choices = [(str(role.id), role.name) for role in Role.query.all() if role.name != 'Administrator']
 
 class UpdateUserForm(FlaskForm, UserFormMixin):
-    role       = SelectField('Role', choices=[], coerce=int)
+    role       = SelectField('Role', choices=[])
     submit     = SubmitField("Update Information")
 
     def __init__(self, *args, **kwargs):
         super(UpdateUserForm, self).__init__(*args, **kwargs)
-        self.role.choices = [(role.id, role.name) for role in Role.query.all() if role.name != 'Administrator']
+        self.role.choices = [(str(role.id), role.name) for role in Role.query.all() if role.name != 'Administrator']
 
 class UpdateUserFormClient(FlaskForm, UserFormMixin):
     submit     = SubmitField("Update Information")
@@ -70,15 +70,15 @@ class ActivityMixin():
     start_date  = DateField("Start Date", validators=[Required()])
     end_date    = DateField("End Date", validators=[Required()])
     address     = StringField("Address", validators=[Required()])
-    group       = SelectField('Group', choices=[], coerce=int)
+    group       = SelectField('Group', choices=[])
 
 class CreateActivityForm(FlaskForm, ActivityMixin):
     image = FileField("Activity Image", validators=[FileRequired()])
-    submit      = SubmitField("Create Activity")
+    submit = SubmitField("Create Activity")
 
     def __init__(self, *args, **kwargs):
         super(CreateActivityForm, self).__init__(*args, **kwargs)
-        self.group.choices = [(0, "None")] + [(group.id, group.name) for group in Interest_Group.query.all()]
+        self.group.choices = [(None, None)] + [(str(group.id), group.name) for group in Interest_Group.query.all()]
 
 class UpdateActivityForm(FlaskForm, ActivityMixin):
     image       = FileField("Activity Image")
@@ -86,7 +86,7 @@ class UpdateActivityForm(FlaskForm, ActivityMixin):
 
     def __init__(self, *args, **kwargs):
         super(UpdateActivityForm, self).__init__(*args, **kwargs)
-        self.group.choices = [(0, "None")] + [(group.id, group.name) for group in Interest_Group.query.all()]
+        self.group.choices = [(None, None)] + [(str(group.id), group.name) for group in Interest_Group.query.all()]
 
 class GroupMembershipForm(FlaskForm):
     join_group = SubmitField("Join Group")

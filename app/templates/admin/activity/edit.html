@@ -1,85 +1,108 @@
 {% extends "/layout/admin_base.html" %}
+{% block title %}Admin Page{% endblock %}
 
 {% block content %}
-    <form class="form-group row edit-activity" method="post" enctype="multipart/form-data" name="edit_activity">
+    <form class="row admin-form" style="padding: 0px" method="post" enctype="multipart/form-data" name="create_activity">
+        {{ form.hidden_tag() }}
 
-        <div class="row">
+        <div class="col-md-12">
+            <h1 class="pull-left">Edit Activity</h1>
+            <div style="margin-top: 25px;">
+                {{ form.submit(
+                    class="btn btn-style-1 pull-right"
+                )}}
+            </div>
+        </div>
+
+        <div class="col-md-6" style="padding: 0px;">
             <div class="col-md-12">
-                <h1 class="title">Edit Activity</h1>
+                <label>Title</label>
+                {{ form.title(
+                    placeholder="Title",
+                    class="form-control") }}
             </div>
+            <div class="col-md-6">
+                <label>Start Date</label>
+                {{ form.start_date(
+                    placeholder="Start Date",
+                    class="form-control")}}
+            </div>
+
+            <div class="col-md-6">
+                <label>End Date</label>
+                {{ form.end_date(
+                    placeholder="End Date",
+                    class="form-control")}}
+            </div>
+            <div class="col-md-12">
+                <label>Address</label>
+                {{ form.address(
+                    placeholder="Address",
+                    class="form-control"
+                )}}
+            </div>
+            <div class="col-md-12">
+                <label>Assign to Group</label>
+                {{ form.group(
+                    class="form-control")
+                }}
+            </div>
+
+            <div class="col-md-12">
+                <label>Description</label>
+                <div id="description-editor" class="wysiwyg-editor">
+
+                </div>
+                {{ form.description(
+                    placeholder="Description",
+                    class="none",   
+                    hidden="true") }}
+            </div>
+
+
+            <div id="description-holder">{{ activity['description'] }}</div>
+            
+
         </div>
 
-        <div class="col-md-6" style="padding: 0px">
-            <div class="row">
-                <div class="col-md-12 admin-card">
-                    {{ form.hidden_tag() }}
-                    <label>Title</label>
-                    {{ form.title(
-                        placeholder="Title",
-                        class="form-control input-lg lead") }}
-                    
-                    <label>Description</label>
-                    {{ form.description(
-                        placeholder="Description",
-                        class="form-control input-md") }}
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6 admin-card">
-                    <label>Start Date</label>
-                    {{ form.start_date(
-                        placeholder="Start Date",
-                        class="form-control input-lg")}}
-                </div>
-
-                <div class="col-md-6 admin-card">
-                    <label>End Date</label>
-                    {{ form.end_date(
-                        placeholder="End Date",
-                        class="form-control input-lg")}}
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12 admin-card">
-                    <label>Address</label>
-                    {{ form.address(
-                        placeholder="Address",
-                        class="form-control"
+        <div class="col-md-6" style="padding: 0px;">
+            <div class="col-md-12">
+                <label>Image</label>
+                {{ form.image(
+                    placeholder="Activity Image",
+                    class="form-control"
                     )}}
-                </div>
             </div>
-
-            <div class="row">
-                <div class="col-md-12 admin-card">
-                    <label>Assign to Group</label>
-                    {{ form.group(
-                        placeholder="Select Group",
-                        class="form-control"
-                    )}}
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <br /><br />
-                    <input class="btn btn-default" type="reset">
-                    {{ form.submit(
-                        placeholder="Submit",
-                        class="btn btn-style-1"
-                    )}}
-                </div>
+            <div class="col-md-12">
+                <img src="{{ url_for('static', filename='images/pub-default-img.jpg') }}" width="100%" height="200px"
+                    style="border: 1px solid rgba(0, 0, 0, 0.2)"/>
             </div>
         </div>
-
-        <div class="col-md-6">
-            <label>Image:</label>
-            <div class="img-container">
-                <img src="{{ url_for('static', filename='uploads/activity_images/' + activity.image)}}" />
-            </div>
-            {{ form.image() }}
-        </div>
-
     </form>
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(document).ready(function() {
+            $('#description-editor').trumbowyg({
+                btns: [
+                    'btnGrp-semantic',
+                    ['superscript', 'subscript'],
+                    ['link'],
+                    // ['insertImage'],
+                    'btnGrp-lists',
+                    ['fullscreen']
+                ]
+            });
+
+            $("#submit").on('click', function(e) {
+                // console.log($("#description").text());
+                $("#description").text($('#description-editor').trumbowyg('html'));
+            });
+
+            $("#description-editor").trumbowyg('html', $("#description").text());
+        });
+    </script>
+
 {% endblock %}

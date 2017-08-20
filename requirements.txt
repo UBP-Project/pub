@@ -7,7 +7,6 @@ cffi==1.10.0
 click==6.7
 colorama==0.3.9
 defusedxml==0.5.0
-enum-compat==0.0.2
 flasgger==0.6.6
 Flask==0.12
 Flask-AppBuilder==1.9.2
@@ -20,12 +19,11 @@ Flask-Moment==0.2.1
 Flask-OpenID==1.2.5
 flask-restplus==0.10.1
 Flask-Script==2.0.5
-Flask-SocketIO==2.9.2
 Flask-SQLAlchemy==2.1
 Flask-User==0.6.11
+Flask-UUID==0.2
 Flask-WTF==0.14.2
 ForgeryPy3==0.3.1
-greenlet==0.4.12
 itsdangerous==0.24
 Jinja2==2.9.5
 jsonschema==2.6.0
@@ -40,13 +38,10 @@ PyMySQL==0.7.11
 python-dateutil==2.6.1
 python-editor==1.0.3
 python3-openid==3.1.0
-python-engineio==1.7.0
-python-socketio==1.8.0
 pytz==2017.2
 PyYAML==3.12
 six==1.10.0
 SQLAlchemy==1.1.5
 SQLAlchemy-Utils==0.32.14
-uWSGI==2.0.15
 Werkzeug==0.11.15
 WTForms==2.1

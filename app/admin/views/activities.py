@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, request
 from .. import admin
 from ...forms import CreateActivityForm, UpdateActivityForm
 from app import db
@@ -18,7 +18,7 @@ def flash_errors(form):
                 error
             ))
 
-@admin.route('/activities/<string:id>')
+@admin.route('/activities/<uuid(strict=False):id>')
 @admin_required
 def activity(id):
     activity = Activity.query.get_or_404(id)
@@ -31,7 +31,7 @@ def activity(id):
 def create_activity():
     form = CreateActivityForm()
     groups = Interest_Group.query.all()
-    if form.validate_on_submit():
+    if request.method == 'POST':
         image                 = form.image.data
         image_filename        = secure_filename(image.filename)
         extension             = image_filename.rsplit('.', 1)[1].lower()
@@ -44,7 +44,7 @@ def create_activity():
             start_date = form.start_date.data,
             end_date = form.start_date.data,
             address = form.address.data,
-            group_id = form.group.data,
+            group_id = None if form.group.data == "None" else uuid.UUID(form.group.data).hex,
             image = image_hashed_filename)
         print(activity)
         db.session.add(activity)
@@ -65,7 +65,8 @@ def activities():
 def edit_activity(id):
     form                  = UpdateActivityForm()
     activity              = Activity.query.get_or_404(id)
-    if form.validate_on_submit():
+
+    if request.method == 'POST':
         if form.image.data is not None:
             image                 = form.image.data
             image_filename        = secure_filename(image.filename)
@@ -79,8 +80,8 @@ def edit_activity(id):
         activity.description = form.description.data
         activity.start_date  = form.start_date.data 
         activity.end_date    = form.end_date.data   
-        activity.address     = form.address.data    
-        activity.group_id    = form.group.data
+        activity.address     = form.address.data
+        activity.group_id    = None if form.group.data == "None" else uuid.UUID(form.group.data).hex
         db.session.commit()
         return redirect(url_for('admin.activities'))
 
