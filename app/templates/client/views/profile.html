@@ -3,7 +3,7 @@
 {% block title %} {{ user['firstname'] }} {{ user['lastname'] }} {% endblock title %}
 
 {% block content %}
-    <div class="row" style="width: 960px;">
+    <div class="row">
         <div class="col-md-3" style="position: absolute; z-index: 2; top: 200px; margin: 15px;">
             <img src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"
                 width="200px" 
