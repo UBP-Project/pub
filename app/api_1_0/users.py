@@ -380,6 +380,7 @@ def follow_user(to_follow_id):
     try:
         db.session.commit()
        
+        #TODO: Wrap this with a asynchronous function
         # follow_notif(follower_id=current_user.get_id(), to_follow_id=to_follow_id)
 
         #send notificaton to the user

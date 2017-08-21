@@ -82,12 +82,28 @@ def followers(id):
 @login_required
 def following(id):
     user = User.query.get_or_404(id)
-    followings = User.query.join(Follow, Follow.follower_id == id).all()
+
+    following_users = Follow.query\
+        .join(User, Follow.follower_id == id).all()
+
+    #HARD CODE FIX
+    
+    followings = []
+
+    for f in following_users:
+        followings.append(User.query.get(f.following_id))
+
     followers_count = Follow.query.filter(Follow.following_id == id).count()
+
     is_following = True if Follow.query.filter(Follow.follower_id == current_user.get_id(),\
         Follow.following_id == user.get_id()).first() is not None else False
-    return render_template("client/views/following.html", user=user, current_user=current_user,\
-        is_following=is_following, followers_count=followers_count, following_count=len(followings),\
+
+    return render_template("client/views/following.html",\
+        user=user,\
+        current_user=current_user,\
+        is_following=is_following,\
+        followers_count=followers_count,\
+        following_count=len(followings),\
         followings=followings)
 
 @client.route('/users-list')
