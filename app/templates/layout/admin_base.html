@@ -18,7 +18,8 @@
     <script src="{{ url_for('static', filename='plugins/wysiwyg/trumbowyg.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='plugins/wysiwyg/ui/trumbowyg.css') }}">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.min.js"></script>
 </head>
 
 <body class="container">
@@ -50,12 +51,12 @@
 
 
 
-    {% for message in get_flashed_messages() %}
+<!--     {% for message in get_flashed_messages() %}
         <div class="alert alert-warning">
             {{ message }}
             <button type="button" class="close pull-right" data-dismiss="alert">&times;</button>
         </div>
-    {% endfor %}
+    {% endfor %} -->
 
     {% for link in links %}
         <h3>{{ link[0] }}</h3>

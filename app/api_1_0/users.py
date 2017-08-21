@@ -87,10 +87,9 @@ def get_users():
         users = User.query.limit(limit)
     else:
         users = User.query.all()
-    print('returning result')
-    return jsonify([
+    return jsonify({"users":[
         user.to_json() for user in users
-    ]), 200
+    ]}), 200
 
 @api.route('/users/<uuid(strict=False):id>')
 @login_required
@@ -417,3 +416,8 @@ def unfollow_user(to_unfollow_id):
         Follow.following_id==to_unfollow_id).delete()
     db.session.commit()
     return jsonify({'message': 'Success'}), 200
+
+@api.route('/leaderboard')
+def leaderboard():
+    leaders = User.query.order_by(User.points.desc()).limit(10)
+    return jsonify([leader.to_json() for leader in leaders])

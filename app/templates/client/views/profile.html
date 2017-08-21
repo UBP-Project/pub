@@ -25,8 +25,12 @@
 
             <div id="profile-btns" style="padding: 0px 20px;">
 
+                <div class="btn btn-xs" style="padding: 0px 20px;">
+                    <h6>Points</h6>
+                    <h4>{{ user['points'] }}</h4>
+                </div>
 
-                <a href="{{ url_for('client.following', id=user.id) }}" class="btn btn-xs">
+                <a href="{{ url_for('client.following', id=user.id) }}" class="btn btn-xs" style="padding: 0px 20px;">
                     <h6>Following</h6>
                     <h4>99</h4>
                 </a>

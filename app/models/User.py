@@ -21,6 +21,9 @@ class User(UserMixin, db.Model):
     position      = db.Column(db.String(100))
     birthday      = db.Column(db.Date)
     role_id       = db.Column(UUIDType(binary=False), db.ForeignKey('roles.id'))
+    points        = db.Column(db.Integer, default=0)
+    cover_photo   = db.Column(db.String(200))
+    photo         = db.Column(db.String(100))
 
     # def __init__(self, firstname, middlename, lastname, email, password_hash, department, position, birthday, role_id):
     #     self.firstname = firstname
@@ -60,16 +63,19 @@ class User(UserMixin, db.Model):
 
     def to_json(self):
         json_post = {
-            'id'            : self.id,
-            'firstname'     : self.firstname,
-            'middlename'    : self.middlename,
-            'lastname'      : self.lastname,
-            'email'         : self.email,
-            'password_hash' : self.password_hash,
-            'department'    : self.department,
-            'position'      : self.position,
-            'birthday'      : self.birthday,
-            'role_id'       : self.role_id
+            'id'           : self.id,
+            'firstname'    : self.firstname,
+            'middlename'   : self.middlename,
+            'lastname'     : self.lastname,
+            'email'        : self.email,
+            'password_hash': self.password_hash,
+            'department'   : self.department,
+            'position'     : self.position,
+            'birthday'     : self.birthday,
+            'role_id'      : self.role_id,
+            'points'       : self.points,
+            'cover_photo'  : self.points,
+            'photo'        : self.photo
         }
         return json_post
 
