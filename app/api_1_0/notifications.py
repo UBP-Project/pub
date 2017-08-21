@@ -7,10 +7,10 @@ from app.models import User, Follow, Notification
 from app.api_1_0 import api
 # from app.api_1_0.decorators import follow_notif
 
-# from app import db
+from app import db
 import json
 
-@api.route('/notification')
+@api.route('/notifications', methods=['GET'])
 @login_required
 def get_notifications():
 	"""
@@ -62,15 +62,82 @@ def get_notifications():
                         description: Hashed password
                         required: true
     """
-    try:
-    	if 'limit' in request.args:
-    		limit = request.args.get('limit')
-    		notifications = Notification.query.filter(user_id=current_user.get_id()).limit(limit)
-    	else:
-    		notifications = Notification.query.filter(user_id=current_user.get_id()).all()
-    except exc.SQLAochemyError as e:
-        print(e)
+	if 'limit' in request.args:
+		limit = request.args.get('limit')
+		notifications = Notification.query.filter(Notification.user_id==current_user.get_id()).limit(limit)
+	else:
+		notifications = Notification.query.filter(Notification.user_id==current_user.get_id()).all()
 
 	return jsonify([
 		notification.to_json() for notification in notifications
 	]), 200
+
+@api.route('/notifications/<uuid(strict=False):id>/mark_read', methods=['PUT'])
+@login_required
+def mark_read(id):
+    """
+    Mark as Read
+    ---
+    tags:
+      - notifications
+
+    parameters:
+      - name: id
+        in: path
+        type: string
+
+    responses:
+        200:
+            description: OK
+        404:
+            description: Not Found
+        500:
+            description: Internal Server Error
+    """
+    notification = Notification.query.get_or_404(id)
+
+    if notification.is_read is False:
+        notification.is_read = True
+
+    try:
+        db.session.commit()
+        return  jsonify({'status': 'Success'}), 200# change this to better message format
+    except exc.SQLAlchemyError as e:
+        db.session.rollback()
+        print(e)
+        return jsonify({'error': 'Internal Server Error'}), 500
+
+@api.route('/notifications/<uuid(strict=False):id>/mark_unread', methods=['PUT'])
+@login_required
+def mark_unread(id):
+    """
+    Mark as Unread
+    ---
+    tags:
+      - notifications
+
+    parameters:
+      - name: id
+        in: path
+        type: string
+
+    responses:
+        200:
+            description: OK
+        404:
+            description: Not Found
+        500:
+            description: Internal Server Error
+    """
+    notification = Notification.query.get_or_404(id)
+
+    if notification.is_read is True:
+        notification.is_read = False
+
+    try:
+        db.session.commit()
+        return  jsonify({'status': 'Success'}), 200# change this to better message format
+    except exc.SQLAlchemyError as e:
+        db.session.rollback()
+        print(e)
+        return jsonify({'error': 'Internal Server Error'}), 500
