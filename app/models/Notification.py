@@ -1,5 +1,6 @@
+from flask import url_for
 from app import db
-from app.models import User
+from app.models import User, Follow
 from sqlalchemy_utils import UUIDType
 from datetime import datetime
 import uuid
@@ -8,12 +9,13 @@ class Notification(db.Model):
     __tablename__ = 'notification'
     id          = db.Column(UUIDType(binary=False), default=uuid.uuid4, primary_key=True)
     user_id     = db.Column(UUIDType(binary=False))
-    content     = db.Column(db.String(100))
+    content     = db.Column(db.Text(4294967295))
     timestamp   = db.Column(db.Date)
     url         = db.Column(db.String(50))
     is_read     = db.Column(db.Boolean)
 
-    def __init__(user_id, url):
+
+    def __init__(self, user_id, content, url):
         self.user_id    = user_id
         self.content    = content
         self.timestamp  = datetime.utcnow()
@@ -39,5 +41,4 @@ class Notification(db.Model):
         content     = json_notification.get('content')
         timestamp   = json_notification.get('timestamp')
         url         = json_notification.get('url')
-        return Notification(user_id=user_id, url=url)
-
+        return Notification(user_id=user_id, content=content, url=url)
