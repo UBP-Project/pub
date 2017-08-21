@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <title>PUB | {% block title %}{% endblock title %}</title>
+
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.min.css') }}">
+
+</head>
+
+<body>
+
+	<div id="top" class="text-center">
+		<a href="/"><img src="{{ url_for('static', filename='../../static/images/ubp-white.png') }}" alt="UBP LOGO" class="side-ubp-logo"></a>
+	</div>
+
+	{% block navigation %}
+
+		<nav class="navbar navbar-default nav-container" role="navigation">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#pub-navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand hidden-sm hidden-md hidden-lg" href="/">UBP:Pub</a>
+			</div>
+			<div class="collapse navbar-collapse block-center" id="pub-navbar-collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="/">HOME</a></li>
+					<li><a href="/groups">INTEREST GROUPS</a></li>
+					<li><a href="/activities">ACTIVITIES</a></li>
+					<li><a href="/leaderboard">LEADERBOARD</a></li>
+				</ul>
+			</div>
+		</nav>
+
+	{% endblock navigation %}
+
+	<div class="row">
+
+		<div class="side col-md-2 col-sm-3">
+
+			{% block sidebar %}
+		    
+		        <div class="hidden-xs">
+
+		            <div class="project-bg">
+		                <div class="white-filter">
+		                    <a href="/"><img src="{{ url_for('static', filename='../../static/images/pub-sm-logo.png') }}" alt="PUB LOGO" class="img-responsive project-logo"></a>
+		                </div>
+		            </div>
+
+		            <div class="side-nav">
+		                <ul class="nav">
+		                	<br/>
+		                    <li><a href="/profile/{{user.get_id()}}">{{user.firstname}} {{user.lastname}}<i class="fa fa-user pull-right"></i></a></li>
+		                    <li><a href="/profile/{{user.get_id()}}/edit"><small>Edit Profile</small></a></li>
+		                    <li><a href="/notifications"><small>Notifications <span class="badge pull-right">10</span></small></a></li>
+		                    <li><hr/></li>
+		                    <li><a href="/groups">Interest Groups<i class="fa fa-group pull-right"></i></a></li>
+		                    <li><a href="#"><small>My Groups</small></a></li>
+		                    <li><a href="#"><small>My Groups' Activities</small></a></li>
+		                    <li><hr/></li>
+		                    <li><a href="/activities">Activities<i class="fa fa-rocket pull-right"></i></a></li>
+		                    <li><a href="#"><small>Upcoming Activities</small></a></li>
+		                    <li><a href="#"><small>Past Activities</small></a></li>
+		                    <li><hr/></li>
+		                    <li><a href="#" id="sign-out" data-toggle="modal" data-target="#logout-modal">Log Out <i class="fa fa-sign-out pull-right"></i></a></li>
+		                    <br/>
+		                </ul>
+		            </div>
+
+		        </div>
+
+		    {% endblock sidebar %}
+
+		</div>
+
+		<div class="content-wrap col-md-10 col-sm-9">
+			{% block content %}
+			{% endblock content %}
+		</div>
+
+	</div>
+
+	{% block footer %}
+		<footer class="footer text-center">
+			<a href="#top" title="Back to top" class="btn btn-lg"><i class="fa fa-angle-up"></i></a>
+		</footer>
+	{% endblock footer %}
+
+	<!-- Log out modal -->
+    <div class="modal fade" id="logout-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">UBP : Pub</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center">Are you sure you want to log out?</p>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-left text-center">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                    <div class="pull-right text-center">
+                        <a href="/logout"><button type="button" class="btn btn-style-1">Log out</button></a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- ./Log out modal -->
+
+	<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/client/main.js') }}"></script>
+
+	{% block scripts %}
+	{% endblock scripts %}
+
+</body>
+
+</html>

@@ -36,10 +36,10 @@ def login():
 def notifications():
     return render_template("client/views/notifications.html", user=current_user)
 
-@client.route('/settings/')
+@client.route('/leaderboard')
 @login_required
-def settings():
-    return render_template("client/views/settings.html", user=current_user)
+def leaderboard():
+    return render_template("client/views/leaderboard.html", user=current_user)
 
 @client.route('/logout')
 @login_required
