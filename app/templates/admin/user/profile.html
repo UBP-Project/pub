@@ -4,100 +4,125 @@
     {% extends "/layout/base.html" %}
 {% endif %}
 
-{% block title %} Admin Page {% endblock %}
-
 {% block content %}
-    <form class="row admin-form" method="post" name="update_user">
-        <div class="row">
-            <div class="col-md-12">
-                <h1>User ID: {{ user['id'] }}</h1>
+    <div class="row">
+        <form class="form-group col-md-12 no-padding admin-form user-form" method="post" name="create_user">
+            <div class="row">
+                <div class="col-md-12 no-padding">
+                    <h1>Update User</span></h1>
+                    <hr />
+                </div>
             </div>
-        </div>
+            <div class="col-md-8 no-padding">
+                {{ form.hidden_tag() }}
 
-        {{ form.hidden_tag() }}
-            
-        <div class="row">
-            <div class="col-md-3">
-                <label>Firstname</label>
-                {{ form.firstname(
-                placeholder="First name",
-                class="form-control") }}
-            </div>
-            <div class="col-md-3">
-                <label>Middlename</label>
-                {{ form.middlename(
-                placeholder="Middle name",
-                class="form-control") }}
-            </div>
-            <div class="col-md-3">
-                <label>Lastname</label>
-                {{ form.lastname(
-                placeholder="Last name",
-                class="form-control") }}
-            </div>
-        </div>
+                <div class="row">
+                    <div class="col-md-4 no-padding-left">
+                        <label>Firstname</label>
+                        {{ form.firstname(
+                            placeholder="First name",
+                            class="form-control",
+                            required="true"
+                        )}}
+                    </div>
+                    <div class="col-md-4">
+                        <label>Middlename</label>
+                        {{ form.middlename(
+                            placeholder="Middle name",
+                            class="form-control"
+                        )}}
+                    </div>
+                    <div class="col-md-4">
+                        <label>Lastname</label>
+                        {{ form.lastname(
+                            placeholder="Last name",
+                            class="form-control",
+                            required="true"
+                        )}}
+                    </div>
+                </div>
 
-        <div class="row">
-            <div class="col-md-5">
-                <label>Department</label>
-                {{ form.department(
-                    placeholder="Department",
-                    class="form-control"
-                )}}
-            </div>
-            <div class="col-md-4">
-                <label>Position</label>
-                {{ form.position(
-                    placeholder="Position",
-                    class="form-control"
-                )}}
-            </div>
-        </div>
+                <div class="row">
+                    <div class="col-md-6 no-padding-left">
+                        <label>Department</label>
+                        {{ form.department(
+                            placeholder="Department",
+                            class="form-control",
+                            required="true"
+                        )}}
+                    </div>
+                    <div class="col-md-6">
+                        <label>Position</label>
+                        {{ form.position(
+                            placeholder="Position",
+                            class="form-control",
+                            required="true"
+                        )}}
+                    </div>
+                </div>
 
-        <div class="row">
-            <div class="col-md-5">
-                <label>Email</label>
-                {{ form.email(
-                    placeholder="Email",
-                    class="form-control") }}
+                <div class="row">
+                    <div class="col-md-6 no-padding-left">
+                        <label>Email</label>
+                        {{ form.email(
+                            placeholder="Email",
+                            class="form-control",
+                            required="true"
+                        ) }}
+                    </div>
+                    <div class="col-md-6">
+                        <label>Birthday</label>
+                        {{ form.birthday(
+                            placeholder="Birthday",
+                            class="form-control",
+                            required="true"
+                        )}}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 no-padding-left">
+                        <label>Role</label>
+                        {{ form.role(
+                            placeholder="Role",
+                            class="form-control",
+                            required="true"
+                        )}}
+                    </div>            </div>
+
+                <br />
+
+                <div class="row">
+                    <div class="col-md-12 no-padding-left">
+                    {{ form.submit(
+                        class="btn btn-style-1",
+                    )}}
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="row">
+                    <div class="col-md-3 no-padding-left">
+                        <a href="{{ url_for('admin.change_password', id=user.id) }}">
+                            Change password
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-4">
-                <label>Birthday</label>
-                {{ form.birthday(
-                    placeholder="Birthday",
-                    class="form-control")}}
+
+            <div class="col-md-4" style="padding: 0px;">
+                <div class="img-upload">
+                    <br /><br ?>
+                    <div class="col-md-12 no-padding-right text-center">
+                        <img width="100px" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"/>
+                        <div id="upload-btn" class="text">
+                            <button class="btn btn-style-1">Choose User Image</button>
+                        </div>
+                        <input type="file" id="image" />
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-2">
-                <label>Role</label>
-                {{ form.role(
-                    placeholder="Role",
-                    class="form-control")}}
-            </div>
-        </div>
-
-        <br />
-
-        <div class="row">
-            <div class="col-md-12">
-            <input class="btn btn-default" type="reset">
-            {{ form.submit(
-                class="btn btn-style-1"
-            )}}
-            </div>
-        </div>
-
-        <br />
-
-        <div class="row">
-            <div class="col-md-3">
-                <a href="{{ url_for('admin.change_password', id=user.id) }}">
-                    Change password
-                </a>
-            </div>
-        </div>
-
-    </form>
+        </form>
+    </div>
 {% endblock %}

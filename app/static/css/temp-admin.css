@@ -1,23 +1,62 @@
 html, body {
     height: 100% !important;
+    background-color: white;
 }
 
 .admin-header {
-    background-color: #ef7c3d;
+/*    background-color: #ef7c3d;
+    padding: 1px;
+    width: 100vw !important;
+    position: absolute;
+    left: -18px;*/
+}
+
+.admin-header .signout {
+    width: 200px;
+}
+
+hr {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
 }
 
 .row {
     width: 100%;
 }
 
+/*[class*="col-"] {
+    padding: 0px;
+}*/
+
+.no-padding {
+    padding: 0px !important;
+}
+
+.no-padding-left {
+    padding-left: 0px;
+}
+
+.no-padding-right {
+    padding-right: 0px;
+}
+
+input[type='text'], input[type='password'],
+input[type='email'], input[type='date'],
+.form-control {
+    border-radius: 0px;
+/*    margin: 10px;*/
+/*    max-width: 90%;*/
+}
+
+
+
 .side-bar {
-    background-color: #0e0058;
-    color: white;
+    /*background-color: #0e0058;*/
     min-height: 100vh;
     height: 100%;
     font-family: "Lato";
-    padding: 5px 0px;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    padding: 5px 20px;
+    /*box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);*/
     flex: 1;
 }
 
@@ -26,9 +65,9 @@ html, body {
 }
 
 label {
-    font-family: 'Lato Light';
-    font-size: 16px;
-    color: #0e0058;
+    font-family: 'Roboto Condensed Bold';
+    font-size: 14px;
+    /*color: #0e0058;*/
 }
 
 .input-lg {
@@ -44,16 +83,24 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-sidebar {
-    background-color: #0e0058;
+    /*background-color: #0e0058;*/
     width: 100%;
     height: 40px;
     text-align: left;
-    font-size: 16px;
-    padding: 5px;
+    font-size: 14px;
+    padding: 10px;
     display: flex;
     align-items: center; /* align vertical */
     transition: none;
     text-decoration: none !important;
+    border-radius: 5px;
+}
+
+#btn-signout {
+    background-color: #ef7c3d;
+    text-decoration: none;
+    padding: 5px 10px;
+    color: white;
 }
 
 .side-bar h5 {
@@ -65,8 +112,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-sidebar:hover {
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white !important;
+    color: black !important;
     transition: none;
 }
 
@@ -74,8 +120,6 @@ h1, h2, h3, h4, h5, h6 {
     background-color: rgba(0, 0, 0, 0.5) !important;
     color: white !important;
     transition: 0s;
-    font-weight: bold;
-
 }
 
 .side-bar .pub-logo {
@@ -96,6 +140,7 @@ h1, h2, h3, h4, h5, h6 {
 .admin-form h1 {
     font-family: "Roboto Condensed Bold";
     color: #ef7c3d;
+    font-weight: 100;
 }
 
 .admin-form input[type=reset] {
@@ -137,8 +182,9 @@ h1, h2, h3, h4, h5, h6 {
     background-size: cover;
     background-repeat: no-repeat;
     margin-bottom: 5px;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-    border-radius: 2px;
+    border-left: 1px solid white;
+    /*box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);*/
+/*    border-radius: 2px;*/
 }
 
 .admin-page .activity-card div {
@@ -146,12 +192,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .admin-page .group-card {
-    margin: 5px;
     background-color: white;
     height: 300px;
     padding: 5px 10px;
     border-radius: 3px;
-    border-right: 3px solid #ef7c3d;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 }
 
@@ -265,5 +309,60 @@ table.users td {
 }
 
 .hidden {
+    display: none;
+}
+
+
+/* ------------------------------ */
+.activity-form .img-upload {
+
+}
+
+.activity-form .img-upload img {
+    position: relative;
+    width: 300px;
+    height: 400px;
+    border: 5px solid rgba(0, 0, 0, 0.2);
+    object-fit: cover;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.activity-form .img-upload .text {
+    position: absolute;
+    left: 2;
+    top: 45%;
+    width: 97%;
+    text-align: center;
+}
+
+.activity-form .img-upload input {
+    display: none;
+}
+
+/* ------------------------------ */
+.user-form .img-upload {
+
+}
+
+.user-form .img-upload img {
+    position: relative;
+    width: 250px;
+    height: 250px;
+    border: 5px solid rgba(0, 0, 0, 0.2);
+    object-fit: cover;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.user-form .img-upload .text {
+    position: absolute;
+    left: 1;
+    top: 45%;
+    width: 95%;
+    text-align: center;
+}
+
+.user-form .img-upload input {
     display: none;
 }
