@@ -534,7 +534,7 @@ def going_to_activity_by(id):
     responses:
         200:
             description: Success
-        409:
+        201:
             description: Record already exists
         500:
             description: Internal Server Error
@@ -578,7 +578,7 @@ def interested_to_activity_by(id):
     responses:
         200:
             description: Success
-        409:
+        201:
             description: Record already exists
         500:
             description: Internal Server Error
