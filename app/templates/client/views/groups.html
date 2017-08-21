@@ -1,4 +1,4 @@
-{% extends "./layout/base2.html" %}
+{% extends "./layout/client_base.html" %}
 {% from "client/components/group-modal.html" import group_modal %}
 
 {% block title %} Interest Groups {% endblock title %}
@@ -7,8 +7,12 @@
 
 	<div class="row">
 
-		<div class="col-md-12 col-sm-12 box-header box-style-2">
-			<span>INTEREST GROUPS</span>
+		<div class="col-md-12 col-sm-12 box-header">
+			<h2>INTEREST GROUPS<span class="fa fa-search pull-right btn btn-search"></span></h2>
+		</div>
+
+		<div class="col-md-12 col-sm-12 box-divider">
+			<div class="inner-divider"></div>
 		</div>
 
 		<div class="col-md-12 col-sm-12 box-content border-bottom-2">

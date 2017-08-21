@@ -1,4 +1,4 @@
-{% extends "./layout/base2.html" %}
+{% extends "./layout/client_base.html" %}
 {% from "client/components/activity-modal.html" import activity_modal %}
 
 {% block title %} Activities {% endblock title %}
@@ -7,11 +7,15 @@
 
 	<div class="row">
 
-		<div class="col-md-12 col-sm-12 box-header box-style-2">
-			<span>ACTIVITIES</span>
+		<div class="col-md-12 col-sm-12 box-header">
+			<h2>ACTIVITIES<span class="fa fa-search pull-right btn btn-search"></span></h2>
 		</div>
 
-		<div class="col-md-12 col-sm-12 box-content border-bottom-2">
+		<div class="col-md-12 col-sm-12 box-divider">
+			<div class="inner-divider"></div>
+		</div>
+
+		<div class="col-md-12 col-sm-12 box-content">
 			<div class="row">
 				{% if activities %}
 					{% for activity in activities %}
