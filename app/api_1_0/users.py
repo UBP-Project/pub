@@ -2,8 +2,7 @@ from flask import jsonify, request, current_app, url_for
 from flask_login import login_required, current_user
 from sqlalchemy import exc
 from app.models import User, Follow, Notification
-from app.api_1_0 import api
-from app.api_1_0.decorators import follow_notif
+from app.api_1_0 import api#, follow_notif
 from app import db
 import json
 
@@ -87,10 +86,9 @@ def get_users():
         users = User.query.limit(limit)
     else:
         users = User.query.all()
-    print('returning result')
-    return jsonify([
+    return jsonify({"users":[
         user.to_json() for user in users
-    ]), 200
+    ]}), 200
 
 @api.route('/users/<uuid(strict=False):id>')
 @login_required
@@ -379,13 +377,49 @@ def follow_user(to_follow_id):
     follow = Follow(follower_id=current_user.get_id(), following_id=to_follow_id)
     db.session.add(follow)
 
-    print(current_user)
-    #follows you notification
-    
-
     try:
         db.session.commit()
+       
+        #TODO: Wrap this with a asynchronous function
+        # follow_notif(follower_id=current_user.get_id(), to_follow_id=to_follow_id)
+
+        #send notificaton to the user
+        content = "<a href='%s'>%s %s</a> follows you" % (url_for('client.view_profile', id=current_user.get_id()), current_user.firstname, current_user.lastname)
+        url = url_for('client.view_profile', id=current_user.get_id())
+
+        notif = Notification(user_id=to_follow_id, content=content, url=url)
+        db.session.add(notif)
+
+        #send notifcation to the followers of the current_user
+        followers = User.query\
+            .join(Follow, Follow.following_id==current_user.get_id())\
+            .filter(id != current_user.get_id())\
+            .all()
+
+        print(followers)
+        followed_user = User.query.get(to_follow_id)
+
+        for follower in followers:
+            content = "<a href='%s'>%s %s</a> follows <a href='%s'>%s %s</a> " % \
+                (
+                    url_for('client.view_profile', id=current_user.get_id()),
+                    current_user.firstname,
+                    current_user.lastname,
+                    url_for('client.view_profile', id=followed_user.get_id()),
+                    followed_user.firstname,
+                    followed_user.lastname
+                )
+            url = url_for('client.view_profile', id=followed_user.get_id())
+            notif = Notification(user_id=follower.get_id(), content=content, url=url)
+            db.session.add(notif)
+
+        db.session.commit()
+
         return jsonify({'status': 'Success'}), 200
+    except exc.IntegrityError as d:
+        db.session.rollback()
+        print(d)
+        return jsonify({'status': 'Record already exists'}), 201
     except exc.SQLAlchemyError as e:
         db.session.rollback()
         print(e)
@@ -417,3 +451,8 @@ def unfollow_user(to_unfollow_id):
         Follow.following_id==to_unfollow_id).delete()
     db.session.commit()
     return jsonify({'message': 'Success'}), 200
+
+@api.route('/leaderboard')
+def leaderboard():
+    leaders = User.query.order_by(User.points.desc()).limit(10)
+    return jsonify([leader.to_json() for leader in leaders])

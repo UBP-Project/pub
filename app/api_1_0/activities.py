@@ -6,6 +6,7 @@ from app import db
 import json
 from flask_login import login_required, current_user
 from ..auth import manager_or_leader_only
+from ..leaderboard import leaderboard
 
 from app.utils import is_valid_extension
 from werkzeug.utils import secure_filename
@@ -534,7 +535,7 @@ def going_to_activity_by(id):
     responses:
         200:
             description: Success
-        409:
+        201:
             description: Record already exists
         500:
             description: Internal Server Error
@@ -554,6 +555,7 @@ def going_to_activity_by(id):
 
       try:
           db.session.commit()
+          leaderboard.joined_activity()
           return jsonify({'status': 'Success'}), 200        
       except exc.SQLAlchemyError as e:
           print(e)
@@ -578,7 +580,7 @@ def interested_to_activity_by(id):
     responses:
         200:
             description: Success
-        409:
+        201:
             description: Record already exists
         500:
             description: Internal Server Error

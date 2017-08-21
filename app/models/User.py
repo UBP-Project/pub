@@ -1,6 +1,6 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, login_manager
-from app.models import Role, Permission
+from app.models import Role, Permission, Follow
 # from app.models.guid import GUID
 from sqlalchemy_utils import UUIDType
 from flask_login import UserMixin
@@ -21,6 +21,33 @@ class User(UserMixin, db.Model):
     position      = db.Column(db.String(100))
     birthday      = db.Column(db.Date)
     role_id       = db.Column(UUIDType(binary=False), db.ForeignKey('roles.id'))
+    points        = db.Column(db.Integer, default=0)
+    cover_photo   = db.Column(db.String(200))
+    photo         = db.Column(db.String(100))
+
+    # followed      = db.relationship('Follow', foreign_keys=[Follow.follower_id], backref=db.backref('follower', lazy='joined'), lazy='dynamic', passive_deletes=True, passive_updates=True)
+    # follower      = db.relationship('Follow', foreign_keys=[Follow.following_id], backref=db.backref('followed', lazy='joined'), passive_deletes=True, passive_updates=True)
+
+    # followed = db.relationship('User',
+    #     secondary = Follow,
+    #     primaryjoin = (Follow.follower_id == id),
+    #     secondaryjoin = (Follow.follower_id == id),
+    #     backref = db.backref('Follow', lazy='dynamic'),
+    #     lazy='dynamic'
+    #     )
+
+    def is_following(self, user):
+        return self.followed.filter(Follow.follower_id == user.get_id).count() > 0
+
+    def follow(self, user):
+        if not self.is_following(user):
+            self.followed.append(user)
+            return self
+
+    def unfollow(self, user):
+        if self.is_following(user):
+            self.followed.remove(user)
+            return self
 
     # def __init__(self, firstname, middlename, lastname, email, password_hash, department, position, birthday, role_id):
     #     self.firstname = firstname
@@ -60,16 +87,19 @@ class User(UserMixin, db.Model):
 
     def to_json(self):
         json_post = {
-            'id'            : self.id,
-            'firstname'     : self.firstname,
-            'middlename'    : self.middlename,
-            'lastname'      : self.lastname,
-            'email'         : self.email,
-            'password_hash' : self.password_hash,
-            'department'    : self.department,
-            'position'      : self.position,
-            'birthday'      : self.birthday,
-            'role_id'       : self.role_id
+            'id'           : self.id,
+            'firstname'    : self.firstname,
+            'middlename'   : self.middlename,
+            'lastname'     : self.lastname,
+            'email'        : self.email,
+            'password_hash': self.password_hash,
+            'department'   : self.department,
+            'position'     : self.position,
+            'birthday'     : self.birthday,
+            'role_id'      : self.role_id,
+            'points'       : self.points,
+            'cover_photo'  : self.points,
+            'photo'        : self.photo
         }
         return json_post
 
