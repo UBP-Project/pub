@@ -560,7 +560,41 @@ def going_to_activity_by(id):
       except exc.SQLAlchemyError as e:
           print(e)
           db.session().rollback()
-          return jsonify({'status': 'error'}), 500
+          return jsonify({'status': 'Internal Server Error'}), 500
+
+@api.route('/activities/<uuid(strict=False):id>/going', methods=['DELETE'])
+@login_required
+def cancel_going_to_activity_by(id):
+    """
+    Delete going status for an event
+    ---
+    tags:
+        - activities
+
+    parameters:
+        - name: id
+          in: path
+          type: string
+          example: 04cb8787-fe54-4e73-80d4-c17bf56537ee
+          description: Activity ID
+
+    responses:
+        200:
+            description: Success
+        201:
+            description: Record already exists
+        500:
+            description: Internal Server Error
+    """    
+    activity = User_Activity.query.filter_by(user_id=current_user.get_id(), activity_id=id).delete()
+
+    try:
+        db.session.commit()
+        return jsonify({'status': 'Success'}), 200        
+    except exc.SQLAlchemyError as e:
+        print(e)
+        db.session().rollback()
+        return jsonify({'status': 'error'}), 500
 
 @api.route('/activities/<uuid(strict=False):id>/interested', methods=['POST'])
 @login_required
@@ -588,19 +622,53 @@ def interested_to_activity_by(id):
     activity = User_Activity.query.filter_by(user_id=current_user.get_id(), activity_id=id, status=0).first()
 
     if activity is not None:
-        #check if the status is going
+        #check if the status is interested
         return jsonify({'status': 'Record already exists'}), 201
     else:
-      activity = User_Activity(
-        user_id=current_user.get_id(),
-        activity_id=id,
-        status = 0 #interested
+        activity = User_Activity(
+            user_id=current_user.get_id(),
+            activity_id=id,
+            status = 0 #interested
         )
-      db.session.add(activity)
+        db.session.add(activity)
 
-      try:
-          db.session.commit()
-          return jsonify({'status': 'Success'}), 200
-      except exc.SQLAlchemyError as e:
-          db.session().rollback()
-          return jsonify({'status': 'error'}), 500
+
+    try:
+        db.session.commit()
+        return jsonify({'status': 'Success'}), 200
+    except exc.SQLAlchemyError as e:
+        print(e)
+        db.session().rollback()
+        return jsonify({'error': 'Internal Server Error'}), 500
+
+@api.route('/activities/<uuid(strict=False):id>/interested', methods=['DELETE'])
+@login_required
+def cancel_interested_to_activity_by(id):
+    """
+    Delete Interest to an Activity
+    ---
+    tags:
+        - activities
+    parameters:
+        - name: id
+          in: path
+          type: string
+          example: 04cb8787-fe54-4e73-80d4-c17bf56537ee
+          description: Activity ID
+
+    responses:
+        200:
+            description: Success
+        201:
+            description: Record already exists
+        500:
+            description: Internal Server Error
+    """    
+    activity = User_Activity.query.filter_by(user_id=current_user.get_id(), activity_id=id, status=0).delete()
+
+    try:
+        db.session.commit()
+        return jsonify({'status': 'Success'}), 200
+    except exc.SQLAlchemyError as e:
+        db.session().rollback()
+        return jsonify({'status': 'error'}), 500
