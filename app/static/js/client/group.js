@@ -28,6 +28,17 @@ $('.grp-btn').bind('click', function(event) {
     } else {
 
         $.ajax({
+            url: '/api/v1.0/interest_groups/'+ group_id + '/members',
+            type: 'GET'
+        })
+        .done(function(data) {
+            console.log("GET MEMBERS DATA -> " + data);
+        })
+        .fail(function() {
+             console.log("error");
+        });
+
+        $.ajax({
             url: '/api/v1.0/interest_groups/'+ group_id + '/leave',
             type: 'DELETE'
         })
