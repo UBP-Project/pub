@@ -109,6 +109,17 @@
                         </a>
                     </div>
                 </div>
+
+                <br /><br /><br />
+                <hr />
+
+                <div class="row">
+                    <div class="col-md-12 no-padding-left">
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-confirmation">
+                            Delete this User
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div class="col-md-4" style="padding: 0px;">
@@ -125,4 +136,26 @@
             </div>
         </form>
     </div>
+
+
+    <!-- Delete User confirmation modal -->
+      <form method="post" class="modal fade" id="delete-confirmation" role="dialog">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4>Confirm Delete</h4>
+            </div>
+            <div class="modal-body">
+              <p>Delete User: {{ user.firstname }} {{ user.lastname }}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="submit" name="delete" value="delete" class="btn btn-danger">
+                    Delete this User
+                </button>
+            </div>
+          </div>
+        </div>
+    </form>
 {% endblock %}

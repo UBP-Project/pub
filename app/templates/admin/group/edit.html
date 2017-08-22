@@ -17,7 +17,7 @@
                     <label>Group name</label>
                     {{ form.name(
                         placeholder="Group name",
-                        class="form-control input-lg lead",
+                        class="form-control",
                         required="true") }}
                     
                     <label>About</label>
@@ -48,6 +48,16 @@
                     )}}
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <br /><br /><br />
+                    <hr />
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-confirmation">
+                        Delete this Group
+                    </button>
+                </div>
+            </div>
         </div>
 
         <div class="col-md-6">
@@ -58,5 +68,26 @@
             {{ form.group_icon() }}
         </div>
 
+    </form>
+
+    <!-- Delete Activity confirmation modal -->
+    <form method="post" class="modal fade" id="delete-confirmation" role="dialog">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4>Confirm Delete</h4>
+            </div>
+            <div class="modal-body">
+              <p>Delete Group: {{ group.name }}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="submit" name="delete" value="delete" class="btn btn-danger">
+                    Delete this Group
+                </button>
+            </div>
+          </div>
+        </div>
     </form>
 {% endblock %}

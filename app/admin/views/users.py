@@ -69,6 +69,10 @@ def profile(id):
     form = UpdateUserForm()
     user = User.query.get_or_404(id)
 
+    if request.method == 'POST' and request.form.get('delete') == 'delete':
+        db.session.delete(user)
+        return redirect(url_for('admin.users'))
+
     if form.validate_on_submit():
         user.firstname  = form.firstname.data,
         user.middlename = form.middlename.data,

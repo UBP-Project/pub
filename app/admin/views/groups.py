@@ -64,8 +64,12 @@ def create_group():
 def update_group(id):
     form = UpdateInterestGroupForm()
     group = Interest_Group.query.get_or_404(id)
-    if form.validate_on_submit():
 
+    if request.method == 'POST' and request.form.get('delete') == 'delete':
+        db.session.delete(group)
+        return redirect(url_for('admin.groups'))
+
+    if form.validate_on_submit():
         # handle upload group cover
         if form.cover_photo.data is not None:
             cover                 = form.cover_photo.data

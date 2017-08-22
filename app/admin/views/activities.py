@@ -66,6 +66,10 @@ def edit_activity(id):
     form                  = UpdateActivityForm()
     activity              = Activity.query.get_or_404(id)
 
+    if request.method == 'POST' and request.form.get('delete') == 'delete':
+        db.session.delete(activity)
+        return redirect(url_for('admin.activities'))
+
     if request.method == 'POST':
         if form.image.data is not None:
             image                 = form.image.data
