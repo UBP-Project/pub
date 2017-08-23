@@ -349,7 +349,7 @@ def delete_activity_by(id):
     db.session.commit()
     return "Deleted"
 
-@api.route('/activities/<uuid(strict=False):id>/going')
+@api.route('/activities/<uuid(strict=False):id>/participants/going')
 @login_required
 def get_going_by(id):
     """
@@ -435,7 +435,86 @@ def get_going_by(id):
         user.to_json() for user in going
     ])
 
-@api.route('/activities/<uuid(strict=False):id>/interested')
+@api.route('/activities/<uuid(strict=False):id>/participants/going', methods=['POST'])
+@login_required
+def going_to_activity_by(id):
+    """
+    Going to an Activity
+    ---
+    tags:
+        - activities
+    parameters:
+        - name: id
+          in: path
+          type: string
+          example: 04cb8787-fe54-4e73-80d4-c17bf56537ee
+          description: Activity ID
+
+    responses:
+        200:
+            description: Success
+        201:
+            description: Record already exists
+        500:
+            description: Internal Server Error
+    """    
+    activity = User_Activity.query.filter_by(user_id=current_user.get_id(), activity_id=id, status=1).first()
+
+    if activity is not None:
+        #check if the status is going
+        return jsonify({'status': 'Record already exists'}), 201
+    else:
+      activity = User_Activity(
+        user_id=current_user.get_id(),
+        activity_id=id,
+        status = 1 #going
+        )
+      db.session.add(activity)
+
+      try:
+          db.session.commit()
+          leaderboard.joined_activity()
+          return jsonify({'status': 'Success'}), 200        
+      except exc.SQLAlchemyError as e:
+          print(e)
+          db.session().rollback()
+          return jsonify({'status': 'Internal Server Error'}), 500
+
+@api.route('/activities/<uuid(strict=False):id>/participants/going', methods=['DELETE'])
+@login_required
+def cancel_going_to_activity_by(id):
+    """
+    Delete going status for an event
+    ---
+    tags:
+        - activities
+
+    parameters:
+        - name: id
+          in: path
+          type: string
+          example: 04cb8787-fe54-4e73-80d4-c17bf56537ee
+          description: Activity ID
+
+    responses:
+        200:
+            description: Success
+        201:
+            description: Record already exists
+        500:
+            description: Internal Server Error
+    """    
+    activity = User_Activity.query.filter_by(user_id=current_user.get_id(), activity_id=id).delete()
+
+    try:
+        db.session.commit()
+        return jsonify({'status': 'Success'}), 200        
+    except exc.SQLAlchemyError as e:
+        print(e)
+        db.session().rollback()
+        return jsonify({'status': 'error'}), 500
+
+@api.route('/activities/<uuid(strict=False):id>/participants/interested')
 @login_required
 def get_interested(id):
     """
@@ -517,86 +596,7 @@ def get_interested(id):
         user.to_json() for user in interested
     ])
 
-@api.route('/activities/<uuid(strict=False):id>/going', methods=['POST'])
-@login_required
-def going_to_activity_by(id):
-    """
-    Going to an Activity
-    ---
-    tags:
-        - activities
-    parameters:
-        - name: id
-          in: path
-          type: string
-          example: 04cb8787-fe54-4e73-80d4-c17bf56537ee
-          description: Activity ID
-
-    responses:
-        200:
-            description: Success
-        201:
-            description: Record already exists
-        500:
-            description: Internal Server Error
-    """    
-    activity = User_Activity.query.filter_by(user_id=current_user.get_id(), activity_id=id, status=1).first()
-
-    if activity is not None:
-        #check if the status is going
-        return jsonify({'status': 'Record already exists'}), 201
-    else:
-      activity = User_Activity(
-        user_id=current_user.get_id(),
-        activity_id=id,
-        status = 1 #going
-        )
-      db.session.add(activity)
-
-      try:
-          db.session.commit()
-          leaderboard.joined_activity()
-          return jsonify({'status': 'Success'}), 200        
-      except exc.SQLAlchemyError as e:
-          print(e)
-          db.session().rollback()
-          return jsonify({'status': 'Internal Server Error'}), 500
-
-@api.route('/activities/<uuid(strict=False):id>/going', methods=['DELETE'])
-@login_required
-def cancel_going_to_activity_by(id):
-    """
-    Delete going status for an event
-    ---
-    tags:
-        - activities
-
-    parameters:
-        - name: id
-          in: path
-          type: string
-          example: 04cb8787-fe54-4e73-80d4-c17bf56537ee
-          description: Activity ID
-
-    responses:
-        200:
-            description: Success
-        201:
-            description: Record already exists
-        500:
-            description: Internal Server Error
-    """    
-    activity = User_Activity.query.filter_by(user_id=current_user.get_id(), activity_id=id).delete()
-
-    try:
-        db.session.commit()
-        return jsonify({'status': 'Success'}), 200        
-    except exc.SQLAlchemyError as e:
-        print(e)
-        db.session().rollback()
-        return jsonify({'status': 'error'}), 500
-
-@api.route('/activities/<uuid(strict=False):id>/interested', methods=['POST'])
+@api.route('/activities/<uuid(strict=False):id>/participants/interested', methods=['POST'])
 @login_required
 def interested_to_activity_by(id):
     """
@@ -641,7 +641,7 @@ def interested_to_activity_by(id):
         db.session().rollback()
         return jsonify({'error': 'Internal Server Error'}), 500
 
-@api.route('/activities/<uuid(strict=False):id>/interested', methods=['DELETE'])
+@api.route('/activities/<uuid(strict=False):id>/participants/interested', methods=['DELETE'])
 @login_required
 def cancel_interested_to_activity_by(id):
     """
@@ -672,3 +672,48 @@ def cancel_interested_to_activity_by(id):
     except exc.SQLAlchemyError as e:
         db.session().rollback()
         return jsonify({'status': 'error'}), 500
+
+@api.route('/activities/<uuid(strict=False):id>/participation')
+@login_required
+def get_participation_status_by(id):
+    """
+    Get User's involvement to an activity
+    ---
+    tags:
+      - activities
+
+    parameters:
+      - in: path
+        name: id
+        description: Activity ID
+        required: true
+
+    responses:
+      200:
+        description: OK
+        schema:
+          id: participation_status
+          properties:
+            interested:
+                type: boolean
+                example: True
+                required: true
+
+            going:
+                type: boolean
+                example: False
+                required: true
+
+    """
+    going = User_Activity.query\
+        .with_entities(User_Activity.status)\
+        .filter_by(user_id=current_user.get_id(), activity_id=id, status=1).first()
+
+    interested = User_Activity.query\
+        .with_entities(User_Activity.status)\
+        .filter_by(user_id=current_user.get_id(), activity_id=id, status=0).first()
+
+    return jsonify({
+            'going' : True if going else False,
+            'interested' : True if interested else False
+        })

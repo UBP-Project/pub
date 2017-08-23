@@ -6,7 +6,7 @@ import uuid
 class Interest_Group(db.Model):
     __tablename__ = 'interest_group'
     id            = db.Column(UUIDType(binary=False), default=uuid.uuid4, primary_key=True)
-    name          = db.Column(db.String(200), unique=False) #change  to true on production
+    name          = db.Column(db.String(200), unique=True) #change  to true on production
     about         = db.Column(db.Text(4294967295))
     cover_photo   = db.Column(db.String(200))
     group_icon    = db.Column(db.String(100))
