@@ -7,7 +7,7 @@ import uuid
 class Activity(db.Model):
     __tablename__ = 'activity'
     id            = db.Column(UUIDType(binary=False), default=uuid.uuid4, primary_key=True)
-    title         = db.Column(db.String(200), unique=True)
+    title         = db.Column(db.String(200), unique=False) #true on deployment
     description   = db.Column(db.Text(4294967295))
     start_date    = db.Column(db.Date)
     end_date      = db.Column(db.Date)  
