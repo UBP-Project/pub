@@ -2,66 +2,91 @@
     ACTIVITY - Going & Interested
 */
 
-$('.actvivity-card').bind('click', function(event) {
-    var activity_id = event.currentTarget.id;  // activity id  
-    viewGoing(activity_id);
-    viewInterested(activity_id);
-});
-
-function viewGoing(activity_id) {
-
-    $.ajax({
-        url: '/api/v1.0/activities/'+ activity_id + '/going',
-        type: 'GET'
-    })
-    .done(function(data) {
-
-        if(data){
-
-            console.log(data);
-            
-        } else {
-            console.log('No one is going in this Activity');
-        }
-
-    })
-    .fail(function() {
-        console.log("error");
-    });
-
+function view_activity(activity_id) {
+    console.log("ACT_ID = " + activity_id);
+    interested_users(activity_id);
+    //going_users(activity_id);
 }
 
-function viewInterested(activity_id) {
-
+function interested_users(activity_id) {
     $.ajax({
         url: '/api/v1.0/activities/'+ activity_id + '/interested',
         type: 'GET'
     })
     .done(function(data) {
-        
-        if(data){
-            console.log(data);
-            /*var activity_list = "";
-            for(activity in data){
-                var title = data[activity].title;
-                activity_list += title + '<br/>';
+        console.log("success");
+        if(data.length){
+            console.log("May interested hehe");
+            var users_list = "";
+            for (var i in data) {
+                var name = data[i].firstname + " " + data[i].lastname;
+                var user_id = data[i].id;
+                users_list += "<a href='/profile/" + user_id + "'>" + name + "</a><br/>";
+                console.log("NAME: " + name);
+                console.log("USER_ID: " + user_id);
             }
-
-            if(activity_list==""){
-                document.getElementById('group-activities-'+group_id).innerHTML = "Group has No Activity"; 
-            } else {
-                document.getElementById('group-activities-'+group_id).innerHTML = activity_list;
-                console.log(activity_list);
-            }*/
-            
+            document.getElementById('interested-users-'+activity_id).innerHTML = users_list;
         } else {
-            /*document.getElementById('group-activities-'+group_id).innerHTML = "Group has No Activity";*/
-            console.log('No one is Iinterested in this Activity');
+            document.getElementById('interested-users-'+activity_id).innerHTML = 'No one is interested'; 
+            console.log("No interesado");  
         }
-
     })
     .fail(function() {
         console.log("error");
     });
+}
 
+function going_users(activity_id) {
+    $.ajax({
+        url: '/api/v1.0/activities/'+ activity_id + '/going',
+        type: 'GET'
+    })
+    .done(function(data) {
+        console.log("success");
+        console.log(data);
+        console.log(data.length);
+    })
+    .fail(function() {
+        console.log("error");
+    });
+}
+
+
+
+/*
+$('.activity-card').bind('click', function(event) {
+
+    var activity_id = event.currentTarget.id;  // activity id  
+    var btn = event.currentTarget;
+    console.log("ACT_ID = " + activity_id);
+    console.log(btn);
+
+});*/
+
+function going(activity_id) {
+    $.ajax({
+        url: '/api/v1.0/activities/'+ activity_id + '/going',
+        type: 'POST'
+    })
+    .done(function(data) {
+        console.log('success going');
+        console.log(data);
+    })
+    .fail(function() {
+        console.log("error");
+    });
+}
+
+function interested(activity_id) {
+    $.ajax({
+        url: '/api/v1.0/activities/'+ activity_id + '/interested',
+        type: 'POST'
+    })
+    .done(function(data) {
+        console.log('success interested');
+        console.log(data);
+    })
+    .fail(function() {
+        console.log("error");
+    });
 }
