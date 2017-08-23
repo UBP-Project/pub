@@ -60,15 +60,35 @@ function going_users(activity_id) {
     });
 }
 
-
-
-
 $('.activity-btn').bind('click', function(event) {
 
     var activity_id = event.currentTarget.id;  // activity id  
     var btn = event.currentTarget;
-    console.log("ACT_ID = " + activity_id);
-    console.log(btn);
+    var val = event.currentTarget.value;
+    console.log("ACT_ID = " + activity_id + ", value = " + val);
+    //console.log(btn);
+
+    if(val=="going"){
+        going(activity_id);
+        $(btn).removeClass('ngoing-btn');
+        $(btn).addClass('going-btn');
+        event.currentTarget.value = 'cgoing';
+    } else if(val=="interested") {
+        interested(activity_id);
+        $(btn).removeClass('ninterested-btn');
+        $(btn).addClass('interested-btn');
+        event.currentTarget.value = 'cinterested';
+    } else if(val=="cgoing") {
+        cancel_going(activity_id);
+        $(btn).removeClass('going-btn');
+        $(btn).addClass('ngoing-btn');
+        event.currentTarget.value = 'going';
+    } else if(val=="cinterested") {
+        cancel_interested(activity_id);
+        $(btn).removeClass('interested-btn');
+        $(btn).addClass('ninterested-btn');
+        event.currentTarget.value = 'interested';
+    }
 
 });
 
@@ -78,8 +98,8 @@ function going(activity_id) {
         type: 'POST'
     })
     .done(function(data) {
+        going_users(activity_id);
         console.log('success going');
-        console.log(data);
     })
     .fail(function() {
         console.log("error");
@@ -92,8 +112,36 @@ function interested(activity_id) {
         type: 'POST'
     })
     .done(function(data) {
+        interested_users(activity_id);
         console.log('success interested');
-        console.log(data);
+    })
+    .fail(function() {
+        console.log("error");
+    });
+}
+
+function cancel_going(activity_id) {
+    $.ajax({
+        url: '/api/v1.0/activities/'+ activity_id + '/going',
+        type: 'DELETE'
+    })
+    .done(function(data) {
+        going_users(activity_id);
+        console.log('cancel going');
+    })
+    .fail(function() {
+        console.log("error");
+    });
+}
+
+function cancel_interested(activity_id) {
+    $.ajax({
+        url: '/api/v1.0/activities/'+ activity_id + '/interested',
+        type: 'DELETE'
+    })
+    .done(function(data) {
+        interested_users(activity_id);
+        console.log('cancel interested');
     })
     .fail(function() {
         console.log("error");
