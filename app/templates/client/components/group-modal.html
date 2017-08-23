@@ -5,7 +5,8 @@
         <div class="col-md-3 col-sm-6 card-container text-center">
             <div class="group-icon">
                 <div class="group-img">
-                    <img src="{{ url_for('static', filename='uploads/group_icons/' + group.group_icon) }}" class="img-circle zoomify grp-icon" data-toggle="modal" data-target="#group-{{ group.id }}" id="{{group.id}}" />
+                    <!-- <img src="{{ url_for('static', filename='uploads/group_icons/' + group.group_icon) }}" class="img-circle zoomify grp-icon" data-toggle="modal" data-target="#group-{{ group.id }}" id="{{group.id}}" /> -->
+                    <img src="{{ group.group_icon }}" class="img-circle zoomify grp-icon" data-toggle="modal" data-target="#group-{{ group.id }}" id="{{group.id}}" />
                 </div>
                 <div class="group-desc">
                     <h4 class="title">{{ group.name | upper }}</h4>
@@ -29,7 +30,8 @@
                     <div class="modal-body">
 
                         <div class="img-container">
-                            <img src="{{ url_for('static', filename='uploads/covers/' + group.cover_photo) }}" />
+                            <!-- <img src="{{ url_for('static', filename='uploads/covers/' + group.cover_photo) }}" /> -->
+                             <img src="{{ group.cover_photo }}" />
                         </div>
 
                         <h2 class="text-center">{{ group.name | upper }}</h2>
@@ -61,7 +63,8 @@
                                             <p>{{ group.about }}</p>
                                         </div>
                                         <div class="col-md-6">
-                                            <img src="{{ url_for('static', filename='uploads/group_icons/' + group.group_icon) }}" class="img-circle pull-right grp-desc-img" />
+                                            <!-- <img src="{{ url_for('static', filename='uploads/group_icons/' + group.group_icon) }}" class="img-circle pull-right grp-desc-img" /> -->
+                                             <img src="{{ group.group_icon }}" class="img-circle pull-right grp-desc-img" />
                                         </div>
                                     </div>
                                     
