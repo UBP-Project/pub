@@ -35,7 +35,9 @@
                                 <div class="search-item" onclick="choose_item({{activity.id}})">
 
                                     <div class="item-img">
-                                        <img src="{{url_for('static',filename='uploads/activity_images/' + activity.image) }}">
+                                        <!-- <img src="{{url_for('static',filename='uploads/activity_images/' + activity.image) }}"> -->
+                                        <img src="{{ activity.image }}">
+
                                     </div>
 
                                     <div class="item-desc">
