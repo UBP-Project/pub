@@ -64,8 +64,8 @@
 		            <div class="side-nav">
 		                <ul class="nav">
 		                	<br/>
-		                    <li><a href="/profile/{{user.get_id()}}">{{user.firstname}} {{user.lastname}}<i class="fa fa-user pull-right"></i></a></li>
-		                    <li><a href="/profile/{{user.get_id()}}/edit"><small>Edit Profile</small></a></li>
+		                    <li><a href="/profile/{{current_user.get_id()}}">{{current_user.firstname}} {{current_user.lastname}}<i class="fa fa-user pull-right"></i></a></li>
+		                    <li><a href="/profile/{{current_user.get_id()}}/edit"><small>Edit Profile</small></a></li>
 		                    <li><a href="/notifications"><small>Notifications <span class="badge badge-error pull-right">10</span></small></a></li>
 		                    <li><hr/></li>
 		                    <li><a href="/groups">Interest Groups<i class="fa fa-group pull-right"></i></a></li>

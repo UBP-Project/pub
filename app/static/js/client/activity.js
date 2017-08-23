@@ -42,7 +42,7 @@ function view_activity(activity_id) {
 
 function going(activity_id) {
     $.ajax({
-        url: '/api/v1.0/activities/'+ activity_id + '/going',
+        url: '/api/v1.0/activities/'+ activity_id + '/participants/going',
         type: 'POST'
     })
     .done(function(data) {
@@ -56,7 +56,7 @@ function going(activity_id) {
 
 function interested(activity_id) {
     $.ajax({
-        url: '/api/v1.0/activities/'+ activity_id + '/interested',
+        url: '/api/v1.0/activities/'+ activity_id + '/participants/interested',
         type: 'POST'
     })
     .done(function(data) {
@@ -70,7 +70,7 @@ function interested(activity_id) {
 
 function cancel_going(activity_id) {
     $.ajax({
-        url: '/api/v1.0/activities/'+ activity_id + '/going',
+        url: '/api/v1.0/activities/'+ activity_id + '/participants/going',
         type: 'DELETE'
     })
     .done(function(data) {
@@ -84,7 +84,7 @@ function cancel_going(activity_id) {
 
 function cancel_interested(activity_id) {
     $.ajax({
-        url: '/api/v1.0/activities/'+ activity_id + '/interested',
+        url: '/api/v1.0/activities/'+ activity_id + '/participants/interested',
         type: 'DELETE'
     })
     .done(function(data) {
@@ -98,7 +98,7 @@ function cancel_interested(activity_id) {
 
 function interested_users(activity_id) {
     $.ajax({
-        url: '/api/v1.0/activities/'+ activity_id + '/interested',
+        url: '/api/v1.0/activities/'+ activity_id + '/participants/interested',
         type: 'GET'
     })
     .done(function(data) {
@@ -124,7 +124,7 @@ function interested_users(activity_id) {
 
 function going_users(activity_id) {
     $.ajax({
-        url: '/api/v1.0/activities/'+ activity_id + '/going',
+        url: '/api/v1.0/activities/'+ activity_id + '/participants/going',
         type: 'GET'
     })
     .done(function(data) {

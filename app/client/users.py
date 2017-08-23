@@ -17,6 +17,10 @@ def view_profile(id):
     following_count = Follow.query.filter(Follow.follower_id == id).count()
     is_following = True if Follow.query.filter(Follow.follower_id == current_user.get_id(),\
         Follow.following_id == user.get_id()).first() is not None else False
+
+    print(user)
+    print(current_user)
+    
     return render_template("client/views/profile.html", user=user, current_user=current_user,\
         is_following=is_following, followers_count=followers_count, following_count=following_count)
 
