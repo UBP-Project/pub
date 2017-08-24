@@ -379,7 +379,14 @@ def get_members(id):
 
     group = Interest_Group.query.get_or_404(id)
 
-    members = User.query.join(Membership).join(Interest_Group).filter(Interest_Group.id == group.id)
+    members = User.query\
+        .join(Membership, User.id == Membership.user_id)\
+        .filter(Membership.status == 1)\
+        .join(Interest_Group, Membership.group_id == Interest_Group.id)\
+        .filter(Interest_Group.id == id)\
+        .all()
+
+    print(members)
     return jsonify([
         user.to_json() for user in members
     ])
@@ -449,6 +456,7 @@ def join_group(id):
     membership = Membership(
         user_id=current_user.get_id(),
         group_id=id)
+    
     db.session.add(membership)
 
     try:
