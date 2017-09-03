@@ -22,7 +22,7 @@ def get_interest_groups():
       - groups
 
     parameters:
-      - name: limit
+      - name: page
         in: query
         example: 1
         default: 15
@@ -57,16 +57,20 @@ def get_interest_groups():
                 example: d167f8ec77194efc8319e3455da9920f.jpg
                 description: File name
     """
-
-    if 'limit' in request.args:
-        limit = request.args.get('limit')
-        interest_groups = Interest_Group.query.limit(limit)
+    if 'page' in request.args:
+        page = int(request.args.get('page'))
     else:
-        interest_groups = Interest_Group.query.all()
-    
-    return jsonify([
-        interest_group.to_json() for interest_group in interest_groups
-    ]), 200
+        page = 1
+
+    interest_groups = Interest_Group.query\
+        .paginate(page = page, per_page = 12, error_out=False)
+
+    return jsonify({
+      'interest_groups': [ group.to_json() for group in interest_groups.items ],
+      'has_next': interest_groups.has_next,
+      'has_prev': interest_groups.has_prev
+    }), 200
+       
 
 @api.route('/interest_groups', methods=['POST'])
 @login_required
