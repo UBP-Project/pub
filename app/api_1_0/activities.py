@@ -1,6 +1,6 @@
 from flask import jsonify, request, current_app, url_for
 from sqlalchemy import exc
-from app.models import Activity, User, User_Activity
+from app.models import Activity, User, User_Activity, Follow
 from app.api_1_0 import api
 from app import db
 import json
@@ -620,17 +620,21 @@ def interested_to_activity_by(id):
             description: Internal Server Error
     """    
     activity = User_Activity.query.filter_by(user_id=current_user.get_id(), activity_id=id, status=0).first()
-
+    
     if activity is not None:
         #check if the status is interested
         return jsonify({'status': 'Record already exists'}), 201
     else:
-        activity = User_Activity(
+        new_user_activity = User_Activity(
             user_id=current_user.get_id(),
             activity_id=id,
             status = 0 #interested
         )
-        db.session.add(activity)
+        db.session.add(new_user_activity)
+        activity = Activity.query\
+          .join(User_Activity)\
+          .join(User, User.id == current_user.get_id())\
+          .first()
 
 
     try:
