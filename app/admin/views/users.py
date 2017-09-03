@@ -17,10 +17,12 @@ USERS_PER_PAGE = 10
 @admin_required
 def users():
     query = request.args.get('query')
-    page = 1
+   
     if request.args.get('page') is not None:
         page = int(request.args.get('page'))
-
+    else:
+        page = 1
+        
     if query is not None:
         users = User.query\
         .join(Role, Role.id == User.role_id)\
