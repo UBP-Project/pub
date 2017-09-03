@@ -4,115 +4,149 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-md-3" style="position: absolute; z-index: 2; top: 200px; margin: 15px;">
+        <div class="col-md-3 profile-info">
             {% if user.image %}
                 <img id="dp" src="{{ url_for('static', filename='uploads/profile_pictures/' + user.image) }}"
                     width="200px" 
-                    height="200x"
-                    style="border: 5px solid white; border-radius: 10px; cursor: pointer; object-fit: cover"/>
+                    height="200x"/>
             {% else %}
                 <img id="dp" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"
                     width="200px" 
-                    height="200x"
-                    style="border: 5px solid white; border-radius: 10px; cursor: pointer; object-fit: cover;"/>
+                    height="200x"/>
             {% endif %}
         </div>
 
-        <div class="col-md-12 text-right" style="background-color: white; padding: 0px;">
+        <div class="col-md-12 text-right cover">
             <!-- Check if user has set cover photo
             <img src="{{ url_for('static', filename='images/building.png') }}"
                 style="width: 100%; height: 250px; z-index: 1;"/> -->
 
             <!-- hold the trianlify cover photo -->
-            <div id="trianglify-cover" class="col-md-12 text-right" style="height: 250px; background-color: white; padding: 0px;">
+            <div id="trianglify-cover" class="col-md-12 text-right"></div>
+
+            <div id="profile-btns">
+
+                <div class="btn btn-xs points" disabled>
+                    <h6>Points</h6>
+                    <h4>{{ user['points'] }}</h4>
+                </div>
+
+                {% if following_count > 0 %}
+                    <div class="btn btn-xs following-count" disabled>
+                        <h6>Following</h6>
+                        <h4>{{ following_count }}</h4>
+                    </div>
+                {% else %}
+                    <div class="btn btn-xs following-count" disabled>
+                        <h6>Following</h6>
+                        <h4>{{ following_count }}</h4>
+                    </div>
+                {% endif %}
+
+                {% if followers_count > 0 %}
+                    <div class="btn btn-xs followers-count" disabled>
+                        <h6>Followers</h6>
+                        <h4>{{ followers_count }}</h4>
+                    </div>
+                {% else %}
+                    <div class="btn btn-xs followers-count" disabled>
+                        <h6>Followers</h6>
+                        <h4>{{ followers_count }}</h4>
+                    </div>
+                {% endif %}
+
+                {% if current_user['id'] == user['id'] %}
+                    <a href="#" id="btn-edit-profile" class="btn btn-style-3" disabled>Edit Profile</a>
+                {% endif %}
+
             </div>
 
-
-                
-            </div>
         </div>
 
-        <form class="col-md-offset-3 col-md-9" method="post" name="update_user" style="background-color: white; padding-bottom: 30px;" enctype="multipart/form-data">
-            {{ form.hidden_tag() }}
-            <br /><br /><br />
-            <div class="row">
-                <div class="col-md-12">
-                    <h3>Edit Profile</h3>
+        <div class="row">
+            <form class="col-md-offset-3 col-md-7 edit-section" method="post" name="update_user" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                <br/>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>Edit Profile</h3>
+                        <hr>
+                    </div>
                 </div>
-            </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label>Firstname</label>
+                        {{ form.firstname(
+                        placeholder="First name",
+                        class="form-control") }}
+                    </div>
+                    <div class="col-md-4">
+                        <label>Middlename</label>
+                        {{ form.middlename(
+                        placeholder="Middle name",
+                        class="form-control") }}
+                    </div>
+                    <div class="col-md-4">
+                        <label>Lastname</label>
+                        {{ form.lastname(
+                        placeholder="Last name",
+                        class="form-control") }}
+                    </div>
+                </div>
 
-            <div class="row">
-                <div class="col-md-3">
-                    <label>Firstname</label>
-                    {{ form.firstname(
-                    placeholder="First name",
-                    class="form-control") }}
+                <br />
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Department</label>
+                        {{ form.department(
+                            placeholder="Department",
+                            class="form-control"
+                        )}}
+                    </div>
+                    <div class="col-md-6">
+                        <label>Position</label>
+                        {{ form.position(
+                            placeholder="Position",
+                            class="form-control"
+                        )}}
+                    </div>
                 </div>
-                <div class="col-md-3">
-                    <label>Middlename</label>
-                    {{ form.middlename(
-                    placeholder="Middle name",
-                    class="form-control") }}
-                </div>
-                <div class="col-md-3">
-                    <label>Lastname</label>
-                    {{ form.lastname(
-                    placeholder="Last name",
-                    class="form-control") }}
-                </div>
-            </div>
 
-            <br />
-            
-            <div class="row">
+                <br />
+
+                <div class="col-md-6">
+                    <label>Email</label>
+                    {{ form.email(
+                        placeholder="Email",
+                        class="form-control") }}
+                </div>
+                <div class="col-md-6">
+                    <label>Birthday</label>
+                    {{ form.birthday(
+                        placeholder="Birthday",
+                        class="form-control")}}
+                </div>
+
+                <br />
+
+                <div class="col-md-7">
+                    <br />
+                    <a href="{{ url_for('client.edit_password', id=user['id']) }}">
+                        Change Password
+                    </a>
+                </div>
+     
                 <div class="col-md-5">
-                    <label>Department</label>
-                    {{ form.department(
-                        placeholder="Department",
-                        class="form-control"
+                    <br/>
+                    {{ form.submit(
+                        class="btn btn-style-1"
                     )}}
+                    <a href="/profile/{{current_user.get_id()}}"><button class="btn btn-default">Cancel</button></a>
                 </div>
-                <div class="col-md-4">
-                    <label>Position</label>
-                    {{ form.position(
-                        placeholder="Position",
-                        class="form-control"
-                    )}}
-                </div>
-            </div>
-
-            <br />
-
-            <div class="col-md-5">
-                <label>Email</label>
-                {{ form.email(
-                    placeholder="Email",
-                    class="form-control") }}
-            </div>
-            <div class="col-md-4">
-                <label>Birthday</label>
-                {{ form.birthday(
-                    placeholder="Birthday",
-                    class="form-control")}}
-            </div>
-
-            <br />
-
-            <div class="col-md-6">
-                <br />
-                <a href="{{ url_for('client.edit_password', id=user['id']) }}">
-                    Change Password
-                </a>
-            </div>
-
-            <div class="col-md-3">
-                <br />
-                {{ form.submit(
-                    class="btn btn-style-1 pull-right"
-                )}}
-            </div>
-            {{ form.image(style="display: none") }}
-        </form>
+                {{ form.image(style="display: none") }}
+            </form>
+        </div>
 
     </div>
 
@@ -135,5 +169,5 @@
             $("#image").trigger('click');
         });
     </script>
-    <script src="{{ url_for('static', filename='js/client/profile.js') }}"></script>
+    <!-- <script src="{{ url_for('static', filename='js/client/profile.js') }}"></script> -->
 {% endblock scripts %}

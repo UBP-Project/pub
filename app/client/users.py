@@ -61,9 +61,13 @@ def edit_profile(id):
     form.birthday.data   = user.birthday
     # flash_errors(form)
 
+    followers_count = Follow.query.filter(Follow.following_id == id).count()
+    following_count = Follow.query.filter(Follow.follower_id == id).count()
+
     if int(id) != int(current_user.get_id()):
         return redirect(url_for('client.index'))
-    return render_template('client/views/edit-profile.html', user=current_user, form=form)
+    return render_template('client/views/edit-profile.html', user=current_user, form=form, \
+        followers_count=followers_count, following_count=following_count)
 
 @client.route('/profile/<uuid(strict=False):id>/edit-password', methods=['POST', 'GET'])
 @login_required
@@ -78,7 +82,7 @@ def edit_password(id):
 
     if int(id) != int(current_user.get_id()):
         return redirect(url_for('client.index'))
-    return render_template('client/views/edit-password.html', user=current_user, form=form)
+    return render_template('client/views/edit-password.html', user=current_user, form=form, followers_count=followers_count, following_count=following_count)
 
 @client.route('/profile/<uuid(strict=False):id>/followers')
 @login_required
