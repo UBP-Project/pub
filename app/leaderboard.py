@@ -3,8 +3,7 @@ from app import db
 
 
 class leaderboard():
-
-    def joined_activity(value=1):
-        user = current_user
+    @staticmethod
+    def joined_activity(user=current_user, value=1):
         user.points = user.points + value
         db.session.commit()

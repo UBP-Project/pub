@@ -12,3 +12,9 @@ from ..utils import flash_errors
 def activities():
     activities = Activity.query.limit(7)
     return render_template("client/views/activities.html", activities=activities, user=current_user)
+
+# @client.route('/activities/<string:id>/attendance')
+# @login_required
+# @manager_or_leader_only
+# def attendance(id):
+    

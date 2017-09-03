@@ -1054,7 +1054,8 @@ activities = [
 	{"title":"Lone Wolf and Cub: Baby Cart in the Land of Demons (Kozure Ôkami: Meifumadô)","description":"morph wireless niches","start_date":"2016-12-25","end_date":"2016-10-17","address":"10604 Bultman Trail","image":"https://robohash.org/nammaioresipsum.png?size=400x400&set=set1"}
 ]
 
-for a in activities:
-	activity = Activity.from_json(a)
+# for a in activities:
+for i in range(0, 15):
+	activity = Activity.from_json(activities[i])
 	db.session.add(activity)
 db.session.commit()

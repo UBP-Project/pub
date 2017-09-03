@@ -1066,8 +1066,9 @@ users = [
 
 user_role = Role.query.filter(Role.name == "User").first()
 
-for u in users:
-	user = User.from_json(u)
+# for u in users:
+for i in range(0, 100):
+	user = User.from_json(users[i])
 	user.role_id = user_role.id
 	user.password_hash = generate_password_hash(user.password_hash)
 	db.session.add(user)
