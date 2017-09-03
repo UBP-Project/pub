@@ -25,7 +25,7 @@ def get_interest_groups():
       - name: page
         in: query
         example: 1
-        default: 15
+        default: 1
 
     responses:
       200:
