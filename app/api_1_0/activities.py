@@ -23,10 +23,10 @@ def get_activities():
       - activities
 
     parameters:
-      - name: limit
+      - name: page
         in: query
         example: 1
-        default: 10
+        default: 1
 
     responses:
       200:
@@ -34,48 +34,54 @@ def get_activities():
         schema:
           id: activities
           properties:
-            id:
-                type: string
-                example: 0f5b5ff8-afa2-43f7-8066-8ec3075c4c0c
-            title:
-                type: string
-                example: Temple Run
-                description: Event Title
-            description:
-                type: string
-                example: Run Run Run
-            start_date:
-                type: string
-                format: date 
-                example: Sat, 19 Aug 2017 00:00:00 GMT
-            end_date:
-                type: string
-                format: date 
-                example: Sat, 19 Aug 2017 00:00:00 GMT
-            address:
-                type: string
-                example: Luneta Park
-            group_id:
-                type: string
-                default: None
-                example: 0f5b5ff8-afa2-43f7-8066-8ec3075c4c0c
-                descripton: In case event is associated with some group
-            image:
-                type: string
-                example: 70a256f3628947508af68343821d78b6.jpg
-                default: None
-                description: File name of image in uploads/activity_image folder
+              id:
+                  type: string
+                  example: 0f5b5ff8-afa2-43f7-8066-8ec3075c4c0c
+              title:
+                  type: string
+                  example: Temple Run
+                  description: Event Title
+              description:
+                  type: string
+                  example: Run Run Run
+              start_date:
+                  type: string
+                  format: date 
+                  example: Sat, 19 Aug 2017 00:00:00 GMT
+              end_date:
+                  type: string
+                  format: date 
+                  example: Sat, 19 Aug 2017 00:00:00 GMT
+              address:
+                  type: string
+                  example: Luneta Park
+              group_id:
+                  type: string
+                  default: None
+                  example: 0f5b5ff8-afa2-43f7-8066-8ec3075c4c0c
+                  descripton: In case event is associated with some group
+              image:
+                  type: string
+                  example: 70a256f3628947508af68343821d78b6.jpg
+                  default: None
+                  description: File name of image in uploads/activity_image folder
+
     """
 
-    if 'limit' in request.args:
-        limit = request.args.get('limit')
-        activities = Activity.query.limit(limit)
+    if 'page' in request.args:
+        page = int(request.args.get('page'))
     else:
-        activities = Activity.query.all()
+        page = 1
 
-    return jsonify([
-        activity.to_json() for activity in activities
-    ])
+    activities = Activity.query\
+        .paginate(page = page, per_page = 12, error_out=False)
+
+    return jsonify({
+      'activities': [ activity.to_json() for activity in activities.items ],
+      'has_next': activities.has_next,
+      'has_prev': activities.has_prev
+    })
+       
 
 @api.route('/activities', methods=['POST'])
 @login_required
