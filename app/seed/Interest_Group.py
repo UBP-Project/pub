@@ -1028,7 +1028,8 @@ groups = [
 	{"name":"Borer, Swaniawski and Hudson","about":"Face to face incremental neural-net","cover_photo":"http://dummyimage.com/303x324.jpg/5fa2dd/ffffff","group_icon":"https://robohash.org/rerumremtotam.jpg?size=50x50&set=set1"}	
 ]
 
-for g in groups:
-	group = Interest_Group.from_json(g)
+# for g in groups:
+for i in range(0, 20):
+	group = Interest_Group.from_json(groups[i])
 	db.session.add(group)
 db.session.commit()

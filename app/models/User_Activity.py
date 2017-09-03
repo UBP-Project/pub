@@ -9,6 +9,7 @@ class User_Activity(db.Model):
     user_id     = db.Column(UUIDType(binary=False), db.ForeignKey('user.id', ondelete="CASCADE", onupdate="CASCADE"))
     activity_id = db.Column(UUIDType(binary=False), db.ForeignKey('activity.id', ondelete="CASCADE", onupdate="CASCADE"))
     status      = db.Column(db.Integer) #0 interested #1 going
+    attended    = db.Column(db.Boolean)
     
     def __init__(self, user_id, activity_id, status = 0):
         self.user_id = user_id
