@@ -2,12 +2,12 @@
     ACTIVITY - Going & Interested
 */
 
-$('.activity-btn').bind('click', function(event) {
+$('.modal-footer .activity-btn').bind('click', function(event) {
 
     var activity_id = event.currentTarget.id;  // activity id  
     var btn = event.currentTarget;
     var val = event.currentTarget.value;
-    console.log("ACT_ID = " + activity_id + ", value = " + val);
+    console.log("ACT_ID fr bind= " + activity_id + ", value = " + val);
     //console.log(btn);
 
     if(val=="going"){
@@ -32,12 +32,54 @@ $('.activity-btn').bind('click', function(event) {
         event.currentTarget.value = 'interested';
     }
 
+    //init_status(activity_id);
+
 });
 
 function view_activity(activity_id) {
-    console.log("ACT_ID = " + activity_id);
+    //console.log("ACT_ID = " + activity_id);
+    init_status(activity_id);
     interested_users(activity_id);
     going_users(activity_id);
+}
+
+function init_status(activity_id) {
+
+    $('.modal-footer .interested-btn').hide();
+    $('.modal-footer .ninterested-btn').hide();
+    $('.modal-footer .going-btn').hide();
+    $('.modal-footer .ngoing-btn').hide();
+
+    $.ajax({
+        url: '/api/v1.0/activities/'+ activity_id + '/participation',
+        type: 'GET'
+    })
+    .done(function(data) {
+
+        var interested = data.interested;
+        var going = data.going;
+
+        if(interested) {
+            $('.modal-footer .interested-btn').show();
+            $('.modal-footer .ninterested-btn').hide();
+        } else {
+            $('modal-footer .interested-btn').hide();
+            $('.modal-footer .ninterested-btn').show();
+        }
+
+        if(going) {
+            $('.modal-footer .going-btn').show();
+            $('.modal-footer .ngoing-btn').hide();
+        } else {
+            $('.modal-footer .going-btn').hide();
+            $('.modal-footer .ngoing-btn').show();
+        }
+
+
+    })
+    .fail(function() {
+        console.log("error");
+    });
 }
 
 function going(activity_id) {
@@ -47,7 +89,7 @@ function going(activity_id) {
     })
     .done(function(data) {
         going_users(activity_id);
-        console.log('success going');
+        //console.log('success going');
     })
     .fail(function() {
         console.log("error");
@@ -61,7 +103,7 @@ function interested(activity_id) {
     })
     .done(function(data) {
         interested_users(activity_id);
-        console.log('success interested');
+        //console.log('success interested');
     })
     .fail(function() {
         console.log("error");
@@ -75,7 +117,7 @@ function cancel_going(activity_id) {
     })
     .done(function(data) {
         going_users(activity_id);
-        console.log('cancel going');
+        //console.log('cancel going');
     })
     .fail(function() {
         console.log("error");
@@ -89,7 +131,7 @@ function cancel_interested(activity_id) {
     })
     .done(function(data) {
         interested_users(activity_id);
-        console.log('cancel interested');
+        //console.log('cancel interested');
     })
     .fail(function() {
         console.log("error");
