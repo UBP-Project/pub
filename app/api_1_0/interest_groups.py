@@ -68,57 +68,6 @@ def get_interest_groups():
         interest_group.to_json() for interest_group in interest_groups
     ]), 200
 
-@api.route('/interest_groups/<string:id>')
-@login_required
-def get_interest_group_by(id):
-    """
-    Get a Group by ID
-    ---
-    tags:
-      - groups
-
-    parameters:
-      - name: id
-        in: path
-        example: 04cb8787-fe54-4e73-80d4-c17bf56537ee
-        type: string
-        required: true
-
-    responses:
-        200:
-            description: OK
-            schema:
-                id: groups
-                properties:
-                    id:
-                        type: string
-                        example: 27e2200d-0da1-4dbf-bc9c-7c930ea1d75c
-                        required: true
-
-                    name:
-                        type: string
-                        example: Sports
-                        description: Group name
-                        required: true
-
-                    description:
-                        type: string
-                        example: Everything you should get involved!
-                        description: About the Group                
-
-                    cover_photo:
-                        type: string
-                        example: c94f84619ce845f3b6398a30aa99c720.bmp
-                        description: File name
-
-                    group_icon:
-                        type: string
-                        example: d167f8ec77194efc8319e3455da9920f.jpg
-                        description: File name
-    """
-    interest_group = Interest_Group.query.get_or_404(id)
-    return jsonify(interest_group.to_json()), 200
-
 @api.route('/interest_groups', methods=['POST'])
 @login_required
 def new_interest_group():
@@ -187,6 +136,58 @@ def new_interest_group():
     except exc.IntegrityError as e:
         db.session.rollback()
         return jsonify({'message': 'Name already taken'}), 409
+
+@api.route('/interest_groups/<string:id>')
+@login_required
+def get_interest_group_by(id):
+    """
+    Get a Group by ID
+    ---
+    tags:
+      - groups
+
+    parameters:
+      - name: id
+        in: path
+        example: 04cb8787-fe54-4e73-80d4-c17bf56537ee
+        type: string
+        required: true
+
+    responses:
+        200:
+            description: OK
+            schema:
+                id: groups
+                properties:
+                    id:
+                        type: string
+                        example: 27e2200d-0da1-4dbf-bc9c-7c930ea1d75c
+                        required: true
+
+                    name:
+                        type: string
+                        example: Sports
+                        description: Group name
+                        required: true
+
+                    description:
+                        type: string
+                        example: Everything you should get involved!
+                        description: About the Group                
+
+                    cover_photo:
+                        type: string
+                        example: c94f84619ce845f3b6398a30aa99c720.bmp
+                        description: File name
+
+                    group_icon:
+                        type: string
+                        example: d167f8ec77194efc8319e3455da9920f.jpg
+                        description: File name
+    """
+    interest_group = Interest_Group.query.get_or_404(id)
+    return jsonify(interest_group.to_json()), 200
+
 
 @api.route('/interest_groups/<string:id>', methods=['PUT'])
 @login_required
@@ -378,7 +379,14 @@ def get_members(id):
 
     group = Interest_Group.query.get_or_404(id)
 
-    members = User.query.join(Membership).join(Interest_Group).filter(Interest_Group.id == group.id)
+    members = User.query\
+        .join(Membership, User.id == Membership.user_id)\
+        .filter(Membership.status == 1)\
+        .join(Interest_Group, Membership.group_id == Interest_Group.id)\
+        .filter(Interest_Group.id == id)\
+        .all()
+
+    print(members)
     return jsonify([
         user.to_json() for user in members
     ])
@@ -448,6 +456,7 @@ def join_group(id):
     membership = Membership(
         user_id=current_user.get_id(),
         group_id=id)
+    
     db.session.add(membership)
 
     try:
@@ -568,15 +577,41 @@ def group_activities_by(id):
             activity.to_json() for activity in activities
         ])
 
-@api.route('/interest_groups/<int:group_id>/leaders', methods=['POST', 'GET'])
-def get_group_leaders(group_id):
+@api.route('/interest_groups/<string:id>/leaders', methods=['GET'])
+def get_group_leaders(id):
+    """
+    Get the list of leaders of the group
+    ---
+    tags:
+      - groups
+
+    parameters:
+      - name: id
+        in: path
+        description: Group ID
+        type: string
+        required: true
+        default: 0f5b5ff8-afa2-43f7-8066-8ec3075c4c0c
+
+    responses:
+      200:
+        description: OK
+      404:
+        description: Not Found
+    """
     leaders = User.query.join(Membership, User.id == Membership.user_id)\
         .filter(Membership.level == 1).all()
+
+    # leaders = User.query\
+    #     .join(Membership, Membership.level == 1)\
+    #     .join(Interest_Group, Membership.group_id == id)\
+    #     .all()
+    
     return jsonify([
         leader.to_json() for leader in leaders
     ])
 
-@api.route('/interest_groups/<int:group_id>/accept', methods=['POST'])
+@api.route('/interest_groups/<string:group_id>/accept', methods=['POST'])
 def accept_request(group_id):
     user_id = int(request.form.get('user_id'));
     membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
@@ -584,7 +619,7 @@ def accept_request(group_id):
     db.session.commit()
     return jsonify({'status': 'Success'}), 200
 
-@api.route('/interest_groups/<int:group_id>/decline', methods=['POST'])
+@api.route('/interest_groups/<string:group_id>/decline', methods=['POST'])
 def decline_request(group_id):
     user_id = int(request.form.get('user_id'));
     membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()

@@ -399,8 +399,7 @@ def follow_user(to_follow_id):
         print(followers)
         followed_user = User.query.get(to_follow_id)
 
-        for follower in followers:
-            content = "<a href='%s'>%s %s</a> follows <a href='%s'>%s %s</a> " % \
+        content = "<a href='%s'>%s %s</a> follows <a href='%s'>%s %s</a> " % \
                 (
                     url_for('client.view_profile', id=current_user.get_id()),
                     current_user.firstname,
@@ -409,7 +408,9 @@ def follow_user(to_follow_id):
                     followed_user.firstname,
                     followed_user.lastname
                 )
-            url = url_for('client.view_profile', id=followed_user.get_id())
+        url = url_for('client.view_profile', id=followed_user.get_id())
+
+        for follower in followers:
             notif = Notification(user_id=follower.get_id(), content=content, url=url)
             db.session.add(notif)
 

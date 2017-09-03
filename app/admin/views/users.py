@@ -7,6 +7,9 @@ from ...decorators import admin_required
 from ...utils import flash_errors
 from sqlalchemy import or_
 import uuid
+from werkzeug.utils import secure_filename
+import os
+from ...utils import flash_errors, is_valid_extension
 
 USERS_PER_PAGE = 10
 
@@ -73,7 +76,16 @@ def profile(id):
         db.session.delete(user)
         return redirect(url_for('admin.users'))
 
-    if form.validate_on_submit():
+    if request.method == 'POST':
+        if form.image.data is not None:
+            image                 = form.image.data
+            image_filename        = secure_filename(image.filename)
+            if is_valid_extension(image_filename):
+                extension             = image_filename.rsplit('.', 1)[1].lower()
+                image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
+                file_path             = os.path.join('app/static/uploads/profile_pictures', image_hashed_filename)
+                image.save(file_path)
+                user.image   = image_hashed_filename
         user.firstname  = form.firstname.data,
         user.middlename = form.middlename.data,
         user.lastname   = form.lastname.data, 
@@ -113,7 +125,13 @@ def change_password(id):
 @admin_required
 def create_user():
     form = CreateUserForm()
-    if form.validate_on_submit():
+    if request.method == 'POST':
+        image                 = form.image.data
+        image_filename        = secure_filename(image.filename)
+        extension             = image_filename.rsplit('.', 1)[1].lower()
+        image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
+        file_path             = os.path.join('app/static/uploads/profile_pictures', image_hashed_filename)
+        image.save(file_path)
         user = User(
             firstname=form.firstname.data,
             middlename=form.middlename.data,
@@ -122,7 +140,8 @@ def create_user():
             department=form.department.data,
             position=form.position.data,
             birthday=form.birthday.data,
-            role_id=uuid.UUID(form.role.data).hex)
+            role_id=uuid.UUID(form.role.data).hex,
+            image=image_hashed_filename)
         user.password = form.password.data
         db.session.add(user)
         db.session.commit()

@@ -6,7 +6,7 @@
 
 {% block content %}
     <div class="row">
-        <form class="form-group col-md-12 no-padding admin-form user-form" method="post" name="create_user">
+        <form class="form-group col-md-12 no-padding admin-form user-form" enctype="multipart/form-data" method="post" name="create_user">
             <div class="row">
                 <div class="col-md-12 no-padding">
                     <h1>Update User</span></h1>
@@ -126,11 +126,21 @@
                 <div class="img-upload">
                     <br /><br ?>
                     <div class="col-md-12 no-padding-right text-center">
-                        <img width="100px" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"/>
+
+                        {% if user.image %}
+                            <img id="preview" width="100px" src="{{ url_for('static', filename='uploads/profile_pictures/' + user.image) }}"/>
+                        {% else %}   
+                            <img id="preview"width="100px" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"/>
+                        {% endif %}
+
+
                         <div id="upload-btn" class="text">
                             <button class="btn btn-style-1">Choose User Image</button>
                         </div>
-                        <input type="file" id="image" />
+                        {{ form.image(
+                            placeholder="User Image",
+                            required="true"
+                        )}}
                     </div>
                 </div>
             </div>
@@ -159,3 +169,26 @@
         </div>
     </form>
 {% endblock %}
+{% block scripts %}
+    <script>
+        $("#image").on('change', function() {
+            var reader = new FileReader();
+             reader.onload = function()
+             {
+              var output = document.getElementById('preview');
+              output.src = reader.result;
+             }
+             reader.readAsDataURL(event.target.files[0]);
+        });
+
+        $("#preview").on('click', function() {
+            $("#image").trigger('click');
+        });
+
+        $("#upload-btn").on('click', function(e) {
+            e.preventDefault();
+            $("#image").trigger('click');
+        });
+
+    </script>
+{% endblock scripts %}

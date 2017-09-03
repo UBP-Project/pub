@@ -5,10 +5,17 @@
 {% block content %}
     <div class="row">
         <div class="col-md-3" style="position: absolute; z-index: 2; top: 200px; margin: 15px;">
-            <img src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"
-                width="200px" 
-                height="200x"
-                style="border: 5px solid white; border-radius: 10px"/>
+            {% if user.image %}
+                <img src="{{ url_for('static', filename='uploads/profile_pictures/' + user.image) }}"
+                    width="200px" 
+                    height="200x"
+                    style="border: 5px solid white; border-radius: 10px; object-fit: cover"/>
+            {% else %}
+                <img src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"
+                    width="200px" 
+                    height="200x"
+                    style="border: 5px solid white; border-radius: 10px"/>
+            {% endif %}
             <h3>{{ user['firstname'] }} {{ user['lastname'] }}</h3>
             <p>{{ user['position'] }} <br /> {{ user['department'] }}</p>
         </div>

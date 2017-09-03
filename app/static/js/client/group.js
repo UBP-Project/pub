@@ -28,6 +28,17 @@ $('.grp-btn').bind('click', function(event) {
     } else {
 
         $.ajax({
+            url: '/api/v1.0/interest_groups/'+ group_id + '/members',
+            type: 'GET'
+        })
+        .done(function(data) {
+            console.log("GET MEMBERS DATA -> " + data);
+        })
+        .fail(function() {
+             console.log("error");
+        });
+
+        $.ajax({
             url: '/api/v1.0/interest_groups/'+ group_id + '/leave',
             type: 'DELETE'
         })
@@ -37,6 +48,7 @@ $('.grp-btn').bind('click', function(event) {
             $(btn).addClass('btn-style-1');
             $(btn).text('JOIN GROUP');
             event.currentTarget.value = 'join';
+            viewMembers(group_id);
             console.log("You left the group");
         })
         .fail(function() {
@@ -66,26 +78,18 @@ function viewMembers(group_id) {
     })
     .done(function(data) {
 
-        if(data){
-            var member_list = "";
-            for(member in data){
-                var name = data[member].firstname + ' ' + data[member].lastname;
-                /*var member_id = data[member].id;
-                member_list += "<a href='/profile/" + member_id + "'>" + name + "</a><br/>";*/
-                member_list += name + '<br/>';
+        if(data.length){
+            var users_list = "";
+            for (var i in data) {
+                var name = data[i].firstname + " " + data[i].lastname;
+                var user_id = data[i].id;
+                users_list += "<a href='/profile/" + user_id + "'>" + name + "</a><br/>";
+                /*console.log("NAME: " + name);
+                console.log("USER_ID: " + user_id);*/
             }
-
-            if(member_list==""){
-                document.getElementById('group-members-'+group_id).innerHTML = "Group has No Members"; 
-            } else {
-                document.getElementById('group-members-'+group_id).innerHTML = member_list;
-                /*$('group-members-'+group_id).add(member_list);*/
-                console.log(member_list);
-            }
-            
+            document.getElementById('group-members-'+group_id).innerHTML = users_list;
         } else {
-            document.getElementById('group-members-'+group_id).innerHTML = "Group has No Members"; 
-            console.log('Group has no members');
+            document.getElementById('group-members-'+group_id).innerHTML = 'Group has no members';   
         }
 
     })

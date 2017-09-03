@@ -102,7 +102,7 @@ def update_group(id):
 
 
 # Actions
-@admin.route('/groups/setleader/<string:group_id>/<int:user_id>')
+@admin.route('/groups/setleader/<string:group_id>/<string:user_id>')
 @admin_required
 def setleader(group_id, user_id):
     membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
@@ -110,7 +110,7 @@ def setleader(group_id, user_id):
     db.session.commit()
     return redirect(url_for("admin.group_members", id=group_id))
 
-@admin.route('/removeleader/<string:group_id>/<int:user_id>')
+@admin.route('/removeleader/<string:group_id>/<string:user_id>')
 @admin_required
 def removeleader(group_id, user_id):
     membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
@@ -139,7 +139,7 @@ def group_requests(id):
         .filter(Membership.group_id==id, Membership.status == 0, Membership.level == 0).all()
     return render_template('admin/group/requests.html', group=group, membership_requests=membership_requests)
 
-@admin.route('/accept_request/<string:group_id>/<int:user_id>')
+@admin.route('/accept_request/<string:group_id>/<string:user_id>')
 @admin_required
 def accept_request(group_id, user_id):
     membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
@@ -147,7 +147,7 @@ def accept_request(group_id, user_id):
     db.session.commit()
     return redirect(url_for("admin.group_requests", id=group_id))
 
-@admin.route('/decline_request/<string:group_id>/<int:user_id>')
+@admin.route('/decline_request/<string:group_id>/<string:user_id>')
 @admin_required
 def decline_request(group_id, user_id):
     membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()

@@ -22,24 +22,27 @@ class UserFormMixin():
     birthday   = DateField("Birthday", validators=[Required()])
 
 class CreateUserForm(FlaskForm, UserFormMixin):
-    role       = SelectField('Role', choices=[], validators=[UUID()])
-    password   = PasswordField("Password", validators=[Required()])
-    submit     = SubmitField("Create User")
+    image    = FileField("Image", validators=[FileRequired()])
+    role     = SelectField('Role', choices=[], validators=[UUID()])
+    password = PasswordField("Password", validators=[Required()])
+    submit   = SubmitField("Create User")
 
     def __init__(self, *args, **kwargs):
         super(CreateUserForm, self).__init__(*args, **kwargs)
         self.role.choices = [(str(role.id), role.name) for role in Role.query.all() if role.name != 'Administrator']
 
 class UpdateUserForm(FlaskForm, UserFormMixin):
-    role       = SelectField('Role', choices=[])
-    submit     = SubmitField("Update Information")
+    image  = FileField("Image")
+    role   = SelectField('Role', choices=[])
+    submit = SubmitField("Update Information")
 
     def __init__(self, *args, **kwargs):
         super(UpdateUserForm, self).__init__(*args, **kwargs)
         self.role.choices = [(str(role.id), role.name) for role in Role.query.all() if role.name != 'Administrator']
 
 class UpdateUserFormClient(FlaskForm, UserFormMixin):
-    submit     = SubmitField("Update Information")
+    image  = FileField("Image")
+    submit = SubmitField("Update Information")
 
 class PasswordForm(FlaskForm):
     password = PasswordField("Password")
