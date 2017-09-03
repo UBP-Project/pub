@@ -3,84 +3,85 @@
 {% block title %} {{ user['firstname'] }} {{ user['lastname'] }} {% endblock title %}
 
 {% block content %}
-    <div class="row" style="width: 960px;">
+    <div class="row">
         <div class="col-md-3" style="position: absolute; z-index: 2; top: 200px; margin: 15px;">
-            <img src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"
-                width="200px" 
-                height="200x"
-                style="border: 5px solid white; border-radius: 10px"/>
-            <h3>{{ user['firstname'] }} {{ user['lastname'] }}</h3>
-            <p>{{ user['position'] }} <br /> {{ user['department'] }}</p>
+            {% if user.image %}
+                <img id="dp" src="{{ url_for('static', filename='uploads/profile_pictures/' + user.image) }}"
+                    width="200px" 
+                    height="200x"
+                    style="border: 5px solid white; border-radius: 10px; cursor: pointer; object-fit: cover"/>
+            {% else %}
+                <img id="dp" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"
+                    width="200px" 
+                    height="200x"
+                    style="border: 5px solid white; border-radius: 10px; cursor: pointer; object-fit: cover;"/>
+            {% endif %}
         </div>
 
         <div class="col-md-12 text-right" style="background-color: white; padding: 0px;">
+            <!-- Check if user has set cover photo
             <img src="{{ url_for('static', filename='images/building.png') }}"
-                style="width: 100%; height: 250px; z-index: 1;"/>
-            <div id="profile-btns" style="padding: 0px 20px;">
+                style="width: 100%; height: 250px; z-index: 1;"/> -->
+
+            <!-- hold the trianlify cover photo -->
+            <div id="trianglify-cover" class="col-md-12 text-right" style="height: 250px; background-color: white; padding: 0px;">
+            </div>
 
 
-                <a href="{{ url_for('client.following', id=user.id) }}" class="btn btn-xs">
-                    <h6>Following</h6>
-                    <h4>99</h4>
-                </a>
-
-                <a href="{{ url_for('client.followers', id=user.id) }}" class="btn btn-xs" style="margin-right: 50px">
-                    <h6>Followers</h6>
-                    <h4>99</h4>
-                </a>
-
-                {% if current_user['id'] == user['id'] %}
-                    <a href="{{ url_for('client.edit_profile', id=user.id) }}" id="btn-edit-profile" class="btn btn-style-3" style="width: 100px">Edit Profile</a>
-                {% endif %}
-
-
-                {% if current_user['id'] != user['id'] and is_following != True %}
-                    <button id="btn-follow" class="btn btn-style-2" style="width: 100px">Follow</button>
-                {% endif %}
-
-                {% if current_user['id'] != user['id'] and is_following == True %}
-                    <button id="btn-unfollow" class="btn btn-style-1" style="width: 100px">Following</button>
-                {% endif %}
+                
             </div>
         </div>
 
-        <form class="col-md-offset-3 col-md-9" method="post" name="update_user">
+        <form class="col-md-offset-3 col-md-9" method="post" name="update_user" style="background-color: white; padding-bottom: 30px;" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
             <br /><br /><br />
-            <h4>Edit Profile</h4>
-            <div class="col-md-3">
-                <label>Firstname</label>
-                {{ form.firstname(
-                placeholder="First name",
-                class="form-control") }}
-            </div>
-            <div class="col-md-3">
-                <label>Middlename</label>
-                {{ form.middlename(
-                placeholder="Middle name",
-                class="form-control") }}
-            </div>
-            <div class="col-md-3">
-                <label>Lastname</label>
-                {{ form.lastname(
-                placeholder="Last name",
-                class="form-control") }}
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Edit Profile</h3>
+                </div>
             </div>
 
-            <div class="col-md-5">
-                <label>Department</label>
-                {{ form.department(
-                    placeholder="Department",
-                    class="form-control"
-                )}}
+            <div class="row">
+                <div class="col-md-3">
+                    <label>Firstname</label>
+                    {{ form.firstname(
+                    placeholder="First name",
+                    class="form-control") }}
+                </div>
+                <div class="col-md-3">
+                    <label>Middlename</label>
+                    {{ form.middlename(
+                    placeholder="Middle name",
+                    class="form-control") }}
+                </div>
+                <div class="col-md-3">
+                    <label>Lastname</label>
+                    {{ form.lastname(
+                    placeholder="Last name",
+                    class="form-control") }}
+                </div>
             </div>
-            <div class="col-md-4">
-                <label>Position</label>
-                {{ form.position(
-                    placeholder="Position",
-                    class="form-control"
-                )}}
+
+            <br />
+            
+            <div class="row">
+                <div class="col-md-5">
+                    <label>Department</label>
+                    {{ form.department(
+                        placeholder="Department",
+                        class="form-control"
+                    )}}
+                </div>
+                <div class="col-md-4">
+                    <label>Position</label>
+                    {{ form.position(
+                        placeholder="Position",
+                        class="form-control"
+                    )}}
+                </div>
             </div>
+
+            <br />
 
             <div class="col-md-5">
                 <label>Email</label>
@@ -95,6 +96,8 @@
                     class="form-control")}}
             </div>
 
+            <br />
+
             <div class="col-md-6">
                 <br />
                 <a href="{{ url_for('client.edit_password', id=user['id']) }}">
@@ -108,6 +111,7 @@
                     class="btn btn-style-1 pull-right"
                 )}}
             </div>
+            {{ form.image(style="display: none") }}
         </form>
 
     </div>
@@ -124,7 +128,12 @@
             height: $("#trianglify-cover").height(),
             seed: "{{ user['id'] }}"
         });
-        $("#trianglify-cover").append(pattern.svg())
+        $("#trianglify-cover").append(pattern.svg());
+
+        $("#dp").on('click', function(e) {
+            e.preventDefault();
+            $("#image").trigger('click');
+        });
     </script>
     <script src="{{ url_for('static', filename='js/client/profile.js') }}"></script>
 {% endblock scripts %}
