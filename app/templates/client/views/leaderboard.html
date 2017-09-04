@@ -16,16 +16,18 @@
 
 		<div class="col-md-12 col-sm-12 box-content">
 			{% for leader in point_leaders %}
-				<div class="col-md-10" style="background-color: white;
+				<div class="col-md-offset-1 col-md-9" style="background-color: white;
 				 height: 100px; margin: 0px 0px 10px 10px; padding: 15px; border-radius: 5px; font-size: 28px; font-family: 'Roboto Condensed Bold'">
 				 	<div class="col-md-6">
+				 		<a href="{{ url_for('client.view_profile', id=leader.id) }}" style="font-family: 'Roboto Condensed Bold'">
 				 		<img src="{{ url_for('static', filename='images/pub-default-img.jpg')}}"
 				 			style="width: 70px; height: 70px; border-radius: 35px; border: 1px solid gray">
 						{{ leader.firstname }} {{leader.lastname}}
+						</a>
 					</div>
 
 					<div class="col-md-5 text-right" style="font-size: 48px;">
-						{{ leader.points }}
+						{{ leader.points }}pts
 					</div>
 				</div>
 			{% endfor %}
