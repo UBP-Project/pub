@@ -8,7 +8,31 @@
 	<div class="row">
 
 		<div class="col-md-12 col-sm-12 box-header">
-			<h2>INTEREST GROUPS<span class="fa fa-search pull-right btn btn-search"></span></h2>
+			<h2>INTEREST GROUPS I MANAGE<span class="fa fa-search pull-right btn btn-search"></span></h2>
+		</div>
+
+		<div class="col-md-12 col-sm-12 box-divider">
+			<div class="inner-divider"></div>
+		</div>
+
+		<div class="col-md-12 col-sm-12 box-content border-bottom-2">
+			<div class="row">
+
+				{% if managed_groups %}
+					{% for mygroup in managed_groups %}
+						{{ group_modal(mygroup) }}
+					{% endfor %}
+				{% else %}
+					<div class="col-md-12 no-content-box text-center">
+						<h2>NO INTEREST GROUPS TO MANAGE</h2>
+					</div>
+				{% endif %}
+
+			</div>
+		</div>
+
+		<div class="col-md-12 col-sm-12 box-header">
+			<h2>MY INTEREST GROUPS<span class="fa fa-search pull-right btn btn-search"></span></h2>
 		</div>
 
 		<div class="col-md-12 col-sm-12 box-divider">
@@ -23,7 +47,7 @@
 					{% endfor %}
 				{% else %}
 					<div class="col-md-12 no-content-box text-center">
-						<h2>NO INTEREST GROUPS TO SHOW</h2>
+						<h2>NO INTEREST GROUPS</h2>
 					</div>
 				{% endif %}
 			</div>

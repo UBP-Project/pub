@@ -30,6 +30,31 @@ def groups():
     
     return render_template("client/views/groups.html", interest_groups=interest_groups, managed_groups=managed_groups, user=current_user)
 
+@client.route('/my-groups/')
+@login_required
+def mygroups():
+    
+    interest_groups = Interest_Group.query  \
+        .outerjoin(Membership,  Membership.user_id == current_user.get_id()) \
+        .with_entities(
+            Interest_Group.id,              \
+            Interest_Group.name,            \
+            Interest_Group.about,           \
+            Interest_Group.cover_photo,     \
+            Interest_Group.group_icon,      \
+            Membership.status
+            )
+
+    managed_groups = Interest_Group.query.join(Membership,\
+        Membership.group_id == Interest_Group.id).filter(Membership.level == 1,\
+        Membership.user_id == current_user.get_id()).all()
+ 
+    interest_groups = Interest_Group.query.join(Membership,\
+        Membership.group_id == Interest_Group.id).filter(Membership.level != 1,\
+        Membership.user_id == current_user.get_id()).all()
+
+    return render_template("client/views/my-groups.html", interest_groups=interest_groups, managed_groups=managed_groups, user=current_user)
+
 @client.route('/groups/<uuid(strict=False):id>', methods=['POST', 'GET'])
 @login_required
 def group(id):
