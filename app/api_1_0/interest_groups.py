@@ -402,7 +402,7 @@ def get_members(id):
 
     group = Interest_Group.query.get_or_404(id)
 
-    members = User.query.join(Membership, User.id == Membership.user_id)\
+    members = User.query.join(Membership, User.id == Membership.user_id).join(Interest_Group, Interest_Group.id == group.id)\
         .filter(Membership.level == Membership.MEMBERSHIP_MEMBER).all()
 
     return jsonify([
@@ -617,13 +617,11 @@ def get_group_leaders(id):
       404:
         description: Not Found
     """
-    leaders = User.query.join(Membership, User.id == Membership.user_id)\
-        .filter(Membership.level == Membership.MEMBERSHIP_LEADER).all()
 
-    # leaders = User.query\
-    #     .join(Membership, Membership.level == 1)\
-    #     .join(Interest_Group, Membership.group_id == id)\
-    #     .all()
+    group = Interest_Group.query.get_or_404(id)
+
+    leaders = User.query.join(Membership, User.id == Membership.user_id).join(Interest_Group, Interest_Group.id == group.id)\
+        .filter(Membership.level == Membership.MEMBERSHIP_LEADER).all()
     
     return jsonify([
         leader.to_json() for leader in leaders

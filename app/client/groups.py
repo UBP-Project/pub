@@ -12,7 +12,8 @@ from ..utils import flash_errors
 def groups():
     
     interest_groups = Interest_Group.query  \
-        .outerjoin(Membership,  Membership.user_id == current_user.get_id()) \
+        .outerjoin(Membership) \
+        .outerjoin(User, User.id == current_user.get_id()) \
         .with_entities(
             Interest_Group.id,              \
             Interest_Group.name,            \
