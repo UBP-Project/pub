@@ -69,7 +69,7 @@
 		                    <li><a href="/notifications"><small>Notifications <span class="badge badge-error pull-right">10</span></small></a></li>
 		                    <li><hr/></li>
 		                    <li><a href="/groups">Interest Groups<i class="fa fa-group pull-right"></i></a></li>
-		                    <li><a href="#"><small>My Groups</small></a></li>
+		                    <li><a href="/my-groups"><small>My Groups</small></a></li>
 		                    <li><hr/></li>
 		                    <li><a href="/activities">Activities<i class="fa fa-rocket pull-right"></i></a></li>
 		                    <li><a href="#"><small>My Activities</small></a></li>
@@ -95,6 +95,68 @@
 	{% block footer %}
 		<footer class="footer text-center">
 			<a href="#top" title="Back to top" class="btn btn-lg"><i class="fa fa-angle-up"></i></a>
+				<div class="row container-fluid">
+                    <div class="col-md-4">
+                        <ul style="text-align: left; list-style-type: none;">
+                            <li>
+                                <a href="www.unionbank.ph">Union Bank of the Philippines</a>
+                            </li>
+                            <li>
+                                <a href="/">UBP: Pub</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-2">
+                        <ul style="text-align: left; list-style-type: none;">
+                            <li>
+                                <a href="/notifications">Notifications</a>
+                            </li>
+                            <li>
+                                <a href="/leaderboard">Leaderboard</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-2">
+                        <ul style="text-align: left; list-style-type: none;">
+                            <li>
+                                <a href="/profile/{{current_user.get_id()}}">My Profile</a>
+                            </li>
+                            <li>
+                                <a href="/profile/{{current_user.get_id()}}/edit">Edit Profile</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-2">
+                        <ul style="text-align: left; list-style-type: none;">
+                            <li>
+                                <a href="/groups">Interest Groups</a>
+                            </li>
+                            <li>
+                                <a href="/my-groups">My Interest Groups</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-2">
+                        <ul style="text-align: left; list-style-type: none;">
+                            <li>
+                                <a href="/activities">Activities</a>
+                            </li>
+                            <li>
+                                <a href="#">My Activities</a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                </div>
+
+                <br/>
+                <div style="color: #777;">
+                   &copy; All Rights Reserved 2017
+                </div>
 		</footer>
 	{% endblock footer %}
 
