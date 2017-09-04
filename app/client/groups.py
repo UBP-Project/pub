@@ -13,7 +13,6 @@ def groups():
     
     interest_groups = Interest_Group.query  \
         .outerjoin(Membership,  Membership.user_id == current_user.get_id()) \
-        .outerjoin(User) \
         .with_entities(
             Interest_Group.id,              \
             Interest_Group.name,            \

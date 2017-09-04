@@ -7,14 +7,14 @@ entity_types = [
 		'entity'	: 'activity',
 		'action'	: 'happening'
 	},
-	{
-		'entity'	: 'activity',
-		'action'	: 'joined'
-	},
-	{
-		'entity'	: 'activity',
-		'action'	: 'interested'
-	},
+	# { This should be on feed
+	# 	'entity'	: 'activity',
+	# 	'action'	: 'joined'
+	# },
+	# {
+	# 	'entity'	: 'activity',
+	# 	'action'	: 'interested'
+	# },
 	{
 		'entity'	: 'interest_group',
 		'action'	: 'created_activity'

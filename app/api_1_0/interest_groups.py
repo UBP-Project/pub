@@ -402,14 +402,9 @@ def get_members(id):
 
     group = Interest_Group.query.get_or_404(id)
 
-    members = User.query\
-        .join(Membership, User.id == Membership.user_id)\
-        .filter(Membership.status == 0)\
-        .join(Interest_Group, Membership.group_id == Interest_Group.id)\
-        .filter(Interest_Group.id == id)\
-        .all()
+    members = User.query.join(Membership, User.id == Membership.user_id)\
+        .filter(Membership.level == Membership.MEMBERSHIP_MEMBER).all()
 
-    print(members)
     return jsonify([
         user.to_json() for user in members
     ])
@@ -623,7 +618,7 @@ def get_group_leaders(id):
         description: Not Found
     """
     leaders = User.query.join(Membership, User.id == Membership.user_id)\
-        .filter(Membership.level == 1).all()
+        .filter(Membership.level == Membership.MEMBERSHIP_LEADER).all()
 
     # leaders = User.query\
     #     .join(Membership, Membership.level == 1)\
