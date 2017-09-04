@@ -10,9 +10,9 @@ from ..utils import flash_errors
 @client.route('/groups/')
 @login_required
 def groups():
-    #problem still exist in this query
+    
     interest_groups = Interest_Group.query  \
-        .outerjoin(Membership) \
+        .outerjoin(Membership,  Membership.user_id == current_user.get_id()) \
         .outerjoin(User) \
         .with_entities(
             Interest_Group.id,              \
@@ -23,9 +23,11 @@ def groups():
             Membership.status
             )  \
         .paginate(page = 1 , per_page = 12, error_out=False).items
+
     managed_groups = Interest_Group.query.join(Membership,\
         Membership.group_id == Interest_Group.id).filter(Membership.level == 1,\
         Membership.user_id == current_user.get_id()).all()
+    
     return render_template("client/views/groups.html", interest_groups=interest_groups, managed_groups=managed_groups, user=current_user)
 
 @client.route('/groups/<uuid(strict=False):id>', methods=['POST', 'GET'])
@@ -39,7 +41,7 @@ def group(id):
                 user_id=current_user.get_id(),
                 group_id=id,
                 status=1,
-                level='regular')
+                level=0)
             db.session.add(membership)
             db.session.commit()
         else:
