@@ -44,7 +44,7 @@
         </div>
 
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-12">
                 {% if 'admin' not in request.path %}
                     <form method="post">
                     {{ form.hidden_tag() }}
@@ -59,9 +59,10 @@
 
 
                 {% if leaders|length > 0 %}
+                    <div class="row">
                     <h4>Leaders</h4>
                     {% for leader in leaders %}
-                        <div class="user-card">
+                        <div class="user-card col-md-4">
                             <a href="{{ url_for('admin.profile', id=leader.id) }}">
                                 <h4><span class="fa fa-user-circle"></span>
                                     {{ leader['firstname'] }} {{ leader['lastname'] }}
@@ -72,13 +73,15 @@
                             user_id =leader['id'])}}">Remove Leader</a>
                         </div>
                     {% endfor %}
+                    </div>
                 {% endif %}
 
 
                 {% if members|length > 0 %}
+                    <div class="row">
                     <h4>Members</h4>
                     {% for member in members %}
-                        <div class="user-card">
+                        <div class="user-card col-md-4">
                             <a href="{{ url_for('admin.profile', id=member.id) }}">
                                 <h4><span class="fa fa-user-circle"></span>
                                     {{ member['firstname'] }} {{ member['lastname'] }}
@@ -88,6 +91,7 @@
                             user_id =member['id'])}}">Set as Leader</a>
                         </div>
                     {% endfor %}
+                    </div>
                 {% endif %}
             </div>
         </div>

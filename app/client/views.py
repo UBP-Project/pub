@@ -39,7 +39,9 @@ def notifications():
 @client.route('/leaderboard')
 @login_required
 def leaderboard():
-    return render_template("client/views/leaderboard.html", user=current_user)
+    point_leaders = User.query.order_by(User.points.desc()).limit(10).all()
+    return render_template("client/views/leaderboard.html", user=current_user,
+        point_leaders=point_leaders)
 
 @client.route('/logout')
 @login_required

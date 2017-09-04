@@ -151,12 +151,13 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ----------------------------- */
 .admin-page .user-card {
-    margin: 5px;
+    /*margin: 5px;*/
     background-color: white;
     height: 100px;
     padding: 5px 10px;
     border-radius: 3px;
-    border-right: 3px solid #ef7c3d;
+    /*border-right: 3px solid #ef7c3d;*/
+    margin-bottom: 2px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 }
 
