@@ -22,7 +22,7 @@ def groups():
             Interest_Group.group_icon,      \
             Membership.status
             )  \
-        .limit(14)    
+        .paginate(page = 1 , per_page = 12, error_out=False).items
     managed_groups = Interest_Group.query.join(Membership,\
         Membership.group_id == Interest_Group.id).filter(Membership.level == 1,\
         Membership.user_id == current_user.get_id()).all()

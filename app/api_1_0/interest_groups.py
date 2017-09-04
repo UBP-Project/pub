@@ -63,6 +63,8 @@ def get_interest_groups():
         page = 1
 
     interest_groups = Interest_Group.query\
+        .outerjoin(Membership) \
+        .outerjoin(User) \
         .paginate(page = page, per_page = 12, error_out=False)
 
     return jsonify({
