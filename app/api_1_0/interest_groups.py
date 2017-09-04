@@ -63,10 +63,29 @@ def get_interest_groups():
         page = 1
 
     interest_groups = Interest_Group.query\
+        .outerjoin(Membership) \
+        .outerjoin(User) \
+        .with_entities(
+            Interest_Group.id,              \
+            Interest_Group.name,            \
+            Interest_Group.about,           \
+            Interest_Group.cover_photo,     \
+            Interest_Group.group_icon,      \
+            Membership.status
+            )  \
         .paginate(page = page, per_page = 12, error_out=False)
 
     return jsonify({
-      'interest_groups': [ group.to_json() for group in interest_groups.items ],
+      'interest_groups': [ 
+            {
+                'id': group.id,
+                'name': group.name,
+                'about': group.about,
+                'cover_photo': group.cover_photo,
+                'group_icon': group.group_icon,
+                'membership_status': group.status
+            }
+            for group in interest_groups.items ],
       'has_next': interest_groups.has_next,
       'has_prev': interest_groups.has_prev
     }), 200
@@ -385,7 +404,7 @@ def get_members(id):
 
     members = User.query\
         .join(Membership, User.id == Membership.user_id)\
-        .filter(Membership.status == 1)\
+        .filter(Membership.status == 0)\
         .join(Interest_Group, Membership.group_id == Interest_Group.id)\
         .filter(Interest_Group.id == id)\
         .all()
