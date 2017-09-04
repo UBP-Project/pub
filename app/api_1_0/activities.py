@@ -74,7 +74,7 @@ def get_activities():
         page = 1
 
     activities = Activity.query\
-        .paginate(page = page, per_page = 12, error_out=False)
+        .paginate(page = page, per_page = 8, error_out=False)
 
     return jsonify({
       'activities': [ activity.to_json() for activity in activities.items ],
