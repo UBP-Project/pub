@@ -7,7 +7,7 @@ $('.modal-footer .activity-btn').bind('click', function(event) {
     var activity_id = event.currentTarget.id;  // activity id  
     var btn = event.currentTarget;
     var val = event.currentTarget.value;
-    console.log("ACT_ID fr bind= " + activity_id + ", value = " + val);
+    //console.log("ACT_ID fr bind= " + activity_id + ", value = " + val);
     //console.log(btn);
 
     if(val=="going"){
@@ -74,7 +74,6 @@ function init_status(activity_id) {
             $('.modal-footer .going-btn').hide();
             $('.modal-footer .ngoing-btn').show();
         }
-
 
     })
     .fail(function() {
