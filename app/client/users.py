@@ -74,6 +74,8 @@ def edit_profile(id):
 def edit_password(id):
     form = PasswordFormClient()
     user = current_user
+    followers_count = Follow.query.filter(Follow.following_id == id).count()
+    following_count = Follow.query.filter(Follow.follower_id == id).count()
     if form.validate_on_submit():
         if user.verify_password(form.old_password.data):
             user.password = form.new_password.data
@@ -82,7 +84,8 @@ def edit_password(id):
 
     if int(id) != int(current_user.get_id()):
         return redirect(url_for('client.index'))
-    return render_template('client/views/edit-password.html', user=current_user, form=form, followers_count=followers_count, following_count=following_count)
+    return render_template('client/views/edit-password.html', user=current_user, form=form,
+        followers_count=followers_count, following_count=following_count)
 
 @client.route('/profile/<uuid(strict=False):id>/followers')
 @login_required
