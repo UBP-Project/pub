@@ -8,11 +8,11 @@
             {% if user.image %}
                 <img id="dp" src="{{ url_for('static', filename='uploads/profile_pictures/' + user.image) }}"
                     width="200px" 
-                    height="200x"/>
+                    height="200px"/>
             {% else %}
                 <img id="dp" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"
                     width="200px" 
-                    height="200x"/>
+                    height="200px"/>
             {% endif %}
         </div>
 

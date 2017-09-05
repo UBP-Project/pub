@@ -454,6 +454,17 @@ def unfollow_user(to_unfollow_id):
     return jsonify({'message': 'Success'}), 200
 
 @api.route('/leaderboard')
+@login_required
 def leaderboard():
     leaders = User.query.order_by(User.points.desc()).limit(10)
     return jsonify([leader.to_json() for leader in leaders])
+
+@api.route('/isCorrectPassword', methods=['POST'])
+@login_required
+def is_correct_password():
+    password = request.form.get('password')
+    print(password)
+    if current_user.verify_password(password):
+        return jsonify({'is_correct_password': True}), 200
+    else:
+        return jsonify({'is_correct_password': False}), 200

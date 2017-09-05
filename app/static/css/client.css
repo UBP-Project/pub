@@ -1,0 +1,9 @@
+#wrong-password {
+    color: red;
+    margin-top: 10px;
+}
+
+#correct-password {
+    color: green;
+    margin-top: 10px;
+}

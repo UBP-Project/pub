@@ -15,24 +15,206 @@
 			<div class="inner-divider"></div>
 		</div>
 
-		<div class="col-md-12 col-sm-12 box-content">
-			<div class="row">
-				{% if activities %}
-					{% for activity in activities %}
-						{{ activity_modal(activity) }}
-					{% endfor %}
-				{% else %}
-					<div class="col-md-12 col-sm-12 no-content-box text-center">
-						<h2>NO ACTIVITIES YET</h2>
-					</div>
-				{% endif %}
+		{% raw %}
+		<div id="app">
+			<div v-for="activity in activities" id="activity_list">
+				<!-- ACTIVITY CARD -->
+				<div class="col-md-2 col-lg-3 col-sm-6 card-container" v-on:click="loadActivityInfo(activity)">
+                    <div class="card zoomify" data-toggle="modal" :data-target="'#activity-' + activity.id">
+                        <div class="card-img">
+                            <!--  <img src="{{ url_for('static',filename='uploads/activity_images/' + activity.image) }}" class="img-responsive" /> -->
+                            <img :src="activity.image" class="img-responsive" />
+                            {{ activity.image }}
+                        </div>
+                        <div class="card-desc">
+                            <h4 class="text-center title">{{ activity.title}}</h4>
+                            <p>{{ activity.description }}</p>
+                        </div>
+                    </div>
+                </div> <!-- END OF ACTIVITY CARD -->
+
+				<!-- ACTIVITY MODAL -->
+				<div class="modal fade" :id="'activity-' + activity.id" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <!-- HEADER -->
+                            <div class="modal-header">
+                                <span><b>ACTIVITY</b></span>
+                                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                            </div>
+                            <!-- BODY -->
+                            <div class="modal-body">
+                                <div class="img-container">
+                                    <!-- <img src="{{ url_for('static',filename='uploads/activity_images/' + activity.image) }}" /> -->
+                                   <img :src="activity.image" />
+                                </div>
+                                <h2 class="text-center">{{ activity.title}}</h2>
+                                <div class="content">
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li role="presentation" class="active act-li">
+                                            <a :href="'#act-desc-' + activity.id" role="tab" data-toggle="tab">Description</a>
+                                        </li>
+                                        <li role="presentation" class="act-li">
+                                            <a :href="'#act-interested-' + activity.id" role="tab" data-toggle="tab">Interested</a>
+                                        </li>
+                                        <li role="presentation" class="act-li">
+                                            <a :href="'#act-going-' + activity.id" role="tab" data-toggle="tab">Going</a>
+                                        </li>
+                                    </ul>
+
+                                    <div class="tab-content">
+                                        <div role="tabpanel" class="tab-pane active" :id="'act-desc-' + activity.id">
+                                            <p>{{ activity.description }}</p>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" :id="'act-interested-' + activity.id">
+                                            <div v-for="interested_user in activity.interested_users">
+												<a :href="'/profile/' + interested_user.id">
+													{{ interested_user.firstname }} {{ interested_user.lastname }}
+												</a>
+											</div>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" :id="'act-going-' + activity.id">
+											<div v-for="going_user in activity.going_users">
+												<a :href="'/profile/' + going_user.id">
+													{{ going_user.firstname }} {{ going_user.lastname }}
+												</a>
+											</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- FOOTER -->
+                            <div class="modal-footer">
+                                
+                                <button v-if="activity.isInterested" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
+                                	NOT INTERESTED
+                                </button>
+                                <button v-else type="button" class="btn btn-style-2" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
+                                	INTERESTED
+                                </button>
+
+                                <!-- GOING BTNS -->
+                                <button v-if="activity.isGoing" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleGoing(activity)">
+                                	LEAVE ACTIVITY
+                                </button>
+                                <button v-else type="button" class="btn btn-style-2" :id="activity.id" value="cgoing" v-on:click="toggleGoing(activity)">
+                                	JOIN ACTIVITY
+                                </button>
+                                <!-- END OF GOING BTNS -->
+
+                            </div> <!-- end of modal-footer -->
+                        </div>
+                    </div>
+                </div> <!-- end of ACTIVITY MODAL -->
+			</div> <!-- END of activity_list -->
+
+			<div class="col-md-12 text-center">
+				<button class="btn btn-style-3" v-on:click="loadActivities">Load Activities</button>
 			</div>
 		</div>
+		{% endraw %}
+
+
 
 	</div>
 
 {% endblock content %}
 
 {% block scripts %}
-	<script src="{{ url_for('static', filename='js/client/activity.js') }}"></script>
+<!-- 	<script src="{{ url_for('static', filename='js/client/activity.js') }}"></script> -->
+	<script>
+		var vm = new Vue({
+		  el: '#app',
+		  data: {
+		    message: 'Hello Vue.js!',
+		    activities: [],
+		    activities_page: 1
+		  },
+		  methods: {
+		  	loadActivities: function() {
+		  		console.log(this.activities);
+		  		$.ajax({
+		  			url: "{{ url_for('api.get_activities')}}" + "?page=" + this.activities_page,
+		  			type: 'GET'
+		  		}).done(data => {
+		  			data.activities.forEach((activity) => {
+						activity.going_users      = [];
+						activity.interested_users = [];
+						activity.isInterested     = false;
+						activity.isGoing          = false;
+		  			});
+		  			this.activities.push.apply(this.activities, data.activities); // append activities
+		  			this.activities_page++;
+		  		});
+		  	},
+		  	loadActivityInfo: function(activity) {
+		  		// load going users
+		  		$.ajax({
+			        url: '/api/v1.0/activities/'+ activity.id + '/participants/going',
+			        type: 'GET'
+			    }).done(function(data) {
+			         activity.going_users = data;
+			    }).fail(function() {
+			        console.log("error");
+			    });
+			    // load interested users
+		  		$.ajax({
+			        url: '/api/v1.0/activities/'+ activity.id + '/participants/interested',
+			        type: 'GET'
+			    }).done(function(data) {
+			         activity.interested_users = data;
+			    }).fail(function() {
+			        console.log("error");
+			    });
+			    // check if users is interested
+			    $.ajax({
+			    	url: '/api/v1.0/activities/' + activity.id + '/participation',
+			    	type: 'GET'
+			    }).done(function(data) {
+			    	activity.isGoing = data.going;
+			    	activity.isInterested = data.interested;
+			    });
+		  	},
+		  	toggleGoing: function(activity) {
+		  		if (activity.isGoing) {
+		  			$.ajax({
+				        url: '/api/v1.0/activities/'+ activity.id + '/participants/going',
+				        type: 'DELETE'
+				    }).done(function(data) {
+				         activity.isGoing = false;
+				    });
+		  		} else {
+		  			$.ajax({
+				        url: '/api/v1.0/activities/'+ activity.id + '/participants/going',
+				        type: 'POST'
+				    }).done(function(data) {
+				         activity.isGoing = true;
+				    });
+		  		}	
+		  	},
+		  	toggleInterested: function(activity) {
+		  		if (activity.isInterested) {
+		  			$.ajax({
+				        url: '/api/v1.0/activities/'+ activity.id + '/participants/interested',
+				        type: 'DELETE'
+				    }).done(function(data) {
+				         activity.isInterested = false;
+				    });
+		  		} else {
+		  			$.ajax({
+				        url: '/api/v1.0/activities/'+ activity.id + '/participants/interested',
+				        type: 'POST'
+				    }).done(function(data) {
+				         activity.isInterested = true;
+				    });
+		  		}	
+		  	}
+		  }
+		});
+
+		$(document).ready(function() {
+			vm.loadActivities();
+		})
+	</script>	
 {% endblock scripts %}

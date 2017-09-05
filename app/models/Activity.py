@@ -40,7 +40,8 @@ class Activity(db.Model):
             'start_date' : self.start_date,
             'end_date'   : self.end_date,
             'address'    : self.address,
-            'group_id'   : self.group_id
+            'group_id'   : self.group_id,
+            'image'      : self.image
         }
         return json_post
 
