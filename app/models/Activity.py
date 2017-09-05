@@ -2,6 +2,7 @@ from app import db
 # from app.models.guid import GUID
 from sqlalchemy_utils import UUIDType
 import uuid
+from datetime import datetime
 
 
 class Activity(db.Model):
@@ -14,6 +15,7 @@ class Activity(db.Model):
     address       = db.Column(db.String(100))
     group_id      = db.Column(UUIDType(binary=False), db.ForeignKey('interest_group.id', ondelete="CASCADE", onupdate="CASCADE"), nullable=True)
     image         = db.Column(db.String(200))
+    timestamp     = db.Column(db.DateTime, default=datetime.utcnow())
 
     # comments    = db.relationship('Comment', backref=db.backref('comments', lazy='joined'), lazy="dynamic", passive_deletes=True, passive_updates=True)
     # schedule    = db.relationship('Schedule', backref=db.backref('schedule', lazy='joined'), lazy="dynamic", passive_deletes=True, passive_updates=True)

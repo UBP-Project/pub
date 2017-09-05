@@ -23,7 +23,7 @@
                     <div class="card zoomify" data-toggle="modal" :data-target="'#activity-' + activity.id">
                         <div class="card-img">
                             <!--  <img src="{{ url_for('static',filename='uploads/activity_images/' + activity.image) }}" class="img-responsive" /> -->
-                            <img :src="activity.image" class="img-responsive" />
+                            <img :src="activity_images_folder+activity.image" class="img-responsive" />
                             {{ activity.image }}
                         </div>
                         <div class="card-desc">
@@ -129,7 +129,8 @@
 		  data: {
 		    message: 'Hello Vue.js!',
 		    activities: [],
-		    activities_page: 1
+		    activities_page: 1,
+            activity_images_folder: '/static/uploads/activity_images/'
 		  },
 		  methods: {
 		  	loadActivities: function() {
