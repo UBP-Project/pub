@@ -1,111 +1,96 @@
 {% macro group_modal(group) %}
 
-    <div class="modal-item">
+    <div class="col-md-3 col-sm-6 group-card">
 
-        <div class="col-md-3 col-sm-6 card-container text-center">
-            <div class="group-icon">
-                <div class="group-img">
-                    <!-- <img src="{{ url_for('static', filename='uploads/group_icons/' + group.group_icon) }}" class="img-circle zoomify grp-icon" data-toggle="modal" data-target="#group-{{ group.id }}" id="{{group.id}}" /> -->
-                    <img src="{{ group.group_icon }}" class="img-circle zoomify grp-icon" data-toggle="modal" data-target="#group-{{ group.id }}" id="{{group.id}}" />
-                </div>
-                <div class="group-desc">
-                    <h4 class="title">{{ group.name | upper }}</h4>
-                    <!-- <p><i class="fa fa-user"></i> 10</p> -->
-                </div>
+        <div class="zoomify group-panel grp-icon" style="background-image: url({{ group.cover_photo }});" data-toggle="modal" data-target="#group-{{ group.id }}" id="{{group.id}}">
+
+            <div class="group-img">
+                <img src="{{ group.group_icon }}" width="120px" height="120px">
             </div>
-        </div>
 
-        <div class="modal fade grp-modal" id="group-{{group.id}}" role="dialog">
-
-            <div class="modal-dialog">
-                <div class="modal-content">
-
-                    <!-- HEADER -->
-                    <div class="modal-header">
-                        <span><b>INTEREST GROUP</b></span>
-                        <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
-                    </div>
-
-                    <!-- BODY -->
-                    <div class="modal-body">
-
-                        <div class="img-container">
-                            <!-- <img src="{{ url_for('static', filename='uploads/covers/' + group.cover_photo) }}" /> -->
-                             <img src="{{ group.cover_photo }}" />
-                        </div>
-
-                        <h2 class="text-center">{{ group.name | upper }}</h2>
-
-                        <div class="content">
-
-                            <ul class="nav nav-tabs" role="tablist">
-
-                                <li role="presentation" class="active grp-li">
-                                    <a href="#grp-desc-{{group.id}}" role="tab" data-toggle="tab">Description</a>
-                                </li>
-
-                                <li role="presentation" class="grp-li">
-                                    <a href="#grp-members-{{group.id}}" role="tab" data-toggle="tab">Members</a>
-                                </li>
-
-                                <li role="presentation" class="grp-li">
-                                    <a href="#grp-activities-{{group.id}}" role="tab" data-toggle="tab">Activities</a>
-                                </li>
-
-                            </ul>
-
-                            <div class="tab-content">
-
-                                <div role="tabpanel" class="tab-pane active" id="grp-desc-{{group.id}}">
-                                
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <p>{{ group.about }}</p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <!-- <img src="{{ url_for('static', filename='uploads/group_icons/' + group.group_icon) }}" class="img-circle pull-right grp-desc-img" /> -->
-                                             <img src="{{ group.group_icon }}" class="img-circle pull-right grp-desc-img" />
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-
-                                <div role="tabpanel" class="tab-pane" id="grp-members-{{group.id}}">
-                                    <p id="group-leaders-{{group.id}}"></p>
-                                    <p id="group-members-{{group.id}}"></p>
-                                </div>
-
-                                <div role="tabpanel" class="tab-pane" id="grp-activities-{{group.id}}">
-                                    <p id="group-activities-{{group.id}}"></p>
-                                </div>
-                        
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <!-- FOOTER -->
-                    <div class="modal-footer">
-                        {% if group.status == 1 %}
-                            <button type="button" id="{{group.id}}" class="btn btn-danger grp-btn" value="leave">LEAVE GROUP</button>
-                        {% elif group.status == 0 %}
-                            <button type="button" id="{{group.id}}" class="btn btn-warning grp-btn" value="cancel">CANCEL JOIN REQUEST</button>
-                        {% else %}
-                            <button type="button" id="{{group.id}}" class="btn btn-style-1 grp-btn" value="join">JOIN GROUP</button>
-                        {% endif %}
-                    </div>
-
-                </div>
+            <div class="group-desc">
+                <h4 class="title">{{ group.name | upper }}</h4>
+                <!-- FIX THIS SECTION: SHOW NUMBER OF MEMBERS -->
+                <p><i class="fa fa-user"></i> 10</p>
             </div>
 
         </div>
+
     </div>
 
-    <script type="text/javascript">
-        function groupDetails(group_id) {
-            console.log('Modal item loaded: Group ' + group_id);
-        }
-    </script>
+    <div class="modal fade grp-modal" id="group-{{group.id}}" role="dialog">
+
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- HEADER -->
+                <div class="modal-header">
+                    <span><b>INTEREST GROUP</b></span>
+                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                </div>
+
+                <!-- BODY -->
+                <div class="modal-body">
+                    
+                    <div class="img-container" style="background-image: url({{ group.cover_photo }});">
+                        <img src="{{ group.group_icon }}" class="img-circle grp-icon-img"/>
+                    </div>
+
+                    <h2 class="text-center">{{ group.name | upper }}</h2>
+
+                    <div class="content">
+
+                        <ul class="nav nav-tabs" role="tablist">
+
+                            <li role="presentation" class="active grp-li">
+                                <a href="#grp-desc-{{group.id}}" role="tab" data-toggle="tab">Description</a>
+                            </li>
+
+                            <li role="presentation" class="grp-li">
+                                <a href="#grp-members-{{group.id}}" role="tab" data-toggle="tab">Members</a>
+                            </li>
+
+                            <li role="presentation" class="grp-li">
+                                <a href="#grp-activities-{{group.id}}" role="tab" data-toggle="tab">Activities</a>
+                            </li>
+
+                        </ul>
+
+                        <div class="tab-content">
+
+                            <div role="tabpanel" class="tab-pane active" id="grp-desc-{{group.id}}">
+                                <p>{{ group.about }}</p>
+                            </div>
+
+                            <div role="tabpanel" class="tab-pane" id="grp-members-{{group.id}}">
+                                <p id="group-leaders-{{group.id}}"></p>
+                                <p id="group-members-{{group.id}}"></p>
+                            </div>
+
+                            <div role="tabpanel" class="tab-pane" id="grp-activities-{{group.id}}">
+                                <p id="group-activities-{{group.id}}"></p>
+                            </div>
+                    
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- FOOTER -->
+                <div class="modal-footer">
+                    {% if group.status == 1 %}
+                        <button type="button" id="{{group.id}}" class="btn btn-danger grp-btn" value="leave">LEAVE GROUP</button>
+                    {% elif group.status == 0 %}
+                        <button type="button" id="{{group.id}}" class="btn btn-warning grp-btn" value="cancel">CANCEL JOIN REQUEST</button>
+                    {% else %}
+                        <button type="button" id="{{group.id}}" class="btn btn-style-1 grp-btn" value="join">JOIN GROUP</button>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+
+    </div>
 
 {% endmacro %}
