@@ -9,7 +9,11 @@
         <div class="col-md-12">
             <div class="group-box">
 
-                <h2>CREATE ACTIVITY</h2>
+                <h2>CREATE ACTIVITY
+                    <a href="/activities">
+                        <button class="btn btn-style-4 btn-sm pull-right">Cancel</button>
+                    </a>
+                </h2>
                 <hr/>
                 <br/>
 
@@ -76,7 +80,8 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6" style="padding: 50px;">
+                        <div class="col-md-6">
+                            <br/><br/>
                             <div class="img-upload text-center">
                                 <img id="preview" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"/>
                                 {{ form.image(

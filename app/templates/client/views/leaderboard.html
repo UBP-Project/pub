@@ -6,31 +6,53 @@
 
 	<div class="row">
 
-		<div class="col-md-12 col-sm-12 box-header">
-			<h2>LEADERBOARD</h2>
-		</div>
+		<div class="col-md-12">
+			<div class="group-box">
 
-		<div class="col-md-12 col-sm-12 box-divider">
-			<div class="inner-divider"></div>
-		</div>
+				<h2>LEADERBOARD</h2>
+				<hr/>
 
-		<div class="col-md-12 col-sm-12 box-content">
-			{% for leader in point_leaders %}
-				<div class="col-md-offset-1 col-md-9" style="background-color: white;
-				 height: 100px; margin: 0px 0px 10px 10px; padding: 15px; border-radius: 5px; font-size: 28px; font-family: 'Roboto Condensed Bold'">
-				 	<div class="col-md-6">
-				 		<a href="{{ url_for('client.view_profile', id=leader.id) }}" style="font-family: 'Roboto Condensed Bold'">
-				 		<img src="{{ url_for('static', filename='images/pub-default-img.jpg')}}"
-				 			style="width: 70px; height: 70px; border-radius: 35px; border: 1px solid gray">
-						{{ leader.firstname }} {{leader.lastname}}
-						</a>
+				<div class="row">
+
+					<div class="col-md-6 user-container">
+						<h3 class="text-center title-points">TOP 10 Most Points <i class="fa fa-trophy"></i></h3>
+						<br/>
+						{% if point_leaders %}
+							{% for leader in point_leaders %}
+								<a href="{{ url_for('client.view_profile', id=leader.id) }}">
+									<div class="zoomify user-card-1">
+										<img src="{{ url_for('static', filename='images/pub-default-img.jpg')}}">
+							 			<span class="name">{{ leader.firstname }} {{leader.lastname}}</span>
+							 			<span class="pull-right user-points"><b>{{ leader.points }} pts</b></span>
+									</div>
+								</a>
+							{% endfor %}
+						{% else %}
+							<div><h3>COMING SOON</h3></div>
+						{% endif %}
 					</div>
-
-					<div class="col-md-5 text-right" style="font-size: 48px;">
-						{{ leader.points }}pts
+					
+					<div class="col-md-6 user-container">
+						<h3 class="text-center title-followed">TOP 10 Most Followed <i class="fa fa-star-o"></i></h3>
+						<br/>
+						{% if point_leaders %}
+							{% for leader in point_leaders %}
+								<a href="{{ url_for('client.view_profile', id=leader.id) }}">
+									<div class="zoomify user-card-2">
+										<img src="{{ url_for('static', filename='images/pub-default-img.jpg')}}">
+							 			<span class="name">{{ leader.firstname }} {{leader.lastname}}</span>
+							 			<span class="pull-right user-points"><b>{{ leader.points }} Followers</b></span>
+									</div>
+								</a>
+							{% endfor %}
+						{% else %}
+							<div><h3>COMING SOON</h3></div>
+						{% endif %}
 					</div>
+					
 				</div>
-			{% endfor %}
+
+			</div>
 		</div>
 
 	</div>
