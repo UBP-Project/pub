@@ -2,10 +2,11 @@
 
     <div class="col-md-3 col-sm-6 group-card">
 
-        <div class="zoomify group-panel grp-icon" style="background-image: url({{ group.cover_photo }});" data-toggle="modal" data-target="#group-{{ group.id }}" id="{{group.id}}">
+        <div class="zoomify group-panel grp-icon" style="background-image: url({{ url_for('static',filename='uploads/covers/' + group.cover_photo) }});" data-toggle="modal" data-target="#group-{{ group.id }}" id="{{group.id}}">
 
             <div class="group-img">
-                <img src="{{ group.group_icon }}" width="120px" height="120px">
+                <img src="{{ url_for('static',filename='uploads/group_icons/' + group.group_icon) }}" width="120px" height="120px"/>
+                <!-- <img src="{{ group.group_icon }}" width="120px" height="120px"> -->
             </div>
 
             <div class="group-desc">
@@ -33,7 +34,8 @@
                 <div class="modal-body">
                     
                     <div class="img-container" style="background-image: url({{ group.cover_photo }});">
-                        <img src="{{ group.group_icon }}" class="img-circle grp-icon-img"/>
+                        <img src="{{ url_for('static',filename='uploads/group_icons/' + group.group_icon) }}" />
+                        <!-- <img src="{{ group.group_icon }}" class="img-circle grp-icon-img"/> -->
                     </div>
 
                     <h2 class="text-center">{{ group.name | upper }}</h2>

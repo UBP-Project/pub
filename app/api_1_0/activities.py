@@ -7,6 +7,7 @@ import json
 from flask_login import login_required, current_user
 from ..auth import is_manager_or_leader
 from ..leaderboard import leaderboard
+from app.notification import Notif
 
 from app.utils import is_valid_extension
 from werkzeug.utils import secure_filename
@@ -646,7 +647,11 @@ def interested_to_activity_by(id):
     try:
         db.session.commit()
 
-        #TODO: WRAP THIS WITH A ASYNCHRONOUS FUNCTION
+        #Notification
+        notification = Notif('activity', 'interested', id)
+
+        #who triggered this action?
+        notification.add_actor(current_user.get_id())
         
         #send notifcation to the followers of the current_user
         followers = User.query\
@@ -654,21 +659,9 @@ def interested_to_activity_by(id):
             .filter(id != current_user.get_id())\
             .all()
 
-        content = '<a href="%s">%s %s</a> joins <a href="%s">%s</a>' % \
-            (
-                url_for('client.view_profile', id = current_user.get_id()),
-                current_user.firstname,
-                current_user.lastname,
-                url_for('client.group', id = activity.id),
-                activity.title
-            )
-
         for follower in followers:
-            notif = Notification(user_id = follower.get_id(), content = content, url = url)
-            db.session.add(notif)
+            notificaiton.add_notifier(follower)
 
-        db.session.commit()
-        
         return jsonify({'status': 'Success'}), 200
     except exc.SQLAlchemyError as e:
         print(e)
