@@ -1,0 +1,71 @@
+{% extends "./layout/client_base.html" %}
+
+{% block title %} Group | {{ group.name }} {% endblock title %}
+
+{% block content %}
+    <div class="membership-requests"">
+        <div class="row">
+            <div class="col-md-9">
+                <h3>{{ group.name }} Membership Requests</h3>
+            </div>
+        </div>
+
+        {% raw %}
+        <div id="app" class="row">
+            <div v-for="(request, index) in requests" class="col-md-9 request-item">
+                <img v-if="request.image" :src="'../../static/uploads/profile_pictures/' + request.image">
+                <img v-else :src="'../../static/images/pub-default-img.jpg'">
+                <span>{{ request.firstname }} {{ request.lastname }}</span>
+                <span class="pull-right">
+                    <button v-on:click="declineRequest(request, index)" class="btn btn-style-3">Decline</button>
+                    <button v-on:click="acceptRequest(request, index)" class="btn btn-style-1">Accept</button>
+                </span>
+                <hr />
+            </div>
+        </div>
+        {% endraw %}
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        var vm = new Vue({
+            el: "#app",
+            data: {
+                requests: []
+            },
+            methods: {
+                loadRequests: function() {
+                    $.ajax({
+                        url: "../../api/v1.0/interest_groups/" + "{{ group.id}}" + "/requests",
+                        type: 'GET'
+                    }).done(data => {
+                        console.log(data);
+                        this.requests = data.requests;
+                    }).fail(function(data) {
+                        console.log(data);
+                    });
+                },
+                acceptRequest: function(request, index) {
+                    $.ajax({
+                        url: "../../api/v1.0/interest_groups/" + "{{ group.id}}" + "/accept",
+                        type: 'POST',
+                        data: {
+                            user_id: request.user_id,
+                            group_id: request.group_id
+                        }
+                    }).done(data => {
+                        this.request.splice(index, i);
+                    });
+                },
+                declineRequest: function(request, index) {
+
+                }
+            }
+        });
+        $(document).ready(function() {
+            vm.loadRequests();
+        });
+    </script>
+{% endblock %}
