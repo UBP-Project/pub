@@ -75,7 +75,8 @@
                                                             <div v-for="interested_user in activity.interested_users" class="col-md-6 mini-container">
                                                                 <a :href="'/profile/' + interested_user.id">
                                                                     <div>
-                                                                        <img :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
+                                                                        <img v-if="interested_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+interested_user.image">
+                                                                        <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
                                                                         <span>{{ interested_user.firstname }} {{interested_user.lastname}}</span>
                                                                     </div>
                                                                 </a>
@@ -87,7 +88,8 @@
                                                             <div v-for="going_user in activity.going_users" class="col-md-6 mini-container">
                                                                 <a :href="'/profile/' + going_user.id">
                                                                     <div>
-                                                                        <img :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
+                                                                        <img v-if="going_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+going_user.image">
+                                                                        <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
                                                                         <span>{{ going_user.firstname }} {{going_user.lastname}}</span>
                                                                     </div>
                                                                 </a>
@@ -145,7 +147,8 @@
           data: {
             activities: [],
             activities_page: 1,
-            activity_images_folder: '/static/uploads/activity_images/'
+            activity_images_folder: '/static/uploads/activity_images/',
+            user_images_folder: '/static/uploads/profile_pictures/'
           },
           methods: {
             loadActivities: function() {
@@ -155,6 +158,7 @@
                     type: 'GET'
                 }).done(data => {
                     data.activities.forEach((activity) => {
+                        // add neccessary field for display
                         activity.going_users      = [];
                         activity.interested_users = [];
                         activity.isInterested     = false;

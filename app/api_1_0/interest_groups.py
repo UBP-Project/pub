@@ -73,7 +73,7 @@ def get_interest_groups():
             Interest_Group.group_icon,      \
             Membership.status
             )  \
-        .paginate(page = page, per_page = 12, error_out=False)
+        .paginate(page = page, per_page = 8, error_out=False)
 
     return jsonify({
       'interest_groups': [ 
@@ -90,6 +90,44 @@ def get_interest_groups():
       'has_prev': interest_groups.has_prev
     }), 200
        
+@api.route('/groups', methods=['GET'])
+@login_required
+def get_groups():
+    if 'page' in request.args:
+        page = int(request.args.get('page'))
+    else:
+        page = 1
+    groups = Interest_Group.query\
+        .paginate(page = page, per_page = 12, error_out=False)
+    return jsonify({
+      'interest_groups': [ group.to_json() for group in groups.items ],
+      'has_next': groups.has_next,
+      'has_prev': groups.has_prev
+    })
+
+@api.route('/groups/<string:id>/members', methods=['GET'])
+@login_required
+def get_group_members(id):
+    leaders = User.query.join(Membership, Membership.user_id == User.id)\
+    .filter(Membership.group_id == id, Membership.level == 1).all()
+    members = User.query.join(Membership, Membership.user_id == User.id)\
+    .filter(Membership.group_id == id, Membership.level == 0).all()
+    managers = User.query.join(Membership, Membership.user_id == User.id)\
+    .filter(Membership.group_id == id, Membership.level == 2).all()
+    return jsonify({
+        'members': [ member.to_json() for member in members],
+        'leaders': [ leader.to_json() for leader in leaders],
+        'managers':[ managers.to_json() for manager in managers]
+    });
+
+@api.route('/groups/<string:id>/activities', methods=['GET'])
+@login_required
+def get_group_activities(id):
+    activities = Activity.query.filter(Activity.group_id == id).all()
+    return jsonify({
+        'activities': [activity.to_json() for activity in activities]
+    })
+
 
 @api.route('/interest_groups', methods=['POST'])
 @login_required

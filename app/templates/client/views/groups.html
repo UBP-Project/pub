@@ -31,10 +31,114 @@
 					{% endif %}
 				</div>
 
-				<div class="show-more-box">
-					<!-- HIDE THIS BUTTON IF THERE'S NO NEXT PAGE -->
-					<button class="btn btn-lg btn-style-1">SHOW MORE</button>
-				</div>
+
+				{% raw %}
+				<div class="row">
+					<div id="app">
+						<div v-for="group in groups" id="group_list">
+							<!-- GROUP CARD -->
+							<div class="col-md-3 col-sm-6 group-card" v-on:click="loadGroupInfo(group)">
+						        <div class="zoomify group-panel grp-icon" :style="group.cover" data-toggle="modal" :data-target="'#group-' + group.id" :id="group.id">
+						            <div class="group-img">
+						                <img :src="group_icons_folder + group.group_icon" width="120px" height="120px">
+						            </div>
+						            <div class="group-desc">
+						                <h4 class="title">{{ group.name}}</h4>
+						                <!-- FIX THIS SECTION: SHOW NUMBER OF MEMBERS -->
+						                <p><i class="fa fa-user"></i> 10</p>
+						            </div>
+						        </div>
+						    </div> <!-- END OF GROUP CARD -->
+
+							<!-- GROUP MODAL -->
+						    <div class="modal fade grp-modal" :id="'group-' + group.id" role="dialog">
+						        <div class="modal-dialog">
+						            <div class="modal-content">
+						                <!-- HEADER -->
+						                <div class="modal-header">
+						                    <span><b>INTEREST GROUP</b></span>
+						                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+						                </div>
+						                <!-- BODY -->
+						                <div class="modal-body">
+						                    <div class="img-container" :style="group.cover">
+						                        <img :src="group_icons_folder + group.group_icon" class="img-circle grp-icon-img"/>
+						                    </div>
+						                    <h2 class="text-center">{{ group.name}}</h2>
+						                    <div class="content">
+						                        <ul class="nav nav-tabs" role="tablist">
+						                            <li role="presentation" class="active grp-li">
+						                                <a :href="'#grp-desc-' + group.id" role="tab" data-toggle="tab">Description</a>
+						                            </li>
+						                            <li role="presentation" class="grp-li">
+						                                <a :href="'#grp-members-' + group.id" role="tab" data-toggle="tab">Members</a>
+						                            </li>
+						                            <li role="presentation" class="grp-li">
+						                                <a :href="'#grp-activities-' + group.id" role="tab" data-toggle="tab">Activities</a>
+						                            </li>
+						                        </ul>
+						                        <div class="tab-content">
+						                            <div role="tabpanel" class="tab-pane active" :id="'grp-desc-' + group.id">
+						                                <p>{{ group.about }}</p>
+						                            </div>
+						                            <div role="tabpanel" class="tab-pane" :id="'grp-members-' + group.id">
+						                            	<h3 v-if="group.members.length > 0">
+						                            		Members
+						                            	</h3>
+						                            	<div class="row">
+							                                <div v-for="member in group.members" class="col-md-6 mini-container">
+	                                                            <a :href="'/profile/' + member.id">
+	                                                                <div>
+	                                                                    <img v-if="member.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+member.image">
+	                                                                    <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
+	                                                                    <span>{{ member.firstname }} {{member.lastname}}</span>
+	                                                                </div>
+	                                                            </a>
+	                                                        </div>
+                                                        </div>
+                                                        <h3 v-if="group.leaders.length > 0">
+						                            		Leaders
+						                            	</h3>
+						                            	<div class="row">
+							                                <div v-for="leader in group.leaders" class="col-md-6 mini-container">
+	                                                            <a :href="'/profile/' + leader.id">
+	                                                                <div>
+	                                                                    <img v-if="leader.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+leader.image">
+	                                                                    <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
+	                                                                    <span>{{ leader.firstname }} {{leader.lastname}}</span>
+	                                                                </div>
+	                                                            </a>
+	                                                        </div>
+                                                        </div>
+						                            </div>
+						                            <div role="tabpanel" class="tab-pane" :id="'grp-activities-' + group.id">
+						                                <div v-for="activity in group.activities" class="col-md-6 mini-container">
+						                                	<a :href="'/activities/' + activity.id">
+						                                		<span>{{ activity.title }}</span>
+						                                	</a>
+						                                </div>
+						                            </div>
+						                        </div>
+						                    </div>
+						                </div>
+						                <!-- FOOTER -->
+						                <div class="modal-footer">
+					                        <button v-if="group.membership_status == 'accepted'" type="button" class="btn btn-danger grp-btn" value="leave" v-on:click="toggleGroupMembership(group)">LEAVE GROUP</button>
+					                        <button v-else-if="group.membership_status == 'pending'" type="button" class="btn btn-warning grp-btn" value="cancel" v-on:click="toggleGroupMembership(group)">CANCEL JOIN REQUEST</button>
+					                        <button v-else type="button" class="btn btn-style-1 grp-btn" value="join" v-on:click="toggleGroupMembership(group)">JOIN GROUP</button>
+						                </div> <!-- END OF FOOTER -->
+						            </div>
+						        </div>
+						    </div> <!-- END OF GROUP MODAL -->
+						</div>
+						<div class="show-more-box col-md-12">
+							<!-- HIDE THIS BUTTON IF THERE'S NO NEXT PAGE -->
+							<button class="btn btn-lg btn-style-1" v-on:click="loadGroups">SHOW MORE</button>
+						</div> <!-- end of show more div -->
+					</div> <!-- end of app -->
+				</div> <!-- end of row -->
+				{% endraw %}
+
 
 			</div>
 		</div>
@@ -45,4 +149,81 @@
 
 {% block scripts %}
 	<script src="{{ url_for('static', filename='js/client/group.js') }}"></script>
+	    <script>
+        var vm = new Vue({
+          el: '#app',
+          data: {
+            groups: [],
+            groups_page: 2,
+            group_icons_folder: '/static/uploads/group_icons/',
+           	group_covers_folder: '/static/uploads/covers/',
+           	user_images_folder: '/static/uploads/profile_pictures/',
+           	default_img: "background-image: url('/static/images/pub-default-img.jpg');"
+          },
+          methods: {
+          	loadGroups: function() {
+          		$.ajax({
+          			url: "{{ url_for('api.get_groups') }}" + "?page=" + this.groups_page,
+          			type: 'GET'
+          		}).done(data => {
+          			data.interest_groups.forEach((group) => {
+          				group.members = [];
+          				group.leaders = [];
+          				group.managers = [];
+          				group.activities = [];
+          				group.membership_status = -1;
+          				group.cover = "background-image: url('/static/uploads/covers/" + group.cover_photo + "');"
+          			});
+          			this.groups.push.apply(this.groups, data.interest_groups);
+          			this.groups_page++;
+          		});
+          	},
+          	loadGroupInfo: function(group) {
+          		// load group members
+          		$.ajax({
+          			url: "/api/v1.0/groups/" + group.id + "/members",
+          			type: 'GET'
+          		}).done(data => {
+          			group.managers = data.managers;
+          			group.leaders = data.leaders;
+          			group.members = data.members;
+          			// console.log(data);
+          		});
+
+          		// load Activities
+          		$.ajax({
+          			url: "/api/v1.0/groups/" + group.id + "/activities",
+          			type: 'GET'
+          		}).done(data => {
+          			group.activities = data.activities;
+          		});
+
+          		// check membership status
+          		$.ajax({
+          			url: "/api/v1.0/interest_groups/" + group.id + "/join/status",
+          			type: 'GET'
+          		}).done(data => {
+          			group.membership_status = data.membership_status;
+          		});
+          	},
+          	toggleGroupMembership: function(group) {
+          		if (group.membership_status == "pending" || group.membership_status == "regular") {
+          			$.ajax({
+	          			url: "/api/v1.0/interest_groups/" + group.id + "/leave",
+	          			type: 'DELETE'
+	          		}).done(data => {
+	          			group.membership_status = "";
+	          		});
+          		} else {
+          			$.ajax({
+	          			url: "/api/v1.0/interest_groups/" + group.id + "/join",
+	          			type: 'POST'
+	          		}).done(data => {
+	          			group.membership_status = "pending";
+	          		});
+          		}
+          	}
+          }
+        });
+    </script> 
 {% endblock scripts %}
