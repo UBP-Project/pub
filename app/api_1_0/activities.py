@@ -673,7 +673,7 @@ def interested_to_activity_by(id):
             .all()
 
         for follower in followers:
-            notificaiton.add_notifier(follower)
+            notification.add_notifier(follower.id)
 
         return jsonify({'status': 'Success'}), 200
     except exc.SQLAlchemyError as e:

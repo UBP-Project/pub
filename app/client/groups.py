@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 from . import client
 from app import db
 from app.models import User, Interest_Group, Activity, Membership, Role, Follow
-from ..auth import is_manager_or_leader
+from ..auth import is_manager_or_leader, is_manager
 from ..utils import flash_errors
 from ..forms import CreateInterestGroupForm, UpdateInterestGroupForm, GroupMembershipForm
 from werkzeug.utils import secure_filename
@@ -89,6 +89,7 @@ def group(id):
 @login_required
 # manager_only
 def create_group():
+    is_manager(abort_on_false=True) # 403 -Forbiden if not a manager
     form = CreateInterestGroupForm()
     if form.validate_on_submit():
         # handle upload group cover
@@ -113,6 +114,16 @@ def create_group():
             cover_photo=cover_hashed_filename,
             group_icon=icon_hashed_filename)
         db.session.add(interest_group)
+        db.session.commit()
+
+        # set manager of group via membership
+        membership = Membership(
+            user_id=current_user.get_id(),
+            group_id=interest_group.id,
+            status=1,
+            level=2 # 2 is manager level
+        )
+        db.session.add(membership)
         db.session.commit()
         return redirect(url_for("client.group", id=interest_group.id))
     return render_template('client/group/create.html', form=form)

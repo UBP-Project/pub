@@ -7,9 +7,9 @@ from flask import abort
 # if the current user can perform manager or leader permissions
 def is_manager_or_leader(abort_on_false=False):
     membership = Membership.query.filter(Membership.user_id == current_user.get_id(),\
-        Membership.level == 1 or Membership.level == 2).first()
+        Membership.level == 1 or Membership.level == 2).first() is not None
 
-    if membership is None and abort_on_false == True:
+    if membership == False and abort_on_false == True:
         abort(403)
         return False
   
@@ -17,9 +17,11 @@ def is_manager_or_leader(abort_on_false=False):
         return False
     return True
 
-def is_manager():
+def is_manager(abort_on_false=False):
     isManager = User.query\
             .join(Role, Role.id == User.role_id)\
             .filter(Role.name == 'Manager', User.id == current_user.get_id()).first() is not None
+    if abort_on_false == True and isManager == False:
+        abort(403)
     return isManager
 
