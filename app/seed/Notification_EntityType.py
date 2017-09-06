@@ -11,10 +11,10 @@ entity_types = [
 	# 	'entity'	: 'activity',
 	# 	'action'	: 'joined'
 	# },
-	# {
-	# 	'entity'	: 'activity',
-	# 	'action'	: 'interested'
-	# },
+	{
+		'entity'	: 'activity',
+		'action'	: 'interested'
+	},
 	{
 		'entity'	: 'interest_group',
 		'action'	: 'created_activity'
