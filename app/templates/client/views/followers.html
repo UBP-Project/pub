@@ -9,7 +9,9 @@
                 width="200px" 
                 height="200x"
                 style="border: 5px solid white; border-radius: 10px"/>
-            <h3>{{ user['firstname'] }} {{ user['lastname'] }}</h3>
+            <a href="{{ url_for('client.view_profile', id=user.id)}}">
+                <h3>{{ user['firstname'] }} {{ user['lastname'] }}</h3>
+            </a>
             <p>{{ user['position'] }} <br /> {{ user['department'] }}</p>
         </div>
 
@@ -78,7 +80,7 @@
                     <div style="background-color: white; padding: 10px; margin: 5px;">
                         <img src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"
                             style="width: 50px; height: 50px; border-radius: 25px;">
-                        <button class="pull-right btn btn-style-1" style="margin-top: 20px; height: 30px; padding: 0px 15px;">Follow</button>
+                        <!-- <button class="pull-right btn btn-style-1" style="margin-top: 20px; height: 30px; padding: 0px 15px;">Follow</button> -->
                         
                         <h4>
                         <a href="{{ url_for('client.view_profile', id=follower.id)}}">
@@ -107,5 +109,41 @@
         });
         $("#trianglify-cover").append(pattern.svg())
     </script>
-    <script src="{{ url_for('static', filename='js/client/profile.js') }}"></script>
+    <script>
+        function set_buttons() {
+            $("#btn-follow").on('click', function() {
+                $.ajax({
+                    'url': '{{ url_for('api.follow_user', to_follow_id=user["id"]) }}',
+                    'type': 'POST'
+                }).done(function(data) {
+                    $("#btn-follow").remove();
+                    $("#profile-btns").append('<button id="btn-unfollow" class="btn btn-style-1" style="width: 100px">Following</button>');
+                    set_buttons();
+                });
+            });
+
+            $("#btn-unfollow").on('click', function() {
+                $.ajax({
+                    'url': '{{ url_for('api.unfollow_user', to_unfollow_id=user["id"]) }}',
+                    'type': 'DELETE'
+                }).done(function(data) {
+                    $("#btn-unfollow").remove();
+                    $("#profile-btns").append('<button id="btn-follow" class="btn btn-style-2" style="width: 100px">Follow</button>');
+                    set_buttons();
+                });
+            });
+
+            $("#btn-unfollow")
+                .mouseover(function() {
+                    $(this).text("Unfollow");
+                })
+                .mouseout(function() {
+                    $(this).text("Following");
+                });
+
+        }
+        // initialize buttons
+        set_buttons();
+    </script>
+    <!-- <script src="{{ url_for('static', filename='js/client/profile.js') }}"></script> -->
 {% endblock scripts %}

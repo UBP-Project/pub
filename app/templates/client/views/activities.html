@@ -90,7 +90,7 @@
                                                                     <div>
                                                                         <img v-if="going_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+going_user.image">
                                                                         <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
-                                                                        <span>{{ going_user.firstname }} {{going_user.lastname}}</span>
+                                                                        <span>{{ going_user.firstname }} {{ going_user.lastname }}</span>
                                                                     </div>
                                                                 </a>
                                                             </div>
@@ -125,8 +125,8 @@
                             </div> <!-- end of ACTIVITY MODAL -->
                         </div> <!-- END of activity_list -->
 
-                        <div class="col-md-12 text-center">
-                            <button class="btn btn-style-3" v-on:click="loadActivities">Load Activities</button>
+                        <div class="col-md-12 text-center show-more-box">
+                            <button class="btn btn-style-3" v-on:click="loadActivities">Show More</button>
                         </div>
                     </div>
                     {% endraw %}
