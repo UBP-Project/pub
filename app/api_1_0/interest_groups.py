@@ -402,8 +402,11 @@ def get_members(id):
 
     group = Interest_Group.query.get_or_404(id)
 
-    members = User.query.join(Membership, User.id == Membership.user_id).join(Interest_Group, Interest_Group.id == group.id)\
-        .filter(Membership.level == Membership.MEMBERSHIP_MEMBER).all()
+    members = User.query\
+        .join(Membership, User.id == Membership.user_id)\
+        .join(Interest_Group, Interest_Group.id == group.id)\
+        .filter(Membership.level == Membership.MEMBERSHIP_MEMBER, Membership.status == Membership.MEMBERSHIP_ACCEPTED)\
+        .all()
 
     return jsonify([
         user.to_json() for user in members
