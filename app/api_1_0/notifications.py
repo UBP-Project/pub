@@ -74,15 +74,14 @@ def get_notifications():
         .filter(Notification.notifier_id == current_user.get_id())\
         .add_columns(Notification_EntityType.action, Notification_EntityType.entity)\
         .order_by(Notification.timestamp.desc())\
-        .distinct()\
-        .paginate(page = page, per_page = 10, error_out = False).items
+        .distinct()
 
     return jsonify([
             {
-                'object_id' : notification.notification_object_id,
                 'id'        : notification.id,
                 'status'    : notification.status,
                 'timestamp' : notification.timestamp,
+                'object_id' : notification.notification_object_id,
                 'action'    : notification.action,
                 'entity'    : notification.entity,
                 'actors'    : [
