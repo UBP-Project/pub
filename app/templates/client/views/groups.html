@@ -7,25 +7,33 @@
 
 	<div class="row">
 
-		<div class="col-md-12 col-sm-12 box-header">
-			<h2>INTEREST GROUPS<span class="fa fa-search pull-right btn btn-search"></span></h2>
-		</div>
+		<div class="col-md-12">
+			<div class="group-box">
 
-		<div class="col-md-12 col-sm-12 box-divider">
-			<div class="inner-divider"></div>
-		</div>
+				<h2>INTEREST GROUPS
+                    <a href="/groups/create">
+                        <button class="btn btn-style-2 btn-sm pull-right" title="Create Group"><i class="fa fa-plus"></i></button>
+                    </a>
+                </h2>
+				<hr/>
 
-		<div class="col-md-12 col-sm-12 box-content border-bottom-2">
-			<div class="row">
-				{% if interest_groups %}
-					{% for group in interest_groups %}
-						{{ group_modal(group) }}
-					{% endfor %}
-				{% else %}
-					<div class="col-md-12 no-content-box text-center">
-						<h2>NO INTEREST GROUPS TO SHOW</h2>
-					</div>
-				{% endif %}
+				<div class="row">
+					{% if interest_groups %}
+						{% for group in interest_groups %}
+							{{ group_modal(group) }}
+						{% endfor %}
+					{% else %}
+						<div class="col-md-12 no-content-box text-center">
+							<h2>NO INTEREST GROUPS TO SHOW</h2>
+						</div>
+					{% endif %}
+				</div>
+
+				<div class="show-more-box">
+					<!-- HIDE THIS BUTTON IF THERE'S NO NEXT PAGE -->
+					<button class="btn btn-lg btn-style-1">SHOW MORE</button>
+				</div>
+
 			</div>
 		</div>
 

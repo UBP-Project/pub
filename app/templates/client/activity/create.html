@@ -1,93 +1,113 @@
 {% extends "./layout/client_base.html" %}
 
-{% block title %} Notifications {% endblock title %}
+{% block title %} Create Activity {% endblock title %}
 
 {% block content %}
-    <form class="row admin-form activity-form" style="padding: 0px" method="post" enctype="multipart/form-data" name="create_activity">
-        {{ form.hidden_tag() }}
+
+    <div class="row">
 
         <div class="col-md-12">
-                <h1 class="pull-left">Create Activity</h1>
-                <div style="margin-top: 25px;">
-                    {{ form.submit(
-                        class="btn btn-style-1 pull-right"
-                    )}}
+            <div class="group-box">
+
+                <h2>CREATE ACTIVITY
+                    <a href="/activities">
+                        <button class="btn btn-style-4 btn-sm pull-right">Cancel</button>
+                    </a>
+                </h2>
+                <hr/>
+                <br/>
+
+                <div class="row">
+
+                    <form class="row admin-form activity-form" style="padding: 0px" method="post" enctype="multipart/form-data" name="create_activity">
+                        {{ form.hidden_tag() }}
+
+                        <div class="col-md-6">
+                            <div class="row">
+
+                                <div class="col-md-12">
+                                    <h4>Activity Name</h4>
+                                    {{ form.title(
+                                        placeholder="Activity Name",
+                                        class="form-control",
+                                        required="true") }}
+                                </div>
+                                <div class="col-md-6">
+                                    <br/>
+                                    <h4>Start Date</h4>
+                                    {{ form.start_date(
+                                        placeholder="Start Date",
+                                        class="form-control",
+                                        required="true")}}
+                                </div>
+                                <div class="col-md-6">
+                                    <br/>
+                                    <h4>End Date</h4>
+                                    {{ form.end_date(
+                                        placeholder="End Date",
+                                        class="form-control",
+                                        required="true")}}
+                                </div>
+                                <div class="col-md-12">
+                                    <br/>
+                                    <h4>Venue</h4>
+                                    {{ form.address(
+                                        placeholder="Venue/Address",
+                                        class="form-control",
+                                        required="true"
+                                    )}}
+                                </div>
+                                <div class="col-md-12">
+                                    <br/>
+                                    <h4>Assign to Group</h4>
+                                    {{ form.group(
+                                        class="form-control",
+                                        required="true")
+                                    }}
+                                </div>
+                                <div class="col-md-12">
+                                    <br/>
+                                    <h4>Description</h4>
+                                    <div id="description-editor" class="wysiwyg-editor" placeholder="Describe this activity">
+
+                                    </div>
+                                    {{ form.description(
+                                        placeholder="Description",
+                                        class="none",   
+                                        hidden="true") }}
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <br/><br/>
+                            <div class="img-upload text-center">
+                                <img id="preview" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"/>
+                                {{ form.image(
+                                    placeholder="Activity Image",
+                                )}}
+                                <div id="upload-btn" class="text">
+                                    <button class="btn btn-style-1">Choose Activity Image</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <br/><br/>
+                            <input class="btn btn-default" type="reset" value="Reset">
+                            {{ form.submit(
+                                class="btn btn-style-1"
+                            )}}
+                        </div>
+                    </form>
+
                 </div>
-        </div>
 
-        <div class="col-md-12">
-            <hr />
-        </div>
-
-        <div class="col-md-6">
-            <div class="col-md-12 no-padding">
-                <label>Title</label>
-                {{ form.title(
-                    placeholder="Title",
-                    class="form-control",
-                    required="true") }}
-            </div>
-            <div class="col-md-6 no-padding-left">
-                <label>Start Date</label>
-                {{ form.start_date(
-                    placeholder="Start Date",
-                    class="form-control",
-                    required="true")}}
-            </div>
-
-            <div class="col-md-6 no-padding-right">
-                <label>End Date</label>
-                {{ form.end_date(
-                    placeholder="End Date",
-                    class="form-control",
-                    required="true")}}
-            </div>
-            <div class="col-md-12 no-padding">
-                <label>Address</label>
-                {{ form.address(
-                    placeholder="Address",
-                    class="form-control",
-                    required="true"
-                )}}
-            </div>
-            <div class="col-md-12 no-padding">
-                <label>Assign to Group</label>
-                {{ form.group(
-                    class="form-control",
-                    required="true")
-                }}
-            </div>
-
-            <div class="col-md-12 no-padding">
-                <label>Description</label>
-                <div id="description-editor" class="wysiwyg-editor" placeholder="Describe this activity">
-
-                </div>
-                {{ form.description(
-                    placeholder="Description",
-                    class="none",   
-                    hidden="true") }}
-            </div>
-
-            
-
-        </div>
-
-        <div class="col-md-6 no-padding-right" style="padding: 0px;">
-            <div class="img-upload">
-                <br /><br ?>
-                <div class="col-md-12 no-padding-right text-center">
-                    <img id="preview" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"/>
-                    <div id="upload-btn" class="text">
-                        <button class="btn btn-style-1">Choose Activity Image</button>
-                    </div>
-                    {{ form.image(
-                        placeholder="Activity Image",
-                    )}}
-                </div>
             </div>
         </div>
-    </form>
+
+    </div>
 
 {% endblock %}
 
