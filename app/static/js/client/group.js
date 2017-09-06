@@ -71,7 +71,7 @@ function viewLeaders(group_id) {
     .done(function(data) {
 
         if(data.length){
-            var users_list = "<b>Leader(s)</b><br/>";
+            var users_list = "<b>Leader(s)</b><br/><br/>";
             for (var i in data) {
                 var name = data[i].firstname + " " + data[i].lastname;
                 var user_id = data[i].id;
@@ -99,7 +99,7 @@ function viewMembers(group_id) {
     .done(function(data) {
 
         if(data.length){
-            var users_list = "<b>Member(s)</b><br/>";
+            var users_list = "<b>Member(s)</b><br/><br/>";
             for (var i in data) {
                 var name = data[i].firstname + " " + data[i].lastname;
                 var user_id = data[i].id;
