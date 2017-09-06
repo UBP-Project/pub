@@ -9,7 +9,4 @@ from app.models.Activity 				import Activity
 from app.models.User_Activity 			import User_Activity
 from app.models.Schedule 				import Schedule
 from app.models.Comment 				import Comment
-from app.models.Notification_EntityType	import Notification_EntityType
-from app.models.Notification_Object		import Notification_Object
-from app.models.Notification 			import Notification
-from app.models.Notification_Change		import Notification_Change
+from app.models.Notification			import Notification_Object, Notification, Notification_EntityType, Notification_Change

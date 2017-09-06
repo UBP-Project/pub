@@ -3,7 +3,8 @@
 {% block title %} Activity | {{ activity.title }} {% endblock title %}
 
 {% block content %}
-    <img src="{{ url_for('static', filename='uploads/activity_images/' + activity.image )}}" />
+    <!-- <img src="{{ url_for('static', filename='uploads/activity_images/' + activity.image )}}" /> -->
+    <img src="{{ activity.image }}" /> 
     <h3>{{ activity.title }}</h3>
 
 {% endblock %}

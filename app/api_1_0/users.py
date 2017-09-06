@@ -5,6 +5,7 @@ from app.models import User, Follow, Notification
 from app.api_1_0 import api#, follow_notif
 from app import db
 import json
+from app.notification.Notif import Notif
 
 @api.route('/users')
 @login_required
@@ -380,41 +381,20 @@ def follow_user(to_follow_id):
     try:
         db.session.commit()
        
-        #TODO: Wrap this with a asynchronous function
-        # follow_notif(follower_id=current_user.get_id(), to_follow_id=to_follow_id)
+        #Notification
+        notification = Notif('user', 'followed_you', to_follow_id)
 
-        #send notificaton to the user
-        content = "<a href='%s'>%s %s</a> follows you" % (url_for('client.view_profile', id=current_user.get_id()), current_user.firstname, current_user.lastname)
-        url = url_for('client.view_profile', id=current_user.get_id())
+        #who triggered this action?
+        notification.add_actor(current_user.get_id())
 
-        notif = Notification(user_id=to_follow_id, content=content, url=url)
-        db.session.add(notif)
+        #who to notify?
+        notification.add_notifier(to_follow_id)
 
-        #send notifcation to the followers of the current_user
-        followers = User.query\
-            .join(Follow, Follow.following_id==current_user.get_id())\
-            .filter(id != current_user.get_id())\
-            .all()
+        # for follower in followers:
+        #     notif = Notification(user_id=follower.get_id(), content=content, url=url)
+        #     db.session.add(notif)
 
-        print(followers)
-        followed_user = User.query.get(to_follow_id)
-
-        content = "<a href='%s'>%s %s</a> follows <a href='%s'>%s %s</a> " % \
-                (
-                    url_for('client.view_profile', id=current_user.get_id()),
-                    current_user.firstname,
-                    current_user.lastname,
-                    url_for('client.view_profile', id=followed_user.get_id()),
-                    followed_user.firstname,
-                    followed_user.lastname
-                )
-        url = url_for('client.view_profile', id=followed_user.get_id())
-
-        for follower in followers:
-            notif = Notification(user_id=follower.get_id(), content=content, url=url)
-            db.session.add(notif)
-
-        db.session.commit()
+        # db.session.commit()
 
         return jsonify({'status': 'Success'}), 200
     except exc.IntegrityError as d:
