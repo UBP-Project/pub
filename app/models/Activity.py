@@ -6,6 +6,7 @@ from datetime import datetime
 
 
 class Activity(db.Model):
+
     __tablename__ = 'activity'
     id            = db.Column(UUIDType(binary=False), default=uuid.uuid4, primary_key=True)
     title         = db.Column(db.String(200), unique=False) #true on production

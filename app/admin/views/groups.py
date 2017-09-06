@@ -8,6 +8,8 @@ from ...utils import flash_errors, is_valid_extension
 from werkzeug.utils import secure_filename
 import os
 import uuid
+from flask_login import current_user
+from app.notification.Notif import Notif
 
 @admin.route('/groups')
 @admin_required
@@ -142,6 +144,16 @@ def group_requests(id):
 @admin.route('/accept_request/<string:group_id>/<string:user_id>')
 @admin_required
 def accept_request(group_id, user_id):
+
+    #Notification
+    notification = Notif('interest_group', 'accepted_join_request', group_id)
+
+    #who triggered this action?
+    notification.add_actor(current_user.get_id())
+
+    #who to notify?
+    notification.add_notifier(user_id)
+
     membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
     membership.status = 1
     db.session.commit()
