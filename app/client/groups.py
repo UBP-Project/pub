@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 from . import client
 from app import db
 from app.models import User, Interest_Group, Activity, Membership, Role, Follow
-from ..auth import manager_or_leader_only
+from ..auth import is_manager_or_leader
 from ..utils import flash_errors
 from ..forms import CreateInterestGroupForm, UpdateInterestGroupForm, GroupMembershipForm
 from werkzeug.utils import secure_filename
@@ -14,6 +14,9 @@ import uuid
 @client.route('/groups/')
 @login_required
 def groups():
+    isManager = User.query\
+            .join(Role, Role.id == User.role_id)\
+            .filter(Role.name == 'Manager', User.id == current_user.get_id()).first() is not None
     interest_groups = Interest_Group.query  \
         .outerjoin(Membership) \
         .outerjoin(User, User.id == current_user.get_id()) \
@@ -40,7 +43,8 @@ def groups():
     managed_groups = Interest_Group.query.join(Membership,\
         Membership.group_id == Interest_Group.id).filter(Membership.level == 1,\
         Membership.user_id == current_user.get_id()).all()
-    return render_template("client/views/groups.html", interest_groups=interest_groups, managed_groups=managed_groups, user=current_user)
+    return render_template("client/views/groups.html", interest_groups=interest_groups,
+        managed_groups=managed_groups, user=current_user, isManager=isManager)
 
 @client.route('/groups/<uuid(strict=False):id>', methods=['POST', 'GET'])
 @login_required

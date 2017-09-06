@@ -5,7 +5,7 @@ from app.api_1_0 import api
 from app import db
 import json
 from flask_login import login_required, current_user
-from ..auth import manager_or_leader_only
+from ..auth import is_manager_or_leader
 from ..leaderboard import leaderboard
 
 from app.utils import is_valid_extension

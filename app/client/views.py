@@ -5,7 +5,7 @@ from ..forms import LoginForm, GroupMembershipForm
 from . import client
 from app import db
 from app.models import User, Interest_Group, Activity, Membership, Role, Follow
-from ..auth import manager_or_leader_only
+from ..auth import is_manager_or_leader
 from ..forms import UpdateUserFormClient, PasswordFormClient
 from ..utils import flash_errors
 from sqlalchemy.sql import func

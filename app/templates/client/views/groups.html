@@ -11,9 +11,11 @@
 			<div class="group-box">
 
 				<h2>INTEREST GROUPS
+					{% if isManager %}
                     <a href="/groups/create">
                         <button class="btn btn-style-2 btn-sm pull-right" title="Create Group"><i class="fa fa-plus"></i></button>
                     </a>
+                    {% endif %}
                 </h2>
 				<hr/>
 

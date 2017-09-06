@@ -9,12 +9,15 @@ import os
 import uuid
 from . import client
 from flask_login import current_user, login_required
+from ..auth import is_manager_or_leader
 
 @client.route('/activities/')
 @login_required
 def activities():
+    show_create = is_manager_or_leader()
     activities = Activity.query.limit(7)
-    return render_template("client/views/activities.html", activities=activities, user=current_user)
+    return render_template("client/views/activities.html", activities=activities,\
+        show_create=show_create, user=current_user)
 
 @client.route('/activities/<string:id>')
 @login_required
