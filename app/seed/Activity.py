@@ -63,7 +63,7 @@ activities = [
 	},
 	{
 		'title'			: 'Liga',
-		'description'	: 'Misa para sa Masa',
+		'description'	: '',
 		'start_date'	: '2017-09-14',
 		'end_date'		: '2017-09-15',
 		'address'		: 'Valle Verde I',
@@ -71,8 +71,8 @@ activities = [
 		'image'			: 'liga.jpg'
 	},
 	{
-		'title'			: 'Liga',
-		'description'	: 'Misa para sa Masa',
+		'title'			: 'Weekend Games',
+		'description'	: '',
 		'start_date'	: '2017-09-16',
 		'end_date'		: '2017-09-16',
 		'address'		: 'Valle Verde I',

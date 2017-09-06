@@ -84,6 +84,8 @@ app/static/uploads/profile_pictures/*
 !app/static/uploads/group_icons/family.jpg
 !app/static/uploads/group_icons/gamer.jpg
 !app/static/uploads/group_icons/shop.jpg
+!app/static/uploads/group_icons/medical.jpg
+!app/static/uploads/group_icons/hike.jpg
 
 !app/static/uploads/activity_images/70a256f3628947508af68343821d78b6.jpg
 !app/static/uploads/activity_images/56946b7fb0f64255af220a34664fd5a7.png
