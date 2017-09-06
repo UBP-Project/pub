@@ -31,6 +31,10 @@ entity_types = [
 		'entity'	: 'interest_group',
 		'action'	: 'accepted_join_request'
 	},
+	{
+		'entity'	: 'user',
+		'action'	: 'followed_you'
+	}
 ]
 
 for e in entity_types:
