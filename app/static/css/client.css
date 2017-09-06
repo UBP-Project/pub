@@ -45,3 +45,33 @@
 .activity-form .img-upload input {
     display: none;
 }
+
+/* ------HOME-------------- */
+.feed-item {
+    background-color: white;
+    border-radius: 3px;
+    padding: 20px 0px;
+    margin-bottom: 7px;
+}
+
+.feed-item .user-img {
+    height: 50px;
+    width: 50px;
+    object-fit: cover;
+    border-radius: 25px;
+}
+
+.feed-item .group-icon {
+    width: 100%;
+    border: 1px solid gray;
+}
+
+.feed-item .group-item {
+    border-radius: 10px;
+}
+
+.feed-item .group-about {
+    border: 1px solid black;
+}
+
+/* END HOME */

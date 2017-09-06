@@ -8,13 +8,68 @@
 
 	<div class="row">
 
-		<div class="col-md-12 col-sm-12 text-center" style="height: 500px; padding-top: 150px;">
-			<h2>
-				<small>WELCOME to UBP: Pub,</small>
-			</h2>
-			<h1>{{ user.firstname }} {{ user.lastname }}!</h1>
+		<div class="col-md-9 col-sm-12">			
+            {% raw %}
+            <div id="app">
+                <div v-for="feed_item in feed" class="feed-item">
+                    <div class="row">
+                        <div class="col-sm-1">
+                            <img v-if="feed_item.user_image" class="user-img" :src="profile_images_folder + feed_item.user_image">
+                            <img v-else="feed_item.user_image" class="user-img" :src="default_user_img">
+                        </div>
+                        <div class="col-sm-9">
+                            <h5>
+                                <a :href="'profile/' + feed_item.user_id">
+                                {{ feed_item.user_firstname }} {{ feed_item.user_lastname }}</a>
+                                    joins groups
+                                <a :href="'groups/' + feed_item.group_id">{{ feed_item.group_name }}</a>
+                                <br />
+                                {{ feed_item.timestamp }}
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="row group-item">
+                        <div class="col-md-offset-1 col-md-3">
+                            <img class="group-icon" :src="feed_item.group_icon">
+                        </div>
+                        <div class="col-md-6">
+                            <h4>{{feed_item.group_name}}</h4>
+                            <h6>{{feed_item.group_about}}</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endraw %}
+
 		</div>
 
 	</div>
 
 {% endblock content %}
+{% block scripts %}
+    <script>
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                profile_images_folder: '/static/uploads/profile_pictures/',
+                group_icons_folder: '/static/uploads/group_icons/',
+                feed: [],
+                default_user_img: '/static/images/pub-default-img.jpg'
+            },
+            methods: {
+                loadFeed: function() {
+                    $.ajax({
+                        url: "{{ url_for('api.feed') }}",
+                        type: 'GET'
+                    }).done(data => {
+                        this.feed = data.feed
+                    })
+                }
+            }
+        });
+
+        $(document).ready(function() {
+            vm.loadFeed();
+        })
+    </script>
+{% endblock scripts %}
