@@ -19,7 +19,7 @@
 
 		<div class="col-md-9 col-sm-12">			
             {% raw %}
-            <!-- <div id="app">
+            <div id="app">
                 <div v-for="feed_item in feed" class="feed-item">
                     <div class="row">
                         <div class="col-sm-1">
@@ -30,8 +30,8 @@
                             <h5>
                                 <a :href="'profile/' + feed_item.user_id">
                                 {{ feed_item.user_firstname }} {{ feed_item.user_lastname }}</a>
-                                    joins groups
-                                <a :href="'groups/' + feed_item.group_id">{{ feed_item.group_name }}</a>
+                                    joins
+                                <a :href="'groups/' + feed_item.group_id">{{ feed_item.group_name }} Group</a>
                                 <br />
                                 {{ feed_item.timestamp }}
                             </h5>
@@ -47,8 +47,8 @@
                         </div>
                     </div>
                 </div>
-            </div> -->
-
+            </div>
+<!-- 
             <div>
                 <div class="feed-item">
                     <div class="row">
@@ -76,7 +76,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             {% endraw %}
 
