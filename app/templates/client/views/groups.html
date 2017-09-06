@@ -43,9 +43,9 @@
 						                <img :src="group_icons_folder + group.group_icon" width="120px" height="120px">
 						            </div>
 						            <div class="group-desc">
-						                <h4 class="title">{{ group.name}}</h4>
+						                <h4 class="title">{{ group.name }}</h4>
 						                <!-- FIX THIS SECTION: SHOW NUMBER OF MEMBERS -->
-						                <p><i class="fa fa-user"></i> 10</p>
+						                <p><i class="fa fa-user"></i> {{ group.population }}</p>
 						            </div>
 						        </div>
 						    </div> <!-- END OF GROUP CARD -->

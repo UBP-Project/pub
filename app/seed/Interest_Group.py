@@ -30,7 +30,7 @@ groups = [
 		"name"			: "Basketball",
 		"about"			: "Where basket is life! Puso!!!",
 		"cover_photo"	: "bball.jpg",
-		"group_icon"	: "bball.jpg"
+		"group_icon"	: "bball.jpeg"
 	},
 	{
 		'name'			: 'Badminton',
