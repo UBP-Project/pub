@@ -24,6 +24,16 @@ def groups():
             )  \
         .paginate(page = 1 , per_page = 12, error_out=False).items
 
+    # interest_groups_query = Interest_Group.query\
+    #     .paginate(page = 1 , per_page = 12, error_out=False).items
+
+    # interest_groups = []
+
+    # for g in interest_groups_query:
+    #     group = g.to_json();
+    #     group.status = Membership.query.filter_by(Membership.user_id == current_user.get_id())
+    #     interest_groups.append(group)
+
     managed_groups = Interest_Group.query.join(Membership,\
         Membership.group_id == Interest_Group.id).filter(Membership.level == 1,\
         Membership.user_id == current_user.get_id()).all()

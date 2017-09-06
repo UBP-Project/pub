@@ -1,5 +1,5 @@
 from app import db
-# from app.models.guid import GUID
+from datetime import datetime
 from sqlalchemy_utils import UUIDType
 import uuid
 
@@ -10,6 +10,8 @@ class User_Activity(db.Model):
     activity_id = db.Column(UUIDType(binary=False), db.ForeignKey('activity.id', ondelete="CASCADE", onupdate="CASCADE"))
     status      = db.Column(db.Integer) #0 interested #1 going
     attended    = db.Column(db.Boolean)
+    timestamp   = db.Column(db.DateTime, default=datetime.utcnow())
+
     
     def __init__(self, user_id, activity_id, status = 0):
         self.user_id = user_id

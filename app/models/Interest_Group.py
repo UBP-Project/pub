@@ -1,5 +1,5 @@
 from app import db
-# from app.models.guid import GUID
+from datetime import datetime# from app.models.guid import GUID
 from sqlalchemy_utils import UUIDType
 import uuid
 
@@ -10,6 +10,8 @@ class Interest_Group(db.Model):
     about         = db.Column(db.Text(4294967295))
     cover_photo   = db.Column(db.String(200))
     group_icon    = db.Column(db.String(100))
+    timestamp       = db.Column(db.DateTime, default=datetime.utcnow())
+
 
     def __init__(self, name, about, cover_photo = "", group_icon = ""):
         self.name           = name

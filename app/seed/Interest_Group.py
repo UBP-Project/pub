@@ -2,30 +2,29 @@ from app import db
 from app.models import Interest_Group
 
 groups = [
-	{
-		'name'			: 'Sports',
-		'about'			: 'Everything you should get involved!',
-		'cover_photo'	: 'c94f84619ce845f3b6398a30aa99c720.bmp',
-		'group_icon'	: 'd167f8ec77194efc8319e3455da9920f.jpg'
-	},
-	{
-		'name'			: 'Techies',
-		'about'			: 'Technology Events',
-		'cover_photo'	: 'c0b5cfd73486428ba70fddd88f045035.jpg',
-		'group_icon'	: 'ee7c6819aa804255a2a3f1a9bd5732d3.jpg'
-	},
-	{
-		'name'			: 'Umba',
-		'about'			: 'Morning Zumba Events',
-		'cover_photo'	: '00771563eb6748b284b713294905777e.jpg',
-		'group_icon'	: '91c4cd4954e14555808e5649653c7666.jpg'
-	},
-	{
-		'name'			: 'Arts',
-		'about'			: 'Artsy People',
-		'cover_photo'	: '5e7a66a709234aed9f690b80de8434e2.jpg',
-		'group_icon'	: 'fbb59b05434d461c932f031029b66562.jpg'
-	},
+	# {
+	# 	'name'			: 'Sports',
+	# 	'about'			: 'Everything you should get involved!',
+	# 	'cover_photo'	: 'https://github.com/UBP-Project/pub/tree/master/app/static/uploads/covers/c94f84619ce845f3b6398a30aa99c720.bmp',
+	# 	'group_icon'	: 'https://github.com/UBP-Project/pub/blob/master/app/static/uploads/group_icons/d167f8ec77194efc8319e3455da9920f.jpg
+	# {
+	# 	'name'			: 'Techies',
+	# 	'about'			: 'Technology Events',
+	# 	'cover_photo'	: '/https://github.com/UBP-Project/pub/tree/master/app/static/uploads/covers/c0b5cfd73486428ba70fddd88f045035.jpg',
+	# 	'group_icon'	: 'https://github.com/UBP-Project/pub/blob/master/app/static/uploads/group_icons/ee7c6819aa804255a2a3f1a9bd5732d3.jpg'
+	# },
+	# {
+	# 	'name'			: 'Umba',
+	# 	'about'			: 'Morning Zumba Events',
+	# 	'cover_photo'	: 'https://github.com/UBP-Project/pub/tree/master/app/static/uploads/covers/00771563eb6748b284b713294905777e.jpg',
+	# 	'group_icon'	: 'https://github.com/UBP-Project/pub/blob/master/app/static/uploads/group_icons/91c4cd4954e14555808e5649653c7666.jpg'
+	# },
+	# {
+	# 	'name'			: 'Arts',
+	# 	'about'			: 'Artsy People',
+	# 	'cover_photo'	: 'https://github.com/UBP-Project/pub/tree/master/app/static/uploads/covers/5e7a66a709234aed9f690b80de8434e2.jpg',
+	# 	'group_icon'	: 'https://github.com/UBP-Project/pub/blob/master/app/static/uploads/group_icons/fbb59b05434d461c932f031029b66562.jpg'
+	# },
 	{"name":"Stokes-Spinka","about":"Devolved systematic groupware","cover_photo":"http://dummyimage.com/304x353.jpg/dddddd/000000","group_icon":"https://robohash.org/oditvoluptatemofficiis.bmp?size=50x50&set=set1"},
 	{"name":"Veum-Harvey","about":"Mandatory human-resource archive","cover_photo":"http://dummyimage.com/312x289.png/5fa2dd/ffffff","group_icon":"https://robohash.org/quasfugitvel.jpg?size=50x50&set=set1"},
 	{"name":"Nicolas Group","about":"Up-sized clear-thinking matrix","cover_photo":"http://dummyimage.com/333x307.jpg/cc0000/ffffff","group_icon":"https://robohash.org/inaccusantiumporro.png?size=50x50&set=set1"},
