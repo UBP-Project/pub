@@ -14,7 +14,9 @@
                     width="200px" 
                     height="200x"/>
             {% endif %}
-            <h3>{{ user['firstname'] }} {{ user['lastname'] }}</h3>
+            <a href="{{ url_for('client.view_profile', id=user.id)}}">
+                <h3>{{ user['firstname'] }} {{ user['lastname'] }}</h3>
+            </a>
             <p>{{ user['position'] }} <br /> {{ user['department'] }}</p>
         </div>
 
