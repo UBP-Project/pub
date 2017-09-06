@@ -1,0 +1,99 @@
+{% extends "./layout/client_base.html" %}
+
+{% block title %} {{ activity.title }} {% endblock title %}
+
+{% block content %}
+    <div id="app" class="checklist">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 text-center">
+                <h2>Attendance Checklist</h2>
+                <h4>Activity: {{ activity.title }}</h4>
+                {% raw %}
+                <input class="form-control input-lg" placeholder="Search Participants" v-model="query"/>
+                <br /><br />
+            </div>
+            
+            <div class="row card-container">
+                <div v-for="user in going_users" class="col-md-6 col-md-offset-3 checklist-item card-container" :hidden="!show_all">
+                    <img v-if="user.image" :src="'/static/uploads/profile_pictures/' + user.image">
+                    <img v-else :src="default_img">
+                    <span>{{ user.firstname }} {{ user.lastname }}</span>
+                    <i v-if="user.attended" class="fa fa-check-circle" aria-hidden="true"></i>
+                    <input v-on:click="toggleCheck(user)" type="checkbox" class="pull-right" :checked="user.attended">
+                    <hr />
+                </div>
+                <div v-for="user in search_items" class="col-md-6 col-md-offset-3 checklist-item card-container" :hidden="show_all">
+                    <img v-if="user.image" :src="'/static/uploads/profile_pictures/' + user.image">
+                    <img v-else :src="default_img">
+                    <span>{{ user.firstname }} {{ user.lastname }}</span>
+                    <i v-if="user.attended" class="fa fa-check-circle" aria-hidden="true"></i>
+                    <input v-on:click="toggleCheck(user)" type="checkbox" class="pull-right" :checked="user.attended">
+                    <hr />
+                </div>
+                <div v-if="!show_all && search_items.length == 0" class="col-md-6 col-md-offset-3 text-center">
+                <h4>No search results for "{{ query }}"</h4>
+                </div>
+            </div>
+            {% endraw %}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        var vm = new Vue({
+            el: "#app",
+            data: {
+                going_users: [],
+                default_img: "{{ url_for('static', filename='images/pub-default-img.jpg') }}",
+                query: "",
+                show_all: true,
+                search_items: []
+            },
+            watch: {
+                query: function() {
+                    if (this.query.length > 0) {
+                        this.show_all = false
+                        this.search_items = this.going_users.filter(user => {
+                            if (user.firstname.includes(this.query) || user.lastname.includes(this.query)) {
+                                return user; 
+                            }
+                            console.log(user.firstname, this.query);
+                        });
+                    } else {
+                        this.show_all = true;
+                        this.search_items = [];
+                    }
+                }
+            },
+            methods: {
+                loadGoingUsers: function() {
+                    $.ajax({
+                        url: "{{ url_for('api.get_going_by', id=activity.id)}}",
+                        type: 'GET'
+                    }).done(data => {
+                        console.log(data);
+                        this.going_users = data.going_users;
+                    });
+                },
+                toggleCheck: function(user) {
+                    action = user.attended ? 'uncheck' : 'check';
+                    $.ajax({
+                        url: '/api/v1.0/activities/'+ "{{ activity.id }}" + "/checklist",
+                        type: 'POST',
+                        data: {
+                            'action': action,
+                            'user_id': user.id
+                        }
+                    }).done(data => {
+                        user.attended = !user.attended;
+                    });
+                },
+            }
+        });
+        $(document).ready(function() {
+            vm.loadGoingUsers();
+        })
+    </script>
+{% endblock %}

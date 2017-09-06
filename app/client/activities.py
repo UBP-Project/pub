@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, jsonify
 from .. import admin
 from ..forms import CreateActivityForm, UpdateActivityForm
 from app import db
@@ -55,8 +55,18 @@ def create_activity():
     flash_errors(form)
     return render_template("client/activity/create.html", form=form, groups=groups)
 
-# @client.route('/activities/<string:id>/attendance')
-# @login_required
+@client.route('/activities/<string:id>/attendance')
+@login_required
 # @manager_or_leader_only
-# def attendance(id):
+def attendance(id):
+    activity = Activity.query.get_or_404(id)
+    return render_template("attendance/checklist.html", activity=activity)
+
+@client.route('/activity-list')
+@login_required
+def activity_list():
+    activities = Activity.query.all()
+    return jsonify({
+        'activities': [activity.to_json() for activity in activities]
+    })
     

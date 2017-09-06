@@ -429,18 +429,31 @@ def get_going_by(id):
                 description: Flag for user's role
                 required: true
     """
-    activity = Activity.query.get_or_404(id)
+    # activity = Activity.query.get_or_404(id)
 
-    going = User.query                      \
-        .join(User_Activity)                \
-        .join(Activity)                     \
-        .filter(Activity.id == activity.id) \
-        .filter(User_Activity.status == 1)  \
-        .order_by(User.lastname)
+    # going = User.query                      \
+    #     .join(User_Activity)                \
+    #     .join(Activity)                     \
+    #     .filter(Activity.id == activity.id) \
+    #     .filter(User_Activity.status == 1)  \
+    #     .order_by(User.lastname)
+    going = User_Activity.query.join(User, User_Activity.user_id == User.id)\
+      .add_columns(User.firstname, User.lastname, User.image, User.id, User_Activity.attended)\
+      .filter(User_Activity.activity_id == id).all()
 
-    return jsonify([
-        user.to_json() for user in going
-    ])
+    return jsonify({
+      'going_users': [user_activity_to_json(user) for user in going]
+    })
+
+def user_activity_to_json(user_activity):
+  json = {
+    'firstname': user_activity.firstname,
+    'lastname' : user_activity.firstname,
+    'image'    : user_activity.image,
+    'attended' : user_activity.attended,
+    'id'       : user_activity.id
+  }
+  return json
 
 @api.route('/activities/<uuid(strict=False):id>/participants/going', methods=['POST'])
 @login_required
@@ -744,3 +757,21 @@ def get_participation_status_by(id):
             'going' : True if going else False,
             'interested' : True if interested else False
         })
+
+@api.route("/activities/<string:id>/checklist", methods=['POST'])
+@login_required
+def check_user(id):
+  action = request.form.get('action')
+  user_id = request.form.get('user_id')
+  print("USER ID", user_id)
+  user_activity = User_Activity.query.filter(User_Activity.activity_id == id, User_Activity.user_id == user_id).first()
+  if action == 'check':
+    user_activity.attended = True
+  else:
+    user_activity.attended = False
+  db.session.commit()
+  return jsonify({
+    'activity_id': id,
+    'user_id': user_id,
+    'action': action
+  }), 200
