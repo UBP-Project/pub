@@ -12,7 +12,7 @@
             <div class="group-desc">
                 <h4 class="title">{{ group.name | upper }}</h4>
                 <!-- FIX THIS SECTION: SHOW NUMBER OF MEMBERS -->
-                <p><i class="fa fa-user"></i> 10</p>
+                <p><i class="fa fa-user"></i></p>
             </div>
 
         </div>
@@ -33,8 +33,8 @@
                 <!-- BODY -->
                 <div class="modal-body">
                     
-                    <div class="img-container" style="background-image: url({{ group.cover_photo }});">
-                        <img src="{{ url_for('static',filename='uploads/group_icons/' + group.group_icon) }}" />
+                    <div class="img-container" style="background-image: url({{ url_for('static',filename='uploads/covers/' + group.cover_photo) }}); background-size: cover; background-repeat: no-repeat;">
+                        <img src="{{ url_for('static',filename='uploads/group_icons/' + group.group_icon) }}" class="grp-icon-img img-circle" />
                         <!-- <img src="{{ group.group_icon }}" class="img-circle grp-icon-img"/> -->
                     </div>
 
