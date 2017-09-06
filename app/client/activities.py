@@ -58,7 +58,7 @@ def create_activity():
 @client.route('/activities/<string:id>/attendance')
 @login_required
 def attendance(id):
-    # is_manager_or_leader(abort_on_false=True) # Forbidden if not a leader or manager
+    is_manager_or_leader(abort_on_false=True) # Forbidden if not a leader or manager
     activity = Activity.query.get_or_404(id)
     return render_template("attendance/checklist.html", activity=activity)
 
