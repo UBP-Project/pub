@@ -174,7 +174,8 @@
                     url: '/api/v1.0/activities/'+ activity.id + '/participants/going',
                     type: 'GET'
                 }).done(function(data) {
-                     activity.going_users = data;
+                    console.log(data);
+                    activity.going_users = data.going_users;
                 }).fail(function() {
                     console.log("error");
                 });

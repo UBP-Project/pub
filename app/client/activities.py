@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from .. import admin
-from ..forms import CreateActivityForm, UpdateActivityForm
+from ..forms import CreateActivityFormClient, UpdateActivityForm
 from app import db
 from app.models import User, Activity, Permission, Interest_Group
 from ..utils import flash_errors, is_valid_extension
@@ -15,9 +15,8 @@ from ..auth import is_manager_or_leader
 @login_required
 def activities():
     show_create = is_manager_or_leader()
-
+    print(show_create)
     activities = Activity.query.limit(7)
-    
     return render_template("client/views/activities.html", activities=activities,\
         show_create=show_create, user=current_user)
 
@@ -30,7 +29,8 @@ def activity(id):
 @client.route('/activities/create', methods=['GET', 'POST'])
 @login_required
 def create_activity():
-    form = CreateActivityForm()
+    is_manager_or_leader(abort_on_false=True) # Forbidden if not a leader or manager
+    form = CreateActivityFormClient()
     groups = Interest_Group.query.all()
     if request.method == 'POST':
         image                 = form.image.data
@@ -57,8 +57,8 @@ def create_activity():
 
 @client.route('/activities/<string:id>/attendance')
 @login_required
-# @manager_or_leader_only
 def attendance(id):
+    is_manager_or_leader(abort_on_false=True) # Forbidden if not a leader or manager
     activity = Activity.query.get_or_404(id)
     return render_template("attendance/checklist.html", activity=activity)
 
