@@ -12,12 +12,13 @@ class Membership(db.Model):
     MEMBERSHIP_MEMBER = 0
     MEMBERSHIP_LEADER = 1
 
-    __tablename__     = 'membership'
-    user_id     = db.Column(UUIDType(binary=False), db.ForeignKey('user.id', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
-    group_id    = db.Column(UUIDType(binary=False), db.ForeignKey('interest_group.id', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
-    timestamp   = db.Column(db.DateTime, default=datetime.utcnow())
-    status      = db.Column(db.Integer)
-    level       = db.Column(db.Integer)
+    __tablename__ = 'membership'
+    user_id       = db.Column(UUIDType(binary=False), db.ForeignKey('user.id', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
+    group_id      = db.Column(UUIDType(binary=False), db.ForeignKey('interest_group.id', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
+    date_joined   = db.Column(db.Date)
+    status        = db.Column(db.Integer)
+    level         = db.Column(db.Integer)
+    timestamp     = db.Column(db.DateTime, default=datetime.utcnow())
 
     def __init__(self, user_id, group_id, status = MEMBERSHIP_PENDING, level = MEMBERSHIP_MEMBER):
         self.user_id = user_id

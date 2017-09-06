@@ -25,8 +25,7 @@ class User(UserMixin, db.Model):
     points        = db.Column(db.Integer, default=0)
     cover_photo   = db.Column(db.String(200))
     image         = db.Column(db.String(100))
-    timestamp       = db.Column(db.DateTime, default=datetime.utcnow())
-
+    timestamp     = db.Column(db.DateTime, default=datetime.utcnow())
     
     # followed      = db.relationship('Follow', foreign_keys=[Follow.follower_id], backref=db.backref('follower', lazy='joined'), lazy='dynamic', passive_deletes=True, passive_updates=True)
     # follower      = db.relationship('Follow', foreign_keys=[Follow.following_id], backref=db.backref('followed', lazy='joined'), passive_deletes=True, passive_updates=True)

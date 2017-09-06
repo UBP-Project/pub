@@ -10,19 +10,22 @@
     <title>PUB | {% block title %}{% endblock title %}</title>
 
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script> -->
     <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <script src="https://unpkg.com/vue"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/client.css') }} ">
+    <script src="{{ url_for('static', filename='plugins/wysiwyg/trumbowyg.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='plugins/wysiwyg/ui/trumbowyg.css') }}">
 
 </head>
 
 <body>
 
 	<div id="top" class="text-center">
-		<a href="www.unionbankph.com"><img src="{{ url_for('static', filename='../../static/images/ubp-white.png') }}" alt="UBP LOGO"></a>
+		<a href="https://www.unionbankph.com"><img src="{{ url_for('static', filename='../../static/images/ubp-white.png') }}" alt="UBP LOGO"></a>
 	</div>
 
 	{% block navigation %}
@@ -101,7 +104,7 @@
                     <div class="col-md-4">
                         <ul style="text-align: left; list-style-type: none;">
                             <li>
-                                <a href="www.unionbank.ph">Union Bank of the Philippines</a>
+                                <a href="https://www.unionbank.ph">Union Bank of the Philippines</a>
                             </li>
                             <li>
                                 <a href="/">UBP: Pub</a>

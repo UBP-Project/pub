@@ -8,6 +8,7 @@ from app.models import User, Interest_Group, Activity, Membership, Role, Follow
 from ..auth import manager_or_leader_only
 from ..forms import UpdateUserFormClient, PasswordFormClient
 from ..utils import flash_errors
+from sqlalchemy.sql import func
 
 @client.route('/', methods=['GET', 'POST'])
 @login_required
@@ -40,8 +41,14 @@ def notifications():
 @login_required
 def leaderboard():
     point_leaders = User.query.order_by(User.points.desc()).limit(10).all()
+    # followed_leaders = Follow.query.group_by(Follow.following_id).order_by(Follow.following_id).limit(10).all()
+    followed_leaders = db.session.query(Follow, func.count(Follow.following_id).label('total'), Follow.following_id)\
+        .join(User, User.id == Follow.following_id)\
+        .add_columns(User.id, User.firstname, User.lastname, User.image)\
+        .group_by(Follow.following_id).order_by('total DESC').limit(10).all()
+    # db.session.query(Post, func.count(likes.c.user_id).label('total')).join(likes).group_by(Post).order_by('total DESC')
     return render_template("client/views/leaderboard.html", user=current_user,
-        point_leaders=point_leaders)
+        point_leaders=point_leaders, followed_leaders=followed_leaders)
 
 @client.route('/logout')
 @login_required

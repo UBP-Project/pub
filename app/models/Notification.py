@@ -16,8 +16,9 @@ class Notification(db.Model):
     # url         = db.Column(db.String(50))
     # is_read     = db.Column(db.Boolean)
     notification_object_id = db.Column(UUIDType(binary=False), db.ForeignKey('notification_object.id'))
-    notifier_id = db.Column(UUIDType(binary=False), db.ForeignKey('user.id'))
-    status = db.Column(db.Boolean)
+    notifier_id            = db.Column(UUIDType(binary=False), db.ForeignKey('user.id'))
+    status                 = db.Column(db.Boolean)
+    timestamp              = db.Column(db.DateTime, default=datetime.utcnow())
 
 
     # def __init__(self, user_id, content, url):

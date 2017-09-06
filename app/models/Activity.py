@@ -17,7 +17,6 @@ class Activity(db.Model):
     image         = db.Column(db.String(200))
     timestamp     = db.Column(db.DateTime, default=datetime.utcnow())
 
-
     # comments    = db.relationship('Comment', backref=db.backref('comments', lazy='joined'), lazy="dynamic", passive_deletes=True, passive_updates=True)
     # schedule    = db.relationship('Schedule', backref=db.backref('schedule', lazy='joined'), lazy="dynamic", passive_deletes=True, passive_updates=True)
     # assignment  = db.relationship('Assignment', backref=db.backref('assignment', lazy='joined'), lazy='dynamic', passive_deletes=True, passive_updates=True)
