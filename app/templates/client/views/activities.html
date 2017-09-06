@@ -71,17 +71,27 @@
                                                         <p>{{ activity.description }}</p>
                                                     </div>
                                                     <div role="tabpanel" class="tab-pane" :id="'act-interested-' + activity.id">
-                                                        <div v-for="interested_user in activity.interested_users">
-                                                            <a :href="'/profile/' + interested_user.id">
-                                                                {{ interested_user.firstname }} {{ interested_user.lastname }}
-                                                            </a>
+                                                        <div class="row">
+                                                            <div v-for="interested_user in activity.interested_users" class="col-md-6 mini-container">
+                                                                <a :href="'/profile/' + interested_user.id">
+                                                                    <div>
+                                                                        <img :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
+                                                                        <span>{{ interested_user.firstname }} {{interested_user.lastname}}</span>
+                                                                    </div>
+                                                                </a>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div role="tabpanel" class="tab-pane" :id="'act-going-' + activity.id">
-                                                        <div v-for="going_user in activity.going_users">
-                                                            <a :href="'/profile/' + going_user.id">
-                                                                {{ going_user.firstname }} {{ going_user.lastname }}
-                                                            </a>
+                                                        <div class="row">
+                                                            <div v-for="going_user in activity.going_users" class="col-md-6 mini-container">
+                                                                <a :href="'/profile/' + going_user.id">
+                                                                    <div>
+                                                                        <img :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
+                                                                        <span>{{ going_user.firstname }} {{going_user.lastname}}</span>
+                                                                    </div>
+                                                                </a>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>

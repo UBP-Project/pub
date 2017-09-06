@@ -16,7 +16,6 @@ class Membership(db.Model):
     __tablename__ = 'membership'
     user_id       = db.Column(UUIDType(binary=False), db.ForeignKey('user.id', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
     group_id      = db.Column(UUIDType(binary=False), db.ForeignKey('interest_group.id', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
-    date_joined   = db.Column(db.Date)
     status        = db.Column(db.Integer)
     level         = db.Column(db.Integer)
     timestamp     = db.Column(db.DateTime, default=datetime.utcnow())
@@ -31,7 +30,7 @@ class Membership(db.Model):
         json_post = {
             'user_id'    : self.user_id,
             'group_id'   : self.group_id,
-            'date_joined': self.date_joined,
+            'timestamp': self.timestamp,
             'status'     : self.status,
             'level'      : self.level
         }
