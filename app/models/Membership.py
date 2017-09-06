@@ -9,8 +9,9 @@ class Membership(db.Model):
     MEMBERSHIP_ACCEPTED = 1
     MEMBERSHIP_DECLINED = 2
 
-    MEMBERSHIP_MEMBER = 0
-    MEMBERSHIP_LEADER = 1
+    MEMBERSHIP_MEMBER  = 0
+    MEMBERSHIP_LEADER  = 1
+    MEMBERSHIP_MANAGER = 2
 
     __tablename__ = 'membership'
     user_id       = db.Column(UUIDType(binary=False), db.ForeignKey('user.id', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
