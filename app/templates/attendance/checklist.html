@@ -3,39 +3,69 @@
 {% block title %} {{ activity.title }} {% endblock title %}
 
 {% block content %}
-    <div id="app" class="checklist">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 text-center">
-                <h2>Attendance Checklist</h2>
-                <h4>Activity: {{ activity.title }}</h4>
+    
+    <div class="row" id="app" class="checklist">
+
+        <div class="col-md-12">
+            <div class="group-box">
+
+                <h2>ATTENDANCE <small>{{ activity.title }}</small> </h2>
+                <hr/>
+
                 {% raw %}
-                <input class="form-control input-lg" placeholder="Search Participants" v-model="query"/>
-                <br /><br />
+                    <div class="row card-container">
+
+                        <div class="col-md-6">
+
+                            <br/>
+                            <input class="form-control input-lg" placeholder="Search" v-model="query"/>
+                            <h3 style="color: #0e0058; font-family: Lato;">PARTICIPANTS LIST</h3>
+                            <hr/>
+
+                            <div v-for="user in going_users" class="col-md-12 checklist-item card-container" :hidden="!show_all">
+                                <img v-if="user.image" :src="'/static/uploads/profile_pictures/' + user.image">
+                                <img v-else :src="default_img">
+                                <a :href="'/profile/' + user.id" style="padding-left: 30px;">
+                                    {{ user.firstname }} {{ user.lastname }}
+                                </a>
+                                <!-- <i v-if="user.attended" class="fa fa-check-circle" aria-hidden="true"></i> -->
+                                <input v-on:click="toggleCheck(user)" type="checkbox" class="pull-right" :checked="user.attended">
+                                <hr />
+                            </div>
+                            <div v-for="user in search_items" class="col-md-12 checklist-item card-container" :hidden="show_all">
+                                <img v-if="user.image" :src="'/static/uploads/profile_pictures/' + user.image">
+                                <img v-else :src="default_img">
+                                <a :href="'/profile/' + user.id" style="padding-left: 30px;">
+                                    {{ user.firstname }} {{ user.lastname }}
+                                </a>
+                                <!-- <i v-if="user.attended" class="fa fa-check-circle" aria-hidden="true"></i> -->
+                                <input v-on:click="toggleCheck(user)" type="checkbox" class="pull-right" :checked="user.attended">
+                                <hr />
+                            </div>
+                            <div v-if="!show_all && search_items.length == 0" class="col-md-6 col-md-offset-3 text-center">
+                            <p>No search results for "{{ query }}"</p>
+                            </div>
+                        </div>
+                {% endraw %}
+                        <div class="col-md-6" style="padding: 20px 40px;">
+                            <div>
+                                {% if activity.image %}
+                                    <img src="{{ url_for('static', filename='uploads/activity_images/' + activity.image )}}" width="420px;" height="300px;">
+                                {% else %}
+                                    <img src="{{ url_for('static', filename='images/pub-default-img.jpg')}}" width="400px;" height="300px;">
+                                {% endif %}
+                                
+                                <h4>{{activity.title}}</h4>
+                                <h4><small>{{activity.description}}</small></h4>
+                            </div>
+                        </div>
+
+                    </div>
+                
+        
             </div>
-            
-            <div class="row card-container">
-                <div v-for="user in going_users" class="col-md-6 col-md-offset-3 checklist-item card-container" :hidden="!show_all">
-                    <img v-if="user.image" :src="'/static/uploads/profile_pictures/' + user.image">
-                    <img v-else :src="default_img">
-                    <span>{{ user.firstname }} {{ user.lastname }}</span>
-                    <i v-if="user.attended" class="fa fa-check-circle" aria-hidden="true"></i>
-                    <input v-on:click="toggleCheck(user)" type="checkbox" class="pull-right" :checked="user.attended">
-                    <hr />
-                </div>
-                <div v-for="user in search_items" class="col-md-6 col-md-offset-3 checklist-item card-container" :hidden="show_all">
-                    <img v-if="user.image" :src="'/static/uploads/profile_pictures/' + user.image">
-                    <img v-else :src="default_img">
-                    <span>{{ user.firstname }} {{ user.lastname }}</span>
-                    <i v-if="user.attended" class="fa fa-check-circle" aria-hidden="true"></i>
-                    <input v-on:click="toggleCheck(user)" type="checkbox" class="pull-right" :checked="user.attended">
-                    <hr />
-                </div>
-                <div v-if="!show_all && search_items.length == 0" class="col-md-6 col-md-offset-3 text-center">
-                <h4>No search results for "{{ query }}"</h4>
-                </div>
-            </div>
-            {% endraw %}
         </div>
+
     </div>
 
 {% endblock %}

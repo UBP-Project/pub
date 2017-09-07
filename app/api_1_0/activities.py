@@ -429,14 +429,8 @@ def get_going_by(id):
                 description: Flag for user's role
                 required: true
     """
-    # activity = Activity.query.get_or_404(id)
-
-    # going = User.query                      \
-    #     .join(User_Activity)                \
-    #     .join(Activity)                     \
-    #     .filter(Activity.id == activity.id) \
-    #     .filter(User_Activity.status == 1)  \
-    #     .order_by(User.lastname)
+    activity = Activity.query.get_or_404(id)
+    
     going = User_Activity.query.join(User, User_Activity.user_id == User.id)\
       .add_columns(User.firstname, User.lastname, User.image, User.id, User_Activity.attended)\
       .filter(User_Activity.activity_id == id).all()
@@ -448,7 +442,7 @@ def get_going_by(id):
 def user_activity_to_json(user_activity):
   json = {
     'firstname': user_activity.firstname,
-    'lastname' : user_activity.firstname,
+    'lastname' : user_activity.lastname,
     'image'    : user_activity.image,
     'attended' : user_activity.attended,
     'id'       : user_activity.id
