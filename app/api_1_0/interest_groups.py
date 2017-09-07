@@ -685,3 +685,22 @@ def decline_request(group_id):
     db.session.commit()
     return jsonify({'status': 'Success'}), 200
 
+
+@api.route('/interest_groups/<string:group_id>/requests', methods=['GET'])
+def get_requests(group_id):
+    requests = Membership.query.join(User, User.id == Membership.user_id)\
+        .add_columns(User.firstname, User.lastname,
+            User.department, User.position, User.image,
+            User.id.label("user_id"), Membership.group_id)\
+        .filter(Membership.group_id == group_id).all()
+    return jsonify({
+        'requests': [{
+            'group_id'  : request.group_id,
+            'user_id'   : request.user_id,
+            'firstname' : request.firstname,
+            'lastname'  : request.lastname,
+            'image'     : request.image,
+            'department': request.department,
+            'position'  : request.position
+        } for request in requests]
+    }), 200

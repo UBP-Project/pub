@@ -75,3 +75,19 @@
 }
 
 /* END HOME */
+
+/* membership-request */
+.membership-requests {
+    background-color: white;
+}
+
+.request-item span {
+    font-size: 20px;
+    font-family: 'Roboto Condensed Bold';
+}
+
+.request-item img {
+    height: 50px;
+    width: 50px;
+    border-radius: 25px;
+}

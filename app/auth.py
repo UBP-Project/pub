@@ -13,7 +13,7 @@ def is_manager_or_leader(abort_on_false=False):
         abort(403)
         return False
   
-    if membership is None:
+    if membership == False:
         return False
     return True
 

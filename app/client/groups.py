@@ -1,5 +1,5 @@
 import json
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import current_user, login_required
 from . import client
 from app import db
@@ -14,7 +14,6 @@ import uuid
 @client.route('/groups/')
 @login_required
 def groups():
-
     isManager = User.query\
             .join(Role, Role.id == User.role_id)\
             .filter(Role.name == 'Manager', User.id == current_user.get_id()).first() is not None
@@ -176,9 +175,19 @@ def mygroups():
 @client.route('/groups/<uuid(strict=False):id>/requests', methods=['POST', 'GET'])
 @login_required
 def group_requests(id):
-    manager_or_leader_only(id) # check if the current user is a manager or leader
+    is_manager_or_leader(abort_on_false=True) # check if the current user is a manager or leader
     group = Interest_Group.query.get_or_404(id)
     membership_requests = User.query \
         .join(Membership, User.id==Membership.user_id) \
         .filter(Membership.group_id==id, Membership.status == 0, Membership.level == 0).all()
     return render_template('client/views/group-requests.html', group=group, membership_requests=membership_requests)
+
+
+@client.route('/groups-list')
+def group_list():
+    groups = Interest_Group.query.all()
+    return jsonify({
+        'groups': [ {
+            'group_id': group.id
+        } for group in groups ]
+    }), 200
