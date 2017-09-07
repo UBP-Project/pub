@@ -1,16 +1,13 @@
-{% if 'admin' in request.path %}
-    {% extends "/layout/admin_base.html" %}
-{% else %}
-    {% extends "/layout/base.html" %}
-{% endif %}
+{% extends "/layout/admin_base.html" %}
 
 {% block content %}
     <div class="row">
-        <form class="form-group col-md-9 admin-form" method="post" enctype="multipart/form-data" name="create_interest_group">
+        <form class="form-group col-md-12 admin-form" method="post" enctype="multipart/form-data" name="create_interest_group">
 
             <div class="row">
                 <div class="col-md-12">
                     <h1>Create Interest Group</h1>
+                    <hr />
                 </div>  
             </div>
 
@@ -21,28 +18,32 @@
                     <label>Group name</label>
                     {{ form.name(
                         placeholder="Group name",
-                        class="form-control") }}
+                        class="form-control",
+                        required="true") }}
                 </div>
                 
                 <div class="col-md-12">
                     <label>About this Group</label>
                     {{ form.about(
                         placeholder="About",
-                        class="form-control") }}
+                        class="form-control",
+                        required="true") }}
                 </div>
 
                 <div class="col-md-6">
                     <label>Group Cover Photo</label>
                     {{ form.cover_photo(
                         placeholder="Cover Photo",
-                        class="form-control")}}
+                        class="form-control",
+                        required="true")}}
                 </div>
                 
                 <div class="col-md-6">
                     <label>Group Icon</label>
                     {{ form.group_icon(
                         placeholder="Group Icon",
-                        class="form-control"
+                        class="form-control",
+                        required="true"
                     )}}
                 </div>
 

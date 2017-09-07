@@ -1,0 +1,68 @@
+{% extends "./layout/client_base.html" %}
+
+{% block title %} Leaderboard {% endblock title %}
+
+{% block content %}
+
+	<div class="row">
+
+		<div class="col-md-12">
+			<div class="group-box">
+
+				<h2>LEADERBOARD</h2>
+				<hr/>
+
+				<div class="row">
+
+					<div class="col-md-6 user-container">
+						<h3 class="text-center title-points">TOP 10 Most Points <i class="fa fa-trophy"></i></h3>
+						<br/>
+						{% if point_leaders %}
+							{% for leader in point_leaders %}
+								<a href="{{ url_for('client.view_profile', id=leader.id) }}">
+									<div class="zoomify user-card-1">
+										{% if leader.image %}
+											<img src="{{ url_for('static', filename='uploads/profile_pictures/' + leader.image )}}">
+										{% else %}
+											<img src="{{ url_for('static', filename='images/pub-default-img.jpg')}}">
+										{% endif %}
+							 			<span class="name">{{ leader.firstname }} {{leader.lastname}}</span>
+							 			<span class="pull-right user-points"><b>{{ leader.points }} pts</b></span>
+									</div>
+								</a>
+							{% endfor %}
+						{% else %}
+							<div><h3>COMING SOON</h3></div>
+						{% endif %}
+					</div>
+					
+					<div class="col-md-6 user-container">
+						<h3 class="text-center title-followed">TOP 10 Most Followed <i class="fa fa-star-o"></i></h3>
+						<br/>
+						{% if followed_leaders %}
+							{% for leader in followed_leaders %}
+								<a href="{{ url_for('client.view_profile', id=leader.id) }}">
+									<div class="zoomify user-card-2">
+										{% if leader.image %}
+											<img src="{{ url_for('static', filename='uploads/profile_pictures/' + leader.image )}}">
+										{% else %}
+											<img src="{{ url_for('static', filename='images/pub-default-img.jpg')}}">
+										{% endif %}
+							 			<span class="name">{{ leader.firstname }} {{leader.lastname}}</span>
+							 			<span class="pull-right user-points"><b>{{ leader.total }} Followers</b></span>
+									</div>
+								</a>
+							{% endfor %}
+						{% else %}
+							<div><h3>COMING SOON</h3></div>
+						{% endif %}
+					</div>
+					
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+
+{% endblock content %}

@@ -22,10 +22,10 @@ def get_interest_groups():
       - groups
 
     parameters:
-      - name: limit
+      - name: page
         in: query
         example: 1
-        default: 15
+        default: 1
 
     responses:
       200:
@@ -34,8 +34,8 @@ def get_interest_groups():
           id: groups
           properties:
             id:
-                type: integer
-                example: 1
+                type: string
+                example: 04cb8787-fe54-4e73-80d4-c17bf56537ee
 
             name:
                 type: string
@@ -57,66 +57,77 @@ def get_interest_groups():
                 example: d167f8ec77194efc8319e3455da9920f.jpg
                 description: File name
     """
-
-    if 'limit' in request.args:
-        limit = request.args.get('limit')
-        interest_groups = Interest_Group.query.limit(limit)
+    if 'page' in request.args:
+        page = int(request.args.get('page'))
     else:
-        interest_groups = Interest_Group.query.all()
-    
-    return jsonify([
-        interest_group.to_json() for interest_group in interest_groups
-    ]), 200
+        page = 1
 
-@api.route('/interest_groups/<int:id>')
+    interest_groups = Interest_Group.query\
+        .outerjoin(Membership) \
+        .outerjoin(User) \
+        .with_entities(
+            Interest_Group.id,              \
+            Interest_Group.name,            \
+            Interest_Group.about,           \
+            Interest_Group.cover_photo,     \
+            Interest_Group.group_icon,      \
+            Membership.status
+            )  \
+        .paginate(page = page, per_page = 8, error_out=False)
+
+    return jsonify({
+      'interest_groups': [ 
+            {
+                'id': group.id,
+                'name': group.name,
+                'about': group.about,
+                'cover_photo': group.cover_photo,
+                'group_icon': group.group_icon,
+                'membership_status': group.status
+            }
+            for group in interest_groups.items ],
+      'has_next': interest_groups.has_next,
+      'has_prev': interest_groups.has_prev
+    }), 200
+       
+@api.route('/groups', methods=['GET'])
 @login_required
-def get_interest_group_by(id):
-    """
-    Get a Group by ID
-    ---
-    tags:
-      - groups
+def get_groups():
+    if 'page' in request.args:
+        page = int(request.args.get('page'))
+    else:
+        page = 1
+    groups = Interest_Group.query\
+        .paginate(page = page, per_page = 12, error_out=False)
+    return jsonify({
+      'interest_groups': [ group.to_json() for group in groups.items ],
+      'has_next': groups.has_next,
+      'has_prev': groups.has_prev
+    })
 
-    parameters:
-      - name: id
-        in: path
-        example: 1
-        required: true
+@api.route('/groups/<string:id>/members', methods=['GET'])
+@login_required
+def get_group_members(id):
+    leaders = User.query.join(Membership, Membership.user_id == User.id)\
+    .filter(Membership.group_id == id, Membership.level == 1).all()
+    members = User.query.join(Membership, Membership.user_id == User.id)\
+    .filter(Membership.group_id == id, Membership.level == 0).all()
+    managers = User.query.join(Membership, Membership.user_id == User.id)\
+    .filter(Membership.group_id == id, Membership.level == 2).all()
+    return jsonify({
+        'members': [ member.to_json() for member in members],
+        'leaders': [ leader.to_json() for leader in leaders],
+        'managers':[ managers.to_json() for manager in managers]
+    });
 
-    responses:
-      200:
-        description: OK
-        schema:
-          id: groups
-          properties:
-            id:
-                type: integer
-                example: 1
-                required: true
+@api.route('/groups/<string:id>/activities', methods=['GET'])
+@login_required
+def get_group_activities(id):
+    activities = Activity.query.filter(Activity.group_id == id).all()
+    return jsonify({
+        'activities': [activity.to_json() for activity in activities]
+    })
 
-            name:
-                type: string
-                example: Sports
-                description: Group name
-                required: true
-
-            description:
-                type: string
-                example: Everything you should get involved!
-                description: About the Group                
-
-            cover_photo:
-                type: string
-                example: c94f84619ce845f3b6398a30aa99c720.bmp
-                description: File name
-
-            group_icon:
-                type: string
-                example: d167f8ec77194efc8319e3455da9920f.jpg
-                description: File name
-    """
-    interest_group = Interest_Group.query.get_or_404(id)
-    return jsonify(interest_group.to_json()), 200
 
 @api.route('/interest_groups', methods=['POST'])
 @login_required
@@ -149,10 +160,10 @@ def new_interest_group():
         required: true
 
     responses:
-      200:
-        description: Success
-      409:
-        description: Name already Taken
+        200:
+            description: Success
+        409:
+            description: Name already Taken
     
     """
 
@@ -187,7 +198,59 @@ def new_interest_group():
         db.session.rollback()
         return jsonify({'message': 'Name already taken'}), 409
 
-@api.route('/interest_groups/<int:id>', methods=['PUT'])
+@api.route('/interest_groups/<string:id>')
+@login_required
+def get_interest_group_by(id):
+    """
+    Get a Group by ID
+    ---
+    tags:
+      - groups
+
+    parameters:
+      - name: id
+        in: path
+        example: 04cb8787-fe54-4e73-80d4-c17bf56537ee
+        type: string
+        required: true
+
+    responses:
+        200:
+            description: OK
+            schema:
+                id: groups
+                properties:
+                    id:
+                        type: string
+                        example: 27e2200d-0da1-4dbf-bc9c-7c930ea1d75c
+                        required: true
+
+                    name:
+                        type: string
+                        example: Sports
+                        description: Group name
+                        required: true
+
+                    description:
+                        type: string
+                        example: Everything you should get involved!
+                        description: About the Group                
+
+                    cover_photo:
+                        type: string
+                        example: c94f84619ce845f3b6398a30aa99c720.bmp
+                        description: File name
+
+                    group_icon:
+                        type: string
+                        example: d167f8ec77194efc8319e3455da9920f.jpg
+                        description: File name
+    """
+    interest_group = Interest_Group.query.get_or_404(id)
+    return jsonify(interest_group.to_json()), 200
+
+
+@api.route('/interest_groups/<string:id>', methods=['PUT'])
 @login_required
 def edit_interest_group_by(id):
     """
@@ -201,9 +264,9 @@ def edit_interest_group_by(id):
         - name: id
           in: path
           description: Group ID
-          type: integer
+          type: string
           required: true
-          default: 1
+          default: 27e2200d-0da1-4dbf-bc9c-7c930ea1d75c
 
         - name: name
           in: formData
@@ -230,10 +293,10 @@ def edit_interest_group_by(id):
           required: true
 
     responses:
-      200:
-        description: OK
-      500:
-        description: Error
+        200:
+            description: OK
+        500:
+            description: Error
     """
     group = Interest_Group.query.get_or_404(id)
 
@@ -265,7 +328,7 @@ def edit_interest_group_by(id):
     db.session.commit()
     return jsonify(group.to_json()) # change this to better message format
 
-@api.route('/interest_groups/<int:id>', methods=['DELETE'])
+@api.route('/interest_groups/<string:id>', methods=['DELETE'])
 @login_required
 def delete_interest_group(id):
     """
@@ -279,15 +342,15 @@ def delete_interest_group(id):
         - name: id
           in: path
           description: Group ID
-          type: integer
+          type: string
           required: true
-          default: 1
+          default: 27e2200d-0da1-4dbf-bc9c-7c930ea1d75c
 
     responses:
-      200:
-        description: OK
-      500:
-        description: Error
+        200:
+            description: OK
+        500:
+            description: Error
     """
     interest_group = Interest_Group.query.filter_by(id=id).delete()
     
@@ -298,7 +361,7 @@ def delete_interest_group(id):
         db.session.rollback()
         return jsonify({'status': 'error'}), 404
 
-@api.route('/interest_groups/<int:id>/members')
+@api.route('/interest_groups/<string:id>/members')
 @login_required
 def get_members(id):
     """
@@ -312,77 +375,82 @@ def get_members(id):
         - name: id
           in: path
           description: Group ID
-          type: integer
+          type: string
           required: true
-          default: 1
+          default: 27e2200d-0da1-4dbf-bc9c-7c930ea1d75c
 
     responses:
-      200:
-        description: OK
-        schema:
-          id: users
-          properties:
-            id:
-                type: integer
-                example: 1
+        200:
+            description: OK
+            schema:
+                id: users
+                properties:
+                    id:
+                        type: string
+                        example: 0f5b5ff8-afa2-43f7-8066-8ec3075c4c0c
 
-            firstname:
-                type: string
-                example: Juan
-                description: First Name
+                    firstname:
+                        type: string
+                        example: Juan
+                        description: First Name
 
-            middlename:
-                type: string
-                example: y
-                description: Middle Name
+                    middlename:
+                        type: string
+                        example: y
+                        description: Middle Name
 
-            lastname:
-                type: string
-                example: dela Cruz
-                description: Last Name    
-                
-            email:
-                type: string
-                example: jdc@gmail.com
-                description: User Email
+                    lastname:
+                        type: string
+                        example: dela Cruz
+                        description: Last Name    
+                        
+                    email:
+                        type: string
+                        example: jdc@gmail.com
+                        description: User Email
 
-            password_hash:
-                type: string
-                example: pbkdf2:sha1:1000$lnFVjrjG$b8cd6a98d9ab806eb52ca0066d275d59ee18e6f5
-                description: User Password
+                    password_hash:
+                        type: string
+                        example: pbkdf2:sha1:1000$lnFVjrjG$b8cd6a98d9ab806eb52ca0066d275d59ee18e6f5
+                        description: User Password
 
-            department:
-                type: string
-                example: Talen Acquisition
-                description: UnionBank Dept
+                    department:
+                        type: string
+                        example: Talen Acquisition
+                        description: UnionBank Dept
 
-            position:
-                type: string
-                example: Head
-                descripton: User's Position
-            
-            birthday:
-                type: string
-                format: date
-                example: '1998-02-01'
-                description: User Birthday
+                    position:
+                        type: string
+                        example: Head
+                        descripton: User's Position
+                    
+                    birthday:
+                        type: string
+                        format: date
+                        example: '1998-02-01'
+                        description: User Birthday
 
-            role_id:
-                type: integer
-                example: 1
-                description: Corresponding values for Administrator, Manager, and User
-      500:
-        description: Error
+                    role_id:
+                        type: string
+                        example: 04cb8787-fe54-4e73-80d4-c17bf56537ee
+                        description: Corresponding values for Administrator, Manager, and User
+        500:
+            description: Error
     """
 
     group = Interest_Group.query.get_or_404(id)
 
-    members = User.query.join(Membership).join(Interest_Group).filter(Interest_Group.id == group.id)
+    members = User.query\
+        .join(Membership, User.id == Membership.user_id)\
+        .join(Interest_Group, Interest_Group.id == group.id)\
+        .filter(Membership.level == Membership.MEMBERSHIP_MEMBER, Membership.status == Membership.MEMBERSHIP_ACCEPTED)\
+        .all()
+
     return jsonify([
         user.to_json() for user in members
     ])
 
-@api.route('/interest_groups/<int:id>/role')
+@api.route('/interest_groups/<string:id>/role')
 @login_required
 def get_role_by_group(id):
     """
@@ -394,10 +462,11 @@ def get_role_by_group(id):
     parameters:
       - name: id
         in: path
-        example: 1
+        example: 04cb8787-fe54-4e73-80d4-c17bf56537ee
         required: true
-        type: int
+        type: string
         description: Group id
+        
     responses:
       200:
         description: OK
@@ -420,7 +489,7 @@ def get_role_by_group(id):
     else:
         return jsonify({'role': 'None'})
 
-@api.route('/interest_groups/<int:id>/join', methods=['POST'])
+@api.route('/interest_groups/<string:id>/join', methods=['POST'])
 @login_required
 def join_group(id):
     """
@@ -431,8 +500,8 @@ def join_group(id):
     parameters:
         - name: id
           in: path
-          type: int
-          example: 1
+          type: string
+          example: 0f5b5ff8-afa2-43f7-8066-8ec3075c4c0c
           description: Group ID
 
     responses:
@@ -446,6 +515,7 @@ def join_group(id):
     membership = Membership(
         user_id=current_user.get_id(),
         group_id=id)
+    
     db.session.add(membership)
 
     try:
@@ -455,7 +525,7 @@ def join_group(id):
         db.session().rollback()
         return jsonify({'message': 'Record exists'}), 409
 
-@api.route('/interest_groups/<int:id>/join/status')
+@api.route('/interest_groups/<string:id>/join/status')
 @login_required
 def get_request_status(id):
     """
@@ -466,8 +536,8 @@ def get_request_status(id):
     parameters:
         - name: id
           in: path
-          type: int
-          example: 1
+          type: string
+          example: 0f5b5ff8-afa2-43f7-8066-8ec3075c4c0c
           description: Group ID
 
     responses:
@@ -501,7 +571,7 @@ def get_request_status(id):
     else:
         return jsonify({'membership_status': 'None'})
 
-@api.route('/interest_groups/<int:id>/leave', methods=['DELETE'])
+@api.route('interest_groups/<string:id>/leave', methods=['DELETE'])
 @login_required
 def leave_group(id):
     """
@@ -514,9 +584,9 @@ def leave_group(id):
       - name: id
         in: path
         description: Group ID
-        type: integer
+        type: string
         required: true
-        default: 1
+        default: 0f5b5ff8-afa2-43f7-8066-8ec3075c4c0c
 
     responses:
       200:
@@ -533,7 +603,7 @@ def leave_group(id):
     else:
         return jsonify({'status': 'Not Found'}), 404
 
-@api.route('/interest_groups/<int:id>/activities')
+@api.route('/interest_groups/<string:id>/activities')
 @login_required
 def group_activities_by(id):
     """
@@ -546,9 +616,9 @@ def group_activities_by(id):
       - name: id
         in: path
         description: Group ID
-        type: integer
+        type: string
         required: true
-        default: 1
+        default: 0f5b5ff8-afa2-43f7-8066-8ec3075c4c0c
 
     responses:
       200:
@@ -558,23 +628,48 @@ def group_activities_by(id):
     """
 
     activities = Activity.query                          \
-                    .join(Interest_Group)                \
-                    .filter(Interest_Group.id == id)   \
-                    .all()
+        .filter(Activity.group_id == id)   \
+        .all()
 
+    print(activities)
+    
     return jsonify([
             activity.to_json() for activity in activities
         ])
 
-@api.route('/interest_groups/<int:group_id>/leaders', methods=['POST', 'GET'])
-def get_group_leaders(group_id):
-    leaders = User.query.join(Membership, User.id == Membership.user_id)\
-        .filter(Membership.level == 1).all()
+@api.route('/interest_groups/<string:id>/leaders', methods=['GET'])
+def get_group_leaders(id):
+    """
+    Get the list of leaders of the group
+    ---
+    tags:
+      - groups
+
+    parameters:
+      - name: id
+        in: path
+        description: Group ID
+        type: string
+        required: true
+        default: 0f5b5ff8-afa2-43f7-8066-8ec3075c4c0c
+
+    responses:
+      200:
+        description: OK
+      404:
+        description: Not Found
+    """
+
+    group = Interest_Group.query.get_or_404(id)
+
+    leaders = User.query.join(Membership, User.id == Membership.user_id).join(Interest_Group, Interest_Group.id == group.id)\
+        .filter(Membership.level == Membership.MEMBERSHIP_LEADER).all()
+    
     return jsonify([
         leader.to_json() for leader in leaders
     ])
 
-@api.route('/interest_groups/<int:group_id>/accept', methods=['POST'])
+@api.route('/interest_groups/<string:group_id>/accept', methods=['POST'])
 def accept_request(group_id):
     user_id = int(request.form.get('user_id'));
     membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
@@ -582,7 +677,7 @@ def accept_request(group_id):
     db.session.commit()
     return jsonify({'status': 'Success'}), 200
 
-@api.route('/interest_groups/<int:group_id>/decline', methods=['POST'])
+@api.route('/interest_groups/<string:group_id>/decline', methods=['POST'])
 def decline_request(group_id):
     user_id = int(request.form.get('user_id'));
     membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()

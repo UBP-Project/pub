@@ -1,12 +1,18 @@
-from app import db, login_manager
-from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from app import db, login_manager
+from app.models import Role, Permission, Follow
+# from app.models.guid import GUID
+from sqlalchemy_utils import UUIDType
+from flask_login import UserMixin
+import uuid
 import getpass
-from app.models import Role, Permission
+from uuid import UUID
+from datetime import datetime
+
 
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
-    id            = db.Column(db.Integer, primary_key=True)
+    id            = db.Column(UUIDType(binary=False), default=uuid.uuid4, primary_key=True)
     firstname     = db.Column(db.String(64))
     middlename    = db.Column(db.String(64), nullable=True)
     lastname      = db.Column(db.String(64))
@@ -15,16 +21,47 @@ class User(UserMixin, db.Model):
     department    = db.Column(db.String(100))
     position      = db.Column(db.String(100))
     birthday      = db.Column(db.Date)
-    role_id       = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    role_id       = db.Column(UUIDType(binary=False), db.ForeignKey('roles.id'))
+    points        = db.Column(db.Integer, default=0)
+    cover_photo   = db.Column(db.String(200))
+    image         = db.Column(db.String(100))
+    timestamp     = db.Column(db.DateTime, default=datetime.utcnow())
+    
+    # followed      = db.relationship('Follow', foreign_keys=[Follow.follower_id], backref=db.backref('follower', lazy='joined'), lazy='dynamic', passive_deletes=True, passive_updates=True)
+    # follower      = db.relationship('Follow', foreign_keys=[Follow.following_id], backref=db.backref('followed', lazy='joined'), passive_deletes=True, passive_updates=True)
 
-    # def __init__(self, **kwargs):
-    #     super(User, self).__init__(**kwargs)
-    #     if self.role is None:
-    #         if self.email == 'admin@ubppub.com': # admin
-    #             self.role = Role.query.filter_by(permissions=0xffff).first()
-    #         if self.role is None:
-    #             self.role = Role.query.filter_by(default=True).first()
-    #             
+    # followed = db.relationship('User',
+    #     secondary = Follow,
+    #     primaryjoin = (Follow.follower_id == id),
+    #     secondaryjoin = (Follow.follower_id == id),
+    #     backref = db.backref('Follow', lazy='dynamic'),
+    #     lazy='dynamic'
+    #     )
+
+    def is_following(self, user):
+        return self.followed.filter(Follow.follower_id == user.get_id).count() > 0
+
+    def follow(self, user):
+        if not self.is_following(user):
+            self.followed.append(user)
+            return self
+
+    def unfollow(self, user):
+        if self.is_following(user):
+            self.followed.remove(user)
+            return self
+
+    # def __init__(self, firstname, middlename, lastname, email, password_hash, department, position, birthday, role_id):
+    #     self.firstname = firstname
+    #     self.middlename = middlename
+    #     self.lastname = lastname
+    #     self.email = email
+    #     self.password_hash = password_hash
+    #     self.department = department
+    #     self.position = position
+    #     self.birthday = birthday
+    #     self.role_id = role_id
+                     
     
     def can(self, permissions):
         return self.role is not None and \
@@ -47,22 +84,24 @@ class User(UserMixin, db.Model):
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    @login_manager.user_loader
-    def load_user(user_id):
-        return User.query.get(int(user_id))
+    def get_id(self):
+        return self.id
 
     def to_json(self):
         json_post = {
-            'id'            : self.id,
-            'firstname'     : self.firstname,
-            'middlename'    : self.middlename,
-            'lastname'      : self.lastname,
-            'email'         : self.email,
-            'password_hash' : self.password_hash,
-            'department'    : self.department,
-            'position'      : self.position,
-            'birthday'      : self.birthday,
-            'role_id'       : self.role_id
+            'id'           : self.id,
+            'firstname'    : self.firstname,
+            'middlename'   : self.middlename,
+            'lastname'     : self.lastname,
+            'email'        : self.email,
+            'password_hash': self.password_hash,
+            'department'   : self.department,
+            'position'     : self.position,
+            'birthday'     : self.birthday,
+            'role_id'      : self.role_id,
+            'points'       : self.points,
+            'cover_photo'  : self.points,
+            'image'        : self.image
         }
         return json_post
 
@@ -89,3 +128,10 @@ class User(UserMixin, db.Model):
             birthday        = birthday,
             role_id         = role_id
         )
+
+@login_manager.user_loader
+def load_user(user_id):
+    if type(user_id) is str:
+        print("Is STR")
+        return None
+    return User.query.get(user_id)

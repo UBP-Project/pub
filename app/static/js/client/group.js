@@ -19,7 +19,8 @@ $('.grp-btn').bind('click', function(event) {
             $(btn).addClass('btn-warning');
             $(btn).text('CANCEL JOIN REQUEST');
             event.currentTarget.value = 'cancel';
-            console.log("Join Request Sent");
+            //console.log("Join Request Sent");
+            console.log("success");
         })
         .fail(function() {
              console.log("error");
@@ -37,7 +38,9 @@ $('.grp-btn').bind('click', function(event) {
             $(btn).addClass('btn-style-1');
             $(btn).text('JOIN GROUP');
             event.currentTarget.value = 'join';
-            console.log("You left the group");
+            viewMembers(group_id);
+            //console.log("You left the group");
+            console.log('success');
         })
         .fail(function() {
              console.log("error");
@@ -53,10 +56,39 @@ $('.grp-btn').bind('click', function(event) {
 */
 
 $('.grp-icon').bind('click', function(event) {
-    var group_id = event.currentTarget.id;  // group id  
+    var group_id = event.currentTarget.id;  // group id
+    viewLeaders(group_id);
     viewMembers(group_id);
     viewActivities(group_id);
 });
+
+function viewLeaders(group_id) {
+
+    $.ajax({
+        url: '/api/v1.0/interest_groups/'+ group_id + '/leaders',
+        type: 'GET'
+    })
+    .done(function(data) {
+
+        if(data.length){
+            var users_list = "<b>Leader(s)</b><br/><br/>";
+            for (var i in data) {
+                var name = data[i].firstname + " " + data[i].lastname;
+                var user_id = data[i].id;
+                users_list += "<div class='col-md-6 mini-container'><a href='/profile/" + user.id + "'><span>"+ name + "</span></a></div>";
+            }
+
+            document.getElementById('group-leaders-'+group_id).innerHTML = users_list;
+        } else {
+            document.getElementById('group-leaders-'+group_id).innerHTML = '<i>Group has no leaders</i>';   
+        }
+
+    })
+    .fail(function() {
+        console.log("error");
+    });
+
+}
 
 function viewMembers(group_id) {
 
@@ -66,26 +98,16 @@ function viewMembers(group_id) {
     })
     .done(function(data) {
 
-        if(data){
-            var member_list = "";
-            for(member in data){
-                var name = data[member].firstname + ' ' + data[member].lastname;
-                /*var member_id = data[member].id;
-                member_list += "<a href='/profile/" + member_id + "'>" + name + "</a><br/>";*/
-                member_list += name + '<br/>';
+        if(data.length){
+            var users_list = "<b>Member(s)</b><br/><br/>";
+            for (var i in data) {
+                var name = data[i].firstname + " " + data[i].lastname;
+                var user_id = data[i].id;
+                users_list += "<div class='col-md-6 mini-container'><a href='/profile/" + user_id + "'><span>"+ name + "</span></a></div>";
             }
-
-            if(member_list==""){
-                document.getElementById('group-members-'+group_id).innerHTML = "Group has No Members"; 
-            } else {
-                document.getElementById('group-members-'+group_id).innerHTML = member_list;
-                /*$('group-members-'+group_id).add(member_list);*/
-                console.log(member_list);
-            }
-            
+            document.getElementById('group-members-'+group_id).innerHTML = users_list;
         } else {
-            document.getElementById('group-members-'+group_id).innerHTML = "Group has No Members"; 
-            console.log('Group has no members');
+            document.getElementById('group-members-'+group_id).innerHTML = '<i>Group has no members</i>';   
         }
 
     })
@@ -112,14 +134,14 @@ function viewActivities(group_id) {
             }
 
             if(activity_list==""){
-                document.getElementById('group-activities-'+group_id).innerHTML = "Group has No Activity"; 
+                document.getElementById('group-activities-'+group_id).innerHTML = "<i>Group has No Activity</i>"; 
             } else {
                 document.getElementById('group-activities-'+group_id).innerHTML = activity_list;
-                console.log(activity_list);
+                //console.log(activity_list);
             }
             
         } else {
-            document.getElementById('group-activities-'+group_id).innerHTML = "Group has No Activity";
+            document.getElementById('group-activities-'+group_id).innerHTML = "<i>Group has No Activity</i>";
             console.log('Group has No Activity');
         }
 

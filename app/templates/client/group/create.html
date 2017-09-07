@@ -1,0 +1,83 @@
+{% extends "./layout/client_base.html" %}
+
+{% block title %} Create Group {% endblock title %}
+
+{% block content %}
+
+    <div class="row">
+
+        <div class="col-md-12">
+            <div class="group-box">
+
+                <h2>CREATE INTEREST GROUP
+                    <a href="/groups">
+                        <button class="btn btn-style-4 btn-sm pull-right">Cancel</button>
+                    </a>
+                </h2>
+                <hr/>
+                <br/>
+
+                <div class="row">
+                    <form class="form-group col-md-12 admin-form" method="post" enctype="multipart/form-data" name="create_interest_group">
+
+                        <div class="col-md-6">
+                            {{ form.hidden_tag() }}
+                            <div>
+                                <h4>Group Name</h4>
+                                {{ form.name(
+                                    placeholder="Group name",
+                                    class="form-control",
+                                    required="true") }}
+                            </div>
+                            <br/>
+                            <div>
+                                <h4>Description of the Group</h4>
+                                {{ form.about(
+                                    placeholder="About",
+                                    class="form-control",
+                                    row="4",
+                                    required="true") }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h4>Group Icon</h4>
+                                    {{ form.group_icon(
+                                        placeholder="Group Icon",
+                                        class="form-control",
+                                        required="true"
+                                    )}}
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h4>Group Cover Photo</h4>
+                                    {{ form.cover_photo(
+                                        placeholder="Cover Photo",
+                                        class="form-control",
+                                        required="true")}}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <br/><br/>
+                            <input class="btn btn-default" type="reset" value="Reset">
+                            {{ form.submit(
+                                placeholder="Submit",
+                                class="btn btn-style-1"
+                            )}}
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}

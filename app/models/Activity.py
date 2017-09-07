@@ -1,30 +1,36 @@
 from app import db
+from datetime import datetime
+from sqlalchemy_utils import UUIDType
+import uuid
+from datetime import datetime
 
 
 class Activity(db.Model):
+
     __tablename__ = 'activity'
-    id            = db.Column(db.Integer, primary_key=True)
-    title         = db.Column(db.String(200), unique=True)
-    description   = db.Column(db.String(200))
+    id            = db.Column(UUIDType(binary=False), default=uuid.uuid4, primary_key=True)
+    title         = db.Column(db.String(200), unique=False) #true on production
+    description   = db.Column(db.Text(4294967295))
     start_date    = db.Column(db.Date)
     end_date      = db.Column(db.Date)  
     address       = db.Column(db.String(100))
-    group_id      = db.Column(db.Integer, db.ForeignKey('interest_group.id', ondelete="CASCADE", onupdate="CASCADE"), nullable=True)
+    group_id      = db.Column(UUIDType(binary=False), db.ForeignKey('interest_group.id', ondelete="CASCADE", onupdate="CASCADE"), nullable=True)
     image         = db.Column(db.String(200))
+    timestamp     = db.Column(db.DateTime, default=datetime.utcnow())
 
     # comments    = db.relationship('Comment', backref=db.backref('comments', lazy='joined'), lazy="dynamic", passive_deletes=True, passive_updates=True)
     # schedule    = db.relationship('Schedule', backref=db.backref('schedule', lazy='joined'), lazy="dynamic", passive_deletes=True, passive_updates=True)
     # assignment  = db.relationship('Assignment', backref=db.backref('assignment', lazy='joined'), lazy='dynamic', passive_deletes=True, passive_updates=True)
     # guests      = db.relationship('User_Activity', backref=db.backref('user_activity', lazy='joined'), lazy='dynamic', passive_deletes=True, passive_updates=True)
     
-    def __init__(self, title, description, start_date, end_date, address, group_id, image):
+    def __init__(self, title, description, start_date, end_date, address, image, group_id = None):
         self.title       = title
         self.description = description
         self.start_date  = start_date
         self.end_date    = end_date
         self.address     = address
-        self.group_id    = group_id or None
-        self.image       = image
+        self.group_id    = group_id
+        self.image       = image 
 
     def __repr__(self):
         return '<Activity %r>' % self.title
@@ -37,7 +43,8 @@ class Activity(db.Model):
             'start_date' : self.start_date,
             'end_date'   : self.end_date,
             'address'    : self.address,
-            'group_id'   : self.group_id
+            'group_id'   : self.group_id,
+            'image'      : self.image
         }
         return json_post
 

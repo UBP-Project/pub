@@ -18,11 +18,17 @@
     <script src="{{ url_for('static', filename='plugins/wysiwyg/trumbowyg.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='plugins/wysiwyg/ui/trumbowyg.css') }}">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.min.js"></script>
 </head>
 
-<body>
+<body class="container">
 
+    <div class="row admin-header">
+        
+    </div>
+
+    <br />
 
     {%  set user_links = [
             ('Create User', url_for('admin.create_user')),
@@ -45,23 +51,25 @@
 
 
 
-    {% for message in get_flashed_messages() %}
+<!--     {% for message in get_flashed_messages() %}
         <div class="alert alert-warning">
             {{ message }}
             <button type="button" class="close pull-right" data-dismiss="alert">&times;</button>
         </div>
-    {% endfor %}
+    {% endfor %} -->
 
     {% for link in links %}
         <h3>{{ link[0] }}</h3>
     {% endfor %}
     
     <div class="row">
-        <div class="col-md-2 side-bar" id="admin-sidebar">
+        <div class="col-md-3 side-bar" id="admin-sidebar">
 
             <img class="pub-logo" src="{{ url_for('static', filename='images/pub-sm-logo.png')}}" />
 
-            <h3 style="font-family: 'Roboto Condensed Bold'; padding-left: 5px;">Administrator</h3>
+            <h3 style="font-family: 'Roboto Condensed Bold'; padding-left: 5px;">Administrator
+                <a href="{{ url_for('client.logout') }}" id="btn-signout" class="btn-xs">Sign out</a>
+            </h3>
 
             {% if request.path == url_for('admin.index') %}
                 <a class="btb btn-sidebar active" href={{url_for('admin.index')}}>Dashboard</a>
@@ -97,11 +105,13 @@
                     <a class="btb btn-sidebar" href={{link[1]}}>{{ link[0] }}</a>
                 {% endif %}
             {% endfor %}
+
+            <hr />
         </div>
-        <div class="col-md-10" style="padding: 0px">
-            <div class="row admin-header">
-                <a href="{{ url_for('client.logout') }}" class="btn link pull-right">Sign out</a>
-            </div>
+        <div class="col-md-9" style="padding: 0px">
+ <!--            <div class="row admin-header">
+                <a href="{{ url_for('client.logout') }}" class="btn  btn-warning pull-right">Sign out</a>
+            </div> -->
             {% block content %}
             {% endblock content %}
         </div>

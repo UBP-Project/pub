@@ -5,134 +5,106 @@
 	padding: 0;
 }
 
-/*.fa {
-	transition: all 200ms ease;
-}*/
-
-/*.navbar {
-	background-image: url('../images/header.jpg');
-}
+// Top Navigation
 
 .nav {
-
 	>li {
-		
 		background-color: none;
-
 		>a {
-
-			color: @white;
 			font-family: @heading-font;
-			font-size: 18px;
+			font-size: 15px;
 			background-color: none;
 			transition: color 0.3s ease;
-
-			&:hover, &:active {
-
-				color: @mystic;
-				background-color: rgba(0, 0, 0, 0);
-
-			}
-
 		}
-
 	}
-
-}*/
-
-.nav {
-
-	>li {
-		
-		background-color: none;
-
-		>a {
-
-			font-family: @heading-font;
-			font-size: 17px;
-			background-color: none;
-			transition: color 0.3s ease;
-
-		}
-
-	}
-
 }
 
-.pub-header {
-	padding-top: 20px; 
-	height: 50px; 
-	width: 100%; 
-	background-image: url('../../static/images/header.jpg');
+.navbar-default .navbar-nav>li>a:hover {
+	color: #0e0058;
 }
 
-.sidebar {
-	/*position: absolute;*/
-	top: 0;
-	left: 0;
-	bottom: 0;
- 	background-color: @white;
- 	/*background-color: #2a2730;*/
-	/*width: 223px;*/
-	width: 16.3%;
-	z-index: 1;
+.navbar-default {
+	border-radius: 0;
+	border-top: 3px solid #fd8103;
+	border-bottom: 3px solid #0e0058;
+}
+
+.fixed-nav{ 
 	position: fixed;
-	/*border-bottom: 5px solid @pizazz;*/
+	left: 0;
+	top: 0;
+	width: 100%;
+	z-index: 999; 
+}
 
-	.side-ubp-logo {
-		width: 100%; 
-		height: 50px;
+.navbar-header, .navbar-collapse {
+	background-color: #fff;
+}
+
+.navbar .navbar-nav {
+	display: inline-block;
+	float: none;
+	vertical-align: top;
+}
+
+.navbar .navbar-collapse {
+  	text-align: center;
+}
+
+.navbar-default .navbar-nav>li>a.active {
+	color: #0e0058;
+}
+
+button.navbar-toggle.collapsed, button.navbar-toggle {
+	border:  0;
+}
+
+button.navbar-toggle.collapsed:active, 
+button.navbar-toggle:active, 
+button.navbar-toggle.collapsed:focus, 
+button.navbar-toggle:focus {
+	background-color: #fff;
+}
+
+#top {
+	height: 45; 
+	background-color: #fd8103;
+}
+
+// Side bar navigation
+
+.side {
+	padding: 0 0 0 20px;
+	margin-bottom: 20px;
+}
+
+.side-nav {
+	background-color: #fff;
+}
+
+.hidden-xs {
+	border-bottom: 3px solid #0e0058;
+}
+
+.nav>li>a {
+	color: #777777;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	small {
+		padding-left: 15px;
 	}
-
 }
 
-.main {
-	/*position: absolute;*/
-	position: relative;
-	/*top: 0;*/
-	/*left: 223px;*/
-	left: 16.3%;
-	width: 83.7%;
+.nav>li>a:hover {
+	color: #0e0058;
+	background-color: #fff;
 }
 
-nav .side-nav {
-	display: block;
+.content-wrap {
+	padding: 0 10px;
+	margin-bottom: 20px;
 }
-
-.side-nav li a {
-	color: gray;
-	/*border-left: 3px solid gray;*/
- 	margin: 5px 0;
-
- 	i {
- 		margin-top: 3px;
- 	}
-
-}
-
-.side-nav li a:hover {
-	color: @kimberly;
-	/*background-color: @alto;*/
-	/*border-left: 3px solid @kimberly;*/
-}
-
-/*.side-nav li a:active {
-	color: @stratos;
-	background-color: @white;
-	border-left: 3px solid @stratos;
-}
-
-.side-nav li a:focus {
-	color: @stratos;
-	background-color: @white;
-	border-left: 3px solid @stratos;
-}
-
-.side-nav li a .active {
-	color: @stratos;
-	background-color: @white;
-	border-left: 3px solid @stratos;
-}*/
 
 .project-bg {
 	width: 100%;
@@ -147,33 +119,22 @@ nav .side-nav {
 	padding: 20%;
 }
 
-.content {
-	padding: 20px;
-}
-
-.sign-out {
-	width: 100%;
-}
-
-#sign-out:hover {
-	color: @pizazz;
-	/*border-left: 3px solid @pizazz;*/
-}
-
 .white-filter {
-	background-color: rgba(255, 255, 255, 0.6);
+	background-color: rgba(253, 129, 3, 0.2);
+	/*background-color: rgba(14, 0, 88, 0.3);*/
 }
 
+// Footer
 
-/*
+footer {
+	height: 150px; 
+	background-color: #2c2c2c;
+	a {
+		color: @white;
+	}
+}
 
-UL Active state
-@statros color
-border-left: 7px solid #0e0058; background-color: #fff; color: #0e0058;
-
-*/
-
-/* Logout modal */
+// Logout modal
 
 .modal-body {
 	p {
