@@ -38,20 +38,28 @@ def groups():
 
     for g in interest_groups_query:
         group = g.to_json()
+
         membership = Membership.query \
             .filter(Membership.group_id == group['id'], Membership.user_id == current_user.get_id())\
             .with_entities(
                 Membership.status
             ).first()
+
+        group['population'] = Membership.query\
+            .filter(Membership.group_id == group['id'], Membership.level == Membership.MEMBERSHIP_MEMBER, Membership.status == Membership.MEMBERSHIP_ACCEPTED)\
+            .count()
+
         if membership is not None:
             group['status'] = membership.status
         else:
             group['status'] = None
+
         interest_groups.append(group)
 
     managed_groups = Interest_Group.query.join(Membership,\
         Membership.group_id == Interest_Group.id).filter(Membership.level == 1,\
         Membership.user_id == current_user.get_id()).all()
+
     return render_template("client/views/groups.html", interest_groups=interest_groups,
         managed_groups=managed_groups, user=current_user, isManager=isManager)
 

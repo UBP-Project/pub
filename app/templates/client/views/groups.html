@@ -36,6 +36,7 @@
 				<div class="row">
 					<div id="app">
 						<div v-for="group in groups" id="group_list">
+
 							<!-- GROUP CARD -->
 							<div class="col-md-3 col-sm-6 group-card" v-on:click="loadGroupInfo(group)">
 						        <div class="zoomify group-panel grp-icon" :style="group.cover" data-toggle="modal" :data-target="'#group-' + group.id" :id="group.id">
@@ -43,9 +44,9 @@
 						                <img :src="group_icons_folder + group.group_icon" width="120px" height="120px">
 						            </div>
 						            <div class="group-desc">
-						                <h4 class="title">{{ group.name}}</h4>
+						                <h4 class="title">{{ group.name }}</h4>
 						                <!-- FIX THIS SECTION: SHOW NUMBER OF MEMBERS -->
-						                <p><i class="fa fa-user"></i> 10</p>
+						                <p><i class="fa fa-user"></i> {{ group.population }}</p>
 						            </div>
 						        </div>
 						    </div> <!-- END OF GROUP CARD -->
@@ -64,7 +65,7 @@
 						                    <div class="img-container" :style="group.cover">
 						                        <img :src="group_icons_folder + group.group_icon" class="img-circle grp-icon-img"/>
 						                    </div>
-						                    <h2 class="text-center">{{ group.name}}</h2>
+						                    <h2 class="text-center">{{ group.name }}</h2>
 						                    <div class="content">
 						                        <ul class="nav nav-tabs" role="tablist">
 						                            <li role="presentation" class="active grp-li">

@@ -571,7 +571,7 @@ def get_request_status(id):
     else:
         return jsonify({'membership_status': 'None'})
 
-@api.route('/interest_groups/<string:id>/leave', methods=['DELETE'])
+@api.route('interest_groups/<string:id>/leave', methods=['DELETE'])
 @login_required
 def leave_group(id):
     """
@@ -628,10 +628,11 @@ def group_activities_by(id):
     """
 
     activities = Activity.query                          \
-                    .join(Interest_Group)                \
-                    .filter(Interest_Group.id == id)   \
-                    .all()
+        .filter(Activity.group_id == id)   \
+        .all()
 
+    print(activities)
+    
     return jsonify([
             activity.to_json() for activity in activities
         ])
