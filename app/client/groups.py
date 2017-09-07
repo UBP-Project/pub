@@ -45,16 +45,14 @@ def groups():
                 Membership.status
             ).first()
 
+        group['population'] = Membership.query\
+            .filter(Membership.group_id == group['id'], Membership.level == Membership.MEMBERSHIP_MEMBER, Membership.status == Membership.MEMBERSHIP_ACCEPTED)\
+            .count()
+
         if membership is not None:
             group['status'] = membership.status
         else:
             group['status'] = None
-
-        group['population'] = User.query\
-            .join(Membership, User.id == Membership.user_id)\
-            .join(Interest_Group, Interest_Group.id == group['id'])\
-            .filter(Membership.level == Membership.MEMBERSHIP_MEMBER, Membership.status == Membership.MEMBERSHIP_ACCEPTED)\
-            .count()
 
         interest_groups.append(group)
 
