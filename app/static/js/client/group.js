@@ -71,12 +71,13 @@ function viewLeaders(group_id) {
     .done(function(data) {
 
         if(data.length){
-            var users_list = "<b>Leader(s)</b><br/>";
+            var users_list = "<b>Leader(s)</b><br/><br/>";
             for (var i in data) {
                 var name = data[i].firstname + " " + data[i].lastname;
                 var user_id = data[i].id;
-                users_list += "<a href='/profile/" + user_id + "'>" + name + "</a><br/>";
+                users_list += "<div class='col-md-6 mini-container'><a href='/profile/" + user.id + "'><span>"+ name + "</span></a></div>";
             }
+
             document.getElementById('group-leaders-'+group_id).innerHTML = users_list;
         } else {
             document.getElementById('group-leaders-'+group_id).innerHTML = '<i>Group has no leaders</i>';   
@@ -98,11 +99,11 @@ function viewMembers(group_id) {
     .done(function(data) {
 
         if(data.length){
-            var users_list = "<b>Member(s)</b><br/>";
+            var users_list = "<b>Member(s)</b><br/><br/>";
             for (var i in data) {
                 var name = data[i].firstname + " " + data[i].lastname;
                 var user_id = data[i].id;
-                users_list += "<a href='/profile/" + user_id + "'>" + name + "</a><br/>";
+                users_list += "<div class='col-md-6 mini-container'><a href='/profile/" + user_id + "'><span>"+ name + "</span></a></div>";
             }
             document.getElementById('group-members-'+group_id).innerHTML = users_list;
         } else {

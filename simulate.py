@@ -95,4 +95,4 @@ def all():
     activity_join()
     activity_interested()
     join_group()
-    group_activities()
+    # group_activities()

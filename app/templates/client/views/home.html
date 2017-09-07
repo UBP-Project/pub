@@ -5,6 +5,15 @@
 {% block content %}
 
 	<!-- Temporary Home Content -->
+    <div class="row" style="margin-bottom: 20px;">
+        <div class="col-md-9 col-sm-12 text-center">
+            <div style="background-color: #fff; width: 100%;">
+                <h3 style="margin: 0;"><small>WELCOME to UBP:Pub</small></h3>
+                <h2 style="margin: 0;">{{user.firstname}} {{user.lastname}}</h2>
+                <p style="margin: 0;"><i><small>We know that you deserve to enjoy at work</small></i></p>
+            </div>
+        </div>
+    </div>
 
 	<div class="row">
 
@@ -21,8 +30,8 @@
                             <h5>
                                 <a :href="'profile/' + feed_item.user_id">
                                 {{ feed_item.user_firstname }} {{ feed_item.user_lastname }}</a>
-                                    joins groups
-                                <a :href="'groups/' + feed_item.group_id">{{ feed_item.group_name }}</a>
+                                    joins
+                                <a :href="'groups/' + feed_item.group_id">{{ feed_item.group_name }} Group</a>
                                 <br />
                                 {{ feed_item.timestamp }}
                             </h5>
@@ -39,6 +48,36 @@
                     </div>
                 </div>
             </div>
+<!-- 
+            <div>
+                <div class="feed-item">
+                    <div class="row">
+                        <div class="col-sm-1">
+                            <img class="user-img" src="../../../static/images/pub-default-img.jpg">
+                        </div>
+                        <div class="col-sm-9">
+                            <h5>
+                                <a>
+                                Prince Julius Hari</a>
+                                    joins groups
+                                <a>Basta Sports</a>
+                                <br />
+                                February 24, 2017
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="row group-item">
+                        <div class="col-md-offset-1 col-md-3">
+                            <img class="group-icon" src="../../../static/images/pub-default-img.jpg">
+                        </div>
+                        <div class="col-md-6">
+                            <h4>Basta Sports</h4>
+                            <h6>Lorem ipsum ipsum ipsum ipsum</h6>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
             {% endraw %}
 
 		</div>
