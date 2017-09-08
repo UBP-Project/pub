@@ -29,12 +29,12 @@
 	border-bottom: 3px solid #0e0058;
 }
 
-.fixed-nav{ 
+.fixed-nav{
 	position: fixed;
 	left: 0;
 	top: 0;
 	width: 100%;
-	z-index: 999; 
+	z-index: 999;
 }
 
 .navbar-header, .navbar-collapse {
@@ -59,15 +59,15 @@ button.navbar-toggle.collapsed, button.navbar-toggle {
 	border:  0;
 }
 
-button.navbar-toggle.collapsed:active, 
-button.navbar-toggle:active, 
-button.navbar-toggle.collapsed:focus, 
+button.navbar-toggle.collapsed:active,
+button.navbar-toggle:active,
+button.navbar-toggle.collapsed:focus,
 button.navbar-toggle:focus {
 	background-color: #fff;
 }
 
 #top {
-	height: 45; 
+	height: 45;
 	background-color: #fd8103;
 }
 
@@ -80,6 +80,17 @@ button.navbar-toggle:focus {
 
 .side-nav {
 	background-color: #fff;
+
+	.nav {
+		li > a {
+			font-size: 16px;
+
+			p {
+				margin: 0;
+				padding-left: 15px;
+			}
+		}
+	}
 }
 
 .hidden-xs {
@@ -127,7 +138,7 @@ button.navbar-toggle:focus {
 // Footer
 
 footer {
-	height: 150px; 
+	height: 150px;
 	background-color: #2c2c2c;
 	a {
 		color: @white;
@@ -138,7 +149,7 @@ footer {
 
 .modal-body {
 	p {
-		margin: 0; 
+		margin: 0;
 		padding: 20px;
 	}
 }

@@ -6,7 +6,7 @@ class Config:
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     PUB_ADMIN = '<admin:email>'
-    
+
     swagger_template = {
       "swagger": "2.0",
       "info": {
@@ -50,7 +50,7 @@ class Config:
 class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
-        'mysql+pymysql://root:@localhost/pub_dev'
+        'mysql+pymysql://root:root@localhost:3306/pub_dev'
 
 class TestingConfig(Config):
     TESTING = True

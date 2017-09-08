@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    
+
     <title>PUB | {% block title %}{% endblock title %}</title>
 
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
@@ -53,51 +53,54 @@
 		</nav>
 
 	{% endblock navigation %}
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+      <div class="row">
 
-	<div class="row">
+    		<div class="side col-md-3 col-sm-3">
 
-		<div class="side col-md-2 col-sm-3">
+    			{% block sidebar %}
 
-			{% block sidebar %}
-		    
-		        <div class="hidden-xs">
+    		        <div class="hidden-xs">
 
-		            <div class="project-bg">
-		                <div class="white-filter">
-		                    <a href="/"><img src="{{ url_for('static', filename='../../static/images/pub-sm-logo.png') }}" alt="PUB LOGO" class="img-responsive project-logo"></a>
-		                </div>
-		            </div>
+    		            <div class="project-bg">
+    		                <div class="white-filter">
+    		                    <a href="/"><img src="{{ url_for('static', filename='../../static/images/pub-sm-logo.png') }}" alt="PUB LOGO" class="img-responsive project-logo"></a>
+    		                </div>
+    		            </div>
 
-		            <div class="side-nav">
-		                <ul class="nav">
-		                	<br/>
-		                    <li><a href="/profile/{{current_user.get_id()}}">{{current_user.firstname}} {{current_user.lastname}}<i class="fa fa-user pull-right"></i></a></li>
-		                    <li><a href="/profile/{{current_user.get_id()}}/edit"><small>Edit Profile</small></a></li>
-		                    <li><a href="/notifications"><small>Notifications <!-- <span class="badge badge-error pull-right">10</span> --></small></a></li>
-		                    <li><hr/></li>
-		                    <li><a href="/groups">Interest Groups<i class="fa fa-group pull-right"></i></a></li>
-		                    <li><a href="/my-groups"><small>My Groups</small></a></li>
-		                    <li><hr/></li>
-		                    <li><a href="/activities">Activities<i class="fa fa-rocket pull-right"></i></a></li>
-		                    <li><a href="#"><small>My Activities</small></a></li>
-		                    <li><hr/></li>
-		                    <li><a href="#" id="sign-out" data-toggle="modal" data-target="#logout-modal">Log Out <i class="fa fa-sign-out pull-right"></i></a></li>
-		                    <br/>
-		                </ul>
-		            </div>
+    		            <div class="side-nav">
+    		                <ul class="nav">
+    		                	<br/>
+    		                    <li><a href="/profile/{{current_user.get_id()}}">{{current_user.firstname}} {{current_user.lastname}}<i class="fa fa-user pull-right"></i></a></li>
+    		                    <li><a href="/profile/{{current_user.get_id()}}/edit"><p>Edit Profile</p></a></li>
+    		                    <li><a href="/notifications"><p>Notifications <!-- <span class="badge badge-error pull-right">10</span> --></p></a></li>
+    		                    <li><hr/></li>
+    		                    <li><a href="/groups">Interest Groups<i class="fa fa-group pull-right"></i></a></li>
+    		                    <li><a href="/my-groups"><p>My Groups</p></a></li>
+    		                    <li><hr/></li>
+    		                    <li><a href="/activities">Activities<i class="fa fa-rocket pull-right"></i></a></li>
+    		                    <li><a href="#"><p>My Activities</p></a></li>
+    		                    <li><hr/></li>
+    		                    <li><a href="#" id="sign-out" data-toggle="modal" data-target="#logout-modal">Log Out <i class="fa fa-sign-out pull-right"></i></a></li>
+    		                    <br/>
+    		                </ul>
+    		            </div>
 
-		        </div>
+    		        </div>
 
-		    {% endblock sidebar %}
+    		    {% endblock sidebar %}
 
-		</div>
+    		</div>
 
-		<div class="content-wrap col-md-10 col-sm-9">
-			{% block content %}
-			{% endblock content %}
-		</div>
+    		<div class="content-wrap col-md-9 col-sm-9">
+    			{% block content %}
+    			{% endblock content %}
+    		</div>
 
-	</div>
+    	</div>
+    </div>
+  </div>
 
 	{% block footer %}
 		<footer class="footer text-center">
@@ -157,7 +160,7 @@
                             </li>
                         </ul>
                     </div>
-                    
+
                 </div>
 
                 <br/>
