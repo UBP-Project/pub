@@ -1,8 +1,4 @@
-{% if 'admin' in request.path %}
-    {% extends "/layout/admin_base.html" %}
-{% else %}
-    {% extends "/layout/base.html" %}
-{% endif %}
+{% extends "/layout/admin_base.html" %}
 
 {% block title %} Groups {% endblock %}
 

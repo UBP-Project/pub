@@ -48,7 +48,7 @@ def create_activity():
 @admin.route('/activities')
 @admin_required
 def activities():
-    activities = Activity.query.all()
+    activities = Activity.query.order_by(Activity.start_date).all()
     return render_template('admin/activity/activities.html', activities=activities);
 
 @admin.route('/activities/<string:id>/edit', methods=['GET', 'POST'])
