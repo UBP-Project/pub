@@ -50,7 +50,7 @@ class Config:
 class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
-        'mysql+pymysql://root:root@localhost:3306/pub_dev'
+        'mysql+pymysql://root:@localhost/pub_dev'
 
 class TestingConfig(Config):
     TESTING = True

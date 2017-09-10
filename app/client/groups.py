@@ -59,7 +59,7 @@ def groups():
         Membership.group_id == Interest_Group.id).filter(Membership.level == 1,\
         Membership.user_id == current_user.get_id()).all()
 
-    return render_template("client/views/groups.html", interest_groups=interest_groups,
+    return render_template("client/group/groups.html", interest_groups=interest_groups,
         managed_groups=managed_groups, user=current_user, isManager=isManager)
 
 @client.route('/groups/<uuid(strict=False):id>', methods=['POST', 'GET'])
@@ -169,7 +169,7 @@ def mygroups():
         Membership.group_id == Interest_Group.id).filter(Membership.level != 1,\
         Membership.user_id == current_user.get_id()).all()
 
-    return render_template("client/views/my-groups.html", interest_groups=interest_groups, managed_groups=managed_groups, user=current_user)
+    return render_template("client/group/my-groups.html", interest_groups=interest_groups, managed_groups=managed_groups, user=current_user)
 
 
 @client.route('/groups/<uuid(strict=False):id>/requests', methods=['POST', 'GET'])
@@ -180,7 +180,7 @@ def group_requests(id):
     membership_requests = User.query \
         .join(Membership, User.id==Membership.user_id) \
         .filter(Membership.group_id==id, Membership.status == 0, Membership.level == 0).all()
-    return render_template('client/views/group-requests.html', group=group, membership_requests=membership_requests)
+    return render_template('client/group/group-requests.html', group=group, membership_requests=membership_requests)
 
 
 @client.route('/groups-list')

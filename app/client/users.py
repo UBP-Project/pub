@@ -20,11 +20,8 @@ def view_profile(id):
     following_count = Follow.query.filter(Follow.follower_id == id).count()
     is_following = True if Follow.query.filter(Follow.follower_id == current_user.get_id(),\
         Follow.following_id == user.get_id()).first() is not None else False
-
-    print(user)
-    print(current_user)
-    
-    return render_template("client/views/profile.html", user=user, current_user=current_user,\
+            
+    return render_template("client/user/profile.html", user=user, current_user=current_user,\
         is_following=is_following, followers_count=followers_count, following_count=following_count)
 
 @client.route('/profile/<uuid(strict=False):id>/edit', methods=['POST', 'GET'])
@@ -66,7 +63,7 @@ def edit_profile(id):
 
     if int(id) != int(current_user.get_id()):
         return redirect(url_for('client.index'))
-    return render_template('client/views/edit-profile.html', user=current_user, form=form, \
+    return render_template('client/user/edit-profile.html', user=current_user, form=form, \
         followers_count=followers_count, following_count=following_count)
 
 @client.route('/profile/<uuid(strict=False):id>/edit-password', methods=['POST', 'GET'])
@@ -84,7 +81,7 @@ def edit_password(id):
 
     if int(id) != int(current_user.get_id()):
         return redirect(url_for('client.index'))
-    return render_template('client/views/edit-password.html', user=current_user, form=form,
+    return render_template('client/user/edit-password.html', user=current_user, form=form,
         followers_count=followers_count, following_count=following_count)
 
 @client.route('/profile/<uuid(strict=False):id>/followers')
@@ -98,7 +95,7 @@ def followers(id):
     following_count = Follow.query.filter(Follow.follower_id == id).count()
     is_following = True if Follow.query.filter(Follow.follower_id == current_user.get_id(),\
         Follow.following_id == user.get_id()).first() is not None else False
-    return render_template("client/views/followers.html", user=user, current_user=current_user,\
+    return render_template("client/user/followers.html", user=user, current_user=current_user,\
         is_following=is_following, followers_count=len(followers), following_count=following_count,\
         followers=followers)
 
@@ -122,7 +119,7 @@ def following(id):
     is_following = True if Follow.query.filter(Follow.follower_id == current_user.get_id(),\
         Follow.following_id == user.get_id()).first() is not None else False
 
-    return render_template("client/views/following.html",\
+    return render_template("client/user/following.html",\
         user=user,\
         current_user=current_user,\
         is_following=is_following,\
@@ -134,4 +131,4 @@ def following(id):
 @login_required
 def users_list():
     users = User.query.all()
-    return render_template('client/views/users-list.html', users=users)
+    return render_template('client/user/users-list.html', users=users)
