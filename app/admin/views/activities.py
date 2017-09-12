@@ -8,6 +8,10 @@ from ...utils import flash_errors, is_valid_extension
 from werkzeug.utils import secure_filename
 import os
 import uuid
+from datetime import datetime
+from sqlalchemy import or_, func
+
+ACTIVITIES_PER_PAGE = 16
 
 @admin.route('/activities/<uuid(strict=False):id>')
 @admin_required
@@ -48,8 +52,67 @@ def create_activity():
 @admin.route('/activities')
 @admin_required
 def activities():
-    activities = Activity.query.order_by(Activity.start_date).all()
-    return render_template('admin/activity/activities.html', activities=activities);
+
+    query = None
+    start_date = None
+    end_date = None
+    if request.args.get('query') is not None:
+        query = request.args.get('query')
+        q = query.lower()
+
+    start_date_str = request.args.get('start_date')
+    if start_date_str is not None and len(start_date_str) > 0:
+        start_date = datetime.strptime(start_date_str, '%a %b %d %Y')
+
+    end_date_str = request.args.get('end_date')
+    if end_date_str is not None and len(end_date_str) > 0:
+        end_date = datetime.strptime(end_date_str, '%a %b %d %Y')
+
+    if request.args.get('page') is not None:
+        page = int(request.args.get('page'))
+    else:
+        page = 1
+
+    # filters activities base on the parameters: query, start_date, and end_date
+    if query is not None and start_date is not None and end_date is not None:
+        activities = Activity.query.filter(
+            or_(Activity.title.ilike("%"+q+"%"),
+            Activity.description.ilike("%"+q+"%")),
+            Activity.start_date >= start_date,
+            Activity.end_date <= end_date)\
+            .order_by(Activity.start_date)\
+            .paginate(page=page, per_page=ACTIVITIES_PER_PAGE, error_out=False)
+    elif query is not None and start_date is not None:
+        activities = Activity.query.filter(
+            or_(Activity.title.ilike("%"+q+"%"),
+            Activity.description.ilike("%"+q+"%")),
+            Activity.start_date >= start_date).order_by(Activity.start_date)\
+            .paginate(page=page, per_page=ACTIVITIES_PER_PAGE, error_out=False)
+    elif query is not None:
+        activities = Activity.query.filter(
+            or_(Activity.title.ilike("%"+q+"%"),
+            Activity.description.ilike("%"+q+"%"))
+            ).order_by(Activity.start_date)\
+            .paginate(page=page, per_page=ACTIVITIES_PER_PAGE, error_out=False)
+    elif start_date is not None and end_date is not None:
+        activities = Activity.query.filter(
+            Activity.start_date >= start_date,
+            Activity.end_date <= end_date).order_by(Activity.start_date)\
+            .paginate(page=page, per_page=ACTIVITIES_PER_PAGE, error_out=False)
+    elif start_date is not None:
+        activities = Activity.query.filter(
+            Activity.start_date >= start_date).order_by(Activity.start_date)\
+            .paginate(page=page, per_page=ACTIVITIES_PER_PAGE, error_out=False)
+    elif end_date is not None:
+        activities = Activity.query.filter(
+            Activity.end_date <= end_date).order_by(Activity.start_date)\
+            .paginate(page=page, per_page=ACTIVITIES_PER_PAGE, error_out=False)
+    else:
+        activities = Activity.query.filter(Activity.start_date >= datetime.now()).order_by(Activity.start_date)\
+            .paginate(page=page, per_page=ACTIVITIES_PER_PAGE, error_out=False)
+
+    return render_template('admin/activity/activities.html', activities=activities, query=query,
+        start_date=start_date_str, end_date=end_date_str);
 
 @admin.route('/activities/<string:id>/edit', methods=['GET', 'POST'])
 @admin_required

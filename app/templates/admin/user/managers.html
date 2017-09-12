@@ -4,7 +4,7 @@
     {% extends "/layout/base.html" %}
 {% endif %}
 
-{% block title %} Users {% endblock %}
+{% block title %} managers {% endblock %}
 
 {% block content %}
     <div class="row admin-page user-list">
@@ -27,17 +27,23 @@
                 </form>
             </div>
             <div class="col-sm-6 text-right pagination">
-                  {%- for page in managers.iter_pages(left_edge=1, left_current=2, right_current=2, right_edge=1) %}
+                {% if managers.has_prev %}
+                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.managers', page=managers.prev_num, query=request.args.get('query')) }}">Prev</a>
+                {% endif %}
+                  {%- for page in managers.iter_pages(left_edge=1, left_current=1, right_current=3, right_edge=1) %}
                     {% if page %}
                       {% if page != managers.page %}
-                        <a class="page-link btn btn-style-3" href="{{ url_for('admin.users', page=page, query=request.args.get('query')) }}">{{ page }}</a>
+                        <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.managers', page=page, query=request.args.get('query')) }}">{{ page }}</a>
                       {% else %}
-                        <strong class="btn current-page">{{ page }}</strong>
+                        <strong class="btn btn-sm current-page">{{ page }}</strong>
                       {% endif %}
                     {% else %}
                       <span class=ellipsis>…</span>
                     {% endif %}
                   {%- endfor %}
+                {% if managers.has_next %}
+                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.managers', page=managers.next_num, query=request.args.get('query')) }}">Next</a>
+                {% endif %}
             </div>
         </div>
 
@@ -48,7 +54,8 @@
                 <table class="users table row table-hover table-condensed">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <!-- <th>ID</th> -->
+                            <th></th>
                             <th>Firstname</th>
                             <th>Middlename</th>
                             <th>Lastname</th>
@@ -60,17 +67,22 @@
                     </thead>
 
                     <tbody>
-                        {% for manager in managers.items %}
-                        <tr class="user-item">
-                            <td>{{ manager['id'] }}</td>
-                            <td>{{ manager['firstname'] }}</td>  
-                            <td>{{ manager['middlename'] }}</td>
-                            <td>{{ manager['lastname'] }}</td>
-                            <td>{{ manager['email'] }}</td>
-                            <td>{{ manager['position'] }}</td>
-                            <td>{{ manager['department'] }}</td>
-                            <td>
-                                <a href="{{ url_for('admin.profile', id=manager.id)}}"><span class="fa fa-pencil-square-o"></span></a>
+                        {% for user in managers.items %}
+                        <tr class="user-table-item">
+                            <!-- <td class="ellipsis">{{ user['id'] }}</td> -->
+                            {% if user.image %}
+                                <td><img class="circle-img-sm" src="{{ url_for('static', filename='uploads/profile_pictures/' + user.image) }}" /></td>
+                            {% else %}
+                                <td><img class="circle-img-sm" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}" /></td>
+                            {% endif %}
+                            <td>{{ user['firstname'] }}</td>  
+                            <td>{{ user['middlename'] }}</td>
+                            <td>{{ user['lastname'] }}</td>
+                            <td>{{ user['email'] }}</td>
+                            <td>{{ user['position'] }}</td>
+                            <td>{{ user['department'] }}</td>
+                            <td class="text-center">
+                                <a href="{{ url_for('admin.profile', id=user.id)}}"><span class="fa fa-pencil-square-o"></span></a>
                             </td>
                         </tr>
                         {% endfor %}
@@ -86,5 +98,35 @@
         </div>
         {% endif %}
 
+        <hr style="margin: 0px" />
+
+        <div class="row">
+            <div class="col-md-offset-6 col-md-6 text-right pagination no-padding">
+                {% if managers.has_prev %}
+                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.managers', page=managers.prev_num, query=request.args.get('query')) }}">Prev</a>
+                {% endif %}
+                  {%- for page in managers.iter_pages(left_edge=1, left_current=1, right_current=3, right_edge=1) %}
+                    {% if page %}
+                      {% if page != managers.page %}
+                        <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.managers', page=page, query=request.args.get('query')) }}">{{ page }}</a>
+                      {% else %}
+                        <strong class="btn btn-sm current-page">{{ page }}</strong>
+                      {% endif %}
+                    {% else %}
+                      <span class=ellipsis>…</span>
+                    {% endif %}
+                  {%- endfor %}
+                {% if managers.has_next %}
+                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.managers', page=managers.next_num, query=request.args.get('query')) }}">Next</a>
+                {% endif %}
+            </div>
+        </div>
+
     </div>
 {% endblock %}
+
+{% block scripts %}
+
+
+
+{% endblock scripts %}

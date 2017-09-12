@@ -300,7 +300,11 @@ table.users td {
     color: white;
 }
 
-.user-item .fa {
+.user-table-item td {
+    vertical-align: middle !important;
+}
+
+.user-table-item .fa {
     font-size: 20px;
     margin: 3px;
     color: #0e0058;
@@ -372,4 +376,20 @@ table.users td {
 
 .user-form .img-upload input {
     display: none;
+}
+
+.date-filter {
+    font-size: 13px;
+    margin-top: 10px;
+}
+
+.date-filter span {
+    font-weight: bold;
+    font-family: "Roboto Condensed Bold";
+}
+
+.date-filter input, .date-filter input:hover {
+    height: 30px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    text-align: center;
 }

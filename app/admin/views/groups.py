@@ -10,12 +10,36 @@ import os
 import uuid
 from flask_login import current_user
 from app.notification.Notif import Notif
+from sqlalchemy import or_, func
+
+
+GROUPS_PER_PAGE = 16
 
 @admin.route('/groups')
 @admin_required
 def groups():
-    groups = Interest_Group.query.all()
-    return render_template('admin/group/groups.html', groups=groups)
+
+    query = None
+    if request.args.get('query') is not None:
+        query = request.args.get('query')
+        q = query.lower()
+
+    if request.args.get('page') is not None:
+        page = int(request.args.get('page'))
+    else:
+        page = 1
+
+    if query is not None:
+        groups = Interest_Group.query.filter(or_(
+            Interest_Group.name.ilike("%"+q+"%"),
+            Interest_Group.about.ilike("%"+q+"%")))\
+            .order_by(Interest_Group.name)\
+            .paginate(page=page, per_page=GROUPS_PER_PAGE, error_out=False)
+    else:
+        groups = Interest_Group.query\
+            .order_by(Interest_Group.name)\
+            .paginate(page=page, per_page=GROUPS_PER_PAGE, error_out=False)
+    return render_template('admin/group/groups.html', groups=groups, query=query)
 
 @admin.route('/groups/<string:id>', methods=['GET', 'POST'])
 @admin_required

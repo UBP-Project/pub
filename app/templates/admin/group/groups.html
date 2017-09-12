@@ -16,7 +16,39 @@
         </div>
 
         <div class="row">
-            {% for group in groups %}
+            <div class="col-sm-6" style="padding: 20px 0px">
+                <form>
+                    <div class="input-group search-form">
+                      <input type="text" class="form-control" name="query" placeholder="Search Groups" value="{% if query %}{{ query }}{% endif %}">
+                      <span class="input-group-btn">
+                        <input type="submit" class="btn" type="button" value="Search" />
+                      </span>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-6 text-right pagination">
+                {% if groups.has_prev %}
+                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.groups', page=groups.prev_num, query=request.args.get('query')) }}">Prev</a>
+                {% endif %}
+                  {%- for page in groups.iter_pages(left_edge=1, left_current=2, right_current=2, right_edge=1) %}
+                    {% if page %}
+                      {% if page != groups.page %}
+                        <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.groups', page=page, query=request.args.get('query')) }}">{{ page }}</a>
+                      {% else %}
+                        <strong class="btn current-page">{{ page }}</strong>
+                      {% endif %}
+                    {% else %}
+                      <span class=ellipsis>…</span>
+                    {% endif %}
+                  {%- endfor %}
+                {% if groups.has_next %}
+                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.groups', page=groups.next_num, query=request.args.get('query')) }}">Next</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row">
+            {% for group in groups.items %}
                 <div class="col-md-3 no-padding">
                     <div class="group-card">
                         {% if group.group_icon %}
@@ -34,6 +66,27 @@
                     </div>
                 </div>
             {% endfor %}
-        </h4>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 text-center pagination">
+                {% if groups.has_prev %}
+                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.groups', page=groups.prev_num, query=request.args.get('query')) }}">Prev</a>
+                {% endif %}
+                  {%- for page in groups.iter_pages(left_edge=1, left_current=2, right_current=2, right_edge=1) %}
+                    {% if page %}
+                      {% if page != groups.page %}
+                        <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.groups', page=page, query=request.args.get('query')) }}">{{ page }}</a>
+                      {% else %}
+                        <strong class="btn current-page">{{ page }}</strong>
+                      {% endif %}
+                    {% else %}
+                      <span class=ellipsis>…</span>
+                    {% endif %}
+                  {%- endfor %}
+                {% if groups.has_next %}
+                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.groups', page=groups.next_num, query=request.args.get('query')) }}">Next</a>
+                {% endif %}
+            </div>
+        </div>
     </div>
 {% endblock %}
