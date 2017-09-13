@@ -436,7 +436,8 @@ def unfollow_user(to_unfollow_id):
     notification = Notif.notif_object(entity='user', action='followed_you', entity_id=to_unfollow_id)
 
     #who triggered this action?
-    notification.set_inactive()
+    if notification:
+        notification.set_inactive()
 
     db.session.commit()
     return jsonify({'message': 'Success'}), 200
