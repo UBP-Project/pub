@@ -38,11 +38,15 @@
                         <!-- <img src="{{ group.group_icon }}" class="img-circle grp-icon-img"/> -->
                     </div>
 
-                    <h2 class="text-center">{{ group.name | upper }}</h2>
+                    <h2 class="text-center">{{ group.name | upper }}
 
-                    <a href="/groups/{{ group.id }}/requests">
-                        <button class="btn btn-style-2 btn-sm" title="Manage Groups"><i class="fa fa-plus"></i></button>
-                    </a>
+                        {% if isManager %}
+                        <a href="/groups/{{ group.id }}/requests">
+                            <button class="btn btn-style-2 btn-sm" title="Manage Group"><i class="fa fa-edit"></i></button>
+                        </a>
+                        {% endif %}
+                        
+                    </h2>
 
                     <div class="content">
 
