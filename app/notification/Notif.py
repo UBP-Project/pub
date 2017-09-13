@@ -1,7 +1,8 @@
 from app import db
-from app.models import Notification, Notification_EntityType, Notification_Object, Notification_Change
+from app.models import Activity, Interest_Group, User, Notification, Notification_EntityType, Notification_Object, Notification_Change
 from threading import Thread
 from functools import wraps
+import uuid
 
 class Notif():
 
@@ -37,6 +38,16 @@ class Notif():
 			.filter(Notification_Object.entity_type_id == entity_type.id, Notification_Object.entity_id == entity_id)\
 			.first()
 
+	def get_entity(entity, notification_object_id):
+
+		if entity == 'activity':
+			return Activity.query.filter(Activity.id==notification_object_id).first().to_json()
+		elif entity == 'interest_group':
+			return Interest_Group.query.filter(Interest_Group.id==notification_object_id).first().to_json()
+		elif entity == 'user':
+			return User.query.filter(User.id == notification_object_id).first().to_json()
+
+
 	def run_async(f):
 		def async_func(*args, **kwargs):
 			func = Thread(target=f, args=args, kwargs=kwargs)
@@ -58,6 +69,7 @@ class Notif():
 
 		db.session.commit()
 
+	@run_async
 	def add_notifiers(self, users):
 		
 		for user in users:

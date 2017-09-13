@@ -512,9 +512,7 @@ def join_group(id):
         500:
             description: Internal Server Error
     """    
-    membership = Membership(
-        user_id=current_user.get_id(),
-        group_id=id)
+    membership = Membership(user_id=current_user.get_id(),group_id=id)
     
     db.session.add(membership)
 
@@ -571,7 +569,7 @@ def get_request_status(id):
     else:
         return jsonify({'membership_status': 'None'})
 
-@api.route('interest_groups/<string:id>/leave', methods=['DELETE'])
+@api.route('/interest_groups/<string:id>/leave', methods=['DELETE'])
 @login_required
 def leave_group(id):
     """
@@ -594,11 +592,14 @@ def leave_group(id):
       404:
         description: Not Found
     """
-    membership = Membership.query.filter(\
-        Membership.user_id==current_user.get_id(),
-        Membership.group_id==id).delete()
+    membership = Membership.query\
+        .filter(\
+            Membership.user_id==current_user.get_id(),\
+            Membership.group_id==id,\
+        ).delete()
 
-    if membership == 1:
+    if membership:
+        db.session.commit()
         return jsonify({'status': 'Success'}), 200
     else:
         return jsonify({'status': 'Not Found'}), 404
