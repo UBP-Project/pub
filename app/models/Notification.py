@@ -40,7 +40,15 @@ class Notification_Object(db.Model):
         self.entity_type_id    = entity_type_id
         self.entity_id = entity_id
         self.timestamp = datetime.utcnow()
+        self.status = True
+
+    def set_inactive(self):
         self.status = False
+        db.session.commit()
+
+    def set_active(self):
+        self.status = True
+        db.session.commit()
         
     def __repr__(self):
         return '<Notification_Object %r>' % self.id
@@ -73,6 +81,17 @@ class Notification(db.Model):
         self.notification_object_id = notification_object_id
         self.notifier_id = notifier_id
         self.status = False
+
+    def is_read(self):
+        return self.status
+
+    def mark_read(self):
+        self.status = True
+        db.session.commit()
+
+    def mark_unread(self):
+        self.status = False
+        db.session.commit()
 
     def __repr__(self):
         return '<Notification %r>' % self.id

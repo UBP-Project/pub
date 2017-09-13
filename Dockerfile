@@ -1,11 +1,11 @@
 # Use an official Python runtime as a parent image
-FROM python:3.5-slim
+FROM python:3.5
 
 # Set the working directory to /app
-WORKDIR /
+WORKDIR /app
 
 # Copy the current directory contents into the container at /app
-ADD . /
+ADD . /app
 
 # Install any needed packages specified in requirements.txt
 RUN pip install -r requirements.txt
@@ -17,9 +17,9 @@ EXPOSE 5000
 ENV FLASK_CONFIG development
 
 # Run app.py when the container launches
-CMD ["python", "manage.py", "shell"]
-CMD ["db.drop_all()"]
-CMD ["db.create_all()"]
-CMD ["seed()"]
-CMD ["quit()"]
+#CMD ["python", "manage.py", "shell"]
+#CMD ["db.drop_all()"]
+#CMD ["db.create_all()"]
+#CMD ["seed()"]
+#CMD ["quit()"]
 CMD ["python", "manage.py", "runserver"]

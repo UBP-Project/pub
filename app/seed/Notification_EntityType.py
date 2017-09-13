@@ -7,10 +7,10 @@ entity_types = [
 		'entity'	: 'activity',
 		'action'	: 'happening'
 	},
-	# { This should be on feed
-	# 	'entity'	: 'activity',
-	# 	'action'	: 'joined'
-	# },
+	{
+		'entity'	: 'activity',
+		'action'	: 'joined'
+	},
 	{
 		'entity'	: 'activity',
 		'action'	: 'interested'
@@ -32,9 +32,13 @@ entity_types = [
 		'action'	: 'accepted_join_request'
 	},
 	{
+		'entity'	: 'interest_group',
+		'action'	: 'has_new_leader'
+	},
+	{
 		'entity'	: 'user',
 		'action'	: 'followed_you'
-	}
+	},
 ]
 
 for e in entity_types:

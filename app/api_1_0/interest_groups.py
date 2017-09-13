@@ -108,12 +108,12 @@ def get_groups():
 @api.route('/groups/<string:id>/members', methods=['GET'])
 @login_required
 def get_group_members(id):
-    leaders = User.query.join(Membership, Membership.user_id == User.id)\
-    .filter(Membership.group_id == id, Membership.level == 1).all()
-    members = User.query.join(Membership, Membership.user_id == User.id)\
-    .filter(Membership.group_id == id, Membership.level == 0).all()
-    managers = User.query.join(Membership, Membership.user_id == User.id)\
-    .filter(Membership.group_id == id, Membership.level == 2).all()
+
+    group = Interest_Group.query.get(id)
+
+    leaders = group.get_leaders()
+    members = group.get_members()
+    managers = group.get_managers()
     return jsonify({
         'members': [ member.to_json() for member in members],
         'leaders': [ leader.to_json() for leader in leaders],

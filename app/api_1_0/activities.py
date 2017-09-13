@@ -11,8 +11,10 @@ from app.notification import Notif
 
 from app.utils import is_valid_extension
 from werkzeug.utils import secure_filename
+
 import os
 import uuid
+from asyncio import get_event_loop
 
 @api.route('/activities', methods=['GET'])
 @login_required
@@ -83,7 +85,6 @@ def get_activities():
       'has_prev': activities.has_prev
     })
        
-
 @api.route('/activities', methods=['POST'])
 @login_required
 def new_activity():
@@ -487,8 +488,22 @@ def going_to_activity_by(id):
 
       try:
           db.session.commit()
+
+          #Notification
+          notification = Notif('activity', 'joined', id)
+
+          #who triggered this action?
+          notification.add_actor(current_user.get_id())
+          
+          #send notifcation to the followers of the current_user
+          followers = current_user.get_followers()
+
+          notification.add_notifiers(followers)
+
           leaderboard.joined_activity()
-          return jsonify({'status': 'Success'}), 200        
+
+          return jsonify({'status': 'Success'}), 200   
+
       except exc.SQLAlchemyError as e:
           print(e)
           db.session().rollback()
@@ -522,6 +537,13 @@ def cancel_going_to_activity_by(id):
 
     try:
         db.session.commit()
+
+        #Notification
+        notification = Notif.notif_object(entity='activity', action='joined', entity_id=id)
+
+        #who triggered this action?
+        notification.set_inactive()
+
         return jsonify({'status': 'Success'}), 200        
     except exc.SQLAlchemyError as e:
         print(e)
@@ -661,13 +683,9 @@ def interested_to_activity_by(id):
         notification.add_actor(current_user.get_id())
         
         #send notifcation to the followers of the current_user
-        followers = User.query\
-            .join(Follow, Follow.following_id==current_user.get_id())\
-            .filter(id != current_user.get_id())\
-            .all()
+        followers = current_user.get_followers()
 
-        for follower in followers:
-            notification.add_notifier(follower.id)
+        notification.add_notifiers(followers)
 
         return jsonify({'status': 'Success'}), 200
     except exc.SQLAlchemyError as e:
@@ -702,6 +720,13 @@ def cancel_interested_to_activity_by(id):
 
     try:
         db.session.commit()
+
+        #Notification
+        notification = Notif.notif_object(entity='activity', action='interested', entity_id=id)
+
+        #who triggered this action?
+        notification.set_inactive()
+
         return jsonify({'status': 'Success'}), 200
     except exc.SQLAlchemyError as e:
         db.session().rollback()

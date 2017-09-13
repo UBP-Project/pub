@@ -71,6 +71,7 @@ def get_notifications():
         .add_columns(Notification.id, Notification.status, Notification.timestamp, Notification.notification_object_id)\
         .join(Notification_Object)\
         .join(Notification_EntityType)\
+        .filter(Notification_Object.status == True)\
         .filter(Notification.notifier_id == current_user.get_id())\
         .add_columns(Notification_EntityType.action, Notification_EntityType.entity)\
         .order_by(Notification.timestamp.desc())\
@@ -78,13 +79,13 @@ def get_notifications():
 
     return jsonify([
             {
-                'id'        : notification.id,
-                'status'    : notification.status,
-                'timestamp' : notification.timestamp,
-                'object_id' : notification.notification_object_id,
-                'action'    : notification.action,
-                'entity'    : notification.entity,
-                'actors'    : [
+                'notification_id'   : notification.id,
+                'status'            : notification.status,
+                'timestamp'         : notification.timestamp,
+                'object_id'         : notification.notification_object_id,
+                'action'            : notification.action,
+                'entity'            : notification.entity,
+                'actors'            : [
                     {
                         'id'           : actor.id,
                         'firstname'    : actor.firstname,
@@ -94,7 +95,7 @@ def get_notifications():
                         'department'   : actor.department,
                         'position'     : actor.position,
                         'birthday'     : actor.birthday
-                    } for actor in User.query.join(Notification_Change).join(Notification_Object, Notification_Object.id == notification.notification_object_id).all()
+                    } for actor in User.query.join(Notification_Change).join(Notification_Object).filter(Notification_Object.id == notification.notification_object_id).filter(Notification_Change.actor_id != current_user.get_id()).all()
                 ]
             }
             for notification in notifications
@@ -124,8 +125,8 @@ def mark_read(id):
     """
     notification = Notification.query.get_or_404(id)
 
-    if notification.status is False:
-        notification.status = True
+    if notification.is_read() is False:
+        notification.mark_read()
 
     try:
         db.session.commit()
@@ -159,8 +160,8 @@ def mark_unread(id):
     """
     notification = Notification.query.get_or_404(id)
 
-    if notification.status is True:
-        notification.status = False
+    if notification.is_read():
+        notification.mark_unread()
 
     try:
         db.session.commit()

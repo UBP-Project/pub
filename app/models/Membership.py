@@ -35,3 +35,11 @@ class Membership(db.Model):
             'level'      : self.level
         }
         return json_post
+
+    def accept(self):
+        self.status = MEMBERSHIP_ACCEPTED
+        db.session.commit()
+
+    def decline(self):
+        self.status = MEMBERSHIP_DECLINED
+        db.session.commmit()
