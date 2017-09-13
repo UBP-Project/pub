@@ -5,7 +5,14 @@
 {% block content %}
 	<div class="row">
 
-		<div class="col-md-10 col-sm-12">			
+		<div class="col-md-12 col-sm-12 col-xs-12">		
+
+            <div class="text-center feed-item" style="padding: 20px;">
+                <h3>Welcome to <b>UBP: Pub</b></h3>
+                <hr/>
+                <h4>See stories from co-workers here in your Actions Feed.<br/><small>Start by connecting with your co-workers on Pub</small></h4>
+            </div>
+
             {% raw %}
             <div id="app">
                 <div v-for="feed_item in feed" class="feed-item">

@@ -20,6 +20,14 @@ def activities():
     return render_template("client/activity/activities.html", activities=activities,\
         show_create=show_create, user=current_user)
 
+@client.route('/myactivities/')
+@login_required
+def myactivities():
+    show_create = is_manager_or_leader()
+    activities = Activity.query.all()
+    return render_template("client/activity/myactivities.html", activities=activities,\
+        show_create=show_create, user=current_user)
+
 @client.route('/activities/<string:id>')
 @login_required
 def activity(id):

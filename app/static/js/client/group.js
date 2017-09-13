@@ -75,7 +75,7 @@ function viewLeaders(group_id) {
             for (var i in data) {
                 var name = data[i].firstname + " " + data[i].lastname;
                 var user_id = data[i].id;
-                users_list += "<div class='col-md-6 mini-container'><a href='/profile/" + user.id + "'><span>"+ name + "</span></a></div>";
+                users_list += "<div class='col-md-6 mini-container'><a href='/profile/" + user_id + "'><span>"+ name + "</span></a></div>";
             }
 
             document.getElementById('group-leaders-'+group_id).innerHTML = users_list;

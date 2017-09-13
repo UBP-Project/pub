@@ -53,120 +53,117 @@
 		</nav>
 
 	{% endblock navigation %}
-  <div class="row">
-    <div class="col-md-10 col-md-offset-1">
-      <div class="row">
 
-    		<div class="side col-md-3 col-sm-3">
+    <div class="row">
 
-    			{% block sidebar %}
+		<div class="side col-lg-offset-1 col-lg-2 col-md-offset-1 col-md-2 col-sm-offset-0 col-sm-3">
 
-    		        <div class="hidden-xs">
+			{% block sidebar %}
 
-    		            <div class="project-bg">
-    		                <div class="white-filter">
-    		                    <a href="/"><img src="{{ url_for('static', filename='../../static/images/pub-sm-logo.png') }}" alt="PUB LOGO" class="img-responsive project-logo"></a>
-    		                </div>
-    		            </div>
+                <div class="hidden-xs">
 
-    		            <div class="side-nav">
-    		                <ul class="nav">
-    		                	<br/>
-    		                    <li><a href="/profile/{{current_user.get_id()}}">{{current_user.firstname}} {{current_user.lastname}}<i class="fa fa-user pull-right"></i></a></li>
-    		                    <li><a href="/profile/{{current_user.get_id()}}/edit"><p>Edit Profile</p></a></li>
-    		                    <li><a href="/notifications"><p>Notifications <!-- <span class="badge badge-error pull-right">10</span> --></p></a></li>
-    		                    <li><hr/></li>
-    		                    <li><a href="/groups">Interest Groups<i class="fa fa-group pull-right"></i></a></li>
-    		                    <li><a href="/my-groups"><p>My Groups</p></a></li>
-    		                    <li><hr/></li>
-    		                    <li><a href="/activities">Activities<i class="fa fa-rocket pull-right"></i></a></li>
-    		                    <li><a href="#"><p>My Activities</p></a></li>
-    		                    <li><hr/></li>
-    		                    <li><a href="#" id="sign-out" data-toggle="modal" data-target="#logout-modal">Log Out <i class="fa fa-sign-out pull-right"></i></a></li>
-    		                    <br/>
-    		                </ul>
-    		            </div>
+    	            <div class="project-bg">
+    	                <div class="white-filter">
+    	                    <a href="/"><img src="{{ url_for('static', filename='../../static/images/pub-sm-logo.png') }}" alt="PUB LOGO" class="img-responsive project-logo"></a>
+    	                </div>
+    	            </div>
 
-    		        </div>
+    	            <div class="side-nav">
+    	                <ul class="nav">
+    	                	<br/>
+    	                    <li><a href="/profile/{{current_user.get_id()}}">{{current_user.firstname}} {{current_user.lastname}}<i class="fa fa-user pull-right"></i></a></li>
+    	                    <li><a href="/profile/{{current_user.get_id()}}/edit"><p>Edit Profile</p></a></li>
+    	                    <li><a href="/notifications"><p>Notifications <!-- <span class="badge badge-error pull-right">10</span> --></p></a></li>
+    	                    <li><hr/></li>
+    	                    <li><a href="/groups">Interest Groups<i class="fa fa-group pull-right"></i></a></li>
+    	                    <li><a href="/mygroups"><p>My Groups</p></a></li>
+    	                    <li><hr/></li>
+    	                    <li><a href="/activities">Activities<i class="fa fa-rocket pull-right"></i></a></li>
+    	                    <li><a href="/myactivities"><p>My Activities</p></a></li>
+    	                    <li><hr/></li>
+    	                    <li><a href="#" id="sign-out" data-toggle="modal" data-target="#logout-modal">Log Out <i class="fa fa-sign-out pull-right"></i></a></li>
+    	                    <br/>
+    	                </ul>
+    	            </div>
 
-    		    {% endblock sidebar %}
+                </div>
 
-    		</div>
+		    {% endblock sidebar %}
 
-    		<div class="content-wrap col-md-9 col-sm-9">
-    			{% block content %}
-    			{% endblock content %}
-    		</div>
+		</div>
 
-    	</div>
+		<div class="content-wrap col-lg-8 col-md-8 col-sm-9">
+			{% block content %}
+			{% endblock content %}
+		</div>
+
     </div>
-  </div>
 
 	{% block footer %}
 		<footer class="footer text-center">
-			<a href="#top" title="Back to top" class="btn btn-lg"><i class="fa fa-angle-up"></i></a>
-				<div class="row container-fluid">
-                    <div class="col-md-4">
-                        <ul style="text-align: left; list-style-type: none;">
-                            <li>
-                                <a href="https://www.unionbank.ph">Union Bank of the Philippines</a>
-                            </li>
-                            <li>
-                                <a href="/">UBP: Pub</a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="col-md-2">
-                        <ul style="text-align: left; list-style-type: none;">
-                            <li>
-                                <a href="/notifications">Notifications</a>
-                            </li>
-                            <li>
-                                <a href="/leaderboard">Leaderboard</a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="col-md-2">
-                        <ul style="text-align: left; list-style-type: none;">
-                            <li>
-                                <a href="/profile/{{current_user.get_id()}}">My Profile</a>
-                            </li>
-                            <li>
-                                <a href="/profile/{{current_user.get_id()}}/edit">Edit Profile</a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="col-md-2">
-                        <ul style="text-align: left; list-style-type: none;">
-                            <li>
-                                <a href="/groups">Interest Groups</a>
-                            </li>
-                            <li>
-                                <a href="/my-groups">My Interest Groups</a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="col-md-2">
-                        <ul style="text-align: left; list-style-type: none;">
-                            <li>
-                                <a href="/activities">Activities</a>
-                            </li>
-                            <li>
-                                <a href="#">My Activities</a>
-                            </li>
-                        </ul>
-                    </div>
-
+			<a href="#" title="Back to top" class="btn btn-lg"><i class="fa fa-angle-up"></i></a>
+			<div class="row container-fluid">
+                <div class="col-md-4">
+                    <ul style="text-align: left; list-style-type: none;">
+                        <li>
+                            <a href="https://www.unionbank.ph">Union Bank of the Philippines</a>
+                        </li>
+                        <li>
+                            <a href="/">UBP: Pub</a>
+                        </li>
+                    </ul>
                 </div>
 
-                <br/>
-                <div style="color: #777;">
-                   &copy; All Rights Reserved 2017
+                <div class="col-md-2">
+                    <ul style="text-align: left; list-style-type: none;">
+                        <li>
+                            <a href="/notifications">Notifications</a>
+                        </li>
+                        <li>
+                            <a href="/leaderboard">Leaderboard</a>
+                        </li>
+                    </ul>
                 </div>
+
+                <div class="col-md-2">
+                    <ul style="text-align: left; list-style-type: none;">
+                        <li>
+                            <a href="/profile/{{current_user.get_id()}}">My Profile</a>
+                        </li>
+                        <li>
+                            <a href="/profile/{{current_user.get_id()}}/edit">Edit Profile</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-md-2">
+                    <ul style="text-align: left; list-style-type: none;">
+                        <li>
+                            <a href="/groups">Interest Groups</a>
+                        </li>
+                        <li>
+                            <a href="/my-groups">My Interest Groups</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-md-2">
+                    <ul style="text-align: left; list-style-type: none;">
+                        <li>
+                            <a href="/activities">Activities</a>
+                        </li>
+                        <li>
+                            <a href="#">My Activities</a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <br/>
+            <div style="color: #777;">
+               &copy; All Rights Reserved 2017
+            </div>
 		</footer>
 	{% endblock footer %}
 

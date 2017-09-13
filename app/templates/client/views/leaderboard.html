@@ -26,7 +26,7 @@
 										{% else %}
 											<img src="{{ url_for('static', filename='images/pub-default-img.jpg')}}">
 										{% endif %}
-							 			<span class="name">{{ leader.firstname }} {{leader.lastname}}</span>
+							 			<span class="name text-wrap">{{ leader.firstname }} {{leader.lastname}}</span>
 							 			<span class="pull-right user-points"><b>{{ leader.points }} pts</b></span>
 									</div>
 								</a>
@@ -48,7 +48,7 @@
 										{% else %}
 											<img src="{{ url_for('static', filename='images/pub-default-img.jpg')}}">
 										{% endif %}
-							 			<span class="name">{{ leader.firstname }} {{leader.lastname}}</span>
+							 			<span class="name text-wrap">{{ leader.firstname }} {{leader.lastname}}</span>
 							 			<span class="pull-right user-points"><b>{{ leader.total }} Followers</b></span>
 									</div>
 								</a>

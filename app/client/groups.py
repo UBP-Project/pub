@@ -176,7 +176,7 @@ def create_group():
         return redirect(url_for("client.group", id=interest_group.id))
     return render_template('client/group/create.html', form=form)
 
-@client.route('/my-groups/')
+@client.route('/mygroups/')
 @login_required
 def mygroups():
     
@@ -210,7 +210,7 @@ def mygroups():
         Membership.group_id == Interest_Group.id).filter(Membership.level != 1,\
         Membership.user_id == current_user.get_id()).all()
 
-    return render_template("client/group/my-groups.html", interest_groups=interest_groups, managed_groups=managed_groups, user=current_user)
+    return render_template("client/group/mygroups.html", interest_groups=interest_groups, managed_groups=managed_groups, user=current_user)
 
 
 @client.route('/groups/<uuid(strict=False):id>/requests', methods=['POST', 'GET'])

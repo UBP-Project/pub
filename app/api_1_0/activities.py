@@ -542,7 +542,8 @@ def cancel_going_to_activity_by(id):
         notification = Notif.notif_object(entity='activity', action='joined', entity_id=id)
 
         #who triggered this action?
-        notification.set_inactive()
+        if notification:
+          notification.set_inactive()
 
         return jsonify({'status': 'Success'}), 200        
     except exc.SQLAlchemyError as e:
@@ -725,7 +726,8 @@ def cancel_interested_to_activity_by(id):
         notification = Notif.notif_object(entity='activity', action='interested', entity_id=id)
 
         #who triggered this action?
-        notification.set_inactive()
+        if notification:
+          notification.set_inactive()
 
         return jsonify({'status': 'Success'}), 200
     except exc.SQLAlchemyError as e:

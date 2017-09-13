@@ -1,7 +1,6 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, login_manager
 from app.models import Role, Permission, Follow
-# from app.models.guid import GUID
 from sqlalchemy_utils import UUIDType
 from flask_login import UserMixin
 import uuid
