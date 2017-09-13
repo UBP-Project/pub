@@ -30,10 +30,10 @@ class Membership(db.Model):
         json_post = {
             'user_id'    : self.user_id,
             'group_id'   : self.group_id,
-            'timestamp': self.timestamp,
+            'timestamp'  : self.timestamp,
             'status'     : self.status,
             'level'      : self.level
-        }
+        }   
         return json_post
 
     def accept(self):
@@ -43,3 +43,4 @@ class Membership(db.Model):
     def decline(self):
         self.status = self.MEMBERSHIP_DECLINED
         db.session.commmit()
+

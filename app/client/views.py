@@ -69,7 +69,7 @@ def notifications():
             }
             for notification in notifs
         ])
-    print(notifications)
+    print(str(notifications))
     return render_template("client/views/notifications.html", user=current_user, notifications=notifications)
 
 @client.route('/leaderboard')
