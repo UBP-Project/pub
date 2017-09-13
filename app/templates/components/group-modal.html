@@ -33,12 +33,16 @@
                 <!-- BODY -->
                 <div class="modal-body">
                     
-                    <div class="img-container" style="background-image: url({{ url_for('static',filename='uploads/covers/' + group.cover_photo) }}); background-size: cover; background-repeat: no-repeat;">
+                    <div class="img-container" style="background-image: url({{ url_for('static',filename='uploads/covers/' + group.cover_photo) }}); background-size: cover; background-repeat: no-repeat; background-origin: center center;">
                         <img src="{{ url_for('static',filename='uploads/group_icons/' + group.group_icon) }}" class="grp-icon-img img-circle" />
                         <!-- <img src="{{ group.group_icon }}" class="img-circle grp-icon-img"/> -->
                     </div>
 
                     <h2 class="text-center">{{ group.name | upper }}</h2>
+
+                    <a href="/groups/{{ group.id }}/requests">
+                        <button class="btn btn-style-2 btn-sm" title="Manage Groups"><i class="fa fa-plus"></i></button>
+                    </a>
 
                     <div class="content">
 

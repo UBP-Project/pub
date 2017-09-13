@@ -5,6 +5,12 @@
 	padding: 0;
 }
 
+.text-wrap {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
 // Top Navigation
 
 .nav {
@@ -83,10 +89,15 @@ button.navbar-toggle:focus {
 
 	.nav {
 		li > a {
-			font-size: 16px;
+			font-size: 13px;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+			padding: 5px 15px;
 
 			p {
 				margin: 0;
+				font-size: 13px;
 				padding-left: 15px;
 			}
 		}
@@ -98,7 +109,7 @@ button.navbar-toggle:focus {
 }
 
 .nav>li>a {
-	color: #777777;
+	color: #777;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	overflow: hidden;
@@ -138,7 +149,7 @@ button.navbar-toggle:focus {
 // Footer
 
 footer {
-	height: 150px;
+	//height: 150px;
 	background-color: #2c2c2c;
 	a {
 		color: @white;

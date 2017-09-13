@@ -13,16 +13,8 @@
 				<h2>MY ACTIVITIES</h2>
 				<hr/>
 
-				<div class="row">
-					{% if activities %}
-						{% for a in activities %}
-							{{ activity_modal(a) }}
-						{% endfor %}
-					{% else %}
-						<div class="col-md-12 no-content-box text-center">
-							<h2>NO ACTIVITIES</h2>
-						</div>
-					{% endif %}
+				<div class="no-content-box text-center">
+					<h2>NO ACTIVITIES</h2>
 				</div>
 
 			</div>
@@ -35,3 +27,16 @@
 {% block scripts %}
 	<script src="{{ url_for('static', filename='js/client/activity.js') }}"></script>
 {% endblock scripts %}
+
+
+<!-- <div class="row">
+	{% if activities %}
+		{% for activity in activities %}
+			{{ activity_modal(activity) }}
+		{% endfor %}
+	{% else %}
+		<div class="col-md-12 no-content-box text-center">
+			<h2>NO ACTIVITIES</h2>
+		</div>
+	{% endif %}
+</div> -->
