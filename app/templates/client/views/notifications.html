@@ -9,22 +9,14 @@
 		<div class="col-md-12">
 			<div class="group-box">
 
-				<h2>NOTIFICATIONS</h2>
+				<h3>NOTIFICATIONS</h3>
 				<hr/>
 
-				{% if notifications %}
-					<div class="row">
-					{% for notif in notifications %}
+				<div class="row">
+					<div class="col-md-12 col-sm-12 box-content" id="notif-panel">
 						
-					{% endfor %}
 					</div>
-				{% else %}
-					<div class="row">
-						<div class="col-md-12 col-sm-12 box-content">
-							<div class="text-center" style="height: 400px; padding-top: 100px;"><h1>NO NOTIFICATIONS YET</h1></div>
-						</div>
-					</div>
-				{% endif %}
+				</div>
 
 			</div>
 		</div>
@@ -32,3 +24,56 @@
 	</div>
 
 {% endblock content %}
+
+{% block scripts %}
+
+	<script>
+		
+	function init_notifications() {
+		$.ajax({
+            url: '/api/v1.0/notifications',
+            type: 'GET'
+        })
+        .done(function(data) {
+            console.log("success");
+            if(data.length == 0) {
+            	document.getElementById('notif-panel').innerHTML = '<div class="text-center" style="height: 300px; padding-top: 70px;"><h2><small>NO NOTIFICATIONS TO SHOW</small></h2></div>';
+            } else {
+
+            	var start = '<div style="padding: 10px;">';
+            	var content = '';
+            	var end = '</div>';
+            	for (var i in data) {
+
+            		var actor = '';
+
+            		for (var j in data[i].actors) {
+            			actor += '<a href="/profile/' + data[i].actors[j].id + '">' + data[i].actors[j].firstname + ' ' + data[i].actors[j].lastname + '</a>';
+            		}
+
+            		
+            		var action = '';
+            		if(data[i].action == 'interested') {
+            			action = ' is interested to something. ';
+            		}
+
+            		var time = '<small style="color: #777;">' + data[i].timestamp + '</small>';
+
+            		content += actor + action + time;
+
+            	} // end for
+
+            	document.getElementById('notif-panel').innerHTML = start + content + end;
+
+            } // end if
+        })
+        .fail(function() {
+             console.log("error");
+        });
+	}
+
+	init_notifications();
+
+	</script>
+
+{% endblock scripts %}
