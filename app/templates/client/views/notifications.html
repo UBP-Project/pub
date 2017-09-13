@@ -9,17 +9,24 @@
 		<div class="col-md-12">
 			<div class="group-box">
 
-				<h2>NOTIFICATIONS</h2>
+				<h3>NOTIFICATIONS</h3>
 				<hr/>
 
-				<!-- <div class="row">
-
-				</div> -->
-
 				<div class="row">
-					<div class="col-md-12 col-sm-12 box-content">
-						<div class="text-center" style="height: 400px; padding-top: 100px;"><h1>NO NOTIFICATIONS YET</h1></div>
+					{% raw %}
+					<div id="app" class="col-md-12 col-sm-12 box-content">
+
+						<div v-if="notifications">
+							<p v-for="notif in notifications">
+								<!-- Stil working on this -->
+								{{ notif.action }}
+							</p>
+						</div>
+
+						<div v-else="notifications" class="text-center" style="height: 300px; padding-top: 70px;"><h2><small>NO NOTIFICATIONS TO SHOW</small></h2></div>
+						
 					</div>
+					{% endraw %}
 				</div>
 
 			</div>
@@ -28,3 +35,39 @@
 	</div>
 
 {% endblock content %}
+
+{% block scripts %}
+
+	<script>
+		
+		var app = new Vue({
+			el: '#app',
+          	data: {
+            	notifications: []
+          	},
+          	methods: {
+            	initNotifications: function() {
+	                $.ajax({
+	                    url: '/api/v1.0/notifications',
+	                    type: 'GET'
+	                }).done(function(data) {
+
+                    	/*for(var i in data) {
+                    		notifications.push(data[i]);
+                    	}*/
+
+	                    notifications = data;
+	                    console.log(notifications);
+
+	                }).fail(function() {
+	                    console.log("error");
+	                });
+            	}
+           	}
+        });
+        
+        app.initNotifications();
+
+	</script>
+
+{% endblock scripts %}
