@@ -7,11 +7,44 @@
 
 		<div class="col-md-12 col-sm-12 col-xs-12">		
 
-            <div class="text-center feed-item" style="padding: 20px;">
+            <div class="text-center feed-item" style="padding: 20px; margin-bottom: 20px;">
                 <h3>Welcome to <b>UBP: Pub</b></h3>
                 <hr/>
-                <h4>See stories from co-workers here in your Actions Feed.<br/><small>Start by connecting with your co-workers on Pub</small></h4>
+                <h4>See stories from co-workers here in your Actions Feed.<br/>
+                    <small>Start by connecting with your co-workers on Pub</small>
+                </h4>
             </div>
+
+            <style>
+                
+                .feed-item {
+                    background-color: white;
+                    border-radius: 3px;
+                    padding: 20px 0px;
+                    margin-bottom: 7px;
+                }
+
+                .feed-item .user-img {
+                    height: 50px;
+                    width: 50px;
+                    object-fit: cover;
+                    border-radius: 25px;
+                }
+
+                .feed-item .group-icon {
+                    width: 100%;
+                    border: 1px solid gray;
+                }
+
+                .feed-item .group-item {
+                    border-radius: 10px;
+                }
+
+                .feed-item .group-about {
+                    border: 1px solid black;
+                }
+
+            </style>
 
             {% raw %}
             <div id="app">
