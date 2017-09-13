@@ -183,7 +183,7 @@ def accept_request(group_id, user_id):
     #who triggered this action?
     notification.add_actor(current_user.get_id())
     #who will receive this action
-    notification.add_notifiers([User.get_user_by_id(to_follow_id)])
+    notification.add_notifiers([User.get_user_by_id(user_id)])
 
     membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
     membership.accept()

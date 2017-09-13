@@ -23,7 +23,7 @@ def get_notifications():
       - name: page
         in: query
         example: 1
-        default: 10
+        default: 1
 
     responses:
         200:
@@ -75,7 +75,7 @@ def get_notifications():
         .filter(Notification.notifier_id == current_user.get_id())\
         .add_columns(Notification_EntityType.action, Notification_EntityType.entity)\
         .order_by(Notification.timestamp.desc())\
-        .distinct()
+        .paginate()
 
     return jsonify([
             {

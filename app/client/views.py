@@ -1,10 +1,10 @@
 import json
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import login_user, login_required, logout_user, current_user
 from ..forms import LoginForm, GroupMembershipForm
 from . import client
 from app import db
-from app.models import User, Interest_Group, Activity, Membership, Role, Follow
+from app.models import User, Interest_Group, Activity, Membership, Role, Follow, Notification, Notification_EntityType, Notification_Object, Notification_Change
 from ..auth import is_manager_or_leader
 from ..forms import UpdateUserFormClient, PasswordFormClient
 from ..utils import flash_errors
@@ -35,7 +35,42 @@ def login():
 @client.route('/notifications/')
 @login_required
 def notifications():
-    return render_template("client/views/notifications.html", user=current_user)
+
+    notifs = Notification.query\
+        .add_columns(Notification.id, Notification.status, Notification.timestamp, Notification.notification_object_id)\
+        .join(Notification_Object)\
+        .join(Notification_EntityType)\
+        .filter(Notification_Object.status == True)\
+        .filter(Notification.notifier_id == current_user.get_id())\
+        .add_columns(Notification_EntityType.action, Notification_EntityType.entity)\
+        .order_by(Notification.timestamp.desc())\
+        .all()
+
+    notifications = jsonify([
+            {
+                'notification_id'   : notification.id,
+                'status'            : notification.status,
+                'timestamp'         : notification.timestamp,
+                'object_id'         : notification.notification_object_id,
+                'action'            : notification.action,
+                'entity'            : notification.entity,
+                'actors'            : [
+                    {
+                        'id'           : actor.id,
+                        'firstname'    : actor.firstname,
+                        'middlename'   : actor.middlename,
+                        'lastname'     : actor.lastname,
+                        'email'        : actor.email,
+                        'department'   : actor.department,
+                        'position'     : actor.position,
+                        'birthday'     : actor.birthday
+                    } for actor in User.query.join(Notification_Change).join(Notification_Object).filter(Notification_Object.id == notification.notification_object_id).filter(Notification_Change.actor_id != current_user.get_id()).all()
+                ]
+            }
+            for notification in notifs
+        ])
+    print(notifications)
+    return render_template("client/views/notifications.html", user=current_user, notifications=notifications)
 
 @client.route('/leaderboard')
 @login_required

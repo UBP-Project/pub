@@ -37,9 +37,9 @@ class Membership(db.Model):
         return json_post
 
     def accept(self):
-        self.status = MEMBERSHIP_ACCEPTED
+        self.status = self.MEMBERSHIP_ACCEPTED
         db.session.commit()
 
     def decline(self):
-        self.status = MEMBERSHIP_DECLINED
+        self.status = self.MEMBERSHIP_DECLINED
         db.session.commmit()

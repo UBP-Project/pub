@@ -66,4 +66,4 @@ class Interest_Group(db.Model):
     def membership_requests(self):
         return User.query \
             .join(Membership, User.id==Membership.user_id) \
-            .filter(Membership.group_id==id, Membership.status == 0, Membership.level == 0).all()
+            .filter(Membership.group_id==self.id, Membership.status == 0, Membership.level == 0).all()

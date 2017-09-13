@@ -3,6 +3,7 @@ from app import db
 from app.models import User, Follow
 from sqlalchemy_utils import UUIDType
 from datetime import datetime
+from flask_login import login_required
 import uuid
 
 class Notification_EntityType(db.Model):
@@ -68,7 +69,6 @@ class Notification_Change(db.Model):
     def __repr__(self):
         return '<Notification_Object %r>' % self.id
 
-
 class Notification(db.Model):
     __tablename__ = 'notification'
     id          = db.Column(UUIDType(binary=False), default=uuid.uuid4, primary_key=True)
@@ -82,16 +82,20 @@ class Notification(db.Model):
         self.notifier_id = notifier_id
         self.status = False
 
+    @login_required
     def is_read(self):
         return self.status
 
+    @login_required
     def mark_read(self):
         self.status = True
         db.session.commit()
 
+    @login_required
     def mark_unread(self):
         self.status = False
         db.session.commit()
+
 
     def __repr__(self):
         return '<Notification %r>' % self.id
