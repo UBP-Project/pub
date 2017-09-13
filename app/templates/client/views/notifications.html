@@ -43,7 +43,7 @@
 		var app = new Vue({
 			el: '#app',
           	data: {
-            	notifications: [],
+            	notifications: []
           	},
           	methods: {
             	initNotifications: function() {
@@ -52,20 +52,13 @@
 	                    type: 'GET'
 	                }).done(function(data) {
 
-	                	/*data.notifications.forEach((activity) => {
-                        // add neccessary field for display
-                        activity.going_users      = [];
-                        activity.interested_users = [];
-                        activity.isInterested     = false;
-                        activity.isGoing          = false;
-                    	});*/
-
-                    	for(var i in data) {
+                    	/*for(var i in data) {
                     		notifications.push(data[i]);
-                    	}
+                    	}*/
 
-	                    //notifications = data;
+	                    notifications = data;
 	                    console.log(notifications);
+
 	                }).fail(function() {
 	                    console.log("error");
 	                });
