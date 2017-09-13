@@ -4,6 +4,7 @@
 
 {% block content %}
     <div class="row admin-page" style="background-color: white">
+
         <div class="row">
             <div class="cover-photo">
                 <img src="{{ url_for('static', filename='uploads/covers/' + group.cover_photo) }}" />
@@ -40,26 +41,43 @@
         </div>
 
         <div class="row">
-            
             <div class="col-md-12">
-                <h2>Group Activities</h2>
-            </div>
-
-            {% for activity in activities %}
-                <div class="col-md-3 no-padding">
-                    <div class="activity-card"
-                    style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{url_for('static',filename='uploads/activity_images/' + activity.image) }})">
-                        <div>
-                            <h3><strong>{{ activity['title'] }}</strong></h3>
-                            <!-- <h6>{{ activity['description'] }}</h6> -->
-                            <h6><i>{{ activity['start_date']}} - {{ activity['end_date']}}</i></h6>
+                {% if leaders|length > 0 %}
+                    <div class="row">
+                    <h4>Leaders</h4>
+                    {% for leader in leaders %}
+                        <div class="user-card col-md-4">
+                            <a href="{{ url_for('admin.profile', id=leader.id) }}">
+                                <h4><span class="fa fa-user-circle"></span>
+                                    {{ leader['firstname'] }} {{ leader['lastname'] }}
+                                </h4>
+                            </a>
+                            </a>
+                            <a class="btn btn-sm btn-style-3" href="{{ url_for('admin.removeleader', group_id=group['id'],
+                            user_id =leader['id'])}}">Remove Leader</a>
                         </div>
-                        <a class="btn btn-block btn-style-3" href="{{ url_for('admin.edit_activity', id=activity['id']) }}">
-                            Edit Activity
-                        </a>
+                    {% endfor %}
                     </div>
-                </div>
-            {% endfor %}
+                {% endif %}
+
+
+                {% if members|length > 0 %}
+                    <div class="row">
+                    <h4>Members</h4>
+                    {% for member in members %}
+                        <div class="user-card col-md-4">
+                            <a href="{{ url_for('admin.profile', id=member.id) }}">
+                                <h4><span class="fa fa-user-circle"></span>
+                                    {{ member['firstname'] }} {{ member['lastname'] }}
+                                </h4>
+                            </a>
+                            <a class="btn btn-sm btn-style-2" href="{{ url_for('admin.setleader', group_id=group['id'],
+                            user_id =member['id'])}}">Set as Leader</a>
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 {% endblock %}

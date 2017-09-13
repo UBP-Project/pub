@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 from . import client
 from app import db
 from app.models import User, Interest_Group, Activity, Membership, Role, Follow
-from ..auth import is_manager_or_leader, is_manager, can_modify_group
+from ..auth import is_manager_or_leader, is_manager, can_modify_group, can_accept_requests
 from ..utils import flash_errors, is_valid_extension
 from ..forms import CreateInterestGroupForm, UpdateInterestGroupForm, GroupMembershipForm
 from werkzeug.utils import secure_filename
@@ -65,6 +65,7 @@ def groups():
 @client.route('/groups/<uuid(strict=False):id>', methods=['POST', 'GET'])
 @login_required
 def group(id):
+    activities = Activity.query.filter(Activity.group_id == id).all()
     form = GroupMembershipForm()
     # handle page actions
     if form.validate_on_submit():
@@ -89,7 +90,8 @@ def group(id):
         current_user.get_id()==Membership.user_id,\
         id==Membership.group_id).first()
     return render_template('client/group/group.html', group=group, members=members, user=current_user,\
-        membership=membership, form=form)
+        membership=membership, form=form, activities=activities,
+        can_edit_group=can_modify_group(id), can_accept_requests=can_accept_requests(id))
 
 @client.route('/groups/<string:id>/edit', methods=['GET', 'POST'])
 def update_group(id):
@@ -216,13 +218,21 @@ def mygroups():
 @client.route('/groups/<uuid(strict=False):id>/requests', methods=['POST', 'GET'])
 @login_required
 def group_requests(id):
-    is_manager_or_leader(abort_on_false=True) # check if the current user is a manager or leader
+    # is_manager_or_leader(abort_on_false=True) # check if the current user is a manager or leader
     group = Interest_Group.query.get_or_404(id)
     membership_requests = User.query \
         .join(Membership, User.id==Membership.user_id) \
         .filter(Membership.group_id==id, Membership.status == 0, Membership.level == 0).all()
-    return render_template('client/group/group-requests.html', group=group, membership_requests=membership_requests)
+    return render_template('client/group/group-requests.html', group=group, membership_requests=membership_requests,
+        can_edit_group=can_modify_group(id), can_accept_requests=can_accept_requests(id))
 
+@client.route('/groups/<string:id>/members', methods=['GET', 'POST'])
+def group_members(id):
+    group = Interest_Group.query.get_or_404(id)
+    leaders = group.get_leaders()
+    members = group.get_members()
+    return render_template('client/group/members.html', group=group, leaders=leaders, members=members,
+        can_edit_group=can_modify_group(id), can_accept_requests=can_accept_requests(id))
 
 @client.route('/groups-list')
 def group_list():

@@ -6,6 +6,11 @@
     <img src="{{ url_for('static', filename='uploads/activity_images/' + activity.image )}}" />
     <!-- <img src="{{ activity.image }}" />  -->
     <h3>{{ activity.title }}</h3>
+    {% if can_edit_group %}
+        <a class="btn btn-sm btn-style-1" href="{{url_for('client.edit_activity', id=activity.id) }}">
+            Edit this Activity
+        </a>
+    {% endif %}
 
 {% endblock %}
 

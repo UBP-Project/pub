@@ -80,6 +80,27 @@ def join_group(group_count=5, user_count=100):
                 print(user.firstname, user.lastname, "joins group: ", group.name)
     db.session.commit()
 
+def join_group_pending(group_count=5, user_count=100):
+    users = User.query.join(Role).filter(Role.name != 'Administrator').all()
+    groups = Interest_Group.query.all()
+    for i in range(0, user_count):
+        user = users[random.randint(0, len(users)-1)]
+        for j in range(0, group_count):
+            group = groups[random.randint(0, len(groups)-1)]
+            membership = Membership(
+                user_id=user.id,
+                group_id=group.id,
+                status=0,
+                level=0)
+            exists = Membership.query.filter_by(user_id=user.id,
+                group_id=group.id).first() is not None
+            if exists:
+                continue
+            else:
+                db.session.add(membership)
+                print(user.firstname, user.lastname, "pending joins group: ", group.name)
+    db.session.commit()
+
 def group_activities(group_count=10, activity_count=3):
     groups = Interest_Group.query.all()
     activities = Activity.query.all()
@@ -95,4 +116,5 @@ def all():
     activity_join()
     activity_interested()
     join_group()
+    join_group_pending()
     # group_activities()

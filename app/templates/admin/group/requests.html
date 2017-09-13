@@ -43,42 +43,40 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-4">
-                {% if 'admin' not in request.path %}
-                    <form method="post">
-                    {{ form.hidden_tag() }}
-                    {% if isMember %} 
-                        <input class="btn btn-warning" type="submit" name="leave_group" value="Leave Group">
-                    {% else %}
-                        <input class="btn btn-primary" type="submit" name="join_group" value="Join Group">
-                    {% endif %}
-                    </form>
-                {% endif %}
-
-    
-                {% if membership_requests|length > 0 %}
-                    <h4>Membership Requests</h4>
-                    {% for request in membership_requests %}
-                        <div class="user-card">
-                            <a href="{{ url_for('admin.profile', id=request.id) }}">
-                                <h4><span class="fa fa-user-circle"></span>
-                                    {{ request['firstname'] }} {{ request['lastname'] }}
-                                </h4>
-                            </a>
-                            </a>
-                            <a class="btn btn-sm btn-default" href="{{ url_for('admin.decline_request', group_id=group['id'],
-                            user_id =request['id'])}}">Decline</a>
-                            <a class="btn btn-sm btn-style-1" href="{{ url_for('admin.accept_request', group_id=group['id'],
-                            user_id =request['id'])}}">Accept</a>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <h4>No membership requests.</h4>
-                {% endif %}
+        <div class="row">    
+            {% if membership_requests|length > 0 %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 style="font-family: 'Roboto Condensed Bold'">Group Membership Request</h3>
+                        <table class="users table row table-hover table-condensed">
+                            <tbody>
+                                {% for user in membership_requests %}
+                                <tr class="user-table-item">
+                                    <!-- <td class="ellipsis">{{ user['id'] }}</td> -->
+                                    {% if user.image %}
+                                        <td><img class="circle-img-sm" src="{{ url_for('static', filename='uploads/profile_pictures/' + user.image) }}" /></td>
+                                    {% else %}
+                                        <td><img class="circle-img-sm" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}" /></td>
+                                    {% endif %}
+                                    <td>{{ user['firstname'] }}</td>  
+                                    <td>{{ user['middlename'] }}</td>
+                                    <td>{{ user['lastname'] }}</td>
+                                    <td>{{ user['position'] }}</td>
+                                    <td>{{ user['department'] }}</td>
+                                    <td class="text-center">
+                                        <a href="{{ url_for('admin.profile', id=user.id)}}"><span class="fa fa-pencil-square-o"></span></a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% else %}
+                <h4>No membership requests.</h4>
+            {% endif %}
 
                 <br /><br />
-            </div>
         </div>
     </div>
 {% endblock %}

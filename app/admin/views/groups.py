@@ -159,19 +159,15 @@ def removeleader(group_id, user_id):
 @admin_required
 def group_members(id):
     group = Interest_Group.query.get_or_404(id)
-
     leaders = group.get_leaders()
     members = group.get_members()
-
     return render_template('admin/group/members.html', group=group, leaders=leaders, members=members)
 
 @admin.route('/groups/<string:id>/requests', methods=['GET', 'POST'])
 @admin_required
 def group_requests(id):
     group = Interest_Group.query.get_or_404(id)
-
     requests = group.membership_requests()
-
     return render_template('admin/group/requests.html', group=group, membership_requests=requests)
 
 @admin.route('/accept_request/<string:group_id>/<string:user_id>')
