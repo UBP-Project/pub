@@ -102,6 +102,16 @@ class UpdateActivityForm(FlaskForm, ActivityMixin):
         super(UpdateActivityForm, self).__init__(*args, **kwargs)
         self.group.choices = [(None, None)] + [(str(group.id), group.name) for group in Interest_Group.query.all()]
 
+class UpdateActivityFormClient(FlaskForm, ActivityMixin):
+    image = FileField("Activity Image")
+    submit = SubmitField("Create Activity")
+
+    def __init__(self, *args, **kwargs):
+        super(UpdateActivityFormClient, self).__init__(*args, **kwargs)
+        groups = Interest_Group.query.join(Membership, Membership.group_id == Interest_Group.id)\
+            .filter(Membership.level == 1 or Membership.level == 2).all()
+        self.group.choices = [(str(group.id), group.name) for group in groups]
+
 class GroupMembershipForm(FlaskForm):
     join_group = SubmitField("Join Group")
     leave_group = SubmitField("Leave Group")
