@@ -12,15 +12,19 @@
 				<h2>NOTIFICATIONS</h2>
 				<hr/>
 
-				<!-- <div class="row">
-
-				</div> -->
-
-				<div class="row">
-					<div class="col-md-12 col-sm-12 box-content">
-						<div class="text-center" style="height: 400px; padding-top: 100px;"><h1>NO NOTIFICATIONS YET</h1></div>
+				{% if notifications %}
+					<div class="row">
+					{% for notif in notifications %}
+						
+					{% endfor %}
 					</div>
-				</div>
+				{% else %}
+					<div class="row">
+						<div class="col-md-12 col-sm-12 box-content">
+							<div class="text-center" style="height: 400px; padding-top: 100px;"><h1>NO NOTIFICATIONS YET</h1></div>
+						</div>
+					</div>
+				{% endif %}
 
 			</div>
 		</div>
