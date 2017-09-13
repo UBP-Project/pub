@@ -13,7 +13,7 @@ from sqlalchemy.sql import func
 @client.route('/', methods=['GET', 'POST'])
 @login_required
 def index():
-    return render_template("client/views/home.html", user=current_user)
+    return render_template("client/index.html", user=current_user)
 
 @client.route('/login/', methods=['GET', 'POST'])
 def login():
