@@ -227,14 +227,37 @@ h1, h2, h3, h4, h5, h6 {
     height: 100%;
     width: 100%;
     object-fit: cover;
-    border-radius: 2px;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+/*    border-radius: 2px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);*/
 }
 
 .edit-group .cover-container {
     width: 100%;
     height: 200px;
     margin-bottom: 10px;
+}
+
+#change-group-cover-btn {
+    position: absolute;
+    top: 87%;
+    left: 2%;
+    cursor: pointer;
+    z-index: 2;
+}
+
+#preview-group-icon {
+    cursor: pointer;
+    background-color: gray;
+}
+
+.edit-group .group-icon span {
+    cursor: pointer;
+    position: absolute;
+    top:70%;
+    left: 42.5%;
+    font-weight: 700;
+    color: white;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 .img-container {

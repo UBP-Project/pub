@@ -1,60 +1,88 @@
 {% extends "/layout/admin_base.html" %}
 
 {% block content %}
-    <div class="row">
-        <form class="form-group col-md-12 admin-form" method="post" enctype="multipart/form-data" name="create_interest_group">
+    <form class="form-group row edit-group" method="post" enctype="multipart/form-data" name="edit_group">
 
-            <div class="row">
-                <div class="col-md-12">
-                    <h1>Create Interest Group</h1>
-                    <hr />
-                </div>  
+        <div class="row">
+            <div class="col-md-12 no-padding">
+                <h1 class="title">Create Interest Group</h1>
+                <hr />
             </div>
+        </div>
 
-            
+        <div class="row">
+            <div class="col-md-12 cover-photo no-padding">
+                <img id="preview_cover" src="{{ url_for('static', filename='images/pub-default-img.jpg' )}}" />
+                <button id="change-group-cover-btn" class="btn btn-xs btn-style-3">
+                    Change Cover Photo
+                </button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 group-icon text-center">
+                <img id="preview-group-icon" src="{{ url_for('static', filename='images/pub-default-img.jpg' )}}" />
+                <span>Change Group Icon</span>
+            </div>
+        </div>
+
+        <br /><br /><br />
+
+        <div class="col-md-12 text-center" style="padding: 0px">
             <div class="row">
-                {{ form.hidden_tag() }}
-                <div class="col-md-12">
+                <div class="col-md-8 col-md-offset-2">
+                    {{ form.hidden_tag() }}
                     <label>Group name</label>
                     {{ form.name(
                         placeholder="Group name",
                         class="form-control",
                         required="true") }}
-                </div>
-                
-                <div class="col-md-12">
+                    
                     <label>About this Group</label>
                     {{ form.about(
-                        placeholder="About",
-                        class="form-control",
+                        placeholder="About this Group",
+                        class="form-control input-md",
                         required="true") }}
-                </div>
-
-                <div class="col-md-6">
-                    <label>Group Cover Photo</label>
-                    {{ form.cover_photo(
-                        placeholder="Cover Photo",
-                        class="form-control",
-                        required="true")}}
-                </div>
-                
-                <div class="col-md-6">
-                    <label>Group Icon</label>
-                    {{ form.group_icon(
-                        placeholder="Group Icon",
-                        class="form-control",
-                        required="true"
-                    )}}
-                </div>
-
-                <div class="col-md-12">
-                    <input class="btn btn-default" type="reset">
-                    {{ form.submit(
-                        placeholder="Submit",
-                        class="btn btn-style-1"
-                    )}}
+                    
+                    <br />
+                    {{ form.submit(class="btn btn-style-1") }}
                 </div>
             </div>
-        </form>
-    </div>
+            {{ form.cover_photo(class="hidden") }}
+            {{ form.group_icon(class="hidden") }}
+        </div>
+
+    </form>
 {% endblock %}
+{% block scripts %}
+    <script>
+        $("#group_icon").on('change', function() {
+            var reader = new FileReader();
+             reader.onload = function()
+             {
+              var output = document.getElementById('preview-group-icon');
+              output.src = reader.result;
+             }
+             reader.readAsDataURL(event.target.files[0]);
+        });
+
+        $("#cover_photo").on('change', function() {
+            var reader = new FileReader();
+             reader.onload = function()
+             {
+              var output = document.getElementById('preview_cover');
+              output.src = reader.result;
+             }
+             reader.readAsDataURL(event.target.files[0]);
+        });
+
+        $("#change-group-cover-btn").on("click", function(e) {
+            e.preventDefault();
+            $("#cover_photo").trigger('click');
+        });
+        $("#preview-group-icon").on("click", function(e) {
+            e.preventDefault();
+            $("#group_icon").trigger('click');
+        });
+    </script>
+{% endblock scripts %}
