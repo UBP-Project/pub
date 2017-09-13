@@ -10,7 +10,6 @@ from app import db
 import json
 
 @api.route('/notifications', methods=['GET'])
-@login_required
 def get_notifications():
     """
     Get Notifications

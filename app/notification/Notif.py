@@ -47,7 +47,6 @@ class Notif():
 		elif entity == 'user':
 			return User.query.filter(User.id == notification_object_id).first().to_json()
 
-
 	def run_async(f):
 		def async_func(*args, **kwargs):
 			func = Thread(target=f, args=args, kwargs=kwargs)
@@ -61,15 +60,14 @@ class Notif():
 		change = Notification_Change.query.filter(Notification_Change.notification_object_id == self.notif_object.id, Notification_Change.actor_id == user_id).first()
 		
 		if change is None:
-			# print("Notification Actor: " + str(user_id))
+			print("Notification Actor: " + str(user_id))
 			actor = Notification_Change(self.notif_object.id, user_id)
 			db.session.add(actor)
-		# else:
-		# 	print("Previously acted: " + str(user_id));
+		else:
+			print("Previously acted: " + str(user_id));
 
 		db.session.commit()
 
-	@run_async
 	def add_notifiers(self, users):
 		
 		for user in users:
@@ -78,10 +76,10 @@ class Notif():
 			notification = Notification.query.filter(Notification.notification_object_id == self.notif_object.id, Notification.notifier_id == user.get_id()).first()
 
 			if notification is None:
-				# print("Notifying: "+ str(user.id))
+				print("Notifying: "+ str(user.id))
 				notifier = Notification(notification_object_id = self.notif_object.id, notifier_id = user.get_id())
 				db.session.add(notifier)
-			# else:
-			# 	print("Previously notified: " + str(user.id));
+			else:
+				print("Previously notified: " + str(user.id));
 
 		db.session.commit()

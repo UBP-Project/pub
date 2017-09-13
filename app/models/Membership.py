@@ -39,6 +39,7 @@ class Membership(db.Model):
     def accept(self):
         self.status = self.MEMBERSHIP_ACCEPTED
         db.session.commit()
+        
 
     def decline(self):
         self.status = self.MEMBERSHIP_DECLINED
