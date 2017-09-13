@@ -17,7 +17,7 @@ def activities():
     show_create = is_manager_or_leader()
     print(show_create)
     activities = Activity.query.limit(7)
-    return render_template("client/views/activities.html", activities=activities,\
+    return render_template("client/activity/activities.html", activities=activities,\
         show_create=show_create, user=current_user)
 
 @client.route('/activities/<string:id>')

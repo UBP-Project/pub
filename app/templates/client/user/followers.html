@@ -73,27 +73,32 @@
         </div>
 
 
+        {% raw %}
+        <div id="followers_app" class="col-md-9 col-md-offset-3" style="padding: 20px 0px;">
+            <div v-for="follower in followers" class="col-md-4" style="width: 270px; padding: 0px;">
+                <div style="background-color: white; padding: 10px; margin: 5px;">
 
-        <div class="col-md-9 col-md-offset-3" style="padding: 20px 0px;">
-            {% for following in followings %}
-                <div class="col-md-4" style="width: 270px; padding: 0px;">
-                    <div style="background-color: white; padding: 10px; margin: 5px;">
-                        <img src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"
-                            style="width: 50px; height: 50px; border-radius: 25px;">
-                        <!-- <button class="pull-right btn btn-style-1" style="margin-top: 20px; height: 30px; padding: 0px 15px;">Follow</button> -->
-                        
-                        <h4>
-                        <a href="{{ url_for('client.view_profile', id=following.id)}}">
-                            {{ following.firstname }} {{ following.lastname }}
-                        </a>
-                        </h4>
+                    <img v-if="follower.image" :src="'../../../static/uploads/profile_pictures/' + follower.image"
+                        style="width: 50px; height: 50px; border-radius: 25px;">
 
-                        <p style="font-size: 12px;">{{ following.position }}<br />
-                        {{ following.department }}</p>
-                    </div>
+                    <img v-else src="../../../static/images/pub-default-img.jpg"
+                        style="width: 50px; height: 50px; border-radius: 25px;">
+
+                    <button v-if="follower.isFollowing" class="pull-right btn btn-style-1" style="margin-top: 20px; height: 30px; padding: 0px 15px;" v-on:click="toggleFollow(follower)">Following</button>
+                    <button v-else class="pull-right btn btn-style-2" style="margin-top: 20px; height: 30px; padding: 0px 15px;" v-on:click="toggleFollow(follower)">Follow</button>
+                    
+                    <h4>
+                    <a :href="'../../profile/' + follower.id">
+                        {{ follower.firstname }} {{ follower.lastname }}
+                    </a>
+                    </h4>
+
+                    <p style="font-size: 12px;">{{ follower.position }}<br />
+                    {{ follower.department }}</p>
                 </div>
-            {% endfor %}
+            </div>
         </div>
+        {% endraw %}
 
     </div>
 
@@ -110,6 +115,7 @@
         $("#trianglify-cover").append(pattern.svg())
     </script>
     <script>
+        // Current Profile follow or unfollow
         function set_buttons() {
             $("#btn-follow").on('click', function() {
                 $.ajax({
@@ -145,5 +151,44 @@
         // initialize buttons
         set_buttons();
     </script>
-    <!-- <script src="{{ url_for('static', filename='js/client/profile.js') }}"></script> -->
+    <script>
+        // Followers follow or unfollow
+        var followers_app = new Vue({
+            el: "#followers_app",
+            data: {
+                followers: []
+            },
+            methods: {
+                loadFollowers: function() {
+                    $.ajax({
+                        url: "{{ url_for('api.get_followers', id=user.id) }}",
+                        type: 'GET'
+                    }).done(data => {
+                        this.followers = data.followers;
+                        console.log(this.followers);
+                    });
+                },
+                toggleFollow: function(follow_item) {
+                    if (follow_item.isFollowing) {
+                        $.ajax({
+                            url: "../../api/v1.0/users/" + follow_item.id + "/unfollow",
+                            type: 'DELETE'
+                        }).done(data => {
+                            follow_item.isFollowing = false;
+                        });
+                    } else {
+                        $.ajax({
+                            url: "../../api/v1.0/users/" + follow_item.id + "/follow",
+                            type: 'POST'
+                        }).done(data => {
+                            follow_item.isFollowing = true;
+                        });
+                    }
+                }
+            }
+        });
+        $(document).ready(function() {
+            followers_app.loadFollowers();
+        })
+    </script>
 {% endblock scripts %}

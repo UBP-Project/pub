@@ -434,7 +434,7 @@ def get_going_by(id):
     
     going = User_Activity.query.join(User, User_Activity.user_id == User.id)\
       .add_columns(User.firstname, User.lastname, User.image, User.id, User_Activity.attended)\
-      .filter(User_Activity.activity_id == id).all()
+      .filter(User_Activity.activity_id == id).order_by(User.firstname).all()
 
     return jsonify({
       'going_users': [user_activity_to_json(user) for user in going]

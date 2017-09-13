@@ -1,10 +1,6 @@
-{% if 'admin' in request.path %}
-    {% extends "/layout/admin_base.html" %}
-{% else %}
-    {% extends "/layout/base.html" %}
-{% endif %}
+{% extends "/layout/admin_base.html" %}
 
-{% block title %} Groups {% endblock %}
+{% block title %} Activities {% endblock %}
 
 {% block content %}
     <div class="row admin-page">
@@ -17,7 +13,45 @@
         <hr />
 
         <div class="row">
-            {% for activity in activities %}
+            <div class="col-sm-6" style="padding: 20px 0px">
+                <form>
+                    <div class="input-group search-form">
+                      <input type="text" class="form-control" name="query" placeholder="Search Activities" value="{% if query %}{{ query }}{% endif %}">
+                      <span class="input-group-btn">
+                        <input type="submit" class="btn" type="button" value="Search" />
+                      </span>
+                    </div>
+                    <div class="col-md-12 no-padding date-filter">
+                        <span>From:</span> 
+                        <input type="text" id="datepicker_start" placeholder="Start Date" name="start_date" value="{% if start_date %}{{ start_date }}{% endif %}" />
+                        <span>To:</span> 
+                        <input type="text" id="datepicker_end" placeholder="End Date" name="end_date" value="{% if end_date %}{{ end_date }}{% endif %}" />
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-6 text-right pagination">
+                {% if activities.has_prev %}
+                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.activities', page=activities.prev_num, query=request.args.get('query')) }}">Prev</a>
+                {% endif %}
+                  {%- for page in activities.iter_pages(left_edge=1, left_current=2, right_current=2, right_edge=1) %}
+                    {% if page %}
+                      {% if page != activities.page %}
+                        <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.activities', page=page, query=request.args.get('query')) }}">{{ page }}</a>
+                      {% else %}
+                        <strong class="btn current-page">{{ page }}</strong>
+                      {% endif %}
+                    {% else %}
+                      <span class=ellipsis>…</span>
+                    {% endif %}
+                  {%- endfor %}
+                {% if activities.has_next %}
+                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.activities', page=activities.next_num, query=request.args.get('query')) }}">Next</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row">
+            {% for activity in activities.items %}
                 <div class="col-md-3 no-padding">
                     <div class="activity-card"
                     style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{url_for('static',filename='uploads/activity_images/' + activity.image) }})">
@@ -34,5 +68,39 @@
             {% endfor %}
         </div>
 
+        <div class="row">
+            <div class="col-sm-12 text-center pagination">
+                {% if activities.has_prev %}
+                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.activities', page=activities.prev_num, query=request.args.get('query')) }}">Prev</a>
+                {% endif %}
+                  {%- for page in activities.iter_pages(left_edge=1, left_current=2, right_current=2, right_edge=1) %}
+                    {% if page %}
+                      {% if page != activities.page %}
+                        <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.activities', page=page, query=request.args.get('query')) }}">{{ page }}</a>
+                      {% else %}
+                        <strong class="btn current-page">{{ page }}</strong>
+                      {% endif %}
+                    {% else %}
+                      <span class=ellipsis>…</span>
+                    {% endif %}
+                  {%- endfor %}
+                {% if activities.has_next %}
+                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.activities', page=activities.next_num, query=request.args.get('query')) }}">Next</a>
+                {% endif %}
+            </div>
+        </div>
+
     </div>
 {% endblock %}
+{% block scripts %}
+<script>
+    {% if start_date %}
+        var picker_start = new Pikaday({ field: document.getElementById('datepicker_start'),
+            defaultDate: "{{ start_date }}"
+        });
+    {% else %}
+        var picker_start = new Pikaday({ field: document.getElementById('datepicker_start') });
+    {% endif %}
+    var picker_end = new Pikaday({ field: document.getElementById('datepicker_end') });
+</script>
+{% endblock scripts %}

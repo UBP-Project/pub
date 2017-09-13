@@ -5,13 +5,13 @@ from app import db
 from app.models import User, Role
 from ...decorators import admin_required
 from ...utils import flash_errors
-from sqlalchemy import or_
+from sqlalchemy import or_, func
 import uuid
 from werkzeug.utils import secure_filename
 import os
 from ...utils import flash_errors, is_valid_extension
 
-USERS_PER_PAGE = 10
+USERS_PER_PAGE = 50
 
 @admin.route('/users')
 @admin_required
@@ -24,20 +24,24 @@ def users():
         page = 1
         
     if query is not None:
+        q = query.lower().strip()
         users = User.query\
         .join(Role, Role.id == User.role_id)\
-        .filter(Role.name == 'User', or_(\
-            User.firstname.like("%"+str(query)+"%)"), \
-            User.middlename.like("%"+str(query)+"%"), \
-            User.lastname.like("%"+str(query)+"%"), \
-            User.email.like("%"+str(query)+"%"), \
-            User.department.like("%"+str(query)+"%"), \
-            User.position.like("%"+str(query)+"%") \
-        )).paginate(page=page, per_page=USERS_PER_PAGE, error_out=False)
+        .filter(Role.name == 'User', or_(
+            User.firstname.ilike("%"+str(q)+"%"),
+            User.middlename.ilike("%"+str(q)+"%"), 
+            User.lastname.ilike("%"+str(q)+"%"),
+            User.email.ilike("%"+str(q)+"%"),
+            User.department.ilike("%"+str(q)+"%"),
+            User.position.ilike("%"+str(q)+"%"),
+            func.concat(User.firstname, ' ', User.lastname).contains(q),
+            func.concat(User.lastname, ' ', User.firstname).contains(q),
+            func.concat(User.firstname, ' ', User.middlename, ' ', User.lastname).contains(q))
+        ).paginate(page=page, per_page=USERS_PER_PAGE, error_out=False)
     else:
         users = User.query\
         .join(Role, Role.id == User.role_id)\
-        .filter(Role.name == 'User').paginate(page=page, per_page=USERS_PER_PAGE, error_out=False)
+        .filter(Role.name == 'User').order_by(User.firstname).paginate(page=page, per_page=USERS_PER_PAGE, error_out=False)
         query = ""
     return render_template('admin/user/users.html', users=users, query=query)
 
@@ -50,16 +54,21 @@ def managers():
         page = int(request.args.get('page'))
         
     if query is not None:
+        q = query.lower().strip()
+        q_arr = q.split()
         managers = User.query\
-            .join(Role, Role.id == User.role_id)\
-            .filter(Role.name == 'Manager', or_(\
-                User.firstname.like("%"+str(query)+"%)"), \
-                User.middlename.like("%"+str(query)+"%"), \
-                User.lastname.like("%"+str(query)+"%"), \
-                User.email.like("%"+str(query)+"%"), \
-                User.department.like("%"+str(query)+"%"), \
-                User.position.like("%"+str(query)+"%") \
-            )).paginate(page=page, per_page=USERS_PER_PAGE, error_out=False)
+        .join(Role, Role.id == User.role_id)\
+        .filter(Role.name == 'Manager', or_(
+            User.firstname.ilike("%"+str(q)+"%"),
+            User.middlename.ilike("%"+str(q)+"%"), 
+            User.lastname.ilike("%"+str(q)+"%"),
+            User.email.ilike("%"+str(q)+"%"),
+            User.department.ilike("%"+str(q)+"%"),
+            User.position.ilike("%"+str(q)+"%"),
+            func.concat(User.firstname, ' ', User.lastname).contains(q),
+            func.concat(User.lastname, ' ', User.firstname).contains(q),
+            func.concat(User.firstname, ' ', User.middlename, ' ', User.lastname).contains(q))
+        ).paginate(page=page, per_page=USERS_PER_PAGE, error_out=False)
     else:
         managers = User.query\
             .join(Role, Role.id == User.role_id)\

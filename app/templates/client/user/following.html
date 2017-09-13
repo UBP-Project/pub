@@ -33,19 +33,19 @@
                 </div>
 
 
-                {% if following_count > 0 %}
+                {% if followings_count > 0 %}
                     <a href="{{ url_for('client.following', id=user.id) }}" class="btn btn-xs" style="padding: 0px 20px;">
                         <h6>Following</h6>
-                        <h4>{{ following_count }}</h4>
+                        <h4>{{ followings_count }}</h4>
                     </a>
                 {% else %}
                     <div class="btn btn-xs" style="padding: 0px 20px;">
                         <h6>Following</h6>
-                        <h4>{{ following_count }}</h4>
+                        <h4>{{ followings_count }}</h4>
                     </div>
                 {% endif %}
 
-                {% if followers_count > 0 %}
+                {% if followings_count > 0 %}
                     <a href="{{ url_for('client.followers', id=user.id) }}" class="btn btn-xs" style="margin-right: 50px">
                         <h6>Followers</h6>
                         <h4>{{ followers_count }}</h4>
@@ -73,27 +73,32 @@
         </div>
 
 
+        {% raw %}
+        <div id="followings_app" class="col-md-9 col-md-offset-3" style="padding: 20px 0px;">
+            <div v-for="following in followings" class="col-md-4" style="width: 270px; padding: 0px;">
+                <div style="background-color: white; padding: 10px; margin: 5px;">
 
-        <div class="col-md-9 col-md-offset-3" style="padding: 20px 0px;">
-            {% for follower in followers %}
-                <div class="col-md-4" style="width: 270px; padding: 0px;">
-                    <div style="background-color: white; padding: 10px; margin: 5px;">
-                        <img src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"
-                            style="width: 50px; height: 50px; border-radius: 25px;">
-                        <!-- <button class="pull-right btn btn-style-1" style="margin-top: 20px; height: 30px; padding: 0px 15px;">Follow</button> -->
-                        
-                        <h4>
-                        <a href="{{ url_for('client.view_profile', id=follower.id)}}">
-                            {{ follower.firstname }} {{ follower.lastname }}
-                        </a>
-                        </h4>
+                    <img v-if="following.image" :src="'../../../static/uploads/profile_pictures/' + following.image"
+                        style="width: 50px; height: 50px; border-radius: 25px;">
 
-                        <p style="font-size: 12px;">{{ follower.position }}<br />
-                        {{ follower.department }}</p>
-                    </div>
+                    <img v-else src="../../../static/images/pub-default-img.jpg"
+                        style="width: 50px; height: 50px; border-radius: 25px;">
+
+                    <button v-if="following.isFollowing" class="pull-right btn btn-style-1" style="margin-top: 20px; height: 30px; padding: 0px 15px;" v-on:click="toggleFollow(following)">Following</button>
+                    <button v-else class="pull-right btn btn-style-2" style="margin-top: 20px; height: 30px; padding: 0px 15px;" v-on:click="toggleFollow(following)">Follow</button>
+                    
+                    <h4>
+                    <a :href="'../../profile/' + following.id">
+                        {{ following.firstname }} {{ following.lastname }}
+                    </a>
+                    </h4>
+
+                    <p style="font-size: 12px;">{{ following.position }}<br />
+                    {{ following.department }}</p>
                 </div>
-            {% endfor %}
+            </div>
         </div>
+        {% endraw %}
 
     </div>
 
@@ -110,6 +115,7 @@
         $("#trianglify-cover").append(pattern.svg())
     </script>
     <script>
+        // Current Profile follow or unfollow
         function set_buttons() {
             $("#btn-follow").on('click', function() {
                 $.ajax({
@@ -145,5 +151,44 @@
         // initialize buttons
         set_buttons();
     </script>
-    <!-- <script src="{{ url_for('static', filename='js/client/profile.js') }}"></script> -->
+    <script>
+        // followings follow or unfollow
+        var followings_app = new Vue({
+            el: "#followings_app",
+            data: {
+                followings: []
+            },
+            methods: {
+                loadFollowings: function() {
+                    $.ajax({
+                        url: "{{ url_for('api.get_followings', id=user.id) }}",
+                        type: 'GET'
+                    }).done(data => {
+                        this.followings = data.followings;
+                        console.log(this.followings);
+                    });
+                },
+                toggleFollow: function(follow_item) {
+                    if (follow_item.isFollowing) {
+                        $.ajax({
+                            url: "../../api/v1.0/users/" + follow_item.id + "/unfollow",
+                            type: 'DELETE'
+                        }).done(data => {
+                            follow_item.isFollowing = false;
+                        });
+                    } else {
+                        $.ajax({
+                            url: "../../api/v1.0/users/" + follow_item.id + "/follow",
+                            type: 'POST'
+                        }).done(data => {
+                            follow_item.isFollowing = true;
+                        });
+                    }
+                }
+            }
+        });
+        $(document).ready(function() {
+            followings_app.loadFollowings();
+        })
+    </script>
 {% endblock scripts %}

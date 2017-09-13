@@ -1,6 +1,5 @@
-/*.checklist {
+.checklist {
     background-color: white;
-    min-height: 100vh;
 }
 
 .checklist-item {
@@ -33,4 +32,4 @@
     width: 30px;
     height: 30px;
     background-color: green;
-}*/
+}

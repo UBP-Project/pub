@@ -6,7 +6,7 @@ class Config:
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     PUB_ADMIN = '<admin:email>'
-    
+
     swagger_template = {
       "swagger": "2.0",
       "info": {

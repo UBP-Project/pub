@@ -27,17 +27,23 @@
                 </form>
             </div>
             <div class="col-sm-6 text-right pagination">
-                  {%- for page in users.iter_pages(left_edge=1, left_current=2, right_current=2, right_edge=1) %}
+                {% if users.has_prev %}
+                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.users', page=users.prev_num, query=request.args.get('query')) }}">Prev</a>
+                {% endif %}
+                  {%- for page in users.iter_pages(left_edge=1, left_current=1, right_current=3, right_edge=1) %}
                     {% if page %}
                       {% if page != users.page %}
-                        <a class="page-link btn btn-style-3" href="{{ url_for('admin.users', page=page, query=request.args.get('query')) }}">{{ page }}</a>
+                        <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.users', page=page, query=request.args.get('query')) }}">{{ page }}</a>
                       {% else %}
-                        <strong class="btn current-page">{{ page }}</strong>
+                        <strong class="btn btn-sm current-page">{{ page }}</strong>
                       {% endif %}
                     {% else %}
                       <span class=ellipsis>…</span>
                     {% endif %}
                   {%- endfor %}
+                {% if users.has_next %}
+                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.users', page=users.next_num, query=request.args.get('query')) }}">Next</a>
+                {% endif %}
             </div>
         </div>
 
@@ -49,6 +55,7 @@
                     <thead>
                         <tr>
                             <!-- <th>ID</th> -->
+                            <th></th>
                             <th>Firstname</th>
                             <th>Middlename</th>
                             <th>Lastname</th>
@@ -61,8 +68,13 @@
 
                     <tbody>
                         {% for user in users.items %}
-                        <tr class="user-item">
+                        <tr class="user-table-item">
                             <!-- <td class="ellipsis">{{ user['id'] }}</td> -->
+                            {% if user.image %}
+                                <td><img class="circle-img-sm" src="{{ url_for('static', filename='uploads/profile_pictures/' + user.image) }}" /></td>
+                            {% else %}
+                                <td><img class="circle-img-sm" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}" /></td>
+                            {% endif %}
                             <td>{{ user['firstname'] }}</td>  
                             <td>{{ user['middlename'] }}</td>
                             <td>{{ user['lastname'] }}</td>
@@ -85,6 +97,31 @@
             </div>
         </div>
         {% endif %}
+
+        <hr style="margin: 0px" />
+
+        <div class="row">
+            <div class="col-md-12 text-center pagination no-padding">
+                {% if users.has_prev %}
+                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.users', page=users.prev_num, query=request.args.get('query')) }}">Prev</a>
+                {% endif %}
+                  {%- for page in users.iter_pages(left_edge=1, left_current=1, right_current=3, right_edge=1) %}
+                    {% if page %}
+                      {% if page != users.page %}
+                        <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.users', page=page, query=request.args.get('query')) }}">{{ page }}</a>
+                      {% else %}
+                        <strong class="btn btn-sm current-page">{{ page }}</strong>
+                      {% endif %}
+                    {% else %}
+                      <span class=ellipsis>…</span>
+                    {% endif %}
+                  {%- endfor %}
+                {% if users.has_next %}
+                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.users', page=users.next_num, query=request.args.get('query')) }}">Next</a>
+                {% endif %}
+            </div>
+        </div>
+
     </div>
 {% endblock %}
 
