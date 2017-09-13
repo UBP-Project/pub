@@ -5,8 +5,7 @@ from sqlalchemy import exc
 
 from app.models import User, Follow, Notification, Notification_Object, Notification_Change, Notification_EntityType
 from app.api_1_0 import api
-# from app.api_1_0.decorators import follow_notif
-
+from app.notification import Notif
 from app import db
 import json
 
@@ -23,7 +22,7 @@ def get_notifications():
       - name: page
         in: query
         example: 1
-        default: 10
+        default: 1
 
     responses:
         200:
@@ -70,21 +69,23 @@ def get_notifications():
     notifications = Notification.query\
         .add_columns(Notification.id, Notification.status, Notification.timestamp, Notification.notification_object_id)\
         .join(Notification_Object)\
+        .add_columns(Notification_Object.entity_id)\
         .join(Notification_EntityType)\
         .filter(Notification_Object.status == True)\
         .filter(Notification.notifier_id == current_user.get_id())\
         .add_columns(Notification_EntityType.action, Notification_EntityType.entity)\
         .order_by(Notification.timestamp.desc())\
-        .distinct()
+        .all()
 
     return jsonify([
             {
-                'notification_id'   : notification.id,
-                'status'            : notification.status,
-                'timestamp'         : notification.timestamp,
-                'object_id'         : notification.notification_object_id,
-                'action'            : notification.action,
-                'entity'            : notification.entity,
+                'notification_id'       : notification.id,
+                'status'                : notification.status,
+                'timestamp'             : notification.timestamp,
+                'notification_object'   : notification.notification_object_id,
+                'action'                : notification.action,
+                'entity'                : notification.entity,
+                'entity_object'         : Notif.get_entity(notification.entity, notification.entity_id),
                 'actors'            : [
                     {
                         'id'           : actor.id,

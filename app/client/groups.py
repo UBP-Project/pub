@@ -4,8 +4,8 @@ from flask_login import current_user, login_required
 from . import client
 from app import db
 from app.models import User, Interest_Group, Activity, Membership, Role, Follow
-from ..auth import is_manager_or_leader, is_manager
-from ..utils import flash_errors
+from ..auth import is_manager_or_leader, is_manager, can_modify_group
+from ..utils import flash_errors, is_valid_extension
 from ..forms import CreateInterestGroupForm, UpdateInterestGroupForm, GroupMembershipForm
 from werkzeug.utils import secure_filename
 import os
@@ -90,6 +90,47 @@ def group(id):
         id==Membership.group_id).first()
     return render_template('client/group/group.html', group=group, members=members, user=current_user,\
         membership=membership, form=form)
+
+@client.route('/groups/<string:id>/edit', methods=['GET', 'POST'])
+def update_group(id):
+    can_modify_group(id, abort_on_false=True)
+    form = UpdateInterestGroupForm()
+    group = Interest_Group.query.get_or_404(id)
+
+    if request.method == 'POST' and request.form.get('delete') == 'delete':
+        db.session.delete(group)
+        return redirect(url_for('admin.groups'))
+
+    if form.validate_on_submit():
+        # handle upload group cover
+        if form.cover_photo.data is not None:
+            cover                 = form.cover_photo.data
+            cover_filename        = secure_filename(cover.filename)
+            if is_valid_extension(cover_filename):
+                extension             = cover_filename.rsplit('.', 1)[1].lower()
+                cover_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
+                file_path             = os.path.join('app/static/uploads/covers', cover_hashed_filename)
+                cover.save(file_path)
+                group.cover_photo = cover_hashed_filename
+
+        # handle upload user icon
+        if form.group_icon.data is not None:
+            icon                 = form.group_icon.data
+            icon_filename        = secure_filename(icon.filename)
+            if is_valid_extension(icon_filename):
+                extension            = icon_filename.rsplit('.', 1)[1].lower()
+                icon_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
+                file_path            = os.path.join('app/static/uploads/group_icons', icon_hashed_filename)
+                icon.save(file_path)
+                group.group_icon = icon_hashed_filename
+
+        group.name = form.name.data
+        group.about = form.about.data
+        db.session.commit()
+        return redirect(url_for('client.group', id=id))
+    form.name.data = group.name
+    form.about.data = group.about
+    return render_template('client/group/edit.html', form=form, group=group)
 
 
 @client.route('/groups/create', methods=['POST', 'GET'])

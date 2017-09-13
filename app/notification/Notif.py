@@ -1,7 +1,8 @@
 from app import db
-from app.models import Notification, Notification_EntityType, Notification_Object, Notification_Change
+from app.models import Activity, Interest_Group, User, Notification, Notification_EntityType, Notification_Object, Notification_Change
 from threading import Thread
 from functools import wraps
+import uuid
 
 class Notif():
 
@@ -37,6 +38,16 @@ class Notif():
 			.filter(Notification_Object.entity_type_id == entity_type.id, Notification_Object.entity_id == entity_id)\
 			.first()
 
+	def get_entity(entity, notification_object_id):
+
+		if entity == 'activity':
+			return Activity.query.filter(Activity.id==notification_object_id).first().to_json()
+		elif entity == 'interest_group':
+			return Interest_Group.query.filter(Interest_Group.id==notification_object_id).first().to_json()
+		elif entity == 'user':
+			return User.query.filter(User.id == notification_object_id).first().to_json()
+
+
 	def run_async(f):
 		def async_func(*args, **kwargs):
 			func = Thread(target=f, args=args, kwargs=kwargs)
@@ -50,14 +61,15 @@ class Notif():
 		change = Notification_Change.query.filter(Notification_Change.notification_object_id == self.notif_object.id, Notification_Change.actor_id == user_id).first()
 		
 		if change is None:
-			print("Notification Actor: " + str(user_id))
+			# print("Notification Actor: " + str(user_id))
 			actor = Notification_Change(self.notif_object.id, user_id)
 			db.session.add(actor)
-		else:
-			print("Previously acted: " + str(user_id));
+		# else:
+		# 	print("Previously acted: " + str(user_id));
 
 		db.session.commit()
 
+	@run_async
 	def add_notifiers(self, users):
 		
 		for user in users:
@@ -66,10 +78,10 @@ class Notif():
 			notification = Notification.query.filter(Notification.notification_object_id == self.notif_object.id, Notification.notifier_id == user.get_id()).first()
 
 			if notification is None:
-				print("Notifying: "+ str(user.id))
+				# print("Notifying: "+ str(user.id))
 				notifier = Notification(notification_object_id = self.notif_object.id, notifier_id = user.get_id())
 				db.session.add(notifier)
-			else:
-				print("Previously notified: " + str(user.id));
+			# else:
+			# 	print("Previously notified: " + str(user.id));
 
 		db.session.commit()

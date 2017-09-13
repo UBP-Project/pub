@@ -91,3 +91,65 @@
     width: 50px;
     border-radius: 25px;
 }
+
+/*------ EDIT GROUP -------------*/
+.edit-group {
+    background-color: white;
+    padding: 20px;
+}
+
+#change-group-cover-btn {
+    position: absolute;
+    top: 87%;
+    left: 2%;
+    cursor: pointer;
+    z-index: 2;
+}
+
+#preview-group-icon {
+    cursor: pointer;
+    background-color: gray;
+}
+
+.edit-group .group-icon span {
+    cursor: pointer;
+    position: absolute;
+    top:70%;
+    left: 42.5%;
+    font-weight: 700;
+    color: white;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+.cover-photo {
+    height: 250px;
+}
+
+.cover-photo img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.group-icon {
+    padding: 10px;
+    position: absolute;
+    top: 175px;
+}
+
+.group-icon img {
+    height: 200px;
+    width: 200px;
+    object-fit: cover;
+    border-radius: 100px;
+    border: 3px solid white;
+}
+
+/*------ END OF EDIT GROUP -------------*/
+
+
+/* ------- START EDIT ACTIVITY ------- */
+
+
+
+/* ------- END OF EDIT ACTIVITY -------- */
