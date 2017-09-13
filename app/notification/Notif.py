@@ -4,6 +4,7 @@ from threading import Thread
 from functools import wraps
 from flask import jsonify
 import uuid
+import asyncio
 
 class Notif():
 
@@ -76,18 +77,35 @@ class Notif():
 
 		db.session.commit()
 
-	def add_notifiers(self, users):
-		
-		for user in users:
-			
-			#check if user was previously notified
-			notification = Notification.query.filter(Notification.notification_object_id == self.notif_object.id, Notification.notifier_id == user.get_id()).first()
+	async def add_notifier(self, user):
+		#check if user was previously notified
+		notification = Notification.query.filter(Notification.notification_object_id == self.notif_object.id, Notification.notifier_id == user.get_id()).first()
 
-			if notification is None:
-				print("Notifying: "+ str(user.id))
-				notifier = Notification(notification_object_id = self.notif_object.id, notifier_id = user.get_id())
-				db.session.add(notifier)
-			else:
-				print("Previously notified: " + str(user.id));
+		if notification is None:
+			print("Notifying: "+ str(user.id))
+			notifier = Notification(notification_object_id = self.notif_object.id, notifier_id = user.get_id())
+			db.session.add(notifier)
+		else:
+			print("Previously notified: " + str(user.id));
 
 		db.session.commit()
+
+		await asyncio.sleep(0.01)
+		
+		return None
+
+	def add_notifiers(self,users):
+		tasks = [
+			self.add_notifier(user) for user in users
+		]
+	
+		loop = asyncio.SelectorEventLoop()
+		asyncio.set_event_loop(loop)
+		loop.run_until_complete(asyncio.wait(tasks))
+		loop.close()
+
+# def notifiers_driver(coroutine):
+# 		try:
+# 			coroutine.send(None)
+# 		except StopIteration as e:
+# 			return e.value
