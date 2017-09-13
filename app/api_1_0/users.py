@@ -6,6 +6,7 @@ from app.api_1_0 import api#, follow_notif
 from app import db
 import json
 from app.notification.Notif import Notif
+from sqlalchemy import func
 
 @api.route('/users')
 @login_required
@@ -432,6 +433,51 @@ def unfollow_user(to_unfollow_id):
         Follow.following_id==to_unfollow_id).delete()
     db.session.commit()
     return jsonify({'message': 'Success'}), 200
+
+@api.route('/<string:id>/followers', methods=['GET'])
+def get_followers(id):
+    followers = User.query.join(Follow, Follow.follower_id == User.id)\
+        .order_by(Follow.timestamp.desc())\
+        .filter(Follow.following_id == id).all()
+    followings_current_user = User.query.join(Follow, Follow.following_id == User.id)\
+        .filter(Follow.follower_id == current_user.get_id()).all()
+    for follower in followers:
+        if follower in followings_current_user:
+            follower.isFollowing = True
+        else:
+            follower.isFollowing = False
+
+    return jsonify({
+        'followers': [follow_item_to_json(follower) for follower in followers]
+    })
+
+@api.route('/<string:id>/followings', methods=['GET'])
+def get_followings(id):
+    followings = User.query.join(Follow, Follow.following_id == User.id)\
+        .order_by(Follow.timestamp.desc())\
+        .filter(Follow.follower_id == id).all()
+    followings_current_user = User.query.join(Follow, Follow.following_id == User.id)\
+        .filter(Follow.follower_id == current_user.get_id()).all()
+    for following in followings:
+        if following in followings_current_user:
+            following.isFollowing = True
+        else:
+            following.isFollowing = False
+
+    return jsonify({
+        'followings': [follow_item_to_json(following) for following in followings]
+    })
+
+def follow_item_to_json(follow_item):
+    return ({
+        'id'         : follow_item.id,
+        'firstname'  : follow_item.firstname,
+        'lastname'   : follow_item.lastname,
+        'department' : follow_item.department,
+        'position'   : follow_item.position,
+        'image'      : follow_item.image,
+        'isFollowing': follow_item.isFollowing
+    })
 
 @api.route('/leaderboard')
 @login_required

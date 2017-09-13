@@ -124,7 +124,7 @@ def following(id):
         current_user=current_user,\
         is_following=is_following,\
         followers_count=followers_count,\
-        following_count=len(followings),\
+        followings_count=len(followings),\
         followings=followings)
 
 @client.route('/users-list')
