@@ -2,6 +2,7 @@ from app import db
 from app.models import Activity, Interest_Group, User, Notification, Notification_EntityType, Notification_Object, Notification_Change
 from threading import Thread
 from functools import wraps
+from flask import jsonify
 import uuid
 
 class Notif():
@@ -45,7 +46,14 @@ class Notif():
 		elif entity == 'interest_group':
 			return Interest_Group.query.filter(Interest_Group.id==notification_object_id).first().to_json()
 		elif entity == 'user':
-			return User.query.filter(User.id == notification_object_id).first().to_json()
+			user = User.query.filter(User.id == notification_object_id).first()
+			return {
+				'firstname' : user.firstname,
+				'middlename': user.middlename,
+				'lastname'	: user.lastname,
+				'email'		: user.email,
+				'image'		: user.image
+			}
 
 	def run_async(f):
 		def async_func(*args, **kwargs):
