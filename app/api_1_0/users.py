@@ -5,7 +5,7 @@ from app.models import User, Follow, Notification
 from app.api_1_0 import api#, follow_notif
 from app import db
 import json
-from app.notification.Notif import Notif
+from app.notification import Notif
 
 @api.route('/users')
 @login_required
@@ -388,7 +388,7 @@ def follow_user(to_follow_id):
         notification.add_actor(current_user.get_id())
 
         #who to notify?
-        notification.add_notifier(to_follow_id)
+        notification.add_notifiers([User.get_user_by_id(to_follow_id)])
 
         # for follower in followers:
         #     notif = Notification(user_id=follower.get_id(), content=content, url=url)
@@ -430,6 +430,13 @@ def unfollow_user(to_unfollow_id):
     """
     follow = Follow.query.filter(Follow.follower_id==current_user.get_id(),\
         Follow.following_id==to_unfollow_id).delete()
+
+    #Notification
+    notification = Notif.notif_object(entity='user', action='followed_you', entity_id=to_unfollow_id)
+
+    #who triggered this action?
+    notification.set_inactive()
+
     db.session.commit()
     return jsonify({'message': 'Success'}), 200
 

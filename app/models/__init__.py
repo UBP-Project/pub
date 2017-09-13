@@ -3,8 +3,8 @@ from app.models.Role 					import Role
 from app.models.Follow 					import Follow
 from app.models.User 					import User
 from app.models.AnonymousUser 			import AnonymousUser
-from app.models.Interest_Group 			import Interest_Group
 from app.models.Membership 				import Membership
+from app.models.Interest_Group 			import Interest_Group
 from app.models.Activity 				import Activity
 from app.models.User_Activity 			import User_Activity
 from app.models.Schedule 				import Schedule

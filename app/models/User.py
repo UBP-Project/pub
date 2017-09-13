@@ -87,6 +87,12 @@ class User(UserMixin, db.Model):
     def get_id(self):
         return self.id
 
+    def get_followers(self):
+        return User.query\
+            .join(Follow, Follow.following_id==self.id)\
+            .filter(id != self.id)\
+            .all()
+
     def to_json(self):
         json_post = {
             'id'           : self.id,
@@ -128,6 +134,9 @@ class User(UserMixin, db.Model):
             birthday        = birthday,
             role_id         = role_id
         )
+
+    def get_user_by_id(id):
+        return User.query.get(id)
 
 @login_manager.user_loader
 def load_user(user_id):

@@ -7,7 +7,7 @@ from app import leaderboard
 random.seed(datetime.now())
 
 def follow(count=20, user_count=100):
-    users = User.query.all()
+    users = User.query.join(Role).filter(Role.name != 'Administrator').all()
     for user in users:
         for i in range(0, count):
             to_follow = users[random.randint(0, len(users)-1)]
@@ -23,7 +23,7 @@ def follow(count=20, user_count=100):
     db.session.commit()
 
 def activity_join(activity_count=10, user_count=100):
-    users = User.query.all()
+    users = User.query.join(Role).filter(Role.name != 'Administrator').all()
     activities = Activity.query.all()
     for i in range(0, user_count):
         user = users[random.randint(0, len(users)-1)]
@@ -42,7 +42,7 @@ def activity_join(activity_count=10, user_count=100):
     db.session.commit()
 
 def activity_interested(activity_count=10, user_count=100):
-    users = User.query.all()
+    users = User.query.join(Role).filter(Role.name != 'Administrator').all()
     activities = Activity.query.all()
     for i in range(0, user_count):
         user = users[random.randint(0, len(users)-1)]
@@ -60,7 +60,7 @@ def activity_interested(activity_count=10, user_count=100):
     db.session.commit()
 
 def join_group(group_count=5, user_count=100):
-    users = User.query.all()
+    users = User.query.join(Role).filter(Role.name != 'Administrator').all()
     groups = Interest_Group.query.all()
     for i in range(0, user_count):
         user = users[random.randint(0, len(users)-1)]

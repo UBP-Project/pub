@@ -107,39 +107,48 @@ def update_group(id):
 @admin.route('/groups/setleader/<string:group_id>/<string:user_id>')
 @admin_required
 def setleader(group_id, user_id):
-    membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
-    membership.level = 1
-    db.session.commit()
+    
+    group = Interest_Group.query.get_or_404(group_id)
+
+    group.set_leader(user_id)
+
+    #Notification
+    notification = Notif('interest_group', 'has_new_leader', group_id)
+
+    #who triggered this action?
+    notification.add_actor(user_id)
+
+    #who will receive this action
+    notification.add_notifiers(group.get_members())
+
     return redirect(url_for("admin.group_members", id=group_id))
 
 @admin.route('/removeleader/<string:group_id>/<string:user_id>')
 @admin_required
 def removeleader(group_id, user_id):
-    membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
-    membership.level = 0
-    db.session.commit()
+    group = Interest_Group.query.get(group_id)
+    group.remove_leader(user_id)
+
     return redirect(url_for("admin.group_members", id=group_id))
 
 @admin.route('/groups/<string:id>/members', methods=['GET', 'POST'])
 @admin_required
 def group_members(id):
     group = Interest_Group.query.get_or_404(id)
-    leaders = User.query \
-        .join(Membership, User.id==Membership.user_id) \
-        .filter(Membership.group_id==id, Membership.status != 0, Membership.level == 1).all()
-    members = User.query \
-        .join(Membership, User.id==Membership.user_id) \
-        .filter(Membership.group_id==id, Membership.status != 0, Membership.level == 0).all()
+
+    leaders = group.get_leaders()
+    members = group.get_members()
+
     return render_template('admin/group/members.html', group=group, leaders=leaders, members=members)
 
 @admin.route('/groups/<string:id>/requests', methods=['GET', 'POST'])
 @admin_required
 def group_requests(id):
     group = Interest_Group.query.get_or_404(id)
-    membership_requests = User.query \
-        .join(Membership, User.id==Membership.user_id) \
-        .filter(Membership.group_id==id, Membership.status == 0, Membership.level == 0).all()
-    return render_template('admin/group/requests.html', group=group, membership_requests=membership_requests)
+
+    requests = group.membership_requests()
+
+    return render_template('admin/group/requests.html', group=group, membership_requests=requests)
 
 @admin.route('/accept_request/<string:group_id>/<string:user_id>')
 @admin_required
@@ -147,22 +156,20 @@ def accept_request(group_id, user_id):
 
     #Notification
     notification = Notif('interest_group', 'accepted_join_request', group_id)
-
     #who triggered this action?
     notification.add_actor(current_user.get_id())
-
-    #who to notify?
-    notification.add_notifier(user_id)
+    #who will receive this action
+    notification.add_notifiers([User.get_user_by_id(to_follow_id)])
 
     membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
-    membership.status = 1
-    db.session.commit()
+    membership.accept()
+
     return redirect(url_for("admin.group_requests", id=group_id))
 
 @admin.route('/decline_request/<string:group_id>/<string:user_id>')
 @admin_required
 def decline_request(group_id, user_id):
     membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
-    membership.status = 3
-    db.session.commit()
+    membership.decline()
+
     return redirect(url_for("admin.group_requests", id=group_id))
