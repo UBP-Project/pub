@@ -1,7 +1,5 @@
 {% extends "./layout/client_base.html" %}
-
 {% block title %} {{ group["name"] }} {% endblock %}
-
 {% block content %}
     <div class="row admin-page" style="background-color: white">
 
@@ -40,44 +38,142 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-12">
-                {% if leaders|length > 0 %}
-                    <div class="row">
-                    <h4>Leaders</h4>
-                    {% for leader in leaders %}
-                        <div class="user-card col-md-4">
-                            <a href="{{ url_for('admin.profile', id=leader.id) }}">
-                                <h4><span class="fa fa-user-circle"></span>
-                                    {{ leader['firstname'] }} {{ leader['lastname'] }}
-                                </h4>
-                            </a>
-                            </a>
-                            <a class="btn btn-sm btn-style-3" href="{{ url_for('admin.removeleader', group_id=group['id'],
-                            user_id =leader['id'])}}">Remove Leader</a>
-                        </div>
-                    {% endfor %}
-                    </div>
-                {% endif %}
+        {% raw %}
+        <div class="row" id="members_app">
+            <div class="col-md-12 members-list">
+                <div class="dropdown">
+                  <h3 v-if="view == 'members'" data-toggle="dropdown" class="">Group Members ({{ members.length }}) <span class="caret"></span></h3>
+                  <h3 v-if="view == 'leaders'" data-toggle="dropdown" class="">Group Leaders ({{ leaders.length }}) <span class="caret"></span></h3>
+                  <h3 v-if="view == 'managers'" data-toggle="dropdown" class="">Group Managers ({{ managers.length }}) <span class="caret"></span></h3>
+                  <ul class="dropdown-menu">
+                    <li v-on:click="changeView('members')"><a>Members ({{ members.length }})</a></li>
+                    <li v-on:click="changeView('leaders')"><a>Leaders ({{ leaders.length }})</a></li>
+                    <li v-on:click="changeView('managers')"><a>Managers ({{ managers.length }})</a></li>
+                  </ul>
+                </div>
+                <table class="users table row table-hover table-condensed">
+                        <tbody class="row">
+                            <tr v-if="view == 'members'" class="user-table-item row" v-for="(user, index) in members">
+                                <td v-if="user.image"><img class="circle-img-sm" :src="'../../../static/uploads/profile_pictures/' + user.image" /></td>
+                                <td v-else><img class="circle-img-sm" :src="'../../../static/images/pub-default-img.jpg'" /></td>
+                                <td>{{ user['firstname'] }}</td>  
+                                <td>{{ user['middlename'] }}</td>
+                                <td>{{ user['lastname'] }}</td>
+                                <td>{{ user['position'] }}</td>
+                                <td>{{ user['department'] }}</td>
+                                <td v-if="canEditGroup" class="text-center">
+                                    <button class="btn btn-style-3" v-on:click="setLeader(user, index)">Set as Leader</button>
+                                </td>
+                                <td v-if="canEditGroup" >
+                                    <span class="fa fa-times-circle" style="cursor: pointer;" v-on:click="removeFromGroup(user, index)"></span>
+                                </td>
+                            </tr>
 
+                            <tr v-if="view == 'leaders'" class="user-table-item row" v-for="(user, index) in leaders">
+                                <td v-if="user.image"><img class="circle-img-sm" :src="'../../../static/uploads/profile_pictures/' + user.image" /></td>
+                                <td v-else><img class="circle-img-sm" :src="'../../../static/images/pub-default-img.jpg'" /></td>
+                                <td>{{ user['firstname'] }}</td>  
+                                <td>{{ user['middlename'] }}</td>
+                                <td>{{ user['lastname'] }}</td>
+                                <td>{{ user['position'] }}</td>
+                                <td>{{ user['department'] }}</td>
+                                <td v-if="canEditGroup" class="text-center">
+                                    <button class="btn btn-style-3" v-on:click="removeLeader(user, index)">Remove as Leader</button>
+                                </td>
+                                <td v-if="canEditGroup" >
+                                    <span class="fa fa-times-circle" style="cursor: pointer;" v-on:click="removeFromGroup(user, index)"></span>
+                                </td>
+                            </tr>
 
-                {% if members|length > 0 %}
-                    <div class="row">
-                    <h4>Members</h4>
-                    {% for member in members %}
-                        <div class="user-card col-md-4">
-                            <a href="{{ url_for('admin.profile', id=member.id) }}">
-                                <h4><span class="fa fa-user-circle"></span>
-                                    {{ member['firstname'] }} {{ member['lastname'] }}
-                                </h4>
-                            </a>
-                            <a class="btn btn-sm btn-style-2" href="{{ url_for('admin.setleader', group_id=group['id'],
-                            user_id =member['id'])}}">Set as Leader</a>
-                        </div>
-                    {% endfor %}
-                    </div>
-                {% endif %}
+                            <tr v-if="view == 'managers'" class="user-table-item row" v-for="(user, index) in managers">
+                                <td v-if="user.image"><img class="circle-img-sm" :src="'../../../static/uploads/profile_pictures/' + user.image" /></td>
+                                <td v-else><img class="circle-img-sm" :src="'../../../static/images/pub-default-img.jpg'" /></td>
+                                <td>{{ user['firstname'] }}</td>  
+                                <td>{{ user['middlename'] }}</td>
+                                <td>{{ user['lastname'] }}</td>
+                                <td>{{ user['position'] }}</td>
+                                <td>{{ user['department'] }}</td>
+                            </tr>
+                        </tbody>
+                </table>
             </div>
         </div>
+        {% endraw %}
     </div>
 {% endblock %}
+{% block scripts %}
+<script>
+    var vm = new Vue({
+        el: "#members_app",
+        data: {
+            members: [],
+            leaders: [],
+            managers: [],
+            view: "members",
+            canEditGroup: false
+        },
+        methods: {
+            init: function() {
+                this.loadMembers();
+            },
+            loadMembers: function() {
+                $.ajax({
+                    url: "{{ url_for('api.get_group_members', id=group.id )}}",
+                    type: 'GET'
+                }).done(data => {
+                    this.members = data.members;
+                    this.leaders = data.leaders;
+                    this.managers = data.managers;
+                });
+            },
+            setLeader: function(user, index) {
+                $.ajax({
+                    url: "{{ url_for('api.set_leader', group_id=group.id ) }}",
+                    type: 'POST',
+                    data: {
+                        user_id: user.id,
+                    }
+                }).done(data => {   
+                    this.members.splice(index, 1);
+                    this.leaders.push(user);
+                });
+            },
+            removeLeader: function(user, index) {
+                $.ajax({
+                    url: "{{ url_for('api.remove_leader', group_id=group.id ) }}",
+                    type: 'POST',
+                    data: {
+                        user_id: user.id,
+                    }
+                }).done(data => {   
+                    this.leaders.splice(index, 1);
+                    this.members.push(user);
+                });
+            },
+            removeFromGroup: function(user, index) {
+                $.ajax({
+                    url: "{{ url_for('api.remove_member', group_id=group.id ) }}",
+                    type: 'POST',
+                    data: {
+                        user_id: user.id,
+                    }
+                }).done(data => {
+                    if (this.view == 'members')
+                        this.members.splice(index, 1);
+                    else if (this.view == 'leaders')
+                        this.leaders.splice(index, 1);
+                    else
+                        this.managers.splice(index, 1);
+                });
+            },
+            changeView: function(member_type) {
+                this.view = member_type;
+            }
+        }
+    });
+    $(document).ready(function() {
+        vm.init();
+        vm.canEditGroup = "{{ can_edit_group }}" == "True" ? true : false;
+    })
+</script>
+{% endblock scripts %}
