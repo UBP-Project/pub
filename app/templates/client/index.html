@@ -7,8 +7,8 @@
 
 		<div class="col-md-12 col-sm-12 col-xs-12">		
 
-            <div class="text-center feed-item" style="padding: 20px; margin-bottom: 20px;">
-                <h3>Welcome to <b>UBP: Pub</b></h3>
+            <div class="text-center" style="padding: 20px; margin-bottom: 20px; background-color: #fff;">
+                <h3 style="margin-top: 10px;">Welcome to <b>UBP: Pub</b></h3>
                 <hr/>
                 <h4>See stories from co-workers here in your Actions Feed.<br/>
                     <small>Start by connecting with your co-workers on Pub</small>
@@ -20,19 +20,21 @@
                 .feed-item {
                     background-color: white;
                     border-radius: 3px;
-                    padding: 20px 0px;
+                    padding: 20px;
                     margin-bottom: 7px;
+                    height: 300px;
                 }
 
                 .feed-item .user-img {
-                    height: 50px;
-                    width: 50px;
+                    height: 100px;
+                    width: 100px;
                     object-fit: cover;
-                    border-radius: 25px;
+                    border-radius: 50%;
                 }
 
                 .feed-item .group-icon {
-                    width: 100%;
+                    max-width: 300px;
+                    max-height: 100px;
                     border: 1px solid gray;
                 }
 
@@ -50,28 +52,25 @@
             <div id="app">
                 <div v-for="feed_item in feed" class="feed-item">
                     <div class="row">
-                        <div class="col-sm-1">
+                        <div class="col-md-2">
                             <img v-if="feed_item.user_image" class="user-img" :src="profile_images_folder + feed_item.user_image">
                             <img v-else="feed_item.user_image" class="user-img" :src="default_user_img">
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-5" style="padding-top: 20px;">
                             <h5>
-                                <a :href="'profile/' + feed_item.user_id">
-                                {{ feed_item.user_firstname }} {{ feed_item.user_lastname }}</a>
-                                    joins
-                                <a :href="'groups/' + feed_item.group_id">{{ feed_item.group_name }} Group</a>
+                                <a :href="'profile/' + feed_item.user_id">{{ feed_item.user_firstname }} {{ feed_item.user_lastname }}</a>
+                                joins
+                                <!-- <a :href="'groups/' + feed_item.group_id">{{ feed_item.group_name }} Group</a> -->
+                                <a :href="'#'">{{ feed_item.group_name }} Group</a>
                                 <br />
-                                {{ feed_item.timestamp }}
+                                <small>{{ feed_item.timestamp }}</small>
                             </h5>
-                        </div>
-                    </div>
-                    <div class="row group-item">
-                        <div class="col-md-offset-1 col-md-3">
-                            <img class="group-icon" :src="group_icons_folder + feed_item.group_icon">
-                        </div>
-                        <div class="col-md-6">
+                            <br/><br/>
                             <h4>{{feed_item.group_name}}</h4>
-                            <h6>{{feed_item.group_about}}</h6>
+                            <h4><small>{{feed_item.group_about}}</small></h4>
+                        </div>
+                        <div class="col-md-5">
+                            <img class="pull-right" :src="group_icons_folder + feed_item.group_icon" style="width: 250px; height: 250px;">
                         </div>
                     </div>
                 </div>

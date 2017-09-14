@@ -13,20 +13,9 @@
 				<hr/>
 
 				<div class="row">
-					{% raw %}
-					<div id="app" class="col-md-12 col-sm-12 box-content">
-
-						<div v-if="notifications">
-							<p v-for="notif in notifications">
-								<!-- Stil working on this -->
-								{{ notif.action }}
-							</p>
-						</div>
-
-						<div v-else="notifications" class="text-center" style="height: 300px; padding-top: 70px;"><h2><small>NO NOTIFICATIONS TO SHOW</small></h2></div>
+					<div class="col-md-12 col-sm-12 box-content" id="notif-panel">
 						
 					</div>
-					{% endraw %}
 				</div>
 
 			</div>
@@ -40,33 +29,61 @@
 
 	<script>
 		
-		var app = new Vue({
-			el: '#app',
-          	data: {
-            	notifications: []
-          	},
-          	methods: {
-            	initNotifications: function() {
-	                $.ajax({
-	                    url: '/api/v1.0/notifications',
-	                    type: 'GET'
-	                }).done(function(data) {
+	function init_notifications() {
+		$.ajax({
+            url: '/api/v1.0/notifications',
+            type: 'GET'
+        })
+        .done(function(data) {
+            console.log("success");
+            console.log(data);
 
-                    	/*for(var i in data) {
-                    		notifications.push(data[i]);
-                    	}*/
+            if(data.length == 0) {
+            	document.getElementById('notif-panel').innerHTML = '<div class="text-center" style="height: 300px; padding-top: 70px;"><h2><small>NO NOTIFICATIONS TO SHOW</small></h2></div>';
+            } else {
 
-	                    notifications = data;
-	                    console.log(notifications);
+            	for(var n in data){
+            		if(data[n].action == 'interested'){
+            			var start = '<div class="row" style="padding: 10px;">';
+		            	var content = '';
+		            	var end = '</div><hr style="margin: 10px 20px 20px 20px; border-top: 1px solid #ddd;"/>';
+		            	for (var i in data) {
 
-	                }).fail(function() {
-	                    console.log("error");
-	                });
+		            		var actor = '';
+		            		var picture = '';
+		            		var action = '';
+		            		var activity = '';
+
+		            		for (var j in data[i].actors) {
+		            			actor += '<a href="/profile/' + data[i].actors[j].id + '">' + data[i].actors[j].firstname + ' ' + data[i].actors[j].lastname + '</a>';
+		            		}
+
+		            		/*picture = '<div class="col-md-2"><img src="' + data[i].actors[j].image + '"/></div>';*/
+		            		picture = '<div class="col-md-1"><img src="{{ url_for("static",filename="images/pub-default-img.jpg") }}" style="width: 60px; height: 60px; border-radius: 50%;"/></div>';
+		            		activity = '<a href="#">' + data[i].entity_object.title + '</a>';
+
+		            		if(data[i].action == 'interested') {
+		            			action = ' is interested to ' + activity + '.';
+		            		}
+
+		            		var time = '<br/><small style="color: #777;">' + data[i].timestamp + '</small>';
+
+		            		content += picture + '<div class="col-md-11" style="padding-top: 10px; padding-left: 30px;">' + actor + action + time + '</div>';
+
+		            	} // end for
+
+		            	$('#notif-panel').append(start + content + end);
+            		}
             	}
-           	}
+
+            } // end if
+        })
+        .fail(function() {
+             console.log("error");
         });
-        
-        app.initNotifications();
+	}
+
+	init_notifications();
 
 	</script>
 
