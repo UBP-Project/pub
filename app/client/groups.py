@@ -223,7 +223,7 @@ def group_requests(id):
     membership_requests = User.query \
         .join(Membership, User.id==Membership.user_id) \
         .filter(Membership.group_id==id, Membership.status == 0, Membership.level == 0).all()
-    return render_template('client/group/group-requests.html', group=group, membership_requests=membership_requests,
+    return render_template('client/group/requests.html', group=group, membership_requests=membership_requests,
         can_edit_group=can_modify_group(id), can_accept_requests=can_accept_requests(id))
 
 @client.route('/groups/<string:id>/members', methods=['GET', 'POST'])
