@@ -90,8 +90,8 @@ class Notif():
 
 		db.session.commit()
 
-		await asyncio.sleep(0.01)
-		
+		# await asyncio.sleep(0.0001)
+
 		return None
 
 	def add_notifiers(self,users):
