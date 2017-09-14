@@ -117,7 +117,7 @@ def get_group_members(id):
     return jsonify({
         'members': [ member.to_json() for member in members],
         'leaders': [ leader.to_json() for leader in leaders],
-        'managers':[ managers.to_json() for manager in managers]
+        'managers':[ manager.to_json() for manager in managers]
     });
 
 @api.route('/groups/<string:id>/activities', methods=['GET'])
@@ -672,20 +672,19 @@ def get_group_leaders(id):
 
 @api.route('/interest_groups/<string:group_id>/accept', methods=['POST'])
 def accept_request(group_id):
-    user_id = int(request.form.get('user_id'));
+    user_id = request.form.get('user_id');
     membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
     membership.status = 1
     db.session.commit()
     return jsonify({'status': 'Success'}), 200
 
-@api.route('/interest_groups/<string:group_id>/decline', methods=['POST'])
+@api.route('/interest_groups/<string:group_id>/decline', methods=['POST', 'GET'])
 def decline_request(group_id):
-    user_id = int(request.form.get('user_id'));
+    user_id = request.form.get('user_id');
     membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
     membership.status = 3
     db.session.commit()
     return jsonify({'status': 'Success'}), 200
-
 
 @api.route('/interest_groups/<string:group_id>/requests', methods=['GET'])
 def get_requests(group_id):
@@ -693,7 +692,7 @@ def get_requests(group_id):
         .add_columns(User.firstname, User.lastname,
             User.department, User.position, User.image,
             User.id.label("user_id"), Membership.group_id)\
-        .filter(Membership.group_id == group_id).all()
+        .filter(Membership.group_id == group_id, Membership.status == 0).all()
     return jsonify({
         'requests': [{
             'group_id'  : request.group_id,
@@ -705,3 +704,27 @@ def get_requests(group_id):
             'position'  : request.position
         } for request in requests]
     }), 200
+
+@api.route('/interest_groups/<string:group_id>/setleader', methods=['POST'])
+def set_leader(group_id):
+    user_id = request.form.get('user_id');
+    membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
+    membership.level = 1
+    db.session.commit()
+    return jsonify({'status': 'Success'}), 200
+
+@api.route('/interest_groups/<string:group_id>/remove_leader', methods=['POST'])
+def remove_leader(group_id):
+    user_id = request.form.get('user_id');
+    membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
+    membership.level = 0
+    db.session.commit()
+    return jsonify({'status': 'Success'}), 200
+
+@api.route('/interest_groups/<string:group_id>/remove', methods=['POST'])
+def remove_member(group_id):
+    user_id = request.form.get('user_id');
+    membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
+    db.session.delete(membership)
+    db.session.commit()
+    return jsonify({'status': 'Success'}), 200

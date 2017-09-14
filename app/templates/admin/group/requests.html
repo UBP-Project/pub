@@ -49,26 +49,23 @@
                     <div class="col-md-12">
                         <h3 style="font-family: 'Roboto Condensed Bold'">Group Membership Request</h3>
                         <table class="users table row table-hover table-condensed">
-                            <tbody>
-                                {% for user in membership_requests %}
-                                <tr class="user-table-item">
-                                    <!-- <td class="ellipsis">{{ user['id'] }}</td> -->
-                                    {% if user.image %}
-                                        <td><img class="circle-img-sm" src="{{ url_for('static', filename='uploads/profile_pictures/' + user.image) }}" /></td>
-                                    {% else %}
-                                        <td><img class="circle-img-sm" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}" /></td>
-                                    {% endif %}
-                                    <td>{{ user['firstname'] }}</td>  
-                                    <td>{{ user['middlename'] }}</td>
-                                    <td>{{ user['lastname'] }}</td>
-                                    <td>{{ user['position'] }}</td>
-                                    <td>{{ user['department'] }}</td>
-                                    <td class="text-center">
-                                        <a href="{{ url_for('admin.profile', id=user.id)}}"><span class="fa fa-pencil-square-o"></span></a>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
+                            {% raw %}
+                                <tbody id="requests_app" class="row">
+                                    <tr class="user-table-item row" v-for="(user, index) in requests">
+                                        <td v-if="user.image"><img class="circle-img-sm" :src="'../../../static/uploads/profile_pictures/' + user.image" /></td>
+                                        <td v-else><img class="circle-img-sm" :src="'../../../static/images/pub-default-img.jpg'" /></td>
+                                        <td>{{ user['firstname'] }}</td>  
+                                        <td>{{ user['middlename'] }}</td>
+                                        <td>{{ user['lastname'] }}</td>
+                                        <td>{{ user['position'] }}</td>
+                                        <td>{{ user['department'] }}</td>
+                                        <td class="text-center">
+                                            <button class="btn btn-style-3" v-on:click="acceptRequest(user, index)">Accept</button>
+                                            <button class="btn btn-style-1" v-on:click="declineRequest(user, index)">Decline</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            {% endraw %}
                         </table>
                     </div>
                 </div>
@@ -80,3 +77,48 @@
         </div>
     </div>
 {% endblock %}
+{% block scripts %}
+<script>
+    var vm = new Vue({
+        el: "#requests_app",
+        data: {
+            requests: []
+        },
+        methods: {
+            loadRequests: function() {
+                $.ajax({
+                    url: "{{ url_for('api.get_requests', group_id=group.id) }}",    
+                    type: 'GET'
+                }).done(data => {
+                    this.requests = data.requests;
+                });
+            },
+            acceptRequest: function(user, index) {
+                $.ajax({
+                    url: "../../../api/v1.0/interest_groups/" + "{{ group.id }}" + "/accept",
+                    type: 'POST',
+                    data: {
+                        'user_id': user.user_id
+                    }
+                }).done(data => {
+                    this.requests.splice(index, 1);
+                });
+            },
+            declineRequest: function(user, index) {
+                $.ajax({
+                    url: "../../../api/v1.0/interest_groups/" + "{{ group.id }}" + "/decline",
+                    type: 'POST',
+                    data: {
+                        'user_id': user.user_id
+                    }
+                }).done(data => {
+                    this.requests.splice(index, 1);
+                });
+            }
+        }
+    });
+    $(document).ready(function() {
+        vm.loadRequests();
+    })
+</script>
+{% endblock scripts %}

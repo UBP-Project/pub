@@ -416,3 +416,20 @@ table.users td {
     border: 1px solid rgba(0, 0, 0, 0.3);
     text-align: center;
 }
+
+/***--- GROUP MEMBERS ***----*/
+.members-list h3 {
+    font-family: 'Roboto Condensed Bold';
+    cursor: pointer;
+}
+
+.members-list .dropdown a {
+    font-family: 'Roboto Condensed Bold';
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.members-list .dropdown a:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+/***--- END OF GROUP MEMBERS ****/
