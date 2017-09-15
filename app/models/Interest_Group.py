@@ -10,7 +10,7 @@ class Interest_Group(db.Model):
     id            = db.Column(UUIDType(binary=False), default=uuid.uuid4, primary_key=True)
     name          = db.Column(db.String(200), unique=False) #change  to true on production
     about         = db.Column(db.Text(4294967295))
-    cover_photo   = db.Column(db.String(200))
+    cover_photo   = db.Column(db.String(100))
     group_icon    = db.Column(db.String(100))
     timestamp     = db.Column(db.DateTime, default=datetime.utcnow())
 

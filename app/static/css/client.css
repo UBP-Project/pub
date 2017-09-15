@@ -147,3 +147,37 @@
 
 
 /* ------- END OF EDIT ACTIVITY -------- */
+
+
+/* HOME */
+
+.feed-item {
+    background-color: #fff;
+    border-radius: 3px;
+    padding: 20px;
+    margin-bottom: 7px;
+    height: 300px;
+}
+
+.feed-item .user-img {
+    height: 100px;
+    width: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.feed-item .group-icon {
+    max-width: 300px;
+    max-height: 100px;
+    border: 1px solid gray;
+}
+
+.feed-item .group-item {
+    border-radius: 10px;
+}
+
+.feed-item .group-about {
+    border: 1px solid black;
+}
+
+/* HOME END */
