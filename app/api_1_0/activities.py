@@ -6,7 +6,6 @@ from app import db
 import json
 from flask_login import login_required, current_user
 from ..auth import is_manager_or_leader
-from ..leaderboard import leaderboard
 from app.notification import Notif
 
 from app.utils import is_valid_extension
@@ -476,8 +475,8 @@ def going_to_activity_by(id):
     activity = User_Activity.query.filter_by(user_id=current_user.get_id(), activity_id=id, status=1).first()
 
     if activity is not None:
-        #check if the status is going
-        return jsonify({'status': 'Record already exists'}), 201
+      #check if the status is going
+      return jsonify({'status': 'Record already exists'}), 201
     else:
       try:
           current_user.join_activity(id)

@@ -100,11 +100,16 @@ class User(UserMixin, db.Model):
         db.session.commit()
 
     def total_points(self):
-        return db.session.query(Points, func.sum(Points.value).label('points'))\
+        user_points = db.session.query(Points, func.sum(Points.value).label('points'))\
             .join(User)\
             .group_by(Points.user_id)\
             .filter(User.id == self.id)\
-            .first().points
+            .first()
+
+        if user_points:
+            return user_points.points
+        else:
+            return 0
 
     def join_activity(self, activity_id):
         activity = Activity.query.get(activity_id)
@@ -121,9 +126,7 @@ class User(UserMixin, db.Model):
         # notification.add_actor(current_user.get_id())
         # #send notifcation to the followers of the current_user
         # followers = current_user.get_followers()
-        
         self.earn_point(1, 'Joined %s' % activity.title)
-
         db.session.add(user_activity)
         db.session.commit()
 
@@ -140,8 +143,7 @@ class User(UserMixin, db.Model):
             'position'     : self.position,
             'birthday'     : self.birthday,
             'role_id'      : self.role_id,
-            'points'       : self.points,
-            'cover_photo'  : self.points,
+            'cover_photo'  : self.cover_photo,
             'image'        : self.image
         }
         return json_post

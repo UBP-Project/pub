@@ -2,7 +2,6 @@ from app.models import Interest_Group, User, Role, Follow, User_Activity, Activi
 import random
 from app import db
 from datetime import datetime
-from app import leaderboard
 
 random.seed(datetime.now())
 
