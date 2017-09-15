@@ -479,31 +479,9 @@ def going_to_activity_by(id):
         #check if the status is going
         return jsonify({'status': 'Record already exists'}), 201
     else:
-      activity = User_Activity(
-        user_id=current_user.get_id(),
-        activity_id=id,
-        status = 1 #going
-        )
-      db.session.add(activity)
-
       try:
-          db.session.commit()
-
-          #Notification
-          notification = Notif('activity', 'joined', id)
-
-          #who triggered this action?
-          notification.add_actor(current_user.get_id())
-          
-          #send notifcation to the followers of the current_user
-          followers = current_user.get_followers()
-
-          notification.add_notifiers(followers)
-
-          leaderboard.joined_activity()
-
+          current_user.join_activity(id)
           return jsonify({'status': 'Success'}), 200   
-
       except exc.SQLAlchemyError as e:
           print(e)
           db.session().rollback()

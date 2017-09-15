@@ -1,6 +1,6 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, login_manager
-from app.models import Role, Permission, Follow
+from app.models import Role, Permission, Follow, Points, User_Activity, Activity
 from sqlalchemy_utils import UUIDType
 from flask_login import UserMixin
 import uuid
@@ -37,6 +37,20 @@ class User(UserMixin, db.Model):
     #     lazy='dynamic'
     #     )
 
+    def __init__(self, firstname, middlename, lastname, email, password_hash, department, position, birthday, role_id):
+        self.firstname = firstname
+        self.middlename = middlename
+        self.lastname = lastname
+        self.email = email
+        self.password_hash = password_hash
+        self.department = department
+        self.position = position
+        self.birthday = birthday
+        self.role_id = role_id
+
+    def __repr__(self):
+        return '<User %r>' % self.email
+
     def is_following(self, user):
         return self.followed.filter(Follow.follower_id == user.get_id).count() > 0
 
@@ -48,19 +62,7 @@ class User(UserMixin, db.Model):
     def unfollow(self, user):
         if self.is_following(user):
             self.followed.remove(user)
-            return self
-
-    # def __init__(self, firstname, middlename, lastname, email, password_hash, department, position, birthday, role_id):
-    #     self.firstname = firstname
-    #     self.middlename = middlename
-    #     self.lastname = lastname
-    #     self.email = email
-    #     self.password_hash = password_hash
-    #     self.department = department
-    #     self.position = position
-    #     self.birthday = birthday
-    #     self.role_id = role_id
-                     
+            return self                     
     
     def can(self, permissions):
         return self.role is not None and \
@@ -68,9 +70,6 @@ class User(UserMixin, db.Model):
     
     def is_administrator(self):
         return self.can(Permission.ADMINISTER)
-
-    def __repr__(self):
-        return '<User %r>' % self.email
 
     @property
     def password(self):
@@ -91,6 +90,36 @@ class User(UserMixin, db.Model):
             .join(Follow, Follow.following_id==self.id)\
             .filter(id != self.id)\
             .all()
+
+    def get_user_by_id(user_id):
+        return User.query.get(user_id)
+
+    def earn_point(self, value, event):
+        point = Points(self.id, 1, event)
+        db.session.add(point)
+        db.session.commit()
+
+    def join_activity(self, activity_id):
+        activity = Activity.query.get(activity_id)
+
+        user_activity = User_Activity(
+            user_id     = self.id,
+            activity_id = activity_id,
+            status      = 1 #going
+        )
+
+        # #Notification
+        # notification = Notif('activity', 'joined', id)
+        # #who triggered this action?
+        # notification.add_actor(current_user.get_id())
+        # #send notifcation to the followers of the current_user
+        # followers = current_user.get_followers()
+        
+        self.earn_point(1, 'Joined %s' % activity.title)
+
+        db.session.add(user_activity)
+        db.session.commit()
+
 
     def to_json(self):
         json_post = {
@@ -133,9 +162,6 @@ class User(UserMixin, db.Model):
             birthday        = birthday,
             role_id         = role_id
         )
-
-    def get_user_by_id(id):
-        return User.query.get(id)
 
 @login_manager.user_loader
 def load_user(user_id):
