@@ -490,7 +490,7 @@ def follow_item_to_json(follow_item):
 @api.route('/leaderboard')
 @login_required
 def leaderboard():
-    leaders = User.query.order_by(User.points.desc()).limit(10)
+    leaders = User.query.order_by(User.total_points().desc()).limit(10)
     return jsonify([leader.to_json() for leader in leaders])
 
 @api.route('/isCorrectPassword', methods=['POST'])

@@ -37,7 +37,7 @@ def activity_join(activity_count=10, user_count=100):
                 continue
             else:
                 db.session.add(user_activity)
-                user.points = user.points + 1
+                user.earn_point(1, 'Joined %s' % activity.title)
                 print(user.firstname, user.lastname, "is going to", activity.title)
     db.session.commit()
 

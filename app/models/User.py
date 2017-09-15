@@ -1,6 +1,7 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, login_manager
 from app.models import Role, Permission, Follow, Points, User_Activity, Activity
+from sqlalchemy import func
 from sqlalchemy_utils import UUIDType
 from flask_login import UserMixin
 import uuid
@@ -21,7 +22,6 @@ class User(UserMixin, db.Model):
     position      = db.Column(db.String(100))
     birthday      = db.Column(db.Date)
     role_id       = db.Column(UUIDType(binary=False), db.ForeignKey('roles.id'))
-    points        = db.Column(db.Integer, default=0)
     cover_photo   = db.Column(db.String(200))
     image         = db.Column(db.String(100))
     timestamp     = db.Column(db.DateTime, default=datetime.utcnow())
@@ -98,6 +98,13 @@ class User(UserMixin, db.Model):
         point = Points(self.id, 1, event)
         db.session.add(point)
         db.session.commit()
+
+    def total_points(self):
+        return db.session.query(Points, func.sum(Points.value).label('points'))\
+            .join(User)\
+            .group_by(Points.user_id)\
+            .filter(User.id == self.id)\
+            .first().points
 
     def join_activity(self, activity_id):
         activity = Activity.query.get(activity_id)
