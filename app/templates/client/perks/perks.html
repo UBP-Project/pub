@@ -9,8 +9,14 @@
 		<div class="col-md-12">
 			<div class="group-box">
 
-				<h3>UNIONBANK PERKS</h3>
-				<hr/>
+				<h3>UNIONBANK PERKS
+					{% if isManager %}
+                    <a href="/perks/create">
+                        <button class="btn btn-style-2 btn-sm pull-right" title="Create Perks"><i class="fa fa-plus"></i></button>
+                    </a>
+                    {% endif %}
+                </h3>
+                <hr/>
 
 				<!-- <div class="text-center" style="height: 400px;">
 					<h3><small>COMING SOON</small></h3>

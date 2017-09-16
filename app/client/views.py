@@ -96,10 +96,15 @@ def leaderboard():
     return render_template("client/views/leaderboard.html", user=current_user,
         point_leaders=point_leaders, followed_leaders=followed_leaders)
 
-@client.route('/perks')
+@client.route('/perks/')
 @login_required
 def perks():
-    return render_template("client/views/perks.html")
+    return render_template("client/perks/perks.html")
+
+@client.route('/perks/create')
+@login_required
+def create_perks():
+    return render_template("client/perks/create.html")
 
 @client.route('/logout')
 @login_required
