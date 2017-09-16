@@ -96,6 +96,11 @@ def leaderboard():
     return render_template("client/views/leaderboard.html", user=current_user,
         point_leaders=point_leaders, followed_leaders=followed_leaders)
 
+@client.route('/perks')
+@login_required
+def perks():
+    return render_template("client/views/perks.html")
+
 @client.route('/logout')
 @login_required
 def logout():
