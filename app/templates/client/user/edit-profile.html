@@ -14,7 +14,9 @@
                     width="200px" 
                     height="200px"/>
             {% endif %}
-            <label class="text-center">Edit Picture</label>
+            <label class="text-center">Edit Picture</label><br/>
+            <h3>{{ user['firstname'] }} {{ user['lastname'] }}</h3>
+            <p>{{ user['position'] }} <br /> {{ user['department'] }}</p>
         </div>
 
         <div class="col-md-12 text-right cover">
@@ -29,7 +31,7 @@
 
                 <div class="btn btn-xs points" disabled>
                     <h6>Points</h6>
-                    <h4>{{ user['points'] }}</h4>
+                    <h4>{{ user.total_points() }}</h4>
                 </div>
 
                 {% if following_count > 0 %}
@@ -65,7 +67,7 @@
         </div>
 
         <div class="row">
-            <form class="col-md-offset-3 col-md-7 edit-section" method="post" name="update_user" enctype="multipart/form-data">
+            <form class="col-md-offset-4 col-md-7 edit-section" method="post" name="update_user" enctype="multipart/form-data">
                 {{ form.hidden_tag() }}
                 <br/>
                 <div class="row">
@@ -131,14 +133,14 @@
 
                 <br />
 
-                <div class="col-md-7">
+                <div class="col-md-5">
                     <br />
                     <a href="{{ url_for('client.edit_password', id=user['id']) }}">
                         Change Password
                     </a>
                 </div>
      
-                <div class="col-md-5">
+                <div class="col-md-7">
                     <br/>
                     {{ form.submit(
                         class="btn btn-style-1"

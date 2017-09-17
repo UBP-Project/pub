@@ -29,7 +29,7 @@
 
                 <div class="btn btn-xs" style="padding: 0px 20px;">
                     <h6>Points</h6>
-                    <h4>{{ user['points'] }}</h4>
+                    <h4>{{ user.total_points() }}</h4>
                 </div>
 
 
@@ -73,32 +73,37 @@
         </div>
 
 
-        {% raw %}
-        <div id="followers_app" class="col-md-9 col-md-offset-3" style="padding: 20px 0px;">
-            <div v-for="follower in followers" class="col-md-4" style="width: 270px; padding: 0px;">
-                <div style="background-color: white; padding: 10px; margin: 5px;">
+        <div class="row">
+            {% raw %}
+            <div id="followers_app" class="col-md-offset-4 col-md-8" style="padding: 20px 0px;">
+                <div class="row">
+                    <div v-for="follower in followers" class="col-md-6" style="padding: 0px;">
+                        <div style="background-color: white; padding: 10px; margin: 5px;">
 
-                    <img v-if="follower.image" :src="'../../../static/uploads/profile_pictures/' + follower.image"
-                        style="width: 50px; height: 50px; border-radius: 25px;">
+                            <img v-if="follower.image" :src="'../../../static/uploads/profile_pictures/' + follower.image"
+                                style="width: 50px; height: 50px; border-radius: 25px;">
 
-                    <img v-else src="../../../static/images/pub-default-img.jpg"
-                        style="width: 50px; height: 50px; border-radius: 25px;">
+                            <img v-else src="../../../static/images/pub-default-img.jpg"
+                                style="width: 50px; height: 50px; border-radius: 25px;">
 
-                    <button v-if="follower.isFollowing" class="pull-right btn btn-style-1" style="margin-top: 20px; height: 30px; padding: 0px 15px;" v-on:click="toggleFollow(follower)">Following</button>
-                    <button v-else class="pull-right btn btn-style-2" style="margin-top: 20px; height: 30px; padding: 0px 15px;" v-on:click="toggleFollow(follower)">Follow</button>
-                    
-                    <h4>
-                    <a :href="'../../profile/' + follower.id">
-                        {{ follower.firstname }} {{ follower.lastname }}
-                    </a>
-                    </h4>
+                            <button v-if="follower.isFollowing" class="pull-right btn btn-style-1" style="margin-top: 20px; height: 30px; padding: 0px 15px;" v-on:click="toggleFollow(follower)">Following</button>
+                            <button v-else class="pull-right btn btn-style-2" style="margin-top: 20px; height: 30px; padding: 0px 15px;" v-on:click="toggleFollow(follower)">Follow</button>
+                            
+                            <h4>
+                            <a :href="'../../profile/' + follower.id">
+                                {{ follower.firstname }} {{ follower.lastname }}
+                            </a>
+                            </h4>
 
-                    <p style="font-size: 12px;">{{ follower.position }}<br />
-                    {{ follower.department }}</p>
+                            <p style="font-size: 12px;">{{ follower.position }}<br />
+                            {{ follower.department }}</p>
+                            
+                        </div>
+                    </div>
                 </div>
             </div>
+            {% endraw %}
         </div>
-        {% endraw %}
 
     </div>
 
