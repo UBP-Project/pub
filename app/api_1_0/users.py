@@ -503,25 +503,16 @@ def is_correct_password():
     else:
         return jsonify({'is_correct_password': False}), 200
 
-@api.route('/myactivities')
+@api.route('/myactivities/joined')
 @login_required
-def my_activities():
-    activities = Activity.query\
-                .join(User_Activity)\
-                .join(User)\
-                .filter(User.id == current_user.get_id())\
-                .all()
+def my_joined_activities():
+    return jsonify([activity.to_json() for activity in current_user.get_joined_activities()]), 200
 
-    return jsonify([activity.to_json() for activity in activities]), 200
-
+@api.route('/myactivities/interested')
+def my_interested_activities():
+    return jsonify([activity.to_json() for activity in current_user.get_interested_activities()]), 200
 
 @api.route('/mygroups')
 @login_required
 def my_groups():
-    groups = Interest_Group.query\
-                .join(Membership)\
-                .join(User)\
-                .filter(User.id == current_user.get_id())\
-                .all()
-
-    return jsonify([group.to_json() for group in groups]), 200
+    return jsonify([group.to_json() for group in current_user.get_joined_groups()]), 200
