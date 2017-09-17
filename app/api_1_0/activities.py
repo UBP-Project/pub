@@ -773,13 +773,3 @@ def check_user(id):
     'user_id': user_id,
     'action': action
   }), 200
-
-@api.route('/activities/myactivities')
-def my_activities():
-  activities = Activity.query\
-                .join(User_Activity)\
-                .join(User)\
-                .filter(User.id == current_user.get_id())\
-                .all()
-
-  return jsonify([activity.to_json() for activity in activities]), 200

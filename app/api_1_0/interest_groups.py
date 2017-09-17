@@ -729,12 +729,3 @@ def remove_member(group_id):
     db.session.commit()
     return jsonify({'status': 'Success'}), 200
 
-@api.route('/interest_groups/mygroups')
-def my_groups():
-    groups = Interest_Group.query\
-                .join(Membership)\
-                .join(User)\
-                .filter(User.id == current_user.get_id())\
-                .all()
-
-    return jsonify([group.to_json() for group in groups]), 200
