@@ -3,6 +3,7 @@
 {% block title %} {{ user['firstname'] }} {{ user['lastname'] }} {% endblock title %}
 
 {% block content %}
+
     <div class="row">
         <div class="col-md-3 profile-info">
             {% if user.image %}
@@ -14,7 +15,7 @@
                     width="200px" 
                     height="200px"/>
             {% endif %}
-            <label class="text-center">Edit Picture</label><br/>
+            <span id="dp-label" style="position: absolute; top: 90px; left: 60px; color: #fff; text-shadow: 0px 0px 20px #111; z-index: 9; font-size: 20px; cursor: pointer;"><b>Edit Picture</b></span><br/>
             <h3>{{ user['firstname'] }} {{ user['lastname'] }}</h3>
             <p>{{ user['position'] }} <br /> {{ user['department'] }}</p>
         </div>
@@ -168,6 +169,11 @@
         $("#trianglify-cover").append(pattern.svg());
 
         $("#dp").on('click', function(e) {
+            e.preventDefault();
+            $("#image").trigger('click');
+        });
+
+        $("#dp-label").on('click', function(e) {
             e.preventDefault();
             $("#image").trigger('click');
         });
