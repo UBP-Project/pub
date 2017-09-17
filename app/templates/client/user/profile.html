@@ -8,7 +8,7 @@
             {% if user.image %}
                 <img src="{{ url_for('static', filename='uploads/profile_pictures/' + user.image) }}"
                     width="200px" 
-                    height="200x"/>
+                    height="200x" />
             {% else %}
                 <img src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"
                     width="200px" 
@@ -21,10 +21,6 @@
         </div>
 
         <div class="col-md-12 text-right cover">
-
-            <!-- Check if user has set cover photo
-            <img src="{{ url_for('static', filename='images/building.png') }}"
-                style="width: 100%; height: 250px; z-index: 1;"/> -->
 
             <!-- hold the trianlify cover photo -->
             <div id="trianglify-cover" class="col-md-12 text-right"></div>

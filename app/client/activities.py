@@ -16,7 +16,7 @@ from ..auth import is_manager_or_leader, can_modify_activity
 def activities():
     show_create = is_manager_or_leader()
     print(show_create)
-    activities = Activity.query.limit(7)
+    activities = Activity.query.all()
     return render_template("client/activity/activities.html", activities=activities,\
         show_create=show_create, user=current_user)
 
