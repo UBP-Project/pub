@@ -50,6 +50,9 @@ class Notification_Object(db.Model):
     def set_active(self):
         self.status = True
         db.session.commit()
+
+    def get_notif_object(id):
+        return Notification_Object.query.get(id)
         
     def __repr__(self):
         return '<Notification_Object %r>' % self.id
