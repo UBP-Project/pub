@@ -70,26 +70,26 @@
                                                         <p>{{ group.about }}</p>
                                                     </div>
                                                     <div role="tabpanel" class="tab-pane" :id="'grp-members-' + group.id">
-                                                        <div v-if="group.members.length > 0" class="row">
-                                                            <h4>Members</h4>
-                                                            <div v-for="member in group.members" class="col-md-6 mini-container">
-                                                                <a :href="'/profile/' + member.id">
-                                                                    <div>
-                                                                        <img v-if="member.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+member.image">
-                                                                        <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
-                                                                        <span>{{ member.firstname }} {{member.lastname}}</span>
-                                                                    </div>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                        <div v-if="group.leaders.length > 0" class="row">
-                                                            <h4>Leaders</h4>
+                                                        <div v-if="group.leaders" class="row">
+                                                            <h5>Leaders</h5>
                                                             <div v-for="leader in group.leaders" class="col-md-6 mini-container">
                                                                 <a :href="'/profile/' + leader.id">
                                                                     <div>
                                                                         <img v-if="leader.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+leader.image">
                                                                         <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
                                                                         <span>{{ leader.firstname }} {{leader.lastname}}</span>
+                                                                    </div>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        <div v-if="group.members" class="row">
+                                                            <h5>Members</h5>
+                                                            <div v-for="member in group.members" class="col-md-6 mini-container">
+                                                                <a :href="'/profile/' + member.id">
+                                                                    <div>
+                                                                        <img v-if="member.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+member.image">
+                                                                        <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
+                                                                        <span>{{ member.firstname }} {{member.lastname}}</span>
                                                                     </div>
                                                                 </a>
                                                             </div>
@@ -107,18 +107,27 @@
                                         </div>
                                         <!-- FOOTER -->
                                         <div class="modal-footer">
-                                            <button v-if="group.membership_status == 'accepted'" type="button" class="btn btn-danger grp-btn" value="leave" v-on:click="toggleGroupMembership(group)">LEAVE GROUP</button>
-                                            <button v-else-if="group.membership_status == 'pending'" type="button" class="btn btn-warning grp-btn" value="cancel" v-on:click="toggleGroupMembership(group)">CANCEL JOIN REQUEST</button>
-                                            <button v-else type="button" class="btn btn-style-1 grp-btn" value="join" v-on:click="toggleGroupMembership(group)">JOIN GROUP</button>
+                                            <template v-if="group.membership_status == 'accepted'">
+                                                <button type="button" class="btn btn-danger grp-btn" value="leave" v-on:click="toggleGroupMembership(group)">LEAVE GROUP</button>
+                                            </template>
+                                            <template v-else-if="group.membership_status == 'pending'">
+                                                <button type="button" class="btn btn-warning grp-btn" value="cancel" v-on:click="toggleGroupMembership(group)">CANCEL JOIN REQUEST</button>
+                                            </template>
+                                            <template v-else>
+                                                <button type="button" class="btn btn-style-1 grp-btn" value="join" v-on:click="toggleGroupMembership(group)">JOIN GROUP</button>
+                                            </template>
                                         </div> <!-- END OF FOOTER -->
                                     </div>
                                 </div>
                             </div> <!-- END OF GROUP MODAL -->
-                        </div>
+
+                        </div> <!-- end of group-listing -->
+
                         <div class="show-more-box col-md-12">
                             <!-- HIDE THIS BUTTON IF THERE'S NO NEXT PAGE -->
                             <button class="btn btn-style-3" v-on:click="loadGroups">Show More</button>
                         </div> <!-- end of show more div -->
+
                     </div> <!-- end of app -->
                     {% endraw %}
                 </div> <!-- end of row -->
@@ -151,23 +160,25 @@
                     data.interest_groups.forEach((group) => {
                         group.members = [];
                         group.leaders = [];
-                        group.managers = [];
+                        //group.managers = [];
                         group.activities = [];
                         group.membership_status = -1;
                         group.cover = "background-image: url('/static/uploads/covers/" + group.cover_photo + "');"
+                        group.population = 0;
+                        vm.groupPopulation(group);
                     });
                     this.groups.push.apply(this.groups, data.interest_groups);
                     this.groups_page++;
                 });
             },
-            loadGroupInfo: function(group) {
+            groupPopulation: function(group) {
+
                 // load group members
                 $.ajax({
                     url: "/api/v1.0/interest_groups/" + group.id + "/members",
                     type: 'GET'
                 }).done(data => {
-                    group.members = data.members;
-                    // console.log(data);
+                    group.population += data.length;
                 });
 
                 // load group leader
@@ -175,8 +186,28 @@
                     url: "/api/v1.0/interest_groups/" + group.id + "/leaders",
                     type: 'GET'
                 }).done(data => {
-                    group.leaders = data.leaders;
-                    // console.log(data);
+                    group.population += data.length;
+                    console.log(group.name + " member count = " + group.population);
+                });
+
+            },
+            loadGroupInfo: function(group) {
+                // load group members
+                $.ajax({
+                    url: "/api/v1.0/interest_groups/" + group.id + "/members",
+                    type: 'GET'
+                }).done(data => {
+                    group.members = data;
+                    //console.log("Members: " + data);
+                });
+
+                // load group leader
+                $.ajax({
+                    url: "/api/v1.0/interest_groups/" + group.id + "/leaders",
+                    type: 'GET'
+                }).done(data => {
+                    group.leaders = data;
+                    //console.log("Leader: "+ data);
                 });
 
                 // load Activities
@@ -184,7 +215,7 @@
                     url: "/api/v1.0/interest_groups/" + group.id + "/activities",
                     type: 'GET'
                 }).done(data => {
-                    group.activities = data.activities;
+                    group.activities = data;
                 });
 
                 // check membership status
@@ -193,10 +224,11 @@
                     type: 'GET'
                 }).done(data => {
                     group.membership_status = data.membership_status;
+                    console.log("Grp_status = " + data.membership_status);
                 });
             },
             toggleGroupMembership: function(group) {
-                if (group.membership_status == "pending" || group.membership_status == "regular") {
+                if (group.membership_status == "pending" || group.membership_status == "accepted") {
                     $.ajax({
                         url: "/api/v1.0/interest_groups/" + group.id + "/leave",
                         type: 'DELETE'
