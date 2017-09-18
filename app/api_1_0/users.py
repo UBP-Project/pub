@@ -1,7 +1,7 @@
 from flask import jsonify, request, current_app, url_for
 from flask_login import login_required, current_user
 from sqlalchemy import exc
-from app.models import User, Follow, Notification
+from app.models import User, Follow, Notification, Interest_Group, Membership
 from app.api_1_0 import api#, follow_notif
 from app import db
 import json
@@ -388,9 +388,6 @@ def follow_user(to_follow_id):
         #who triggered this action?
         notification.add_actor(current_user.get_id())
 
-        #who to notify?
-        notification.add_notifiers([User.get_user_by_id(to_follow_id)])
-
         # for follower in followers:
         #     notif = Notification(user_id=follower.get_id(), content=content, url=url)
         #     db.session.add(notif)
@@ -444,9 +441,7 @@ def unfollow_user(to_unfollow_id):
 
 @api.route('/users/<string:id>/followers', methods=['GET'])
 def get_followers(id):
-    followers = User.query.join(Follow, Follow.follower_id == User.id)\
-        .order_by(Follow.timestamp.desc())\
-        .filter(Follow.following_id == id).all()
+    followers = current_user.get_followers()
     followings_current_user = User.query.join(Follow, Follow.following_id == User.id)\
         .filter(Follow.follower_id == current_user.get_id()).all()
     for follower in followers:
@@ -506,13 +501,144 @@ def is_correct_password():
 @api.route('/myactivities/joined')
 @login_required
 def my_joined_activities():
+    """
+    Get joined activities by user
+    ---
+    tags:
+      - users
+
+    responses:
+        200:
+            description: OK
+            schema:
+                id: acitivites
+                properties:
+                    id:
+                        type: string
+                        example: 0f5b5ff8-afa2-43f7-8066-8ec3075c4c0c
+                    title:
+                        type: string
+                        example: Temple Run
+                        description: Event Title
+                    description:
+                        type: string
+                        example: Run Run Run
+                    start_date:
+                        type: string
+                        format: date 
+                        example: Sat, 19 Aug 2017 00:00:00 GMT
+                    end_date:
+                        type: string
+                        format: date 
+                        example: Sat, 19 Aug 2017 00:00:00 GMT
+                    address:
+                        type: string
+                        example: Luneta Park
+                    group_id:
+                        type: string
+                        default: None
+                        example: 0f5b5ff8-afa2-43f7-8066-8ec3075c4c0c
+                        descripton: In case event is associated with some group
+                    image:
+                        type: string
+                        example: 70a256f3628947508af68343821d78b6.jpg
+                        default: None
+                        description: File name of image in uploads/activity_image folder
+            """
     return jsonify([activity.to_json() for activity in current_user.get_joined_activities()]), 200
 
 @api.route('/myactivities/interested')
 def my_interested_activities():
+    """
+    Get interested activities by user
+    ---
+    tags:
+      - users
+
+    responses:
+        200:
+            description: OK
+            schema:
+                id: acitivites
+                properties:
+                    id:
+                        type: string
+                        example: 0f5b5ff8-afa2-43f7-8066-8ec3075c4c0c
+                    title:
+                        type: string
+                        example: Temple Run
+                        description: Event Title
+                    description:
+                        type: string
+                        example: Run Run Run
+                    start_date:
+                        type: string
+                        format: date 
+                        example: Sat, 19 Aug 2017 00:00:00 GMT
+                    end_date:
+                        type: string
+                        format: date 
+                        example: Sat, 19 Aug 2017 00:00:00 GMT
+                    address:
+                        type: string
+                        example: Luneta Park
+                    group_id:
+                        type: string
+                        default: None
+                        example: 0f5b5ff8-afa2-43f7-8066-8ec3075c4c0c
+                        descripton: In case event is associated with some group
+                    image:
+                        type: string
+                        example: 70a256f3628947508af68343821d78b6.jpg
+                        default: None
+                        description: File name of image in uploads/activity_image folder
+            """
     return jsonify([activity.to_json() for activity in current_user.get_interested_activities()]), 200
 
 @api.route('/mygroups')
 @login_required
 def my_groups():
-    return jsonify([group.to_json() for group in current_user.get_joined_groups()]), 200
+    """
+    Get joined groups by user
+    ---
+    tags:
+      - users
+
+    responses:
+        200:
+            description: OK
+            schema:
+                id: groups
+                properties:
+                    id:
+                        type: string
+                        example: 04cb8787-fe54-4e73-80d4-c17bf56537ee
+
+                    name:
+                        type: string
+                        example: Sports
+                        description: Group name
+
+                    description:
+                        type: string
+                        example: Everything you should get involved!
+                        description: About the Group                
+
+                    cover_photo:
+                        type: string
+                        example: c94f84619ce845f3b6398a30aa99c720.bmp
+                        description: File name
+
+                    group_icon:
+                        type: string
+                        example: d167f8ec77194efc8319e3455da9920f.jpg
+                        description: File name
+            """
+
+    groups = Interest_Group.query\
+                .join(Membership)\
+                .join(User)\
+                .filter(User.id == current_user.get_id(), Membership.status == Membership.MEMBERSHIP_ACCEPTED)\
+                .all()
+
+    return jsonify([group.to_json() for group in groups]), 200

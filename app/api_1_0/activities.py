@@ -656,14 +656,8 @@ def interested_to_activity_by(id):
 
         #Notification
         notification = Notif('activity', 'interested', id)
-
         #who triggered this action?
         notification.add_actor(current_user.get_id())
-        
-        #send notifcation to the followers of the current_user
-        followers = current_user.get_followers()
-
-        notification.add_notifiers(followers)
 
         return jsonify({'status': 'Success'}), 200
     except exc.SQLAlchemyError as e:

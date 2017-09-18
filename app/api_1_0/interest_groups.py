@@ -564,6 +564,8 @@ def get_request_status(id):
         .filter(Membership.user_id == current_user.get_id())\
         .first()
 
+    print(status_code)
+
     if(status_code != None):
         return jsonify({'membership_status': 'pending', 'membership_level': 'regular'} if status_code.status == 0 else {'membership_status': 'accepted', 'membership_level': 'regular' if status_code.level == 0 else 'leader'})
     else:
@@ -633,10 +635,10 @@ def group_activities_by(id):
         .all()
 
     print(activities)
-    
+
     return jsonify([
-            activity.to_json() for activity in activities
-        ])
+        activity.to_json() for activity in activities
+    ])
 
 @api.route('/interest_groups/<string:id>/leaders', methods=['GET'])
 def get_group_leaders(id):
@@ -665,6 +667,8 @@ def get_group_leaders(id):
 
     leaders = User.query.join(Membership, User.id == Membership.user_id).join(Interest_Group, Interest_Group.id == group.id)\
         .filter(Membership.level == Membership.MEMBERSHIP_LEADER).all()
+    
+    print(leaders)
     
     return jsonify([
         leader.to_json() for leader in leaders

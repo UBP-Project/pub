@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 
 from sqlalchemy import exc
 
-from app.models import User, Follow, Notification, Notification_Object, Notification_Change, Notification_EntityType
+from app.models import User, Follow, Notification, Notification_Object, Notification_EntityType
 from app.api_1_0 import api
 from app.notification import Notif
 from app import db

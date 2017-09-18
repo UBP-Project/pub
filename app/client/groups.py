@@ -11,7 +11,7 @@ from werkzeug.utils import secure_filename
 import os
 import uuid
 
-@client.route('/groups/')
+@client.route('/groups')
 @login_required
 def groups():
     isManager = User.query\
@@ -53,7 +53,10 @@ def groups():
         else:
             group['status'] = None
 
+        print(group)
         interest_groups.append(group)
+
+
 
     managed_groups = Interest_Group.query.join(Membership,\
         Membership.group_id == Interest_Group.id).filter(Membership.level == 1,\

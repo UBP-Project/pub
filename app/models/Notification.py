@@ -54,49 +54,16 @@ class Notification_Object(db.Model):
     def __repr__(self):
         return '<Notification_Object %r>' % self.id
 
-class Notification_Change(db.Model):
-    __tablename__           = 'notification_change'
+class Notification(db.Model):
+    __tablename__           = 'notification'
     id                      = db.Column(UUIDType(binary=False), default=uuid.uuid4, primary_key=True)
     notification_object_id  = db.Column(UUIDType(binary=False), db.ForeignKey('notification_object.id'))
     actor_id                = db.Column(UUIDType(binary=False), db.ForeignKey('user.id'))
-    status                  = db.Column(db.Boolean)
+    timestamp               = db.Column(db.DateTime, default=datetime.utcnow())
 
     def __init__(self, notification_object_id, actor_id):
         self.notification_object_id    = notification_object_id
         self.actor_id = actor_id
-        self.status = False
         
     def __repr__(self):
-        return '<Notification_Object %r>' % self.id
-
-class Notification(db.Model):
-    __tablename__ = 'notification'
-    id          = db.Column(UUIDType(binary=False), default=uuid.uuid4, primary_key=True)
-    notification_object_id = db.Column(UUIDType(binary=False), db.ForeignKey('notification_object.id'))
-    notifier_id            = db.Column(UUIDType(binary=False), db.ForeignKey('user.id'))
-    status                 = db.Column(db.Boolean)
-    timestamp              = db.Column(db.DateTime, default=datetime.utcnow())
-
-    def __init__(self, notification_object_id, notifier_id):
-        self.notification_object_id = notification_object_id
-        self.notifier_id = notifier_id
-        self.status = False
-
-    @login_required
-    def is_read(self):
-        return self.status
-
-    @login_required
-    def mark_read(self):
-        self.status = True
-        db.session.commit()
-
-    @login_required
-    def mark_unread(self):
-        self.status = False
-        db.session.commit()
-
-
-    def __repr__(self):
         return '<Notification %r>' % self.id
-

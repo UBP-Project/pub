@@ -4,7 +4,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 from ..forms import LoginForm, GroupMembershipForm
 from . import client
 from app import db
-from app.models import User, Interest_Group, Activity, Membership, Role, Follow, Notification, Notification_EntityType, Notification_Object, Notification_Change, Points
+from app.models import User, Interest_Group, Activity, Membership, Role, Follow, Notification, Notification_EntityType, Notification_Object, Points
 from ..auth import is_manager_or_leader
 from ..forms import UpdateUserFormClient, PasswordFormClient
 from ..utils import flash_errors

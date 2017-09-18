@@ -1,6 +1,6 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, login_manager
-from app.models import Role, Permission, Follow, Points, User_Activity, Activity
+from app.models import Role, Permission, Follow, Points, Interest_Group, Membership, User_Activity, Activity
 from sqlalchemy import func
 from sqlalchemy_utils import UUIDType
 from flask_login import UserMixin
@@ -86,13 +86,9 @@ class User(UserMixin, db.Model):
         return self.id
 
     def get_followers(self):
-        return User.query\
-            .join(Follow, Follow.following_id==self.id)\
-            .filter(id != self.id)\
-            .all()
-
-    def get_user_by_id(user_id):
-        return User.query.get(user_id)
+        return self.query.join(Follow, Follow.follower_id == self.id)\
+                .order_by(Follow.timestamp.desc())\
+                .filter(Follow.following_id == id).all()
 
     def earn_point(self, value, event):
         point = Points(self.id, 1, event)
@@ -131,14 +127,12 @@ class User(UserMixin, db.Model):
         # #send notifcation to the followers of the current_user
         # followers = current_user.get_followers()
         
-        
-
-    def get_joined_groups(self):
-        return Interest_Group.query\
-                .join(Membership)\
-                .join(User)\
-                .filter(User.id == self.id)\
-                .all()
+    # def get_joined_groups(self):
+    #     return Interest_Group.query\
+    #             .join(Membership)\
+    #             .join(User)\
+    #             .filter(User.id == self.id, Membership.status == Membership.MEMBERSHIP_ACCEPTED)\
+    #             .all()
 
     def get_interested_activities(self):
         return Activity.query\
@@ -194,6 +188,10 @@ class User(UserMixin, db.Model):
             birthday        = birthday,
             role_id         = role_id
         )
+
+    @staticmethod
+    def get(user_id):
+        return User.query.get(user_id)
 
 @login_manager.user_loader
 def load_user(user_id):
