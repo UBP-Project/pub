@@ -67,3 +67,11 @@ class Notification(db.Model):
         
     def __repr__(self):
         return '<Notification %r>' % self.id
+
+    def to_json(self):
+        return {
+            'id' : self.id,
+            'notification_object_id' : self.notification_object_id,
+            'actor_id' : self.actor_id,
+            'timestamp' : self.timestamp 
+        }

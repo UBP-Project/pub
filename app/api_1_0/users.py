@@ -442,8 +442,7 @@ def unfollow_user(to_unfollow_id):
 @api.route('/users/<string:id>/followers', methods=['GET'])
 def get_followers(id):
     followers = current_user.get_followers()
-    followings_current_user = User.query.join(Follow, Follow.following_id == User.id)\
-        .filter(Follow.follower_id == current_user.get_id()).all()
+    followings_current_user = current_user.get_followings()
     for follower in followers:
         if follower in followings_current_user:
             follower.isFollowing = True

@@ -13,11 +13,14 @@ def follow(count=20, user_count=100):
             to_follow = users[random.randint(0, len(users)-1)]
             if to_follow == user:
                 continue
+
             exists = Follow.query.filter(Follow.follower_id==user.get_id(), Follow.following_id==to_follow.get_id()).first() is not None
+            
             if exists:
                 continue
+
             else:
-                notification = Notif('user', 'followed_you', to_follow.get_id())
+                notification = Notif('user', 'followed', to_follow.get_id())
                 notification.add_actor(user.get_id())
 
                 follow = Follow(follower_id=user.get_id(), following_id=to_follow.get_id())

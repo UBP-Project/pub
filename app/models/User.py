@@ -90,9 +90,13 @@ class User(UserMixin, db.Model):
         return self.id
 
     def get_followers(self):
-        return self.query.join(Follow, Follow.follower_id == self.id)\
+        return self.query.join(Follow, Follow.follower_id == User.id)\
                 .order_by(Follow.timestamp.desc())\
-                .filter(Follow.following_id == id).all()
+                .filter(Follow.following_id == self.id).all()
+
+    def get_following(self):
+        return self.query.join(Follow, Follow.following_id == User.id)\
+                    .filter(Follow.follower_id == self.id).all()
 
     def earn_point(self, value, event):
         point = Points(self.id, 1, event)

@@ -37,7 +37,7 @@ entity_types = [
 	},
 	{
 		'entity'	: 'user',
-		'action'	: 'followed_you'
+		'action'	: 'followed'
 	},
 ]
 

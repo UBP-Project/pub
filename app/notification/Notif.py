@@ -60,6 +60,7 @@ class Notif():
 		elif entity == 'user':
 			user = User.query.filter(User.id == notification_object_id).first()
 			return {
+				'id'		: user.id,
 				'firstname' : user.firstname,
 				'middlename': user.middlename,
 				'lastname'	: user.lastname,
