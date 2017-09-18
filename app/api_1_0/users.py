@@ -467,18 +467,15 @@ def get_followings(id):
             following.isFollowing = False
 
     return jsonify({
-        'followings': [follow_item_to_json(following) for following in followings]
-    })
-
-def follow_item_to_json(follow_item):
-    return ({
-        'id'         : follow_item.id,
-        'firstname'  : follow_item.firstname,
-        'lastname'   : follow_item.lastname,
-        'department' : follow_item.department,
-        'position'   : follow_item.position,
-        'image'      : follow_item.image,
-        'isFollowing': follow_item.isFollowing
+        'followings': [{
+            'id'         : follow_item.id,
+            'firstname'  : follow_item.firstname,
+            'lastname'   : follow_item.lastname,
+            'department' : follow_item.department,
+            'position'   : follow_item.position,
+            'image'      : follow_item.image,
+            'isFollowing': follow_item.isFollowing
+        }for following in followings]
     })
 
 @api.route('/leaderboard')

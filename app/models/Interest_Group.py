@@ -41,18 +41,6 @@ class Interest_Group(db.Model):
         group_icon  = json_interest_group.get('group_icon')
         return Interest_Group(name=name, about=about, cover_photo=cover_photo, group_icon=group_icon)
 
-    def get_members(self):
-        return User.query.join(Membership, Membership.user_id == User.id)\
-            .filter(Membership.group_id == self.id, Membership.status == 1, Membership.level == 0).all()
-
-    def get_leaders(self):
-        return User.query.join(Membership, Membership.user_id == User.id)\
-            .filter(Membership.group_id == self.id, Membership.status == 1, Membership.level == 1).all()
-
-    def get_managers(self):
-        return User.query.join(Membership, Membership.user_id == User.id)\
-            .filter(Membership.group_id == self.id, Membership.status == 1, Membership.level == 2).all()
-
     def set_leader(self, user_id):
         membership = Membership.query.filter(Membership.group_id == self.id, Membership.user_id == user_id).first()
         membership.level = 1
