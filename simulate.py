@@ -87,8 +87,6 @@ def join_group(group_count=5, user_count=100):
             if exists:
                 continue
             else:
-                notification = Notif('activity', 'interested', activity.id)
-                nofitication.add_actor(user.id)
                 db.session.add(membership)
                 print(user.firstname, user.lastname, "joins group: ", group.name)
     db.session.commit()
