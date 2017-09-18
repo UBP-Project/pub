@@ -1,4 +1,5 @@
 from app.models import Interest_Group, User, Role, Follow, User_Activity, Activity, Membership
+from app.notification import Notif
 import random
 from app import db
 from datetime import datetime
@@ -16,12 +17,12 @@ def follow(count=20, user_count=100):
             if exists:
                 continue
             else:
+                notification = Notif('user', 'followed_you', to_follow.get_id())
+                notification.add_actor(user.get_id())
+
                 follow = Follow(follower_id=user.get_id(), following_id=to_follow.get_id())
                 db.session.add(follow)
 
-                notification = Notif('user', 'followed', to_followe.get_id())
-                notification.add_actor(user.get_id())
-                
                 print(user.firstname, user.lastname, "followed", to_follow.firstname, to_follow.lastname);
     db.session.commit()
 
@@ -39,8 +40,13 @@ def activity_join(activity_count=10, user_count=100):
             if exists:
                 continue
             else:
-                db.session.add(user_activity)
+                notification = Notif('activity', 'joined', activity.id)
+                notification.add_actor(user.id)
+
                 user.earn_point(1, 'Joined %s' % activity.title)
+
+                db.session.add(user_activity)
+
                 print(user.firstname, user.lastname, "is going to", activity.title)
     db.session.commit()
 
@@ -58,6 +64,8 @@ def activity_interested(activity_count=10, user_count=100):
             if exists:
                 continue
             else:
+                notification = Notif('activity', 'interested', activity.id)
+                notification.add_actor(user.id)
                 db.session.add(user_activity)
                 print(user.firstname, user.lastname, "is interested in", activity.title)
     db.session.commit()
@@ -79,6 +87,8 @@ def join_group(group_count=5, user_count=100):
             if exists:
                 continue
             else:
+                notification = Notif('activity', 'interested', activity.id)
+                nofitication.add_actor(user.id)
                 db.session.add(membership)
                 print(user.firstname, user.lastname, "joins group: ", group.name)
     db.session.commit()

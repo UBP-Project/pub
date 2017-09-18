@@ -36,12 +36,8 @@ class Notif():
 		change = Notification.query.filter(Notification.notification_object_id == self.notif_object.id, Notification.actor_id == user_id).first()
 		
 		if change is None:
-			print("Notification Actor: " + str(user_id))
 			actor = Notification(self.notif_object.id, user_id)
 			db.session.add(actor)
-		else:
-			print("Previously acted: " + str(user_id));
-
 		db.session.commit()
 
 	def notif_object(entity, action, entity_id):
