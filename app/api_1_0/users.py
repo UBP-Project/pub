@@ -1,7 +1,7 @@
 from flask import jsonify, request, current_app, url_for
 from flask_login import login_required, current_user
 from sqlalchemy import exc
-from app.models import User, Follow, Notification, Interest_Group, Membership
+from app.models import User, Follow, Notification, Interest_Group, Membership, Points
 from app.api_1_0 import api#, follow_notif
 from app import db
 import json
@@ -484,8 +484,86 @@ def follow_item_to_json(follow_item):
 @api.route('/leaderboard')
 @login_required
 def leaderboard():
-    leaders = User.query.order_by(User.total_points().desc()).limit(10)
-    return jsonify([leader.to_json() for leader in leaders])
+    """
+    Get list of Leading of users in the system
+    ---
+    tags:
+    - users
+
+    responses:
+        200:
+            description: OK
+            schema:
+            id: users
+            properties:
+                id:
+                type: string
+                example: 1
+                example: 0f5b5ff8-afa2-43f7-8066-8ec3075c4c0c
+                required: true
+
+                firstname:
+                type: string
+                example: John
+                required: true
+
+                middlename:
+                type: string
+                example: Clinton
+
+                lastname:
+                type: string
+                example: dela Cruz
+                required: true
+
+                email:
+                type: string
+                example: juandelacruz@gmail.com
+                required: true
+
+                password_hash:
+                type: string
+                example: pbkdf2:sha1:1000$bK0Jvvl7$974df4129556a5bdb11b7892b09275c6ed595f76             
+                description: Hashed password
+                required: true
+
+                department:
+                type: string
+                example: Business Analytics
+                description: Department where the employee belong
+                required: true
+
+                position:
+                type: string
+                example: Project Hire
+                description: Job position
+                required: true
+
+                birthday:
+                type: string
+                format: date
+                example: 1997-09-07
+
+                role_id:
+                type: string
+                example: 0f5b5ff8-afa2-43f7-8066-8ec3075c4c0c
+                description: Flag for user's role
+                required: true
+    """
+    leaders = db.session.query(Points, func.sum(Points.value).label('points'))\
+                .join(User)\
+                .add_columns(User.firstname, User.middlename, User.lastname, User.id, User.image)\
+                .group_by(Points.user_id)\
+                .order_by('points DESC')\
+                .all()
+
+    return jsonify([ {
+        'id' : leader.id,
+        'firstname' : leader.firstname,
+        'middlename': leader.middlename,
+        'lastname'  : leader.lastname,
+        'points'    : int(leader.points)
+    } for leader in leaders])
 
 @api.route('/isCorrectPassword', methods=['POST'])
 @login_required
