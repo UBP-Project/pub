@@ -18,6 +18,10 @@ def follow(count=20, user_count=100):
             else:
                 follow = Follow(follower_id=user.get_id(), following_id=to_follow.get_id())
                 db.session.add(follow)
+
+                notification = Notif('user', 'followed', to_followe.get_id())
+                notification.add_actor(user.get_id())
+                
                 print(user.firstname, user.lastname, "followed", to_follow.firstname, to_follow.lastname);
     db.session.commit()
 

@@ -71,6 +71,10 @@ class User(UserMixin, db.Model):
     def is_administrator(self):
         return self.can(Permission.ADMINISTER)
 
+    def is_manager(self):
+        manager = Role.query.filter(name == 'Manager').first()
+        return (self.id.role_id == manager.id)
+
     @property
     def password(self):
         raise AttributeError("password is not a readable attribute")
