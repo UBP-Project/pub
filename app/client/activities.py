@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from .. import admin
-from ..forms import CreateActivityFormClient, UpdateActivityFormClient
+from ..forms import CreateActivityFormClient, UpdateActivityFormClient, CreateActivityForm
 from app import db
 from app.models import User, Activity, Permission, Interest_Group
 from ..utils import flash_errors, is_valid_extension
@@ -9,7 +9,7 @@ import os
 import uuid
 from . import client
 from flask_login import current_user, login_required
-from ..auth import is_manager_or_leader, can_modify_activity
+from ..auth import is_manager_or_leader, can_modify_activity, is_manager
 
 @client.route('/activities/')
 @login_required
@@ -38,7 +38,12 @@ def activity(id):
 @login_required
 def create_activity():
     is_manager_or_leader(abort_on_false=True) # Forbidden if not a leader or manager
-    form = CreateActivityFormClient()
+
+    if is_manager():
+        form = CreateActivityForm() #all the groups 
+    else:
+        form = CreateActivityFormClient() #limited only to groups led
+
     groups = Interest_Group.query.all()
     if request.method == 'POST':
         image                 = form.image.data

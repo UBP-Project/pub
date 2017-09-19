@@ -6,6 +6,8 @@ from flask import abort
 # helper function to check
 # if the current user can perform manager or leader permissions
 def is_manager_or_leader(abort_on_false=False):
+    if is_manager():
+        return True
     can_access = Membership.query.filter(Membership.user_id == current_user.get_id(),
         (Membership.level == 1) | (Membership.level == 2)).first() is not None
     if can_access == False and abort_on_false == True:

@@ -92,8 +92,9 @@ class CreateActivityFormClient(FlaskForm, ActivityMixin):
     def __init__(self, *args, **kwargs):
         super(CreateActivityFormClient, self).__init__(*args, **kwargs)
         groups = Interest_Group.query.join(Membership, Membership.group_id == Interest_Group.id)\
-            .filter(Membership.level == 1 or Membership.level == 2).all()
+            .filter(Membership.level == 1).all()
         self.group.choices = [(str(group.id), group.name) for group in groups]
+        print("Choices", self.group.choices)
 
 class UpdateActivityForm(FlaskForm, ActivityMixin):
     image       = FileField("Activity Image")
