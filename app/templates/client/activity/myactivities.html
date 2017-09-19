@@ -1,7 +1,6 @@
 {% extends "./layout/client_base.html" %}
-{% from "components/activity-modal.html" import activity_modal %}
 
-{% block title %} Interest Groups {% endblock title %}
+{% block title %} My Activities {% endblock title %}
 
 {% block content %}
 
@@ -10,17 +9,11 @@
 		<div class="col-md-12">
 			<div class="group-box">
 
-				<h3>MY ACTIVITIES
-                    {% if show_create %}
-                    <a href="/activities/create">
-                        <button class="btn btn-style-2 btn-sm pull-right" title="Create Activity"><i class="fa fa-plus"></i></button>
-                    </a>
-                    {% endif %}
-                </h3>
+				<h3>MY ACTIVITIES</h3>
                 <hr/>
 
                 {% raw %}
-                <div id="app" class="row">
+                <div id="interested" class="row">
 
                     <template v-if="activities.length > 0">
 
@@ -150,8 +143,8 @@
 
 {% block scripts %}
     <script>
-        var vm = new Vue({
-          el: '#app',
+        var interested = new Vue({
+          el: '#interested',
           data: {
             activities: [],
             activities_page: 1,
@@ -173,7 +166,6 @@
                     });
                     this.activities.push.apply(this.activities, data.activities); // append activities
                     this.activities_page++;
-                    console.log(data);
                 });
                 //console.log(this.activities);
             },
@@ -243,7 +235,7 @@
           }
         });
         $(document).ready(function() {
-            vm.loadActivities();
+            interested.loadActivities();
         });
     </script>
 {% endblock scripts %}
