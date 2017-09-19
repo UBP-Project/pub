@@ -49,10 +49,13 @@
                                         </div>
                                         <!-- BODY -->
                                         <div class="modal-body">
+
                                             <div class="img-container" :style="group.cover">
                                                 <img :src="group_icons_folder + group.group_icon" class="img-circle grp-icon-img"/>
                                             </div>
+
                                             <h2 class="text-center">{{ group.name }}</h2>
+
                                             <div class="content">
                                                 <ul class="nav nav-tabs" role="tablist">
                                                     <li role="presentation" class="active grp-li">
@@ -65,36 +68,54 @@
                                                         <a :href="'#grp-activities-' + group.id" role="tab" data-toggle="tab">Activities</a>
                                                     </li>
                                                 </ul>
+
                                                 <div class="tab-content">
+
                                                     <div role="tabpanel" class="tab-pane active" :id="'grp-desc-' + group.id">
                                                         <p>{{ group.about }}</p>
                                                     </div>
+
                                                     <div role="tabpanel" class="tab-pane" :id="'grp-members-' + group.id">
-                                                        <div v-if="group.leaders" class="row">
-                                                            <h5>Leaders</h5>
-                                                            <div v-for="leader in group.leaders" class="col-md-6 mini-container">
-                                                                <a :href="'/profile/' + leader.id">
-                                                                    <div>
-                                                                        <img v-if="leader.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+leader.image">
-                                                                        <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
-                                                                        <span>{{ leader.firstname }} {{leader.lastname}}</span>
-                                                                    </div>
-                                                                </a>
-                                                            </div>
+                                                        <div class="row" style="padding-bottom: 30px;">
+                                                            <h5><strong>Leaders</strong></h5>
+                                                            <template v-if="group.leaders.length > 0">
+                                                                <div v-for="leader in group.leaders" class="col-md-6 mini-container">
+                                                                    <a :href="'/profile/' + leader.id">
+                                                                        <div>
+                                                                            <img v-if="leader.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+leader.image">
+                                                                            <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
+                                                                            <span>{{ leader.firstname }} {{leader.lastname}}</span>
+                                                                        </div>
+                                                                    </a>
+                                                                </div>
+                                                            </template>
+                                                            <template v-else>
+                                                                <div style="padding-left: 10px;">
+                                                                    <i><small>This group has no leaders.</small></i>
+                                                                </div>
+                                                            </template>
                                                         </div>
-                                                        <div v-if="group.members" class="row">
-                                                            <h5>Members</h5>
-                                                            <div v-for="member in group.members" class="col-md-6 mini-container">
-                                                                <a :href="'/profile/' + member.id">
-                                                                    <div>
-                                                                        <img v-if="member.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+member.image">
-                                                                        <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
-                                                                        <span>{{ member.firstname }} {{member.lastname}}</span>
-                                                                    </div>
-                                                                </a>
-                                                            </div>
+                                                        <div class="row" style="padding-bottom: 30px;">
+                                                            <h5><strong>Members</strong></h5>
+                                                            <template v-if="group.members.length > 0">
+                                                                <div v-for="member in group.members" class="col-md-6 mini-container">
+                                                                    <a :href="'/profile/' + member.id">
+                                                                        <div>
+                                                                            <img v-if="member.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+member.image">
+                                                                            <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
+                                                                            <span>{{ member.firstname }} {{member.lastname}}</span>
+                                                                        </div>
+                                                                    </a>
+                                                                </div>
+                                                            </template>
+                                                            <template v-else>
+                                                                <div style="padding-left: 10px;">
+                                                                    <i><small>This group has no members.</small></i>
+                                                                </div>
+                                                            </template>
                                                         </div>
                                                     </div>
+
                                                     <div role="tabpanel" class="tab-pane" :id="'grp-activities-' + group.id">
                                                         <div v-for="activity in group.activities" class="col-md-6 mini-container">
                                                             <a :href="'/activities/' + activity.id">
@@ -102,9 +123,13 @@
                                                             </a>
                                                         </div>
                                                     </div>
-                                                </div>
+
+                                                </div> <!-- end of tab content -->
+
                                             </div>
+
                                         </div>
+
                                         <!-- FOOTER -->
                                         <div class="modal-footer">
                                             <template v-if="group.membership_status == 'accepted'">
@@ -117,6 +142,7 @@
                                                 <button type="button" class="btn btn-style-1 grp-btn" value="join" v-on:click="toggleGroupMembership(group)">JOIN GROUP</button>
                                             </template>
                                         </div> <!-- END OF FOOTER -->
+                                        
                                     </div>
                                 </div>
                             </div> <!-- END OF GROUP MODAL -->
