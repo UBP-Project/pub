@@ -167,11 +167,6 @@
 
                         </div> <!-- end of group-listing -->
 
-                        <div class="show-more-box col-md-12">
-                            <!-- HIDE THIS BUTTON IF THERE'S NO NEXT PAGE -->
-                            <button class="btn btn-style-3" v-on:click="loadGroups">Show More</button>
-                        </div> <!-- end of show more div -->
-
                     </template>
 
                     <template v-else>
@@ -196,7 +191,7 @@
           el: '#app',
           data: {
             groups: [],
-            groups_page: 1,
+            //groups_page: 1,
             group_icons_folder: '/static/uploads/group_icons/',
             group_covers_folder: '/static/uploads/covers/',
             user_images_folder: '/static/uploads/profile_pictures/',
@@ -209,7 +204,7 @@
                     url: "{{ url_for('api.my_groups') }}" + "?page=" + this.groups_page,
                     type: 'GET'
                 }).done(data => {
-                    data.forEach((group) => {
+                    data.mygroups.forEach((group) => {
                         group.members = [];
                         group.leaders = [];
                         //group.managers = [];
@@ -219,8 +214,8 @@
                         group.population = 0;
                         vm.groupPopulation(group);
                     });
-                    this.groups.push.apply(this.groups, data.interest_groups);
-                    this.groups_page++;
+                    this.groups.push.apply(this.groups, data.mygroups);
+                    //this.groups_page++;
                 });
             },
             groupPopulation: function(group) {

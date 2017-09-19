@@ -718,4 +718,4 @@ def my_groups():
                 .filter(User.id == current_user.get_id(), Membership.status == Membership.MEMBERSHIP_ACCEPTED)\
                 .all()
 
-    return jsonify([group.to_json() for group in groups]), 200
+    return jsonify({'mygroups': [group.to_json() for group in groups]}), 200
