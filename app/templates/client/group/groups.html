@@ -1,5 +1,4 @@
 {% extends "./layout/client_base.html" %}
-{% from "components/group-modal.html" import group_modal %}
 
 {% block title %} Interest Groups {% endblock title %}
 
@@ -239,7 +238,7 @@
                     type: 'GET'
                 }).done(data => {
                     group.population += data.length;
-                    console.log(group.name + " member count = " + group.population);
+                    //console.log(group.name + " member count = " + group.population);
                 });
 
             },
@@ -276,7 +275,7 @@
                     type: 'GET'
                 }).done(data => {
                     group.membership_status = data.membership_status;
-                    console.log("Grp_status = " + data.membership_status);
+                    //console.log("Grp_status = " + data.membership_status);
                 });
             },
             toggleGroupMembership: function(group) {
