@@ -209,7 +209,7 @@
                     type: 'GET'
                 }).done(data => {
                     console.log(data);
-                    data.forEach((group) => {
+                    data.interest_groups.forEach((group) => {
                         group.members = [];
                         group.leaders = [];
                         //group.managers = [];
