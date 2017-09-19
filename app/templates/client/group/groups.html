@@ -19,9 +19,11 @@
                 </h3>
                 <hr/>
 
-                <div class="row">
-                    {% raw %}
-                    <div id="app">
+                {% raw %}
+                <div id="app" class="row">
+
+                    <template v-if="groups.length > 0">
+                    
                         <div v-for="group in groups" id="group_list">
 
                             <!-- GROUP CARD -->
@@ -72,7 +74,8 @@
                                                 <div class="tab-content">
 
                                                     <div role="tabpanel" class="tab-pane active" :id="'grp-desc-' + group.id">
-                                                        <p>{{ group.about }}</p>
+                                                        <p v-if="group.about">{{ group.about }}</p>
+                                                        <p v-else><i><small>Groups has no description.</small></i></p>
                                                     </div>
 
                                                     <div role="tabpanel" class="tab-pane" :id="'grp-members-' + group.id">
@@ -117,11 +120,26 @@
                                                     </div>
 
                                                     <div role="tabpanel" class="tab-pane" :id="'grp-activities-' + group.id">
-                                                        <div v-for="activity in group.activities" class="col-md-6 mini-container">
-                                                            <a :href="'/activities/' + activity.id">
-                                                                <span>{{ activity.title }}</span>
-                                                            </a>
-                                                        </div>
+                                                        <h5><strong>Group Activities</strong></h5>
+                                                        <template v-if="group.activities.length > 0">
+                                                            <!-- ACTIVITY CARD -->
+                                                            <div v-for="activity in group.activities" class="col-md-3 col-lg-4 col-sm-6 card-container">
+                                                                <div style="height: 160px; border-radius: 5px; border: 1px solid #d0d0d0;">
+                                                                    <div style="height: 70%; overflow: hidden;">
+                                                                        <img :src="activity_images_folder + activity.image" class="img-responsive" style="min-height: 100%; max-width: 100%; border-radius: 5px 5px 0 0;" />
+                                                                    </div>
+                                                                    <div style="height: 30%; padding: 7px;">
+                                                                        <h5 class="text-center title">{{ activity.title }}</h5>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- END OF ACTIVITY CARD -->
+                                                        </template>
+                                                        <template v-else>
+                                                            <div>
+                                                                <p><i><small>Group has no activities.</small></i></p>
+                                                            </div>
+                                                        </template>
                                                     </div>
 
                                                 </div> <!-- end of tab content -->
@@ -142,7 +160,7 @@
                                                 <button type="button" class="btn btn-style-1 grp-btn" value="join" v-on:click="toggleGroupMembership(group)">JOIN GROUP</button>
                                             </template>
                                         </div> <!-- END OF FOOTER -->
-                                        
+
                                     </div>
                                 </div>
                             </div> <!-- END OF GROUP MODAL -->
@@ -154,9 +172,16 @@
                             <button class="btn btn-style-3" v-on:click="loadGroups">Show More</button>
                         </div> <!-- end of show more div -->
 
-                    </div> <!-- end of app -->
-                    {% endraw %}
-                </div> <!-- end of row -->
+                    </template>
+
+                    <template v-else>
+                        <div class="col-md-12 no-content-box text-center">
+                            <h2><small>NO INTEREST GROUPS</small></h2>
+                        </div>
+                    </template>
+
+                </div> <!-- end of app -->
+                {% endraw %}
                 
             </div>
         </div>
@@ -175,6 +200,7 @@
             group_icons_folder: '/static/uploads/group_icons/',
             group_covers_folder: '/static/uploads/covers/',
             user_images_folder: '/static/uploads/profile_pictures/',
+            activity_images_folder: '/static/uploads/activity_images/',
             default_img: "background-image: url('/static/images/pub-default-img.jpg');"
           },
           methods: {
