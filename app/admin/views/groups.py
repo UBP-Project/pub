@@ -82,6 +82,20 @@ def create_group():
             group_icon=icon_hashed_filename)
         db.session.add(interest_group)
         db.session.commit()
+
+        # insert leaders
+        leader_ids = form.leader_ids.data.split(',')
+        for leader_id in leader_ids:
+            membership = Membership(
+                group_id = interest_group.id,
+                user_id = leader_id,
+                status = 1,
+                level = 1
+            )
+            db.session.add(membership)
+        db.session.commit();
+
+
         return redirect(url_for("admin.groups"))
     return render_template('admin/group/create.html', form=form)
 
@@ -126,7 +140,6 @@ def update_group(id):
     form.about.data = group.about
     return render_template('admin/group/edit.html', form=form, group=group)
 
-
 # Actions
 @admin.route('/groups/setleader/<string:group_id>/<string:user_id>')
 @admin_required
@@ -159,8 +172,12 @@ def removeleader(group_id, user_id):
 @admin_required
 def group_members(id):
     group = Interest_Group.query.get_or_404(id)
-    leaders = group.get_leaders()
-    members = group.get_members()
+    leaders = User.query \
+        .join(Membership, User.id==Membership.user_id) \
+        .filter(Membership.group_id==id, Membership.status != 0, Membership.level == 1)
+    members = User.query \
+        .join(Membership, User.id==Membership.user_id) \
+        .filter(Membership.group_id==id, Membership.status != 0, Membership.level == 0)
     return render_template('admin/group/members.html', group=group, leaders=leaders, members=members)
 
 @admin.route('/groups/<string:id>/requests', methods=['GET', 'POST'])

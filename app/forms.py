@@ -57,6 +57,7 @@ class PasswordFormClient(FlaskForm):
 class InterestGroupMixin():
     name        = StringField("Group Name", validators=[Required()])
     about       = StringField("About Group", widget=TextArea(), validators=[Required()])
+    leader_ids  = StringField("Leader Ids")
 
 class CreateInterestGroupForm(FlaskForm, InterestGroupMixin):
     cover_photo = FileField("Cover Photo", validators=[FileRequired()])

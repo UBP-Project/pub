@@ -52,10 +52,60 @@
             {{ form.group_icon(class="hidden") }}
         </div>
 
+
+        {% raw %}
+        <div id="add_leaders">
+            <div class="col-md-12 text-center no-padding">
+                <br />
+                <button type="button" data-toggle="modal" data-target="#users_modal" class="btn btn-style-1" v-on:click="loadUsers()">
+                    Add Group Leaders +
+                </button>
+            </div>
+
+            <div class="col-md-12">
+                <h3 v-if="leaders.length > 0" class="text-center">Leaders</h3>
+                <div v-for="(user, index) in leaders" class="col-md-6 col-md-offset-3" style="padding: 8px;">
+                    <img v-if="user.image" :src="'../../static/uploads/profile_pictures/' + user.image" class="circle-img-sm" />
+                    <img v-else src="../../static/images/pub-default-img.jpg" class="circle-img-sm" />
+                    <span>{{ user.firstname }} {{ user.lastname }}</span>
+                    <span><button type="button" class="btn btn-style-3 pull-right" v-on:click="removeLeader(user, index)">Remove Leader</button></span>
+                </div>
+                <br /><br /><br />
+            </div>
+
+            <!-- Users list modal -->
+            <div id="users_modal" class="modal fade" role="dialog">
+              <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Modal Header</h4>
+                  </div>
+                  <div class="modal-body">
+                    <div v-for="(user, index) in users" class="col-md-12" style="padding: 8px;">
+                        <img v-if="user.image" :src="'../../static/uploads/profile_pictures/' + user.image" class="circle-img-sm" />
+                        <img v-else src="../../static/images/pub-default-img.jpg" class="circle-img-sm" />
+                        <span>{{ user.firstname }} {{ user.lastname }}</span>
+                        <span><button type="button" class="btn btn-style-1 pull-right" v-on:click="setAsLeader(user, index)">Set as Leader</button></span>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+
+              </div>
+            </div> <!-- End of Users list modal -->
+        </div>
+        {% endraw %}
+        {{ form.leader_ids() }}
     </form>
 {% endblock %}
 {% block scripts %}
     <script>
+        // Image upload behavior
         $("#group_icon").on('change', function() {
             var reader = new FileReader();
              reader.onload = function()
@@ -83,6 +133,44 @@
         $("#preview-group-icon").on("click", function(e) {
             e.preventDefault();
             $("#group_icon").trigger('click');
+        });
+    </script>
+    <script>
+        var vm = new Vue({
+            el: "#add_leaders",
+            data: {
+                users_page: 1,
+                users: [],
+                leaders: [],
+                leader_ids: ""
+            },
+            methods: {
+                loadUsers: function() {
+                    $.ajax({
+                        url: '../../api/v1.0/users' + '?page=' + this.users_page,
+                        type: 'GET' 
+                    }).done(data => {
+                       this.users = this.users.concat(data.users);
+                    });
+                },
+                setAsLeader: function(user, index) {
+                    this.leaders.push(user);
+                    this.users.splice(index, 1);
+                    this.updateLeaderIds();
+                },
+                removeLeader: function(user, index) {
+                    this.leaders.splice(index, 1);
+                    this.users.splice(index, 0, user);
+                    this.updateLeaderIds();
+                },
+                updateLeaderIds: function() {
+                    ids = [],
+                    this.leaders.forEach(leader => {
+                        ids.push(leader.id); 
+                    });
+                    $("#leader_ids").val(ids.join());
+                }
+            }
         });
     </script>
 {% endblock scripts %}
