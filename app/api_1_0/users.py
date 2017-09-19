@@ -678,6 +678,13 @@ def my_groups():
     tags:
       - users
 
+    parameters:
+      - name: page
+        in: query
+        type: integer
+        example: 1
+        required: true
+    
     responses:
         200:
             description: OK
@@ -709,10 +716,17 @@ def my_groups():
                         description: File name
             """
 
+    if 'page' in request.args:
+        page = int(request.args.get('page'))
+    else:
+        page = 1
+
     groups = Interest_Group.query\
                 .join(Membership)\
                 .join(User)\
                 .filter(User.id == current_user.get_id(), Membership.status == Membership.MEMBERSHIP_ACCEPTED)\
-                .all()
+                .paginate(page=page, per_page=8, error_out=False).items
 
-    return jsonify([group.to_json() for group in groups]), 200
+    return jsonify({
+        'mygroups': [group.to_json() for group in groups]
+    }), 200

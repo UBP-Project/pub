@@ -209,7 +209,9 @@
                     url: "{{ url_for('api.my_groups') }}" + "?page=" + this.groups_page,
                     type: 'GET'
                 }).done(data => {
-                    data.forEach((group) => {
+                    console.log(data);
+                    data.mygroups.forEach((group) => {
+
                         group.members = [];
                         group.leaders = [];
                         //group.managers = [];
@@ -219,8 +221,8 @@
                         group.population = 0;
                         vm.groupPopulation(group);
                     });
-                    this.groups.push.apply(this.groups, data.interest_groups);
-                    this.groups_page++;
+                    this.groups.push.apply(this.groups, data.mygroups);
+                    this.groups_page = this.groups_page + 1;
                 });
             },
             groupPopulation: function(group) {
