@@ -215,7 +215,7 @@
                         vm.groupPopulation(group);
                     });
                     this.groups.push.apply(this.groups, data.mygroups);
-                    //this.groups_page++;
+                    this.groups_page = this.groups_page + 1;
                 });
             },
             groupPopulation: function(group) {

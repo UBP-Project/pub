@@ -50,8 +50,3 @@ class Interest_Group(db.Model):
         membership = Membership.query.filter(Membership.group_id == self.id, Membership.user_id == user_id).first()
         membership.level = 0
         db.session.commit()
-
-    def membership_requests(self):
-        return User.query \
-            .join(Membership, User.id==Membership.user_id) \
-            .filter(Membership.group_id==self.id, Membership.status == 0, Membership.level == 0).all()

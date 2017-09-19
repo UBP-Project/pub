@@ -167,7 +167,9 @@ def group_members(id):
 @admin_required
 def group_requests(id):
     group = Interest_Group.query.get_or_404(id)
-    requests = group.membership_requests()
+    requests = User.query \
+            .join(Membership, User.id==Membership.user_id) \
+            .filter(Membership.group_id==id, Membership.status == 0, Membership.level == 0).all()
     return render_template('admin/group/requests.html', group=group, membership_requests=requests)
 
 @admin.route('/accept_request/<string:group_id>/<string:user_id>')

@@ -208,6 +208,7 @@
                     url: "{{ url_for('api.get_groups') }}" + "?page=" + this.groups_page,
                     type: 'GET'
                 }).done(data => {
+                    console.log(data);
                     data.interest_groups.forEach((group) => {
                         group.members = [];
                         group.leaders = [];
