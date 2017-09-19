@@ -670,7 +670,7 @@ def my_interested_activities():
                         default: None
                         description: File name of image in uploads/activity_image folder
             """
-    return jsonify([activity.to_json() for activity in current_user.get_interested_activities()]), 200
+    return jsonify({'interested_activities': [activity.to_json() for activity in current_user.get_interested_activities()]}), 200
 
 @api.route('/mygroups')
 @login_required

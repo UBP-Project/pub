@@ -9,7 +9,7 @@
 		<div class="col-md-12">
 			<div class="group-box">
 
-				<h3>MY ACTIVITIES</h3>
+				<h3>ACTIVITIES I'M INTERESTED IN</h3>
                 <hr/>
 
                 {% raw %}
@@ -119,10 +119,6 @@
                             </div> <!-- end of ACTIVITY MODAL -->
                         </div> <!-- END of activity_list -->
 
-                        <div class="col-md-12 text-center show-more-box">
-                            <button class="btn btn-style-3" v-on:click="loadActivities">Show More</button>
-                        </div>
-
                     </template>
 
                     <template v-else>
@@ -147,7 +143,7 @@
           el: '#interested',
           data: {
             activities: [],
-            activities_page: 1,
+            //activities_page: 1,
             activity_images_folder: '/static/uploads/activity_images/',
             user_images_folder: '/static/uploads/profile_pictures/'
           },
@@ -157,15 +153,15 @@
                     url: "{{ url_for('api.my_interested_activities')}}" + "?page=" + this.activities_page,
                     type: 'GET'
                 }).done(data => {
-                    data.forEach((activity) => {
+                    data.interested_activities.forEach((activity) => {
                         // add neccessary field for display
                         activity.going_users      = [];
                         activity.interested_users = [];
                         activity.isInterested     = false;
                         activity.isGoing          = false;
                     });
-                    this.activities.push.apply(this.activities, data.activities); // append activities
-                    this.activities_page++;
+                    this.activities.push.apply(this.activities, data.interested_activities); // append activities
+                    //this.activities_page++;
                 });
                 //console.log(this.activities);
             },
