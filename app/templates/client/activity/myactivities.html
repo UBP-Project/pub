@@ -1,7 +1,6 @@
 {% extends "./layout/client_base.html" %}
-{% from "components/activity-modal.html" import activity_modal %}
 
-{% block title %} Interest Groups {% endblock title %}
+{% block title %} My Activities {% endblock title %}
 
 {% block content %}
 
@@ -11,32 +10,232 @@
 			<div class="group-box">
 
 				<h3>MY ACTIVITIES</h3>
-				<hr/>
+                <hr/>
 
-				<div class="no-content-box text-center">
-					<h2><small>NO ACTIVITIES</small></h2>
-				</div>
+                {% raw %}
+                <div id="interested" class="row">
 
-			</div>
-		</div>
+                    <template v-if="activities.length > 0">
 
-	</div>
+                        <div v-for="activity in activities" id="activity_list">
+                            <!-- ACTIVITY CARD -->
+                            <div class="col-md-3 col-lg-4 col-sm-6 card-container" v-on:click="loadActivityInfo(activity)">
+                                <div class="card zoomify" data-toggle="modal" :data-target="'#activity-' + activity.id">
+                                    <div class="card-img">
+                                        <img :src="activity_images_folder + activity.image" class="img-responsive" />
+                                    </div>
+                                    <div class="card-desc">
+                                        <h4 class="text-center title">{{ activity.title}}</h4>
+                                        <p>{{ activity.description }}</p>
+                                    </div>
+                                </div>
+                            </div> <!-- END OF ACTIVITY CARD -->
+
+                            <!-- ACTIVITY MODAL -->
+                            <div class="modal fade" :id="'activity-' + activity.id" role="dialog">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <!-- HEADER -->
+                                        <div class="modal-header">
+                                            <span><b>ACTIVITY</b></span>
+                                            <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                                        </div>
+                                        <!-- BODY -->
+                                        <div class="modal-body">
+                                            <div class="img-container">
+                                                <!-- <img src="{{ url_for('static',filename='uploads/activity_images/' + activity.image) }}" /> -->
+                                               <img :src="activity_images_folder + activity.image" />
+                                            </div>
+                                            <h2 class="text-center">{{ activity.title}}</h2>
+                                            <div class="content">
+                                                <ul class="nav nav-tabs" role="tablist">
+                                                    <li role="presentation" class="active act-li">
+                                                        <a :href="'#act-desc-' + activity.id" role="tab" data-toggle="tab">Description</a>
+                                                    </li>
+                                                    <li role="presentation" class="act-li">
+                                                        <a :href="'#act-interested-' + activity.id" role="tab" data-toggle="tab">Interested</a>
+                                                    </li>
+                                                    <li role="presentation" class="act-li">
+                                                        <a :href="'#act-going-' + activity.id" role="tab" data-toggle="tab">Going</a>
+                                                    </li>
+                                                </ul>
+
+                                                <div class="tab-content">
+                                                    <div role="tabpanel" class="tab-pane active" :id="'act-desc-' + activity.id">
+                                                        <p>{{ activity.description }}</p>
+                                                    </div>
+                                                    <div role="tabpanel" class="tab-pane" :id="'act-interested-' + activity.id">
+                                                        <div class="row">
+                                                            <div v-for="interested_user in activity.interested_users" class="col-md-6 mini-container">
+                                                                <a :href="'/profile/' + interested_user.id">
+                                                                    <div>
+                                                                        <img v-if="interested_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+interested_user.image">
+                                                                        <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
+                                                                        <span>{{ interested_user.firstname }} {{interested_user.lastname}}</span>
+                                                                    </div>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div role="tabpanel" class="tab-pane" :id="'act-going-' + activity.id">
+                                                        <div class="row">
+                                                            <div v-for="going_user in activity.going_users" class="col-md-6 mini-container">
+                                                                <a :href="'/profile/' + going_user.id">
+                                                                    <div>
+                                                                        <img v-if="going_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+going_user.image">
+                                                                        <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
+                                                                        <span>{{ going_user.firstname }} {{ going_user.lastname }}</span>
+                                                                    </div>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- FOOTER -->
+                                        <div class="modal-footer">
+
+                                            <button v-if="activity.isInterested" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
+                                                NOT INTERESTED
+                                            </button>
+                                            <button v-else type="button" class="btn btn-style-2" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
+                                                INTERESTED
+                                            </button>
+
+                                            <!-- GOING BTNS -->
+                                            <button v-if="activity.isGoing" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleGoing(activity)">
+                                                LEAVE ACTIVITY
+                                            </button>
+                                            <button v-else type="button" class="btn btn-style-2" :id="activity.id" value="cgoing" v-on:click="toggleGoing(activity)">
+                                                JOIN ACTIVITY
+                                            </button>
+                                            <!-- END OF GOING BTNS -->
+
+                                        </div> <!-- end of modal-footer -->
+                                    </div>
+                                </div>
+                            </div> <!-- end of ACTIVITY MODAL -->
+                        </div> <!-- END of activity_list -->
+
+                        <div class="col-md-12 text-center show-more-box">
+                            <button class="btn btn-style-3" v-on:click="loadActivities">Show More</button>
+                        </div>
+
+                    </template>
+
+                    <template v-else>
+                        <div class="col-md-12 no-content-box text-center">
+                            <h2><small>NO ACTIVITIES</small></h2>
+                        </div>
+                    </template>
+
+                </div>
+                {% endraw %}
+
+            </div>
+        </div>
+
+    </div>
 
 {% endblock content %}
 
 {% block scripts %}
-	<script src="{{ url_for('static', filename='js/client/activity.js') }}"></script>
+    <script>
+        var interested = new Vue({
+          el: '#interested',
+          data: {
+            activities: [],
+            activities_page: 1,
+            activity_images_folder: '/static/uploads/activity_images/',
+            user_images_folder: '/static/uploads/profile_pictures/'
+          },
+          methods: {
+            loadActivities: function() {
+                $.ajax({
+                    url: "{{ url_for('api.my_interested_activities')}}" + "?page=" + this.activities_page,
+                    type: 'GET'
+                }).done(data => {
+                    data.forEach((activity) => {
+                        // add neccessary field for display
+                        activity.going_users      = [];
+                        activity.interested_users = [];
+                        activity.isInterested     = false;
+                        activity.isGoing          = false;
+                    });
+                    this.activities.push.apply(this.activities, data.activities); // append activities
+                    this.activities_page++;
+                });
+                //console.log(this.activities);
+            },
+            loadActivityInfo: function(activity) {
+                // load going users
+                $.ajax({
+                    url: '/api/v1.0/activities/'+ activity.id + '/participants/going',
+                    type: 'GET'
+                }).done(function(data) {
+                    console.log(data);
+                    activity.going_users = data.going_users;
+                }).fail(function() {
+                    console.log("error");
+                });
+                // load interested users
+                $.ajax({
+                    url: '/api/v1.0/activities/'+ activity.id + '/participants/interested',
+                    type: 'GET'
+                }).done(function(data) {
+                     activity.interested_users = data;
+                }).fail(function() {
+                    console.log("error");
+                });
+                // check if users is interested
+                $.ajax({
+                    url: '/api/v1.0/activities/' + activity.id + '/participation',
+                    type: 'GET'
+                }).done(function(data) {
+                    activity.isGoing = data.going;
+                    activity.isInterested = data.interested;
+                });
+            },
+            toggleGoing: function(activity) {
+                if (activity.isGoing) {
+                    $.ajax({
+                        url: '/api/v1.0/activities/'+ activity.id + '/participants/going',
+                        type: 'DELETE'
+                    }).done(function(data) {
+                         activity.isGoing = false;
+                    });
+                } else {
+                    $.ajax({
+                        url: '/api/v1.0/activities/'+ activity.id + '/participants/going',
+                        type: 'POST'
+                    }).done(function(data) {
+                         activity.isGoing = true;
+                    });
+                }
+            },
+            toggleInterested: function(activity) {
+                if (activity.isInterested) {
+                    $.ajax({
+                        url: '/api/v1.0/activities/'+ activity.id + '/participants/interested',
+                        type: 'DELETE'
+                    }).done(function(data) {
+                         activity.isInterested = false;
+                    });
+                } else {
+                    $.ajax({
+                        url: '/api/v1.0/activities/'+ activity.id + '/participants/interested',
+                        type: 'POST'
+                    }).done(function(data) {
+                         activity.isInterested = true;
+                    });
+                }
+            }
+          }
+        });
+        $(document).ready(function() {
+            interested.loadActivities();
+        });
+    </script>
 {% endblock scripts %}
-
-
-<!-- <div class="row">
-	{% if activities %}
-		{% for activity in activities %}
-			{{ activity_modal(activity) }}
-		{% endfor %}
-	{% else %}
-		<div class="col-md-12 no-content-box text-center">
-			<h2>NO ACTIVITIES</h2>
-		</div>
-	{% endif %}
-</div> -->
