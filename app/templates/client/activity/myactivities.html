@@ -283,7 +283,7 @@
           methods: {
             loadActivities: function() {
                 $.ajax({
-                    url: "{{ url_for('api.my_joined_activities')}}" + "?page=" + this.activities_page,
+                    url: "{{ url_for('api.my_joined_activities')}}",
                     type: 'GET'
                 }).done(data => {
                     data.joined_activities.forEach((activity) => {
@@ -375,7 +375,7 @@
           methods: {
             loadActivities: function() {
                 $.ajax({
-                    url: "{{ url_for('api.my_interested_activities')}}" + "?page=" + this.activities_page,
+                    url: "{{ url_for('api.my_interested_activities')}}",
                     type: 'GET'
                 }).done(data => {
                     data.interested_activities.forEach((activity) => {

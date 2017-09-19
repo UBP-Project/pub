@@ -201,7 +201,7 @@
           methods: {
             loadGroups: function() {
                 $.ajax({
-                    url: "{{ url_for('api.my_groups') }}" + "?page=" + this.groups_page,
+                    url: "{{ url_for('api.my_groups') }}",
                     type: 'GET'
                 }).done(data => {
                     data.mygroups.forEach((group) => {
@@ -215,7 +215,7 @@
                         vm.groupPopulation(group);
                     });
                     this.groups.push.apply(this.groups, data.mygroups);
-                    this.groups_page = this.groups_page + 1;
+                   // this.groups_page = this.groups_page + 1;
                 });
             },
             groupPopulation: function(group) {
