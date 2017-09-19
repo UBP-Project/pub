@@ -126,7 +126,7 @@
                         </div> <!-- END of activity_list -->
 
                         <div class="col-md-12 text-center show-more-box">
-                            <button class="btn btn-style-3" v-on:click="loadActivities">Show More</button>
+                            <button v-show="hasNext" class="btn btn-style-3" v-on:click="loadActivities">Show More</button>
                         </div>
 
                     </template>
@@ -154,6 +154,7 @@
           data: {
             activities: [],
             activities_page: 1,
+            hasNext: false,
             activity_images_folder: '/static/uploads/activity_images/',
             user_images_folder: '/static/uploads/profile_pictures/'
           },
@@ -173,6 +174,7 @@
                     });
                     this.activities.push.apply(this.activities, data.activities); // append activities
                     this.activities_page++;
+                    this.hasNext = data.has_next;
                 });
             },
             loadActivityInfo: function(activity) {

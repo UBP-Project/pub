@@ -119,6 +119,10 @@
                             </div> <!-- end of ACTIVITY MODAL -->
                         </div> <!-- END of activity_list -->
 
+                        <div class="show-more-box col-md-12">
+                            <button v-show="hasNext" class="btn btn-style-3" v-on:click="loadActivities">Show More</button>
+                        </div> <!-- end of show more div -->
+
                     </template>
 
                     <template v-else>
@@ -135,7 +139,7 @@
 
     </div>
 
-    <br/><br/>
+    <br/>
 
 	<div class="row">
 
@@ -252,6 +256,10 @@
                             </div> <!-- end of ACTIVITY MODAL -->
                         </div> <!-- END of activity_list -->
 
+                        <div class="show-more-box col-md-12">
+                            <button v-show="hasNext" class="btn btn-style-3" v-on:click="loadActivities">Show More</button>
+                        </div> <!-- end of show more div -->
+
                     </template>
 
                     <template v-else>
@@ -276,14 +284,15 @@
           el: '#joined',
           data: {
             activities: [],
-            //activities_page: 1,
+            activities_page: 1,
+            hasNext: false,
             activity_images_folder: '/static/uploads/activity_images/',
             user_images_folder: '/static/uploads/profile_pictures/'
           },
           methods: {
             loadActivities: function() {
                 $.ajax({
-                    url: "{{ url_for('api.my_joined_activities')}}",
+                    url: "{{ url_for('api.my_joined_activities')}}" + "?page=" + this.activities_page,
                     type: 'GET'
                 }).done(data => {
                     data.joined_activities.forEach((activity) => {
@@ -294,7 +303,8 @@
                         activity.isGoing          = false;
                     });
                     this.activities.push.apply(this.activities, data.joined_activities); // append activities
-                    //this.activities_page++;
+                    this.activities_page++;
+                    this.hasNext = data.has_next;
                 });
                 //console.log(this.activities);
             },
@@ -368,14 +378,15 @@
           el: '#interested',
           data: {
             activities: [],
-            //activities_page: 1,
+            activities_page: 1,
+            hasNext: false,
             activity_images_folder: '/static/uploads/activity_images/',
             user_images_folder: '/static/uploads/profile_pictures/'
           },
           methods: {
             loadActivities: function() {
                 $.ajax({
-                    url: "{{ url_for('api.my_interested_activities')}}",
+                    url: "{{ url_for('api.my_interested_activities')}}" + "?page=" + this.activities_page,
                     type: 'GET'
                 }).done(data => {
                     data.interested_activities.forEach((activity) => {
@@ -386,7 +397,8 @@
                         activity.isGoing          = false;
                     });
                     this.activities.push.apply(this.activities, data.interested_activities); // append activities
-                    //this.activities_page++;
+                    this.activities_page++;
+                    this.hasNext = data.has_next;
                 });
                 //console.log(this.activities);
             },
