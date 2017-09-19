@@ -1,5 +1,4 @@
 {% extends "./layout/client_base.html" %}
-{% from "components/activity-modal.html" import activity_modal %}
 
 {% block title %} Activities {% endblock title %}
 
@@ -19,9 +18,11 @@
                 </h3>
                 <hr/>
 
-                <div class="row">
-                    {% raw %}
-                    <div id="app">
+                {% raw %}
+                <div id="app" class="row">
+
+                    <template v-if="activities.length > 0">
+
                         <div v-for="activity in activities" id="activity_list">
                             <!-- ACTIVITY CARD -->
                             <div class="col-md-3 col-lg-4 col-sm-6 card-container" v-on:click="loadActivityInfo(activity)">
@@ -127,9 +128,17 @@
                         <div class="col-md-12 text-center show-more-box">
                             <button class="btn btn-style-3" v-on:click="loadActivities">Show More</button>
                         </div>
-                    </div>
-                    {% endraw %}
+
+                    </template>
+
+                    <template v-else>
+                        <div class="col-md-12 no-content-box text-center">
+                            <h2><small>NO ACTIVITIES</small></h2>
+                        </div>
+                    </template>
+
                 </div>
+                {% endraw %}
 
             </div>
         </div>
@@ -139,7 +148,6 @@
 {% endblock content %}
 
 {% block scripts %}
-<!--    <script src="{{ url_for('static', filename='js/client/activity.js') }}"></script> -->
     <script>
         var vm = new Vue({
           el: '#app',
@@ -151,7 +159,7 @@
           },
           methods: {
             loadActivities: function() {
-                console.log(this.activities);
+                //console.log(this.activities);
                 $.ajax({
                     url: "{{ url_for('api.get_activities')}}" + "?page=" + this.activities_page,
                     type: 'GET'
