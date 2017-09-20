@@ -6,7 +6,7 @@
         {{ form.hidden_tag() }}
 
         <div class="col-md-12 no-padding">
-                <h1 class="pull-left">Create Perk</h1>
+                <h1 class="pull-left">Edit Perk</h1>
                 <div style="margin-top: 25px;">
                     {{ form.submit(
                         class="btn btn-style-1 pull-right"
@@ -41,9 +41,13 @@
 
         <div class="col-md-6 no-padding-right" style="padding: 0px;">
             <div class="img-upload">
-                <br /><br ?>
+                <br /><br />
                 <div class="col-md-12 no-padding-right text-center">
-                    <img id="preview" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"/>
+                    {% if perk.image %}
+                        <img id="preview" src="{{ url_for('static', filename='uploads/perks_images/' + perk.image) }}"/>
+                    {% else %}
+                        <img id="preview" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"/>
+                    {% endif %}
                     <div id="upload-btn" class="text">
                         <button class="btn btn-style-1">Choose Perk Image</button>
                     </div>
