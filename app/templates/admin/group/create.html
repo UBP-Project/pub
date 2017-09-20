@@ -28,25 +28,23 @@
 
         <br /><br /><br />
 
-        <div class="col-md-12 text-center" style="padding: 0px">
-            <div class="row">
-                <div class="col-md-8 col-md-offset-2">
-                    {{ form.hidden_tag() }}
-                    <label>Group name</label>
-                    {{ form.name(
-                        placeholder="Group name",
-                        class="form-control",
-                        required="true") }}
-                    
-                    <label>About this Group</label>
-                    {{ form.about(
-                        placeholder="About this Group",
-                        class="form-control input-md",
-                        required="true") }}
-                    
-                    <br />
-                    {{ form.submit(class="btn btn-style-1") }}
-                </div>
+        <div class="col-md-6" style="padding: 0px">
+            <div class="col-md-12 no-padding">
+                {{ form.hidden_tag() }}
+                <label>Group name</label>
+                {{ form.name(
+                    placeholder="Group name",
+                    class="form-control",
+                    required="true") }}
+                
+                <label>About this Group</label>
+                {{ form.about(
+                    placeholder="About this Group",
+                    class="form-control input-md",
+                    required="true") }}
+                
+                <br />
+                {{ form.submit(class="btn btn-style-1") }}
             </div>
             {{ form.cover_photo(class="hidden") }}
             {{ form.group_icon(class="hidden") }}
@@ -54,21 +52,23 @@
 
 
         {% raw %}
-        <div id="add_leaders">
-            <div class="col-md-12 text-center no-padding">
+        <div id="add_leaders_app" class="col-md-6 no-padding-right">
+            <div class="col-md-12 no-padding-right">
                 <br />
-                <button type="button" data-toggle="modal" data-target="#users_modal" class="btn btn-style-1" v-on:click="loadUsers()">
-                    Add Group Leaders +
+                <span class="lead">Group Leaders
+                </span>
+                <button type="button" data-toggle="modal" data-target="#users_modal" class="btn btn-style-1 pull-right">
+                    +
                 </button>
+                <hr />
             </div>
 
-            <div class="col-md-12">
-                <h3 v-if="leaders.length > 0" class="text-center">Leaders</h3>
-                <div v-for="(user, index) in leaders" class="col-md-6 col-md-offset-3" style="padding: 8px;">
+            <div class="col-md-12 no-padding">
+                <div v-for="(user, index) in leaders" class="col-md-12" style="margin: 5px !important;">
                     <img v-if="user.image" :src="'../../static/uploads/profile_pictures/' + user.image" class="circle-img-sm" />
                     <img v-else src="../../static/images/pub-default-img.jpg" class="circle-img-sm" />
                     <span>{{ user.firstname }} {{ user.lastname }}</span>
-                    <span><button type="button" class="btn btn-style-3 pull-right" v-on:click="removeLeader(user, index)">Remove Leader</button></span>
+                    <span><button type="button" class="btn btn-sm btn-style-3 pull-right" style="margin-top: 10px;" v-on:click="removeLeader(user, index)">Remove Leader</button></span>
                 </div>
                 <br /><br /><br />
             </div>
@@ -79,18 +79,33 @@
 
                 <!-- Modal content-->
                 <div class="modal-content">
-                  <div class="modal-header">
+                  <div class="modal-header" style="padding-bottom: 5px;">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Modal Header</h4>
+                    <h4 class="modal-title">Add Leaders</h4>
+                    <input type="text" v-model="query" class="form-control" placeholder="Search Users"
+                        style="margin-top: 10px;"/>
                   </div>
-                  <div class="modal-body">
-                    <div v-for="(user, index) in users" class="col-md-12" style="padding: 8px;">
+
+                  <!-- All users list -->
+                  <div v-if="query.length == 0" class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
+                    <div v-for="(user, index) in sorted_users" class="col-md-12" style="padding: 8px;">
                         <img v-if="user.image" :src="'../../static/uploads/profile_pictures/' + user.image" class="circle-img-sm" />
                         <img v-else src="../../static/images/pub-default-img.jpg" class="circle-img-sm" />
                         <span>{{ user.firstname }} {{ user.lastname }}</span>
-                        <span><button type="button" class="btn btn-style-1 pull-right" v-on:click="setAsLeader(user, index)">Set as Leader</button></span>
-                    </div>
+                        <span><button type="button" class="btn btn-style-1 pull-right" v-on:click="setAsLeader(user, index, users)">Set as Leader</button></span>
+                    </div> <!-- end of all users -->
                   </div>
+
+                  <!-- Searched Users -->
+                  <div v-else class="modal-body" style="max-height: calc(100vh - 200px); min-height: calc(100vh - 200px); overflow-y: auto;">
+                    <div v-for="(user, index) in searched_users" class="col-md-12" style="padding: 8px;">
+                        <img v-if="user.image" :src="'../../static/uploads/profile_pictures/' + user.image" class="circle-img-sm" />
+                        <img v-else src="../../static/images/pub-default-img.jpg" class="circle-img-sm" />
+                        <span>{{ user.firstname }} {{ user.lastname }}</span>
+                        <span><button type="button" class="btn btn-style-1 pull-right" v-on:click="setAsLeader(user, index, searched_users)">Set as Leader</button></span>
+                    </div> <!-- end of searched users -->
+                  </div>
+
                   <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                   </div>
@@ -100,7 +115,7 @@
             </div> <!-- End of Users list modal -->
         </div>
         {% endraw %}
-        {{ form.leader_ids() }}
+        {{ form.leader_ids(hidden="true") }}
     </form>
 {% endblock %}
 {% block scripts %}
@@ -137,12 +152,13 @@
     </script>
     <script>
         var vm = new Vue({
-            el: "#add_leaders",
+            el: "#add_leaders_app",
             data: {
                 users_page: 1,
                 users: [],
                 leaders: [],
-                leader_ids: ""
+                leader_ids: "",
+                query: "",
             },
             methods: {
                 loadUsers: function() {
@@ -153,9 +169,12 @@
                        this.users = this.users.concat(data.users);
                     });
                 },
-                setAsLeader: function(user, index) {
+                setAsLeader: function(user, index, list) {
                     this.leaders.push(user);
-                    this.users.splice(index, 1);
+                    // list.splice(index, 1);
+                    this.users = this.users.filter(user_item => {
+                        return user_item != user;
+                    });
                     this.updateLeaderIds();
                 },
                 removeLeader: function(user, index) {
@@ -169,8 +188,23 @@
                         ids.push(leader.id); 
                     });
                     $("#leader_ids").val(ids.join());
+                },
+            },
+            computed: {
+                searched_users: function() {
+                    return this.users.filter(user => {
+                        return user.firstname.includes(this.query) || user.lastname.includes(this.query);
+                    });
+                },
+                sorted_users: function() {
+                    return this.users.sort((a,b) => {
+                        return a.firstname.localeCompare(b.firstname);
+                    });
                 }
             }
+        });
+        $(document).ready(() => {
+            vm.loadUsers();
         });
     </script>
 {% endblock scripts %}

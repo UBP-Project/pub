@@ -6,7 +6,7 @@ from app.api_1_0 import api#, follow_notif
 from app import db
 import json
 from app.notification import Notif
-from sqlalchemy import func
+from sqlalchemy import func, or_
 
 @api.route('/users')
 @login_required
@@ -85,9 +85,24 @@ def get_users():
     """
     if 'limit' in request.args:
         limit = request.args.get('limit')
-        users = User.query.limit(limit)
+        users = User.query.order_by(User.firstname).limit(limit)
+    elif 'query' in request.args:
+        query = request.args.get('query')
+        q = query.lower().strip()
+        users = User.query\
+        .filter(or_(
+            User.firstname.ilike("%"+str(q)+"%"),
+            User.middlename.ilike("%"+str(q)+"%"), 
+            User.lastname.ilike("%"+str(q)+"%"),
+            User.email.ilike("%"+str(q)+"%"),
+            User.department.ilike("%"+str(q)+"%"),
+            User.position.ilike("%"+str(q)+"%"),
+            func.concat(User.firstname, ' ', User.lastname).contains(q),
+            func.concat(User.lastname, ' ', User.firstname).contains(q),
+            func.concat(User.firstname, ' ', User.middlename, ' ', User.lastname).contains(q))
+        ).order_by(User.firstname).all()
     else:
-        users = User.query.all()
+        users = User.query.order_by(User.firstname).all()
     return jsonify({"users":[
         user.to_json() for user in users
     ]}), 200
