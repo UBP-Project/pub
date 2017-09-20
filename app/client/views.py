@@ -22,7 +22,7 @@ def login():
     hasError = False
     if form.validate_on_submit():
         email = form.email.data
-        if EMAIL_DOMAIN not in email: # allows login of emails with @unionbank.com
+        if '@' not in email: # allows login of emails with @unionbank.com
             email = email + '@' + EMAIL_DOMAIN
         user = User.query.filter_by(email = email).first()
         if user is not  None and user.verify_password(form.password.data):

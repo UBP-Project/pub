@@ -19,6 +19,14 @@ html, body {
     font-family: 'Roboto Condensed Bold';
 }
 
+.ellipsis {
+    white-space: nowrap; 
+    width: 12em; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
 hr {
     border-top: 1px solid rgba(0, 0, 0, 0.15);
     margin-top: 10px;
@@ -213,6 +221,7 @@ h1, h2, h3, h4, h5, h6 {
 .admin-page .group-card img {
     width: 100%;
     height: 150px;
+    object-fit: cover;
 }
 
 .admin-page .group-card div {
