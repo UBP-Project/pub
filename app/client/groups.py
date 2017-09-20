@@ -30,39 +30,36 @@ def groups():
     #         )  \
     #     .paginate(page = 1 , per_page = 12, error_out=False).items
 
-    interest_groups_query = Interest_Group.query\
-        .paginate(page = 1 , per_page = 12, error_out=False).items
+    # interest_groups_query = Interest_Group.query\
+    #     .paginate(page = 1 , per_page = 12, error_out=False).items
 
-    interest_groups = []
+    # interest_groups = []
 
-    for g in interest_groups_query:
-        group = g.to_json()
+    # for g in interest_groups_query:
+    #     group = g.to_json()
 
-        membership = Membership.query \
-            .filter(Membership.group_id == group['id'], Membership.user_id == current_user.get_id())\
-            .with_entities(
-                Membership.status
-            ).first()
+    #     membership = Membership.query \
+    #         .filter(Membership.group_id == group['id'], Membership.user_id == current_user.get_id())\
+    #         .with_entities(
+    #             Membership.status
+    #         ).first()
 
-        group['population'] = Membership.query\
-            .filter(Membership.group_id == group['id'], Membership.level == Membership.MEMBERSHIP_MEMBER, Membership.status == Membership.MEMBERSHIP_ACCEPTED)\
-            .count()
+    #     group['population'] = Membership.query\
+    #         .filter(Membership.group_id == group['id'], Membership.level == Membership.MEMBERSHIP_MEMBER, Membership.status == Membership.MEMBERSHIP_ACCEPTED)\
+    #         .count()
 
-        if membership is not None:
-            group['status'] = membership.status
-        else:
-            group['status'] = None
+    #     if membership is not None:
+    #         group['status'] = membership.status
+    #     else:
+    #         group['status'] = None
 
-        print(group)
-        interest_groups.append(group)
-
-
-
+    #     print(group)
+    #     interest_groups.append(group)
     managed_groups = Interest_Group.query.join(Membership,\
         Membership.group_id == Interest_Group.id).filter(Membership.level == 1,\
         Membership.user_id == current_user.get_id()).all()
 
-    return render_template("client/group/groups.html", interest_groups=interest_groups,
+    return render_template("client/group/groups.html", # interest_groups=interest_groups,
         managed_groups=managed_groups, user=current_user, isManager=isManager)
 
 @client.route('/groups/<uuid(strict=False):id>', methods=['POST', 'GET'])

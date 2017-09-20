@@ -917,10 +917,7 @@ def get_group_leaders(id):
     group = Interest_Group.query.get_or_404(id)
 
     leaders = User.query.join(Membership, User.id == Membership.user_id).join(Interest_Group, Interest_Group.id == group.id)\
-        .filter(Membership.level == Membership.MEMBERSHIP_LEADER).all()
-    
-    print(leaders)
-    
+        .filter(Membership.level == Membership.MEMBERSHIP_LEADER).all()    
     return jsonify([
         leader.to_json() for leader in leaders
     ])

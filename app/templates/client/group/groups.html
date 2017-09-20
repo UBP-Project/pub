@@ -208,14 +208,14 @@
                     url: "{{ url_for('api.get_groups') }}" + "?page=" + this.groups_page,
                     type: 'GET'
                 }).done(data => {
-                    console.log(data);
+                    // console.log(data);
                     data.interest_groups.forEach((group) => {
                         group.members = [];
                         group.leaders = [];
                         //group.managers = [];
                         group.activities = [];
                         group.membership_status = -1;
-                        group.cover = "background-image: url('/static/uploads/covers/" + group.cover_photo + "');"
+                        // group.cover = "background-image: url('/static/uploads/covers/" + group.cover_photo + "');"
                         group.population = 0;
                         vm.groupPopulation(group);
                     });
@@ -263,13 +263,13 @@
                     //console.log("Leader: "+ data);
                 });
 
-                // load Activities
-                $.ajax({
-                    url: "/api/v1.0/interest_groups/" + group.id + "/activities",
-                    type: 'GET'
-                }).done(data => {
-                    group.activities = data;
-                });
+                // // load Activities
+                // $.ajax({
+                //     url: "/api/v1.0/interest_groups/" + group.id + "/activities",
+                //     type: 'GET'
+                // }).done(data => {
+                //     group.activities = data;
+                // });
 
                 // check membership status
                 $.ajax({
