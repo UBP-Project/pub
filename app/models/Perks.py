@@ -1,6 +1,7 @@
 import uuid
 from app import db
 from sqlalchemy_utils import UUIDType
+from datetime import datetime
 
 class Perks(db.Model):
 	__tablename__ = 'perks'
@@ -8,6 +9,7 @@ class Perks(db.Model):
 	title 		= db.Column(db.Text(4294967295), nullable=False)
 	image 		= db.Column(db.String(200))
 	description = db.Column(db.Text(4294967295))
+	timestamp   = db.Column(db.DateTime, default=datetime.utcnow())
 
 	def __init_(self, title, image = '', description = ''):
 		self.title = title

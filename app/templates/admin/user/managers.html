@@ -24,6 +24,11 @@
                         <input type="submit" class="btn" type="button" value="Search" />
                       </span>
                     </div>
+                    {% if query %}
+                        <h4 style="padding-top: 15px;">Search Results for "{{ query }}".
+                            <a href="{{ url_for('admin.users') }}" class="label btn-style-3">Return to List</a>
+                        </h4>
+                    {% endif %}
                 </form>
             </div>
             <div class="col-sm-6 text-right pagination">
@@ -93,7 +98,7 @@
         {% else %}
         <div class="row">
             <div class="col-md-12">
-                <h3>No search results for "{{ query }}".</h3>
+                <h3>No managers found.</h3>
             </div>
         </div>
         {% endif %}

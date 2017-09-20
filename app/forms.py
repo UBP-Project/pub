@@ -105,7 +105,7 @@ class UpdateActivityForm(FlaskForm, ActivityMixin):
         self.group.choices = [(None, None)] + [(str(group.id), group.name) for group in Interest_Group.query.all()]
 
 class UpdateActivityFormClient(FlaskForm, ActivityMixin):
-    image = FileField("Activity Image")
+    image  = FileField("Activity Image")
     submit = SubmitField("Create Activity")
 
     def __init__(self, *args, **kwargs):
@@ -115,8 +115,20 @@ class UpdateActivityFormClient(FlaskForm, ActivityMixin):
         self.group.choices = [(str(group.id), group.name) for group in groups]
 
 class GroupMembershipForm(FlaskForm):
-    join_group = SubmitField("Join Group")
+    join_group  = SubmitField("Join Group")
     leave_group = SubmitField("Leave Group")
+
+class PerkFormMixin():
+    title       = StringField("Perk Title")
+    description = StringField("Perk Description", widget=TextArea())
+
+class CreatePerkForm(FlaskForm, PerkFormMixin):
+    image  = FileField("Perk Image", validators=[FileRequired()])
+    submit = SubmitField("Create Perk")
+
+class UpdatePerkForm(FlaskForm, PerkFormMixin):
+    image  = FileField("Perk Image")
+    submit = SubmitField("Update Perk")
 
 
 

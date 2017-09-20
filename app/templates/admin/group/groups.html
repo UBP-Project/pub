@@ -24,6 +24,11 @@
                         <input type="submit" class="btn" type="button" value="Search" />
                       </span>
                     </div>
+                    {% if query %}
+                        <h4 style="padding-top: 15px;">Search Results for "{{ query }}".
+                            <a href="{{ url_for('admin.groups') }}" class="label btn-style-3">Return to List</a>
+                        </h4>
+                    {% endif %}
                 </form>
             </div>
             <div class="col-sm-6 text-right pagination">
@@ -67,6 +72,15 @@
                 </div>
             {% endfor %}
         </div>
+        {% if groups.items|length == 0 %}
+            <div class="row">
+                <div class="col-md-12 no-padding">
+                    <h3>No Groups found.</h3>
+                    <hr />
+                </div>
+            </div>
+        {% endif %}
+
         <div class="row">
             <div class="col-sm-12 text-center pagination">
                 {% if groups.has_prev %}

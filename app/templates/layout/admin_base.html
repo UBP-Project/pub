@@ -50,6 +50,12 @@
         ]
     %}
 
+    {% set perk_links = [
+            ('Create Perk', url_for('admin.create_perk')),
+            ('View Perks', url_for('admin.perks'))
+        ]
+    %}
+
 
 
 <!--     {% for message in get_flashed_messages() %}
@@ -100,6 +106,15 @@
 
             <h5>Groups</h5>
             {% for link in group_links %}
+                {% if request.path == link[1] %}
+                    <a class="btb btn-sidebar active" href={{link[1]}}>{{ link[0] }}</a>
+                {% else %}
+                    <a class="btb btn-sidebar" href={{link[1]}}>{{ link[0] }}</a>
+                {% endif %}
+            {% endfor %}
+
+            <h5>Perks</h5>
+            {% for link in perk_links %}
                 {% if request.path == link[1] %}
                     <a class="btb btn-sidebar active" href={{link[1]}}>{{ link[0] }}</a>
                 {% else %}

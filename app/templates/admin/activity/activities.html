@@ -27,6 +27,12 @@
                         <span>To:</span> 
                         <input type="text" id="datepicker_end" placeholder="End Date" name="end_date" value="{% if end_date %}{{ end_date }}{% endif %}" />
                     </div>
+                    {% if query %}
+                        <br /><br />
+                        <h4 style="padding-top: 15px;">Search Results for "{{ query }}".
+                            <a href="{{ url_for('admin.activities') }}" class="label btn-style-3">Return to List</a>
+                        </h4>
+                    {% endif %}
                 </form>
             </div>
             <div class="col-sm-6 text-right pagination">
@@ -67,6 +73,15 @@
                 </div>
             {% endfor %}
         </div>
+    
+        {% if activities.items|length == 0 %}
+        <div class="row">
+            <div class="col-md-12 no-padding">
+                <h3>No Activities found.</h3>
+                <hr />
+            </div>
+        </div>
+        {% endif %}
 
         <div class="row">
             <div class="col-sm-12 text-center pagination">

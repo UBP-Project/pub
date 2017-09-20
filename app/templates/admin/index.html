@@ -20,7 +20,7 @@
                     <div class="activity-card"
                     style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{url_for('static',filename='uploads/activity_images/' + activity.image) }})">
                         <div>
-                            <h3><strong>{{ activity['title'] }}</strong></h3>
+                            <h3><strong class="ellipsis">{{ activity['title'] }}</strong></h3>
                             <!-- <h6>{{ activity['description'] }}</h6> -->
                             <h6><i>{{ activity['start_date']}} - {{ activity['end_date']}}</i></h6>
                         </div>
@@ -51,7 +51,7 @@
                             {% endif %}
                             
                             <span>
-                                <a href="{{ url_for('admin.profile', id=user.id)}}">
+                                <a href="{{ url_for('admin.profile', id=user.id)}}" class="ellipsis">
                                     {{ user.firstname }} {{ user.lastname }}
                                 </a>
                             </span>
@@ -78,8 +78,8 @@
                             <img src="{{ url_for('static', filename='images/pub-default-img.jpg') }} "/>
                         {% endif %}
                         <div>
-                            <h3>{{ group['name'] }}</h3>
-                            <h6>{{ group['about'] }}</h6>
+                            <h3 class="ellipsis">{{ group['name'] }}</h3>
+                            <h6 class="ellipsis">{{ group['about'] }}</h6>
                         </div>
                         <a class="btn btn-block btn-style-1" href="{{ url_for('admin.group', id=group['id']) }}">
                             View Group

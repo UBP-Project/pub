@@ -1,0 +1,116 @@
+{% extends "/layout/admin_base.html" %}
+
+{% block title %} Perks {% endblock %}
+
+{% block content %}
+    <div class="row admin-page">
+        <div class="row">
+            <div class="col-md-12 no-padding">
+                <h1>Perks</h1>
+            </div>
+        </div>
+
+        <hr/>
+
+        <div class="row">
+            <div class="col-sm-6" style="padding: 20px 0px">
+                <form>
+                    <div class="input-group search-form">
+                      <input type="text" class="form-control" name="query" placeholder="Search Perks" value="{% if query %}{{ query }}{% endif %}">
+                      <span class="input-group-btn">
+                        <input type="submit" class="btn" type="button" value="Search" />
+                      </span>
+                    </div>
+                    {% if query %}
+                        <h4 style="padding-top: 15px;">Search Results for "{{ query }}".
+                            <a href="{{ url_for('admin.perks') }}" class="label btn-style-3">Return to List</a>
+                        </h4>
+                    {% endif %}
+                </form>
+            </div>
+            <div class="col-sm-6 text-right pagination">
+                {% if perks.has_prev %}
+                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.perks', page=perks.prev_num, query=request.args.get('query')) }}">Prev</a>
+                {% endif %}
+                  {%- for page in perks.iter_pages(left_edge=1, left_current=2, right_current=2, right_edge=1) %}
+                    {% if page %}
+                      {% if page != perks.page %}
+                        <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.perks', page=page, query=request.args.get('query')) }}">{{ page }}</a>
+                      {% else %}
+                        <strong class="btn current-page">{{ page }}</strong>
+                      {% endif %}
+                    {% else %}
+                      <span class=ellipsis>…</span>
+                    {% endif %}
+                  {%- endfor %}
+                {% if perks.has_next %}
+                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.perks', page=perks.next_num, query=request.args.get('query')) }}">Next</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Perks cards -->
+        <div class="row">
+            {% for perk in perks.items %}
+                <div class="col-md-12 no-padding">
+                    <div class="col-md-4 no-padding">
+                        <div class="perk-card">
+                            <img src="{{url_for('static',filename='uploads/perks_images/' + perk.image) }}">
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h2 class="ellipsis"><strong>{{ perk['title'] }}</strong></h2>
+                        <h6>{{ perk['description'] }}</h6>
+                        <a class="btn btn-sm btn-style-3" href="{{ url_for('admin.edit_perk', id=perk['id']) }}">
+                                Edit this Perk
+                            </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div> <!-- End of Perks Cards -->
+    
+        {% if perks.items|length == 0 %}
+        <div class="row">
+            <div class="col-md-12 no-padding">
+                <h3>No perks found.</h3>
+                <hr />
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-sm-12 text-center pagination">
+                {% if perks.has_prev %}
+                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.perks', page=perks.prev_num, query=request.args.get('query')) }}">Prev</a>
+                {% endif %}
+                  {%- for page in perks.iter_pages(left_edge=1, left_current=2, right_current=2, right_edge=1) %}
+                    {% if page %}
+                      {% if page != perks.page %}
+                        <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.perks', page=page, query=request.args.get('query')) }}">{{ page }}</a>
+                      {% else %}
+                        <strong class="btn current-page">{{ page }}</strong>
+                      {% endif %}
+                    {% else %}
+                      <span class=ellipsis>…</span>
+                    {% endif %}
+                  {%- endfor %}
+                {% if perks.has_next %}
+                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.perks', page=perks.next_num, query=request.args.get('query')) }}">Next</a>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+{% block scripts %}
+<script>
+    {% if start_date %}
+        var picker_start = new Pikaday({ field: document.getElementById('datepicker_start'),
+            defaultDate: "{{ start_date }}"
+        });
+    {% else %}
+        var picker_start = new Pikaday({ field: document.getElementById('datepicker_start') });
+    {% endif %}
+    var picker_end = new Pikaday({ field: document.getElementById('datepicker_end') });
+</script>
+{% endblock scripts %}
