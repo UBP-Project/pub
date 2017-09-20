@@ -15,20 +15,22 @@ from sqlalchemy.sql import func
 def index():
     return render_template("client/index.html", user=current_user)
 
+EMAIL_DOMAIN = 'unionbank.com'
 @client.route('/login/', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     hasError = False
     if form.validate_on_submit():
-        user = User.query.filter_by(email = form.email.data).first()
+        email = form.email.data
+        if EMAIL_DOMAIN not in email: # allows login of emails with @unionbank.com
+            email = email + '@' + EMAIL_DOMAIN
+        user = User.query.filter_by(email = email).first()
         if user is not  None and user.verify_password(form.password.data):
             login_user(user)
-
             if(user.is_administrator()):
                 return redirect(url_for('admin.index'))
             else:
                 return redirect(request.args.get('next') or url_for('client.index'))
-                
         hasError = True
     return render_template("client/views/login.html", form=form, hasError=hasError)
 
