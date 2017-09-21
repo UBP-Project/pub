@@ -1,0 +1,21 @@
+{% macro user_card(user) %}
+<div class="col-md-4" style="padding: 5px;">
+    <div style="border: 1px solid gray;">
+        <div style="background-color: white; padding: 10px; margin: 5px;">
+            {% if user.image %}
+                <img src="{{ url_for('static', filename='uploads/profile_pictures/' + user.image) }}"
+                class="circle-img-sm">
+            {% else %}
+                <img src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"
+                class="circle-img-sm">
+            {% endif %}
+            
+            <span>
+                <a href="{{ url_for('admin.profile', id=user.id)}}" class="ellipsis">
+                    {{ user.firstname }} {{ user.lastname }}
+                </a>
+            </span>
+        </div>
+    </div>
+</div>
+{% endmacro %}

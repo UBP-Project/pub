@@ -1,0 +1,16 @@
+{% macro perk_card(perk) %}
+<div class="col-md-12 no-padding">
+    <div class="col-md-4 no-padding">
+        <div class="perk-card">
+            <img src="{{url_for('static',filename='uploads/perks_images/' + perk.image) }}">
+        </div>
+    </div>
+    <div class="col-md-8">
+        <h2 class="ellipsis"><strong>{{ perk['title'] }}</strong></h2>
+        <h6>{{ perk['description'] }}</h6>
+        <a class="btn btn-sm btn-style-3" href="{{ url_for('admin.edit_perk', id=perk['id']) }}">
+                Edit this Perk
+            </a>
+    </div>
+</div>
+{% endmacro %}

@@ -1,0 +1,19 @@
+{% macro pagination(list, url) %}
+    {% if list.has_prev %}
+        <a class="page-link btn btn-sm btn-style-3" href="{{ url_for(url, page=list.prev_num, query=request.args.get('query')) }}">Prev</a>
+    {% endif %}
+      {%- for page in list.iter_pages(left_edge=1, left_current=2, right_current=2, right_edge=1) %}
+        {% if page %}
+          {% if page != list.page %}
+            <a class="page-link btn btn-sm btn-style-3" href="{{ url_for(url, page=page, query=request.args.get('query')) }}">{{ page }}</a>
+          {% else %}
+            <strong class="btn current-page">{{ page }}</strong>
+          {% endif %}
+        {% else %}
+          <span class=ellipsis>…</span>
+        {% endif %}
+      {%- endfor %}
+    {% if list.has_next %}
+        <a class="page-link btn btn-sm btn-style-3" href="{{ url_for(url, page=list.next_num, query=request.args.get('query')) }}">Next</a>
+    {% endif %}
+{% endmacro %}

@@ -1,4 +1,6 @@
 {% extends "/layout/admin_base.html" %}
+{% from 'components/admin-perk-card.html' import perk_card %}
+{% from 'components/admin-pagination.html' import pagination %}
 
 {% block title %} Perks {% endblock %}
 
@@ -29,43 +31,14 @@
                 </form>
             </div>
             <div class="col-sm-6 text-right pagination">
-                {% if perks.has_prev %}
-                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.perks', page=perks.prev_num, query=request.args.get('query')) }}">Prev</a>
-                {% endif %}
-                  {%- for page in perks.iter_pages(left_edge=1, left_current=2, right_current=2, right_edge=1) %}
-                    {% if page %}
-                      {% if page != perks.page %}
-                        <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.perks', page=page, query=request.args.get('query')) }}">{{ page }}</a>
-                      {% else %}
-                        <strong class="btn current-page">{{ page }}</strong>
-                      {% endif %}
-                    {% else %}
-                      <span class=ellipsis>…</span>
-                    {% endif %}
-                  {%- endfor %}
-                {% if perks.has_next %}
-                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.perks', page=perks.next_num, query=request.args.get('query')) }}">Next</a>
-                {% endif %}
+                {{ pagination(perks, 'admin.perks') }}
             </div>
         </div>
 
         <!-- Perks cards -->
         <div class="row">
             {% for perk in perks.items %}
-                <div class="col-md-12 no-padding">
-                    <div class="col-md-4 no-padding">
-                        <div class="perk-card">
-                            <img src="{{url_for('static',filename='uploads/perks_images/' + perk.image) }}">
-                        </div>
-                    </div>
-                    <div class="col-md-8">
-                        <h2 class="ellipsis"><strong>{{ perk['title'] }}</strong></h2>
-                        <h6>{{ perk['description'] }}</h6>
-                        <a class="btn btn-sm btn-style-3" href="{{ url_for('admin.edit_perk', id=perk['id']) }}">
-                                Edit this Perk
-                            </a>
-                    </div>
-                </div>
+                {{ perk_card(perk) }}
             {% endfor %}
         </div> <!-- End of Perks Cards -->
     
@@ -80,23 +53,7 @@
 
         <div class="row">
             <div class="col-sm-12 text-center pagination">
-                {% if perks.has_prev %}
-                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.perks', page=perks.prev_num, query=request.args.get('query')) }}">Prev</a>
-                {% endif %}
-                  {%- for page in perks.iter_pages(left_edge=1, left_current=2, right_current=2, right_edge=1) %}
-                    {% if page %}
-                      {% if page != perks.page %}
-                        <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.perks', page=page, query=request.args.get('query')) }}">{{ page }}</a>
-                      {% else %}
-                        <strong class="btn current-page">{{ page }}</strong>
-                      {% endif %}
-                    {% else %}
-                      <span class=ellipsis>…</span>
-                    {% endif %}
-                  {%- endfor %}
-                {% if perks.has_next %}
-                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.perks', page=perks.next_num, query=request.args.get('query')) }}">Next</a>
-                {% endif %}
+                 {{ pagination(perks, 'admin.perks') }}
             </div>
         </div>
 

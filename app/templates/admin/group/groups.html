@@ -1,8 +1,6 @@
-{% if 'admin' in request.path %}
-    {% extends "/layout/admin_base.html" %}
-{% else %}
-    {% extends "/layout/base.html" %}
-{% endif %}
+{% extends "/layout/admin_base.html" %}
+{% from 'components/admin-group-card.html' import group_card %}
+{% from 'components/admin-pagination.html' import pagination %}
 
 {% block title %} Groups {% endblock %}
 
@@ -32,44 +30,13 @@
                 </form>
             </div>
             <div class="col-sm-6 text-right pagination">
-                {% if groups.has_prev %}
-                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.groups', page=groups.prev_num, query=request.args.get('query')) }}">Prev</a>
-                {% endif %}
-                  {%- for page in groups.iter_pages(left_edge=1, left_current=2, right_current=2, right_edge=1) %}
-                    {% if page %}
-                      {% if page != groups.page %}
-                        <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.groups', page=page, query=request.args.get('query')) }}">{{ page }}</a>
-                      {% else %}
-                        <strong class="btn current-page">{{ page }}</strong>
-                      {% endif %}
-                    {% else %}
-                      <span class=ellipsis>…</span>
-                    {% endif %}
-                  {%- endfor %}
-                {% if groups.has_next %}
-                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.groups', page=groups.next_num, query=request.args.get('query')) }}">Next</a>
-                {% endif %}
+                {{ pagination(groups, 'admin.groups') }}
             </div>
         </div>
 
         <div class="row">
             {% for group in groups.items %}
-                <div class="col-md-3 no-padding">
-                    <div class="group-card">
-                        {% if group.group_icon %}
-                            <img src="{{ url_for('static', filename='uploads/group_icons/' + group.group_icon) }} "/>
-                        {% else %}
-                            <img src="{{ url_for('static', filename='images/pub-default-img.jpg') }} "/>
-                        {% endif %}
-                        <div>
-                            <h3 class="ellipsis">{{ group['name'] }}</h3>
-                            <h6 class="ellipsis">{{ group['about'] }}</h6>
-                        </div>
-                        <a class="btn btn-block btn-style-1" href="{{ url_for('admin.group', id=group['id']) }}">
-                            View Group
-                        </a>
-                    </div>
-                </div>
+                {{ group_card(group) }}
             {% endfor %}
         </div>
         {% if groups.items|length == 0 %}
@@ -83,23 +50,7 @@
 
         <div class="row">
             <div class="col-sm-12 text-center pagination">
-                {% if groups.has_prev %}
-                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.groups', page=groups.prev_num, query=request.args.get('query')) }}">Prev</a>
-                {% endif %}
-                  {%- for page in groups.iter_pages(left_edge=1, left_current=2, right_current=2, right_edge=1) %}
-                    {% if page %}
-                      {% if page != groups.page %}
-                        <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.groups', page=page, query=request.args.get('query')) }}">{{ page }}</a>
-                      {% else %}
-                        <strong class="btn current-page">{{ page }}</strong>
-                      {% endif %}
-                    {% else %}
-                      <span class=ellipsis>…</span>
-                    {% endif %}
-                  {%- endfor %}
-                {% if groups.has_next %}
-                    <a class="page-link btn btn-sm btn-style-3" href="{{ url_for('admin.groups', page=groups.next_num, query=request.args.get('query')) }}">Next</a>
-                {% endif %}
+                {{ pagination(groups, 'admin.groups') }}
             </div>
         </div>
     </div>

@@ -5,6 +5,7 @@ from flasgger import Swagger
 from config import config
 from flask_login import LoginManager
 from flask_uuid import FlaskUUID
+from . import jinja_filters
 
 bootstrap = Bootstrap()
 db = SQLAlchemy()

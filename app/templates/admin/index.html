@@ -1,5 +1,7 @@
 {% extends "layout/admin_base.html" %}
-
+{% from 'components/admin-activity-card.html' import activity_card %}
+{% from 'components/admin-user-card.html' import user_card %}
+{% from 'components/admin-group-card.html' import group_card %}
 {% block title %} Admin Page {% endblock %}
 
 {% block content %}
@@ -16,19 +18,7 @@
         <h3>Upcoming Activities</h3>
         <div class="row">
             {% for activity in upcoming_activities %}
-                <div class="col-md-3 no-padding">
-                    <div class="activity-card"
-                    style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{url_for('static',filename='uploads/activity_images/' + activity.image) }})">
-                        <div>
-                            <h3><strong class="ellipsis">{{ activity['title'] }}</strong></h3>
-                            <!-- <h6>{{ activity['description'] }}</h6> -->
-                            <h6><i>{{ activity['start_date']}} - {{ activity['end_date']}}</i></h6>
-                        </div>
-                        <a class="btn btn-block btn-style-3" href="{{ url_for('admin.edit_activity', id=activity['id']) }}">
-                            Edit Activity
-                        </a>
-                    </div>
-                </div>
+                {{ activity_card(activity) }}
             {% endfor %}
             <div class="col-md-12 no-padding">
                 <a href="{{ url_for('admin.activities') }}" class="btn btn-xs btn-style-3 pull-right">See All Activities</a>
@@ -39,26 +29,7 @@
         <h3>New Users</h3>
         <div class="row">
             {% for user in new_users %}
-                <div class="col-md-4" style="padding: 5px;">
-                    <div style="border: 1px solid gray;">
-                        <div style="background-color: white; padding: 10px; margin: 5px;">
-                            {% if user.image %}
-                                <img src="{{ url_for('static', filename='uploads/profile_pictures/' + user.image) }}"
-                                class="circle-img-sm">
-                            {% else %}
-                                <img src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"
-                                class="circle-img-sm">
-                            {% endif %}
-                            
-                            <span>
-                                <a href="{{ url_for('admin.profile', id=user.id)}}" class="ellipsis">
-                                    {{ user.firstname }} {{ user.lastname }}
-                                </a>
-                            </span>
-
-                        </div>
-                    </div>
-                </div>
+                {{ user_card(user) }}
             {% endfor %}
             <div class="col-md-12 no-padding">
                 <a href="{{ url_for('admin.users') }}" class="btn btn-xs btn-style-3 pull-right">See All Users</a>
@@ -70,22 +41,7 @@
         <h3>New Groups</h3>
         <div class="row">
             {% for group in new_groups %}
-                <div class="col-md-3 no-padding">
-                    <div class="group-card">
-                        {% if group.group_icon %}
-                            <img src="{{ url_for('static', filename='uploads/group_icons/' + group.group_icon) }} "/>
-                        {% else %}
-                            <img src="{{ url_for('static', filename='images/pub-default-img.jpg') }} "/>
-                        {% endif %}
-                        <div>
-                            <h3 class="ellipsis">{{ group['name'] }}</h3>
-                            <h6 class="ellipsis">{{ group['about'] }}</h6>
-                        </div>
-                        <a class="btn btn-block btn-style-1" href="{{ url_for('admin.group', id=group['id']) }}">
-                            View Group
-                        </a>
-                    </div>
-                </div>
+                {{ group_card(group) }}
             {% endfor %}
             <div class="col-md-12 no-padding">
                 <a href="{{ url_for('admin.groups') }}" class="btn btn-xs btn-style-3 pull-right" style="margin-top: 10px;">See All Groups</a>

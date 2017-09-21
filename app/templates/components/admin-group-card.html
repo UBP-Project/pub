@@ -1,0 +1,18 @@
+{% macro group_card(group) %}
+<div class="col-md-3 no-padding">
+    <div class="group-card">
+        {% if group.group_icon %}
+            <img src="{{ url_for('static', filename='uploads/group_icons/' + group.group_icon) }} "/>
+        {% else %}
+            <img src="{{ url_for('static', filename='images/pub-default-img.jpg') }} "/>
+        {% endif %}
+        <div>
+            <h3 class="ellipsis">{{ group['name'] }}</h3>
+            <h6 class="ellipsis">{{ group['about'] }}</h6>
+        </div>
+        <a class="btn btn-block btn-style-1" href="{{ url_for('admin.group', id=group['id']) }}">
+            View Group
+        </a>
+    </div>
+</div>
+{% endmacro %}

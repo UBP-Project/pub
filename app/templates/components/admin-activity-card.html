@@ -1,0 +1,16 @@
+{% macro activity_card(activity) %}
+<div class="col-md-3 no-padding">
+    <div class="activity-card"
+    style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{url_for('static',filename='uploads/activity_images/' + activity.image) }})">
+        <div>
+            <h3><strong>{{ activity['title'] }}</strong></h3>
+            <!-- <h6>{{ activity['description'] }}</h6> -->
+            <h6>From: {{ activity['start_date']|datetime_with_day}}</i></h6>
+            <h6>To: {{ activity['start_date']|datetime_with_day}}</i></h6>
+        </div>
+        <a class="btn btn-block btn-style-3" href="{{ url_for('admin.edit_activity', id=activity['id']) }}">
+            Edit Activity
+        </a>
+    </div>
+</div>
+{% endmacro %}
