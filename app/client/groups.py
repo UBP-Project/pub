@@ -218,7 +218,7 @@ def mygroups():
 @client.route('/groups/<uuid(strict=False):id>/requests', methods=['POST', 'GET'])
 @login_required
 def group_requests(id):
-    # is_manager_or_leader(abort_on_false=True) # check if the current user is a manager or leader
+    is_manager_or_leader(abort_on_false=True) # check if the current user is a manager or leader
     group = Interest_Group.query.get_or_404(id)
     membership_requests = User.query \
         .join(Membership, User.id==Membership.user_id) \
@@ -229,9 +229,7 @@ def group_requests(id):
 @client.route('/groups/<string:id>/members', methods=['GET', 'POST'])
 def group_members(id):
     group = Interest_Group.query.get_or_404(id)
-    leaders = group.get_leaders()
-    members = group.get_members()
-    return render_template('client/group/members.html', group=group, leaders=leaders, members=members,
+    return render_template('client/group/members.html', group=group, 
         can_edit_group=can_modify_group(id), can_accept_requests=can_accept_requests(id))
 
 @client.route('/groups-list')

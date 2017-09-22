@@ -37,7 +37,6 @@ def activity(id):
     else:
         creator = User.query.join(Role, Role.id == User.role_id)\
             .filter(Role.name == 'Administrator').first()
-
     going_users = User.query.join(User_Activity, User.id == User_Activity.user_id)\
         .filter(User_Activity.activity_id == id, User_Activity.status == 1).all()
     interested_users = User.query.join(User_Activity, User.id == User_Activity.user_id)\
