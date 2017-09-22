@@ -21,10 +21,11 @@ class Perks(db.Model):
 
 	def to_json(self):
 		json = {
-			'id'			: self.id,
-			'title'			: self.title,
-			'description'	: self.description,
-			'image'			: self.image
+			'id'         : self.id,
+			'title'      : self.title,
+			'description': self.description,
+			'image'      : self.image,
+			'timestamp'  : self.timestamp
 		}
 
 		return json

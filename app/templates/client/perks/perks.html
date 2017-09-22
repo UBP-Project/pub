@@ -24,19 +24,27 @@
 
 				<div class="row">
 
-					<div class="col-md-12" style="padding: 40px 50px;">
-						<div class="row zoomify" style="border: 1px solid #d0d0d0; border-radius: 5px;">
-							<div class="col-md-5" style="background-color: orange; height: 200px; background-image: url({{ url_for('static', filename='images/pub-default-head-img.jpg')}}); background-size: cover; background-position: center center;">
-							</div>
-							<div class="col-md-7" style="background-color: #fff; height: 200px; padding: 15px;">
-								<h4 style="margin: 0;"><strong>Title of Perks</strong></h4>
-								<h4><small>Description of perks of being a wallflower.</small></h4>
-								<br/><br/><br/><br/>
-								<h5><small>TIMESTAMP</small></h5>
+					{% raw %}
+					<div id="perks_app">
+						<div v-for="perk in perks" class="col-md-12" style="padding: 40px 50px;">
+							<div class="row zoomify" style="border: 1px solid #d0d0d0; border-radius: 5px;">
+								<div class="col-md-5 no-padding" style="">
+									<img :src="'../../static/uploads/perks_images/' + perk.image"
+										style="object-fit: cover; height: 200px; width: 100%;">
+								</div>
+								<div class="col-md-7" style="background-color: #fff; height: 200px; padding: 15px;">
+									<h4 style="margin: 0;"><strong>{{ perk.title }}</strong></h4>
+									<h4><small>{{ perk.description }}</small></h4>
+									<br/><br/><br/><br/>
+									<h5><small>{{ perk.timestamp }}</small></h5>
+								</div>
 							</div>
 						</div>
-						<br/>
+						<div class="col-md-12 no-padding text-center show-more-box">
+	                        <button v-show="hasNext" class="btn btn-style-3" v-on:click="loadActivities">Show More</button>
+	                    </div>
 					</div>
+					{% endraw %}
 
 				</div>
 
@@ -46,3 +54,30 @@
 	</div>
 
 {% endblock content %}
+{% block scripts %}
+<script>
+	var vm = new Vue({
+		el: "#perks_app",
+		data: {
+			perks: [],
+			page: 1,
+			hasNext: false
+		},
+		methods: {
+			loadPerks: function() {
+				$.ajax({
+					url: '../../api/v1.0/perks' + "?=page" + this.page,
+					type: 'GET'
+				}).done(data => {
+					this.perks = data.perks;
+					this.hasNext = data.has_next;
+					this.page++;
+				});
+			}
+		}
+	});
+	$(document).ready(function() {
+		vm.loadPerks();
+	})
+</script>
+{% endblock scripts %}
