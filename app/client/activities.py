@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, request, jsonify
 from .. import admin
 from ..forms import CreateActivityFormClient, UpdateActivityFormClient, CreateActivityForm
 from app import db
-from app.models import User, Activity, Permission, Interest_Group
+from app.models import User, Activity, Permission, Interest_Group, Role, User_Activity
 from ..utils import flash_errors, is_valid_extension
 from werkzeug.utils import secure_filename
 import os
@@ -32,7 +32,19 @@ def myactivities():
 @login_required
 def activity(id):
     activity = Activity.query.get_or_404(id)
-    return render_template('client/activity/activity.html', activity=activity)
+    if activity.creator_id is not None:
+        creator = User.query.filter(User.id == activity.creator_id).first()
+    else:
+        creator = User.query.join(Role, Role.id == User.role_id)\
+            .filter(Role.name == 'Administrator').first()
+
+    going_users = User.query.join(User_Activity, User.id == User_Activity.user_id)\
+        .filter(User_Activity.activity_id == id, User_Activity.status == 1).all()
+    interested_users = User.query.join(User_Activity, User.id == User_Activity.user_id)\
+        .filter(User_Activity.activity_id == id, User_Activity.status == 0).all()
+    return render_template('client/activity/activity.html', activity=activity,
+        going_users=going_users, interested_users=interested_users,
+        can_edit_activity=is_manager_or_leader(), creator=creator)
 
 @client.route('/activities/create', methods=['GET', 'POST'])
 @login_required

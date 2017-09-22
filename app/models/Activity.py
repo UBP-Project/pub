@@ -3,6 +3,7 @@ from datetime import datetime
 from sqlalchemy_utils import UUIDType
 import uuid
 from datetime import datetime
+from flask_login import current_user
 
 
 class Activity(db.Model):
@@ -17,6 +18,7 @@ class Activity(db.Model):
     group_id      = db.Column(UUIDType(binary=False), db.ForeignKey('interest_group.id', ondelete="CASCADE", onupdate="CASCADE"), nullable=True)
     image         = db.Column(db.String(200))
     timestamp     = db.Column(db.DateTime, default=datetime.utcnow())
+    creator_id    = db.Column(UUIDType(binary=False), nullable=True)
 
     # comments    = db.relationship('Comment', backref=db.backref('comments', lazy='joined'), lazy="dynamic", passive_deletes=True, passive_updates=True)
     # schedule    = db.relationship('Schedule', backref=db.backref('schedule', lazy='joined'), lazy="dynamic", passive_deletes=True, passive_updates=True)
@@ -30,7 +32,11 @@ class Activity(db.Model):
         self.end_date    = end_date
         self.address     = address
         self.group_id    = group_id
-        self.image       = image 
+        self.image       = image
+        if current_user.is_authenticated:
+            self.creator_id  = current_user.get_id()
+        else:
+            self.creator_id = None
 
     def __repr__(self):
         return '<Activity %r>' % self.title

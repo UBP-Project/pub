@@ -1,20 +1,157 @@
 {% extends "./layout/client_base.html" %}
+{% from 'components/client-user-image-popup.html' import user_image_popup %}
 
 {% block title %} Activity | {{ activity.title }} {% endblock title %}
 
 {% block content %}
-    <img src="{{ url_for('static', filename='uploads/activity_images/' + activity.image )}}" />
+    <div id="activity_app" class="row activity-page" style="background-color: white">
+
+    <div class="col-md-12 activity-header" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), url('{{ url_for('static', filename='uploads/activity_images/' + activity.image ) }}');">
+        <div class="col-md-4 no-padding">
+            <img src="{{ url_for('static', filename='uploads/activity_images/' + activity.image ) }}">
+        </div>
+        <div class="col-md-8">
+            <h2 class="ellipsis" style="font-weight: 900;">{{ activity.title }}</h2>
+            {% if activity.start_date == activity.end_date %}
+                <h4>{{ activity.start_date|datetime_with_day}}</h4>
+            {% else %}
+                <h4>{{ activity.start_date|datetime_with_day}} to {{ activity.end_date|datetime_with_day}}</h4>
+            {% endif %}
+            <hr />
+                {% raw %}
+                <button v-if="isInterested" type="button" class="btn btn-style-1" id="ninterested-btn" value="cgoing" v-on:click="toggleInterested()">
+                    NOT INTERESTED
+                </button>
+                <button v-else type="button" class="btn btn-style-2" id="interested-btn" value="cgoing" v-on:click="toggleInterested()">
+                    INTERESTED
+                </button>
+
+                <!-- GOING BTNS -->
+                <button v-if="isGoing" type="button" class="btn btn-style-1" id="njoin-btn" value="cgoing" v-on:click="toggleGoing()">
+                    LEAVE ACTIVITY
+                </button>
+                <button v-else type="button" class="btn btn-style-2" id="join-btn" value="cgoing" v-on:click="toggleGoing()">
+                    JOIN ACTIVITY
+                </button>
+                {% endraw %}
+            <hr />
+        </div>
+    </div>
+
+    <div class="col-md-8 col-md-offset-4" style="margin-top: 15px;">
+        <h4>Activity created by 
+            <span>
+                {% if creator.image %}
+                    <img class="circle-img-sm" src="{{url_for('static', filename='uploads/profile_pictures/' + creator.image) }}">
+                {% else %}
+                    <img class="circle-img-sm" src="{{url_for('static', filename='images/pub-default-img.jpg') }}">
+                {% endif %}
+            </span>
+            <span>{{ creator.firstname }} {{ creator.lastname }}</span>
+        </h4>
+    </div>
+
+    <div class="col-md-8 col-md-offset-2 text-center activity-about">
+        <hr />
+        <h3><strong>About this Activity</strong></h3>
+        <div class="text-center">
+            {{ activity.description }}
+        </div>
+    </div>
+
+    <div class="col-md-10 col-md-offset-1 text-center activity-about">
+        <hr />
+        <h3><strong>{{ going_users|length }} people are Going to this Activity</strong></h3>
+        <div>
+            {% for user in going_users %}
+                {{ user_image_popup(user) }}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="col-md-10 col-md-offset-1 text-center activity-about">
+        <hr />
+        <h3><strong>{{ interested_users|length }} people are Interested to this Activity</strong></h3>
+        <div>
+            {% for user in interested_users %}
+                {{ user_image_popup(user) }}
+            {% endfor %}
+        </div>
+        <hr />
+    </div>
+
+        
+        
+
+
     <!-- <img src="{{ activity.image }}" />  -->
-    <h3>{{ activity.title }}</h3>
-    {% if can_edit_group %}
+    {% if can_edit_activity %}
         <a class="btn btn-sm btn-style-1" href="{{url_for('client.edit_activity', id=activity.id) }}">
             Edit this Activity
         </a>
     {% endif %}
+    </div>    
 
 {% endblock %}
 
 {% block scripts %}
     <script>
+        var vm = new Vue({
+            el: "#activity_app",
+            data: {
+                isGoing: false,
+                isInterested: false
+            },
+            methods: {
+                loadActivityStatus: function() {
+                    $.ajax({
+                        url: "../../api/v1.0/activities/" + "{{ activity.id }}" + "/participation",
+                        type: 'GET'
+                    }).done(data => {
+                        this.isGoing = data.going;
+                        this.isInterested = data.interested;
+                    });
+                },
+                toggleGoing: function() {
+                    if (this.isGoing) {
+                        $.ajax({
+                            url: '../../api/v1.0/activities/'+ "{{ activity.id }}" + '/participants/going',
+                            type: 'DELETE'
+                        }).done(data => {
+                            this.isGoing = false;
+                        });
+                    } else {
+                        $.ajax({
+                            url: '../../api/v1.0/activities/'+ "{{ activity.id }}" + '/participants/going',
+                            type: 'POST'
+                        }).done(data => {
+                            this.isGoing = true;
+                        });
+                    }
+                },
+                toggleInterested: function(activity) {
+                    if (this.isInterested) {
+                        $.ajax({
+                            url: '../../api/v1.0/activities/'+ "{{ activity.id }}" + '/participants/interested',
+                            type: 'DELETE'
+                        }).done(data => {
+                            this.isInterested = false;
+                        });
+                    } else {
+                        $.ajax({
+                            url: '../../api/v1.0/activities/'+ "{{ activity.id }}" + '/participants/interested',
+                            type: 'POST'
+                        }).done(data => {
+                            this.isInterested = true;
+                        });
+                    }
+                }
+
+            }
+        })
+        $(document).ready(function(){
+            $('[data-toggle="popover"]').popover();
+            vm.loadActivityStatus();
+        });
     </script>
 {% endblock %}

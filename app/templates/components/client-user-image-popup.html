@@ -1,0 +1,9 @@
+{% macro user_image_popup(user) %}
+<a data-toggle="popover" data-placement="top" data-content="<h4>{{ user.firstname }} {{ user.lastname }}</h4><h5>{{ user.position }}</h5><h6>{{ user.position }}</h6>" data-html="true" data-trigger="hover" href="{{ url_for('client.view_profile', id=user.id) }}">
+{% if user.image %}
+    <img class="circle-img-sm" src="{{url_for('static', filename='uploads/profile_pictures/' + user.image) }}">
+{% else %}
+    <img class="circle-img-sm" src="{{url_for('static', filename='images/pub-default-img.jpg') }}">
+{% endif %}
+</a>
+{% endmacro %}

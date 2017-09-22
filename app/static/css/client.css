@@ -181,3 +181,48 @@
 }
 
 /* HOME END */
+
+
+/*** ACTIVITY PAGE ***/
+
+.activity-page {
+    background-color: white;
+}
+
+.activity-page .activity-header {
+    background-size: cover;
+    font-weight: bold !important;
+    padding: 20px;
+    height: 300px ;
+    color: white;
+}
+
+.activity-page .activity-header h2 {
+    font-weight: 900 !important;
+}
+
+.activity-page .activity-header h5 {
+    color: #fd8103 !important;
+}
+
+.activity-page .activity-header img {
+    width: 270px;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 2px;
+}
+
+.activity-page .activity-about {
+    min-height: 150px;
+    margin-top: 50px;
+}
+
+.activity-page .activity-about h3 {
+    color: #fd8103;
+}
+
+.popover {
+    width: 300px !important;
+}
+
+/**** END OF ACTIVITY PAGE ***/
