@@ -74,28 +74,42 @@
                                                     </div>
                                                     <div role="tabpanel" class="tab-pane" :id="'act-interested-' + activity.id">
                                                         <div class="row">
-                                                            <div v-for="interested_user in activity.interested_users" class="col-md-6 mini-container">
-                                                                <a :href="'/profile/' + interested_user.id">
-                                                                    <div>
-                                                                        <img v-if="interested_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+interested_user.image">
-                                                                        <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
-                                                                        <span>{{ interested_user.firstname }} {{interested_user.lastname}}</span>
-                                                                    </div>
-                                                                </a>
-                                                            </div>
+                                                            <template v-if="activity.interested_users.length > 0">
+                                                                <div v-for="interested_user in activity.interested_users" class="col-md-6 mini-container">
+                                                                    <a :href="'/profile/' + interested_user.id">
+                                                                        <div>
+                                                                            <img v-if="interested_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+interested_user.image">
+                                                                            <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
+                                                                            <span>{{ interested_user.firstname }} {{interested_user.lastname}}</span>
+                                                                        </div>
+                                                                    </a>
+                                                                </div>
+                                                            </template>
+                                                            <template v-else>
+                                                                 <div style="padding-left: 10px;">
+                                                                    <i><small>No interested users.</small></i>
+                                                                </div>
+                                                            </template>
                                                         </div>
                                                     </div>
                                                     <div role="tabpanel" class="tab-pane" :id="'act-going-' + activity.id">
                                                         <div class="row">
-                                                            <div v-for="going_user in activity.going_users" class="col-md-6 mini-container">
-                                                                <a :href="'/profile/' + going_user.id">
-                                                                    <div>
-                                                                        <img v-if="going_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+going_user.image">
-                                                                        <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
-                                                                        <span>{{ going_user.firstname }} {{ going_user.lastname }}</span>
-                                                                    </div>
-                                                                </a>
-                                                            </div>
+                                                            <template v-if="activity.going_users.length > 0">
+                                                                <div v-for="going_user in activity.going_users" class="col-md-6 mini-container">
+                                                                    <a :href="'/profile/' + going_user.id">
+                                                                        <div>
+                                                                            <img v-if="going_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+going_user.image">
+                                                                            <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
+                                                                            <span>{{ going_user.firstname }} {{ going_user.lastname }}</span>
+                                                                        </div>
+                                                                    </a>
+                                                                </div>
+                                                            </template>
+                                                            <template v-else>
+                                                                 <div style="padding-left: 10px;">
+                                                                    <i><small>No going users.</small></i>
+                                                                </div>
+                                                            </template>
                                                         </div>
                                                     </div>
                                                 </div>
