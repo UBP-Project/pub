@@ -18,14 +18,10 @@
                 </h3>
                 <hr/>
 
-				<!-- <div class="text-center" style="height: 400px;">
-					<h3><small>COMING SOON</small></h3>
-				</div> -->
+				{% raw %}
+				<div id="perks_app" class="row">
 
-				<div class="row">
-
-					{% raw %}
-					<div id="perks_app">
+					<template v-if="perks.length > 0">
 						<div v-for="perk in perks" class="col-md-12" style="padding: 40px 50px;">
 							<div class="row zoomify" style="border: 1px solid #d0d0d0; border-radius: 5px;">
 								<div class="col-md-5 no-padding" style="">
@@ -41,12 +37,18 @@
 							</div>
 						</div>
 						<div class="col-md-12 no-padding text-center show-more-box">
-	                        <button v-show="hasNext" class="btn btn-style-3" v-on:click="loadActivities">Show More</button>
+	                        <button v-show="hasNext" class="btn btn-style-3" v-on:click="loadPerks">Show More</button>
 	                    </div>
-					</div>
-					{% endraw %}
+	                </template>
+
+	                <template v-else>
+	                	<div class="col-md-12 no-content-box text-center">
+                        	<h2><small>NO PERKS FOR TODAY</small></h2>
+                    	</div>
+	                </template>
 
 				</div>
+				{% endraw %}
 
 			</div>
 		</div>
@@ -69,6 +71,7 @@
 					url: '../../api/v1.0/perks' + "?=page" + this.page,
 					type: 'GET'
 				}).done(data => {
+					console.log(data);
 					this.perks = data.perks;
 					this.hasNext = data.has_next;
 					this.page++;
