@@ -27,9 +27,10 @@
 
                             <!-- GROUP CARD -->
                             <div class="col-md-3 col-sm-6 group-card" v-on:click="loadGroupInfo(group)">
-                                <div class="zoomify group-panel grp-icon" :style="group.cover" data-toggle="modal" :data-target="'#group-' + group.id" :id="group.id">
+                                <div class="zoomify group-panel grp-icon" data-toggle="modal" :data-target="'#group-' + group.id" :id="group.id">
                                     <div class="group-img">
-                                        <img :src="group_icons_folder + group.group_icon" width="120px" height="120px">
+                                        <img :src="group_covers_folder + group.cover_photo" style="height: 100%; width: 100%; min-width: 100%;">
+                                        <img class="img-icon" :src="group_icons_folder + group.group_icon" style="z-index: 5; margin-top: -180px;" width="120px" height="120px">
                                     </div>
                                     <div class="group-desc">
                                         <h4 class="title">{{ group.name }}</h4>
