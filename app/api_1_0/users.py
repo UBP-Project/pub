@@ -562,7 +562,8 @@ def leaderboard():
                 description: Flag for user's role
                 required: true
     """
-    leaders = db.session.query(Points, func.sum(Points.value).label('points'))\
+    leaders = db.session.query(Points_Type, func.sum(Points_Type.value).label('points'))\
+                .join(Points)\
                 .join(User)\
                 .add_columns(User.firstname, User.middlename, User.lastname, User.id, User.image)\
                 .group_by(Points.user_id)\

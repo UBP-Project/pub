@@ -380,7 +380,6 @@ def get_group_activities(id):
         'activities': [activity.to_json() for activity in activities]
     })
 
-
 @api.route('/interest_groups', methods=['POST'])
 @login_required
 def new_interest_group():
@@ -500,7 +499,6 @@ def get_interest_group_by(id):
     """
     interest_group = Interest_Group.query.get_or_404(id)
     return jsonify(interest_group.to_json()), 200
-
 
 @api.route('/interest_groups/<uuid(strict=False):id>', methods=['PUT'])
 @login_required

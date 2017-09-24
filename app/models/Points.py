@@ -8,7 +8,8 @@ class Points_Type(db.Model):
 	id = db.Column(UUIDType(binary=False), default=uuid.uuid4, primary_key=True)
 	name = db.Column(db.String(50))
 	value = db.Column(db.Integer)
-
+	timestamp     = db.Column(db.DateTime, default=datetime.utcnow())
+	
 	def __init__(self, name, value):
 		self.name = name
 		self.value = value
