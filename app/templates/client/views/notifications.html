@@ -50,8 +50,6 @@
             		var content = '';
 
             		if(data[n].action == 'interested'){
-		            	// for (var i in data) {
-
 	            		var actor = '';
 	            		var picture = '';
 	            		var action = '';
@@ -70,8 +68,6 @@
 	            		var time = '<br/><small style="color: #777;">' + data[n].object_timestamp + '</small>';
 
 	            		content += picture + '<div class="col-md-11" style="padding-top: 10px; padding-left: 30px;">' + actor + action + time + '</div>';
-
-		            	// } // end for
 
 		            	$('#notif-panel').append(start + content + end);
             		}
