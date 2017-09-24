@@ -11,7 +11,7 @@ class Perks(db.Model):
 	description = db.Column(db.Text(4294967295))
 	timestamp   = db.Column(db.DateTime, default=datetime.utcnow())
 
-	def __init_(self, title, image = '', description = ''):
+	def __init__(self, title, image, description):
 		self.title = title
 		self.image = image
 		self.description = description
