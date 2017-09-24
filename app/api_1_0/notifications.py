@@ -42,14 +42,20 @@ def get_notifications():
                         .join(Follow, User.id == Follow.follower_id)\
                         .filter(Notification_Object.status == True)\
                         .order_by(Notification.timestamp.desc())\
-                        .paginate(page=page, per_page=10, error_out=False).items
+                        .paginate(page=page, per_page=10, error_out=False)
 
 
-    return jsonify([{
-        'object_id'         : notification.object_id,
-        'object_timestamp'  : notification.object_timestamp,
-        'entity_type'       : notification.entity,
-        'entity'            : Notif.get_entity(notification.entity, notification.entity_id),
-        'action'            : notification.action,
-        'actor'             : User.query.get(notification.actor_id).to_json()
-    } for notification in notifications]), 200
+    return jsonify(
+        {
+            'has_next': notifications.has_next,
+            'has_prev': notifications.has_prev,
+            'notifications' : [{
+                'object_id'         : notification.object_id,
+                'object_timestamp'  : notification.object_timestamp,
+                'entity_type'       : notification.entity,
+                'entity'            : Notif.get_entity(notification.entity, notification.entity_id),
+                'action'            : notification.action,
+                'actor'             : User.query.get(notification.actor_id).to_json()
+            } for notification in notifications.items]
+        }
+    ), 200

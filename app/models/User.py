@@ -113,48 +113,7 @@ class User(UserMixin, db.Model):
         if user_points:
             return user_points.points
         else:
-            return 0
-
-    def join_activity(self, activity_id):
-        activity = Activity.query.get(activity_id)
-
-        user_activity = User_Activity(
-            user_id     = self.id,
-            activity_id = activity_id,
-            status      = 1 #going
-        )
-
-        self.earn_point(1, 'Joined %s' % activity.title)
-        db.session.add(user_activity)
-        db.session.commit()
-
-        # #Notification
-        # notification = Notif('activity', 'joined', id)
-        # #who triggered this action?
-        # notification.add_actor(current_user.get_id())
-        # #send notifcation to the followers of the current_user
-        # followers = current_user.get_followers()
-        
-    # def get_joined_groups(self):
-    #     return Interest_Group.query\
-    #             .join(Membership)\
-    #             .join(User)\
-    #             .filter(User.id == self.id, Membership.status == Membership.MEMBERSHIP_ACCEPTED)\
-    #             .all()
-
-    def get_interested_activities(self):
-        return Activity.query\
-                .join(User_Activity)\
-                .join(User)\
-                .filter(User.id == self.id, User_Activity.status == 0)\
-                .all()
-
-    def get_joined_activities(self):
-        return Activity.query\
-                .join(User_Activity)\
-                .join(User)\
-                .filter(User.id == self.id, User_Activity.status == 1)\
-                .all()
+            return 0    
 
     def to_json(self):
         json_post = {

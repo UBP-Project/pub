@@ -1,7 +1,7 @@
 from flask import jsonify, request, current_app, url_for
 from flask_login import login_required, current_user
 from sqlalchemy import exc
-from app.models import User, Follow, Notification, Interest_Group, Membership, Points
+from app.models import User, Follow, Notification, Interest_Group, Membership, Points, Activity, User_Activity
 from app.api_1_0 import api#, follow_notif
 from app import db
 import json
@@ -595,7 +595,12 @@ def my_joined_activities():
     ---
     tags:
       - users
-
+    parameters:
+      - name: page
+        in: query
+        type: integer
+        example: 1
+        required: true
     responses:
         200:
             description: OK
@@ -634,7 +639,21 @@ def my_joined_activities():
                         default: None
                         description: File name of image in uploads/activity_image folder
             """
-    return jsonify({'joined_activities': [activity.to_json() for activity in current_user.get_joined_activities()]}), 200
+    if 'page' in request.args:
+        page = int(request.args.get('page'))
+    else:
+        page = 1
+
+    activities = Activity.query\
+                .join(User_Activity)\
+                .join(User)\
+                .filter(User.id == current_user.get_id(), User_Activity.status == 1)\
+                .paginate(page=page, per_page=8, error_out=False)
+
+    return jsonify({
+        'has_next': activities.has_next,
+        'has_prev': activities.has_prev,
+        'joined_activities': [activity.to_json() for activity in activities.items]}), 200
 
 @api.route('/myactivities/interested')
 def my_interested_activities():
@@ -643,6 +662,12 @@ def my_interested_activities():
     ---
     tags:
       - users
+    parameters:
+      - name: page
+        in: query
+        type: integer
+        example: 1
+        required: true
 
     responses:
         200:
@@ -682,7 +707,21 @@ def my_interested_activities():
                         default: None
                         description: File name of image in uploads/activity_image folder
             """
-    return jsonify({'interested_activities': [activity.to_json() for activity in current_user.get_interested_activities()]}), 200
+    if 'page' in request.args:
+        page = int(request.args.get('page'))
+    else:
+        page = 1
+
+    activities = Activity.query\
+                .join(User_Activity)\
+                .join(User)\
+                .filter(User.id == current_user.get_id(), User_Activity.status == 0)\
+                .paginate(page=page, per_page=10, error_out=False)
+
+    return jsonify({
+        'has_next': activities.has_next,
+        'has_prev': activities.has_prev,
+        'interested_activities': [activity.to_json() for activity in activities.items]}), 200
 
 @api.route('/mygroups/joined')
 @login_required
@@ -740,9 +779,12 @@ def my_groups():
                 .join(Membership)\
                 .join(User)\
                 .filter(User.id == current_user.get_id(), Membership.status == Membership.MEMBERSHIP_ACCEPTED)\
-                .paginate(page=page, per_page=8, error_out=False).items
+                .paginate(page=page, per_page=8, error_out=False)
 
-    return jsonify({'mygroups': [group.to_json() for group in groups]}), 200
+    return jsonify({
+        'has_next': groups.has_next,
+        'has_prev': groups.has_prev,
+        'mygroups': [group.to_json() for group in groups.items]}), 200
 
 @api.route('/mygroups/pending')
 @login_required
@@ -800,6 +842,9 @@ def my_pending_groups():
                 .join(Membership)\
                 .join(User)\
                 .filter(User.id == current_user.get_id(), Membership.status == Membership.MEMBERSHIP_PENDING)\
-                .paginate(page=page, per_page=8, error_out=False).items
+                .paginate(page=page, per_page=8, error_out=False)
 
-    return jsonify({'mygroups': [group.to_json() for group in groups]}), 200
+    return jsonify({
+        'has_next': groups.has_next,
+        'has_prev': groups.has_prev,
+        'mygroups': [group.to_json() for group in groups.items]}), 200

@@ -38,32 +38,36 @@
             console.log("success");
             console.log(data);
 
-            if(data.length == 0) {
+            var has_next = data.has_next;
+            var has_prev = data.has_prev;
+            var notifications = data.notifications;
+
+            if(notifications.length == 0) {
             	document.getElementById('notif-panel').innerHTML = '<div class="text-center" style="height: 300px; padding-top: 70px;"><h2><small>NO NOTIFICATIONS TO SHOW</small></h2></div>';
             } else {
 
     			var start = '<div class="row" style="padding: 10px;">';
             	var end = '</div><hr style="margin: 10px 20px 20px 20px; border-top: 1px solid #ddd;"/>';
 
-            	for(var n in data){
+            	for(var n in notifications){
 
             		var content = '';
 
-            		if(data[n].action == 'interested'){
+            		if(notifications[n].action == 'interested'){
 	            		var actor = '';
 	            		var picture = '';
 	            		var action = '';
 	            		var activity = '';
 
-	            		/*picture = '<div class="col-md-2"><img src="' + data[n].actors[j].image + '"/></div>';*/
+	            		actor += '<a href="/profile/' + notifications[n].actor.id + '">' + notifications[n].actor.firstname + ' ' + notifications[n].actor.lastname + '</a>';
+
 	            		picture = '<div class="col-md-1"><img src="{{ url_for("static",filename="images/pub-default-img.jpg") }}" style="width: 60px; height: 60px; border-radius: 50%;"/></div>';
-	            		activity = '<a href="#">' + data[n].entity.title + '</a>';
 
-	            		if(data[n].action == 'interested') {
-	            			action = ' is interested to ' + activity + '.';
-	            		}
+	            		activity = '<a href="#">' + notifications[n].entity.title + '</a>';
 
-	            		var time = '<br/><small style="color: #777;">' + data[n].object_timestamp + '</small>';
+	            		action = ' is interested to ' + activity + '.';
+	            		
+	            		var time = '<br/><small style="color: #777;">' + notifications[n].object_timestamp + '</small>';
 
 	            		content += picture + '<div class="col-md-11" style="padding-top: 10px; padding-left: 30px;">' + actor + action + time + '</div>';
 

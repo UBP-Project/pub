@@ -435,18 +435,14 @@ def get_going_by(id):
       .filter(User_Activity.activity_id == id).order_by(User.firstname).all()
 
     return jsonify({
-      'going_users': [user_activity_to_json(user) for user in going]
+      'going_users': [{
+        'firstname': user.firstname,
+        'lastname' : user.lastname,
+        'image'    : user.image,
+        'attended' : user.attended,
+        'id'       : user.id
+      } for user in going]
     })
-
-def user_activity_to_json(user_activity):
-  json = {
-    'firstname': user_activity.firstname,
-    'lastname' : user_activity.lastname,
-    'image'    : user_activity.image,
-    'attended' : user_activity.attended,
-    'id'       : user_activity.id
-  }
-  return json
 
 @api.route('/activities/<uuid(strict=False):id>/participants/going', methods=['POST'])
 @login_required
@@ -478,7 +474,18 @@ def going_to_activity_by(id):
       return jsonify({'status': 'Record already exists'}), 201
     else:
       try:
-          current_user.join_activity(id)
+          activity = Activity.query.get(activity_id)
+
+          user_activity = User_Activity(
+              user_id     = self.id,
+              activity_id = activity_id,
+              status      = 1 #going
+          )
+
+          current_user.earn_point(1, 'Joined %s' % activity.title)
+
+          db.session.add(user_activity)
+          db.session.commit()
           return jsonify({'status': 'Success'}), 200   
       except exc.SQLAlchemyError as e:
           print(e)
