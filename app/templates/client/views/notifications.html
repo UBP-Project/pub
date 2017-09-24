@@ -42,33 +42,36 @@
             	document.getElementById('notif-panel').innerHTML = '<div class="text-center" style="height: 300px; padding-top: 70px;"><h2><small>NO NOTIFICATIONS TO SHOW</small></h2></div>';
             } else {
 
+    			var start = '<div class="row" style="padding: 10px;">';
+            	var end = '</div><hr style="margin: 10px 20px 20px 20px; border-top: 1px solid #ddd;"/>';
+
             	for(var n in data){
+
+            		var content = '';
+
             		if(data[n].action == 'interested'){
-            			var start = '<div class="row" style="padding: 10px;">';
-		            	var content = '';
-		            	var end = '</div><hr style="margin: 10px 20px 20px 20px; border-top: 1px solid #ddd;"/>';
-		            	for (var i in data) {
+		            	// for (var i in data) {
 
-		            		var actor = '';
-		            		var picture = '';
-		            		var action = '';
-		            		var activity = '';
+	            		var actor = '';
+	            		var picture = '';
+	            		var action = '';
+	            		var activity = '';
 
-		            		actor += '<a href="/profile/' + data[i].actor.id + '">' + data[i].actor.firstname + ' ' + data[i].actor.lastname + '</a>';
+	            		actor += '<a href="/profile/' + data[n].actor.id + '">' + data[n].actor.firstname + ' ' + data[n].actor.lastname + '</a>';
 
-		            		/*picture = '<div class="col-md-2"><img src="' + data[i].actors[j].image + '"/></div>';*/
-		            		picture = '<div class="col-md-1"><img src="{{ url_for("static",filename="images/pub-default-img.jpg") }}" style="width: 60px; height: 60px; border-radius: 50%;"/></div>';
-		            		activity = '<a href="#">' + data[i].entity.title + '</a>';
+	            		/*picture = '<div class="col-md-2"><img src="' + data[n].actors[j].image + '"/></div>';*/
+	            		picture = '<div class="col-md-1"><img src="{{ url_for("static",filename="images/pub-default-img.jpg") }}" style="width: 60px; height: 60px; border-radius: 50%;"/></div>';
+	            		activity = '<a href="#">' + data[n].entity.title + '</a>';
 
-		            		if(data[i].action == 'interested') {
-		            			action = ' is interested to ' + activity + '.';
-		            		}
+	            		if(data[n].action == 'interested') {
+	            			action = ' is interested to ' + activity + '.';
+	            		}
 
-		            		var time = '<br/><small style="color: #777;">' + data[i].timestamp + '</small>';
+	            		var time = '<br/><small style="color: #777;">' + data[n].object_timestamp + '</small>';
 
-		            		content += picture + '<div class="col-md-11" style="padding-top: 10px; padding-left: 30px;">' + actor + action + time + '</div>';
+	            		content += picture + '<div class="col-md-11" style="padding-top: 10px; padding-left: 30px;">' + actor + action + time + '</div>';
 
-		            	} // end for
+		            	// } // end for
 
 		            	$('#notif-panel').append(start + content + end);
             		}
