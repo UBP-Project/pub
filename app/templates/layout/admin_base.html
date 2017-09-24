@@ -55,7 +55,11 @@
             ('View Perks', url_for('admin.perks'))
         ]
     %}
-
+    
+    {% set points_links = [
+            ('View Points', url_for('admin.points'))
+        ]
+    %}
 
 
 <!--     {% for message in get_flashed_messages() %}
@@ -115,6 +119,15 @@
 
             <h5>Perks</h5>
             {% for link in perk_links %}
+                {% if request.path == link[1] %}
+                    <a class="btb btn-sidebar active" href={{link[1]}}>{{ link[0] }}</a>
+                {% else %}
+                    <a class="btb btn-sidebar" href={{link[1]}}>{{ link[0] }}</a>
+                {% endif %}
+            {% endfor %}
+
+            <h5>Points</h5>
+            {% for link in points_links %}
                 {% if request.path == link[1] %}
                     <a class="btb btn-sidebar active" href={{link[1]}}>{{ link[0] }}</a>
                 {% else %}

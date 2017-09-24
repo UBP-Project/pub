@@ -1,4 +1,4 @@
-from app.models import Interest_Group, User, Role, Follow, User_Activity, Activity, Membership
+from app.models import Interest_Group, User, Role, Follow, User_Activity, Activity, Membership, Points_Type
 from app.notification import Notif
 import random
 from app import db
@@ -46,7 +46,7 @@ def activity_join(activity_count=10, user_count=100):
                 notification = Notif('activity', 'joined', activity.id)
                 notification.add_actor(user.id)
 
-                user.earn_point(1, 'Joined %s' % activity.title)
+                user.earn_point('Joined %s' % activity.title, Points_Type.get_type_id('Joined Activity'))
 
                 db.session.add(user_activity)
 
@@ -91,6 +91,7 @@ def join_group(group_count=5, user_count=100):
                 continue
             else:
                 db.session.add(membership)
+                user.earn_point('Joined %s' % group.name, Points_Type.get_type_id('Joined Group'))
                 print(user.firstname, user.lastname, "joins group: ", group.name)
     db.session.commit()
 

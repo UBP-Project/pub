@@ -98,8 +98,8 @@ class User(UserMixin, db.Model):
         return self.query.join(Follow, Follow.following_id == User.id)\
                     .filter(Follow.follower_id == self.id).all()
 
-    def earn_point(self, value, event):
-        point = Points(self.id, 1, event)
+    def earn_point(self, event, type):
+        point = Points(self.id, event, type)
         db.session.add(point)
         db.session.commit()
 

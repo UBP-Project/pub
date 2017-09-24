@@ -1,7 +1,7 @@
 from flask import render_template, flash
 from .. import admin
 from ...decorators import admin_required
-from . import activities, groups, users, perks
+from . import activities, groups, users, perks, points
 from app.models import Activity, User, Interest_Group
 from datetime import datetime
 
