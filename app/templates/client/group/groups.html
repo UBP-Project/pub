@@ -53,7 +53,8 @@
                                         <div class="modal-body">
 
                                             <div class="img-container" :style="group.cover">
-                                                <img :src="group_icons_folder + group.group_icon" class="img-circle grp-icon-img"/>
+                                                <img :src="group_covers_folder + group.cover_photo">
+                                                <img class="grp-icon-img" :src="group_icons_folder + group.group_icon" style="margin-top: -300px; border-radius: 50%;">
                                             </div>
 
                                             <h2 class="text-center">{{ group.name }}</h2>

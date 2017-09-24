@@ -20,7 +20,7 @@
                         <div v-for="activity in activities" id="activity_list">
                             <!-- ACTIVITY CARD -->
                             <div class="col-md-3 col-lg-4 col-sm-6 card-container" v-on:click="loadActivityInfo(activity)">
-                                <div class="card zoomify" data-toggle="modal" :data-target="'#activity-' + activity.id">
+                                <div class="card zoomify" data-toggle="modal" :data-target="'#activity-joined-' + activity.id">
                                     <div class="card-img">
                                         <img :src="activity_images_folder + activity.image" class="img-responsive" />
                                     </div>
@@ -33,7 +33,7 @@
                             </div> <!-- END OF ACTIVITY CARD -->
 
                             <!-- ACTIVITY MODAL -->
-                            <div class="modal fade" :id="'activity-' + activity.id" role="dialog">
+                            <div class="modal fade" :id="'activity-joined-' + activity.id" role="dialog">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <!-- HEADER -->
@@ -51,22 +51,22 @@
                                             <div class="content">
                                                 <ul class="nav nav-tabs" role="tablist">
                                                     <li role="presentation" class="active act-li">
-                                                        <a :href="'#act-desc-' + activity.id" role="tab" data-toggle="tab">Description</a>
+                                                        <a :href="'#act-desc-joined-' + activity.id" role="tab" data-toggle="tab">Description</a>
                                                     </li>
                                                     <li role="presentation" class="act-li">
-                                                        <a :href="'#act-interested-' + activity.id" role="tab" data-toggle="tab">Interested</a>
+                                                        <a :href="'#act-interested-joined-' + activity.id" role="tab" data-toggle="tab">Interested</a>
                                                     </li>
                                                     <li role="presentation" class="act-li">
-                                                        <a :href="'#act-going-' + activity.id" role="tab" data-toggle="tab">Going</a>
+                                                        <a :href="'#act-going-joined-' + activity.id" role="tab" data-toggle="tab">Going</a>
                                                     </li>
                                                 </ul>
 
                                                 <div class="tab-content">
-                                                    <div role="tabpanel" class="tab-pane active" :id="'act-desc-' + activity.id">
+                                                    <div role="tabpanel" class="tab-pane active" :id="'act-desc-joined-' + activity.id">
                                                         <p v-if="activity.description">{{ activity.description }}</p>
                                                         <p v-else><i><small>No description</small></i></p>
                                                     </div>
-                                                    <div role="tabpanel" class="tab-pane" :id="'act-interested-' + activity.id">
+                                                    <div role="tabpanel" class="tab-pane" :id="'act-interested-joined-' + activity.id">
                                                         <div class="row">
                                                             <template v-if="activity.interested_users.length > 0">
                                                                 <div v-for="interested_user in activity.interested_users" class="col-md-6 mini-container">
@@ -86,7 +86,7 @@
                                                             </template>
                                                         </div>
                                                     </div>
-                                                    <div role="tabpanel" class="tab-pane" :id="'act-going-' + activity.id">
+                                                    <div role="tabpanel" class="tab-pane" :id="'act-going-joined-' + activity.id">
                                                         <div class="row">
                                                             <template v-if="activity.going_users.length > 0">
                                                                 <div v-for="going_user in activity.going_users" class="col-md-6 mini-container">
@@ -173,7 +173,7 @@
                         <div v-for="activity in activities" id="activity_list">
                             <!-- ACTIVITY CARD -->
                             <div class="col-md-3 col-lg-4 col-sm-6 card-container" v-on:click="loadActivityInfo(activity)">
-                                <div class="card zoomify" data-toggle="modal" :data-target="'#activity-' + activity.id">
+                                <div class="card zoomify" data-toggle="modal" :data-target="'#activity-interested-' + activity.id">
                                     <div class="card-img">
                                         <img :src="activity_images_folder + activity.image" class="img-responsive" />
                                     </div>
@@ -186,7 +186,7 @@
                             </div> <!-- END OF ACTIVITY CARD -->
 
                             <!-- ACTIVITY MODAL -->
-                            <div class="modal fade" :id="'activity-' + activity.id" role="dialog">
+                            <div class="modal fade" :id="'activity-interested-' + activity.id" role="dialog">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <!-- HEADER -->
@@ -204,22 +204,22 @@
                                             <div class="content">
                                                 <ul class="nav nav-tabs" role="tablist">
                                                     <li role="presentation" class="active act-li">
-                                                        <a :href="'#act-desc-' + activity.id" role="tab" data-toggle="tab">Description</a>
+                                                        <a :href="'#act-desc-interested-' + activity.id" role="tab" data-toggle="tab">Description</a>
                                                     </li>
                                                     <li role="presentation" class="act-li">
-                                                        <a :href="'#act-interested-' + activity.id" role="tab" data-toggle="tab">Interested</a>
+                                                        <a :href="'#act-interested-interested-' + activity.id" role="tab" data-toggle="tab">Interested</a>
                                                     </li>
                                                     <li role="presentation" class="act-li">
-                                                        <a :href="'#act-going-' + activity.id" role="tab" data-toggle="tab">Going</a>
+                                                        <a :href="'#act-going-interested-' + activity.id" role="tab" data-toggle="tab">Going</a>
                                                     </li>
                                                 </ul>
 
                                                 <div class="tab-content">
-                                                    <div role="tabpanel" class="tab-pane active" :id="'act-desc-' + activity.id">
+                                                    <div role="tabpanel" class="tab-pane active" :id="'act-desc-interested-' + activity.id">
                                                         <p v-if="activity.description">{{ activity.description }}</p>
                                                         <p v-else><i><small>No description</small></i></p>
                                                     </div>
-                                                    <div role="tabpanel" class="tab-pane" :id="'act-interested-' + activity.id">
+                                                    <div role="tabpanel" class="tab-pane" :id="'act-interested-interested-' + activity.id">
                                                         <div class="row">
                                                             <div v-for="interested_user in activity.interested_users" class="col-md-6 mini-container">
                                                                 <a :href="'/profile/' + interested_user.id">
@@ -232,7 +232,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div role="tabpanel" class="tab-pane" :id="'act-going-' + activity.id">
+                                                    <div role="tabpanel" class="tab-pane" :id="'act-going-interested-' + activity.id">
                                                         <div class="row">
                                                             <div v-for="going_user in activity.going_users" class="col-md-6 mini-container">
                                                                 <a :href="'/profile/' + going_user.id">
@@ -298,7 +298,7 @@
 
 {% block scripts %}
     <script>
-    var joined = new Vue({
+        var joined = new Vue({
           el: '#joined',
           data: {
             activities: [],
@@ -487,8 +487,8 @@
         });
 
         $(document).ready(function() {
-            interested.loadActivities();
             joined.loadActivities();
+            interested.loadActivities();
         });
     </script>
 {% endblock scripts %}
