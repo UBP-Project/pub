@@ -18,10 +18,6 @@
                 </h3>
                 <hr/>
 
-                <!-- <a href="/perks/354c8692-d6cf-4917-bb50-eaef895fa680/edit">
-                    <button class="btn btn-style-2 btn-sm pull-right" title="Edit Perks"><i class="fa fa-edit"></i></button>
-                </a> -->
-
 				{% raw %}
 				<div id="perks_app" class="row">
 
@@ -32,10 +28,11 @@
 									<img :src="'../../static/uploads/perks_images/' + perk.image"
 										style="object-fit: cover; height: 200px; width: 100%;">
 								</div>
-								<div class="col-md-7" style="background-color: #fff; height: 200px; padding: 15px;">
+								<div class="col-md-7" style="background-color: #fff; padding: 15px;">
 									<h4 style="margin: 0;"><strong>{{ perk.title }}</strong></h4>
-									<h4><small>{{ perk.description }}</small></h4>
-									<br/><br/><br/>
+									<div style="height: 120px; overflow: scroll; overflow-y: auto; overflow-x: auto;">
+										<p style="font-size: 15px; color: gray;"><small>{{ perk.description }}</small></p>
+									</div>
 									<h5><small>{{ perk.timestamp }}</small></h5>
 								</div>
 							</div>
