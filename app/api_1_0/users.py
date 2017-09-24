@@ -648,7 +648,7 @@ def my_joined_activities():
                 .join(User_Activity)\
                 .join(User)\
                 .filter(User.id == current_user.get_id(), User_Activity.status == 1)\
-                .paginate(page=page, per_page=8, error_out=False)
+                .paginate(page=page, per_page=3, error_out=False)
 
     return jsonify({
         'has_next': activities.has_next,
@@ -716,7 +716,7 @@ def my_interested_activities():
                 .join(User_Activity)\
                 .join(User)\
                 .filter(User.id == current_user.get_id(), User_Activity.status == 0)\
-                .paginate(page=page, per_page=10, error_out=False)
+                .paginate(page=page, per_page=3, error_out=False)
 
     return jsonify({
         'has_next': activities.has_next,
@@ -779,7 +779,7 @@ def my_groups():
                 .join(Membership)\
                 .join(User)\
                 .filter(User.id == current_user.get_id(), Membership.status == Membership.MEMBERSHIP_ACCEPTED)\
-                .paginate(page=page, per_page=8, error_out=False)
+                .paginate(page=page, per_page=4, error_out=False)
 
     return jsonify({
         'has_next': groups.has_next,
@@ -842,7 +842,7 @@ def my_pending_groups():
                 .join(Membership)\
                 .join(User)\
                 .filter(User.id == current_user.get_id(), Membership.status == Membership.MEMBERSHIP_PENDING)\
-                .paginate(page=page, per_page=8, error_out=False)
+                .paginate(page=page, per_page=4, error_out=False)
 
     return jsonify({
         'has_next': groups.has_next,
