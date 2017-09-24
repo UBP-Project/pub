@@ -15,65 +15,53 @@
                     </a>
                 </h3>
 				<hr/>
-
-				<div class="row">
-					<div class="col-md-12" style="padding: 20px 30px;">
+				<br/>
 						
-					    <form class="row admin-form activity-form" style="padding: 0px" method="post" enctype="multipart/form-data" name="create_perk">
-					        {{ form.hidden_tag() }}
+				<form class="row activity-form" method="post" enctype="multipart/form-data" name="create_perk" style="margin-bottom: 20px; padding: 15px;">
 
-					        <div class="col-md-12 no-padding">
-					                <h1 class="pull-left">Create Perk</h1>
-					                <div style="margin-top: 25px;">
-					                    {{ form.submit(
-					                        class="btn btn-style-1 pull-right"
-					                    )}}
-					                </div>
-					        </div>
-
-					        <div class="col-md-12 no-padding">
-					            <hr />
-					        </div>
-
-					        <div class="col-md-6 no-padding">
-					            <div class="col-md-12 no-padding">
-					                <label>Title</label>
-					                {{ form.title(
-					                    placeholder="Title",
-					                    class="form-control",
-					                    required="true") }}
-					            </div>
-
-					            <div class="col-md-12 no-padding">
-					                <label>Description</label>
-					                {{ form.description(
-					                    placeholder="About this Group",
-					                    class="form-control input-md",
-					                    required="true") }}
-					            </div>
-
-					            
-
-					        </div>
-
-					        <div class="col-md-6 no-padding-right" style="padding: 0px;">
-					            <div class="img-upload">
-					                <br /><br ?>
-					                <div class="col-md-12 no-padding-right text-center">
-					                    <img id="preview" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"/>
-					                    <div id="upload-btn" class="text">
-					                        <button class="btn btn-style-1">Choose Perk Image</button>
-					                    </div>
-					                    {{ form.image(
-					                        placeholder="Perk Image",
-					                    )}}
-					                </div>
-					            </div>
-					        </div>
-					    </form>
-
+					<div class="col-md-6">
+                        {{ form.hidden_tag() }}
+                        <div>
+                            <h4>Title</h4>
+			                {{ form.title(
+			                    placeholder="Title",
+			                    class="form-control",
+			                    required="true") }}
+			            </div>
+			            <br/>
+			            <div>
+                            <h4>Description</h4>
+			                {{ form.description(
+			                    placeholder="About this Group",
+			                    class="form-control input-md",
+			                    required="true") }}
+						</div>
 					</div>
-				</div>
+
+					<div class="col-md-6 no-padding-right" style="padding: 0px;">
+			            <div class="img-upload text-center">
+			                <br />
+			                    <img id="preview" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}" style="height: 300px;" />
+			                    <div id="upload-btn" class="text">
+			                        <button class="btn btn-style-1">Choose Perks Image</button>
+			                    </div>
+			                    {{ form.image(
+			                        placeholder="Perk Image",
+			                    )}}
+			            </div>
+			        </div>
+
+					<br/><br/>
+					<div class="col-md-12">
+                        <br/><br/>
+                        <input class="btn btn-default" type="reset" value="Reset">
+                        {{ form.submit(
+                            placeholder="Submit",
+                            class="btn btn-style-1"
+                        )}}
+                    </div>
+
+				</form>
 
 			</div>
 		</div>

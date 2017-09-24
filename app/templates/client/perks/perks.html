@@ -18,15 +18,15 @@
                 </h3>
                 <hr/>
 
-                <a href="/perks/354c8692-d6cf-4917-bb50-eaef895fa680/edit">
+                <!-- <a href="/perks/354c8692-d6cf-4917-bb50-eaef895fa680/edit">
                     <button class="btn btn-style-2 btn-sm pull-right" title="Edit Perks"><i class="fa fa-edit"></i></button>
-                </a>
+                </a> -->
 
 				{% raw %}
 				<div id="perks_app" class="row">
 
 					<template v-if="perks.length > 0">
-						<div v-for="perk in perks" class="col-md-12" style="padding: 40px 50px;">
+						<div v-for="perk in perks" class="col-md-12" style="padding: 20px 30px;">
 							<div class="row zoomify" style="border: 1px solid #d0d0d0; border-radius: 5px;">
 								<div class="col-md-5 no-padding" style="">
 									<img :src="'../../static/uploads/perks_images/' + perk.image"
@@ -35,7 +35,7 @@
 								<div class="col-md-7" style="background-color: #fff; height: 200px; padding: 15px;">
 									<h4 style="margin: 0;"><strong>{{ perk.title }}</strong></h4>
 									<h4><small>{{ perk.description }}</small></h4>
-									<br/><br/>
+									<br/><br/><br/>
 									<h5><small>{{ perk.timestamp }}</small></h5>
 								</div>
 							</div>
