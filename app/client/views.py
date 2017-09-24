@@ -68,7 +68,12 @@ def leaderboard():
 @client.route('/perks/')
 @login_required
 def perks():
-    return render_template("client/perks/perks.html")
+
+    isManager = User.query\
+            .join(Role, Role.id == User.role_id)\
+            .filter(Role.name == 'Manager', User.id == current_user.get_id()).first() is not None
+
+    return render_template("client/perks/perks.html", isManager=isManager)
 
 @client.route('/perks/create')
 @login_required
