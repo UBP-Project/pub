@@ -54,13 +54,11 @@
 		            		var action = '';
 		            		var activity = '';
 
-		            		for (var j in data[i].actors) {
-		            			actor += '<a href="/profile/' + data[i].actors[j].id + '">' + data[i].actors[j].firstname + ' ' + data[i].actors[j].lastname + '</a>';
-		            		}
+		            		actor += '<a href="/profile/' + data[i].actor.id + '">' + data[i].actor.firstname + ' ' + data[i].actor.lastname + '</a>';
 
 		            		/*picture = '<div class="col-md-2"><img src="' + data[i].actors[j].image + '"/></div>';*/
 		            		picture = '<div class="col-md-1"><img src="{{ url_for("static",filename="images/pub-default-img.jpg") }}" style="width: 60px; height: 60px; border-radius: 50%;"/></div>';
-		            		activity = '<a href="#">' + data[i].entity_object.title + '</a>';
+		            		activity = '<a href="#">' + data[i].entity.title + '</a>';
 
 		            		if(data[i].action == 'interested') {
 		            			action = ' is interested to ' + activity + '.';

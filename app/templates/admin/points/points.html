@@ -1,0 +1,16 @@
+{% extends "/layout/admin_base.html" %}
+
+{% block title %} Points {% endblock %}
+
+<h1>Create Point Rule</h1>
+{{form.hidden_tag()}}
+{{form.name(
+	placeholder = 'Pointing Rule Name',
+	class = 'form-control',
+	required='true'
+)}}
+{{form.value(
+	placeholder = 'Value',
+	class = 'form-control',
+	required='true'
+)}}
