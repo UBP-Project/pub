@@ -65,6 +65,7 @@
                         url: "{{ url_for('api.feed') }}",
                         type: 'GET'
                     }).done(data => {
+                        console.log(data);
                         this.feed = data.feed
                     })
                 }

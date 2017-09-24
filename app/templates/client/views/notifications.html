@@ -60,7 +60,8 @@
 
 		            		/*picture = '<div class="col-md-2"><img src="' + data[i].actors[j].image + '"/></div>';*/
 		            		picture = '<div class="col-md-1"><img src="{{ url_for("static",filename="images/pub-default-img.jpg") }}" style="width: 60px; height: 60px; border-radius: 50%;"/></div>';
-		            		activity = '<a href="#">' + data[i].entity_object.title + '</a>';
+
+		            		activity = '<a href="#">' + data[i].entity_object + '</a>';
 
 		            		if(data[i].action == 'interested') {
 		            			action = ' is interested to ' + activity + '.';

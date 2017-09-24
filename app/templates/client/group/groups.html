@@ -265,13 +265,13 @@
                     //console.log("Leader: "+ data);
                 });
 
-                // // load Activities
-                // $.ajax({
-                //     url: "/api/v1.0/interest_groups/" + group.id + "/activities",
-                //     type: 'GET'
-                // }).done(data => {
-                //     group.activities = data;
-                // });
+                // load Activities
+                $.ajax({
+                    url: "/api/v1.0/interest_groups/" + group.id + "/activities",
+                    type: 'GET'
+                }).done(data => {
+                    group.activities = data;
+                });
 
                 // check membership status
                 $.ajax({
