@@ -4,7 +4,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 from ..forms import LoginForm, GroupMembershipForm
 from . import client
 from app import db
-from app.models import User, Interest_Group, Activity, Membership, Role, Follow, Notification, Notification_EntityType, Notification_Object, Points
+from app.models import User, Interest_Group, Activity, Membership, Role, Follow, Notification, Notification_EntityType, Notification_Object, Points_Type, Points
 from ..auth import is_manager_or_leader
 from ..forms import UpdateUserFormClient, PasswordFormClient
 from ..utils import flash_errors
@@ -46,7 +46,8 @@ def leaderboard():
     # point_leaders = User.query.order_by(User.desc()).limit(10).all()
     # sample = User.query.join(Points).add_columns(func.sum(Points.value).label('points')).all()
 
-    point_leaders = db.session.query(Points, func.sum(Points.value).label('points'))\
+    point_leaders = db.session.query(Points_Type, func.sum(Points_Type.value).label('points'))\
+        .join(Points)\
         .join(User)\
         .group_by(Points.user_id)\
         .add_columns(User.id, User.firstname, User.lastname, User.image)\

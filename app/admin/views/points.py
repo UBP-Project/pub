@@ -22,4 +22,3 @@ def points():
 		return redirect(url_for("admin.points"))
 
 	return render_template('admin/points/points.html', form=form)
-

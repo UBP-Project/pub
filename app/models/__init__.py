@@ -1,4 +1,4 @@
-from app.models.Points					import Points
+from app.models.Points					import Points_Type, Points
 from app.models.Permission 				import Permission
 from app.models.Role 					import Role
 from app.models.Follow 					import Follow
