@@ -130,5 +130,10 @@ class UpdatePerkForm(FlaskForm, PerkFormMixin):
     image  = FileField("Perk Image")
     submit = SubmitField("Update Perk")
 
+class CreatePointRuleForm(FlaskForm, PerkFormMixin):
+    name  = StringField("Pointing Rule Name")
+    value = StringField("Value")
+    submit = SubmitField("Submit")
+
 
 
