@@ -13,7 +13,6 @@ from werkzeug.utils import secure_filename
 
 import os
 import uuid
-from asyncio import get_event_loop
 
 @api.route('/activities', methods=['GET'])
 @login_required
