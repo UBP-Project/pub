@@ -100,6 +100,34 @@ def create_perks():
         return redirect(url_for("client.perks"))
     return render_template("client/perks/create.html", form=form)
 
+@client.route('/perks/<string:id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_perk(id):
+    form = UpdatePerkForm()
+    perk = Perks.query.get_or_404(id)
+
+    if request.method == 'POST' and request.form.get('delete') == 'delete':
+        db.session.delete(perk)
+        return redirect(url_for('client.perks'))
+
+    if form.validate_on_submit():
+        if form.image.data:
+            image = form.image.data
+            image_filename = secure_filename(image.filename)
+            extension = image_filename.rsplit('.', 1)[1].lower()
+            image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
+            file_path             = os.path.join('app/static/uploads/perks_images', image_hashed_filename)
+            image.save(file_path)
+            perk.image = image_hashed_filename
+        perk.title = form.title.data
+        perk.description = form.description.data
+        db.session.commit()
+        return redirect(url_for("client.perks"))
+    # load activity data to the form
+    form.title.data       = perk.title
+    form.description.data = perk.description
+    return render_template('client/perks/edit.html', form=form, perk=perk)
+
 @client.route('/logout')
 @login_required
 def logout():
