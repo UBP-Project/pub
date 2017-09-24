@@ -482,18 +482,15 @@ def get_followings(id):
             following.isFollowing = False
 
     return jsonify({
-        'followings': [follow_item_to_json(following) for following in followings]
-    })
-
-def follow_item_to_json(follow_item):
-    return ({
-        'id'         : follow_item.id,
-        'firstname'  : follow_item.firstname,
-        'lastname'   : follow_item.lastname,
-        'department' : follow_item.department,
-        'position'   : follow_item.position,
-        'image'      : follow_item.image,
-        'isFollowing': follow_item.isFollowing
+        'followings': [{
+        'id'         : following.id,
+        'firstname'  : following.firstname,
+        'lastname'   : following.lastname,
+        'department' : following.department,
+        'position'   : following.position,
+        'image'      : following.image,
+        'isFollowing': following.isFollowing
+    } for following in followings]
     })
 
 @api.route('/leaderboard')
@@ -687,7 +684,7 @@ def my_interested_activities():
             """
     return jsonify({'interested_activities': [activity.to_json() for activity in current_user.get_interested_activities()]}), 200
 
-@api.route('/mygroups')
+@api.route('/mygroups/joined')
 @login_required
 def my_groups():
     """
@@ -743,6 +740,66 @@ def my_groups():
                 .join(Membership)\
                 .join(User)\
                 .filter(User.id == current_user.get_id(), Membership.status == Membership.MEMBERSHIP_ACCEPTED)\
+                .paginate(page=page, per_page=8, error_out=False).items
+
+    return jsonify({'mygroups': [group.to_json() for group in groups]}), 200
+
+@api.route('/mygroups/pending')
+@login_required
+def my_pending_groups():
+    """
+    Get pending request to join groups by user
+    ---
+    tags:
+      - users
+
+    parameters:
+      - name: page
+        in: query
+        type: integer
+        example: 1
+        required: true
+    
+    responses:
+        200:
+            description: OK
+            schema:
+                id: groups
+                properties:
+                    id:
+                        type: string
+                        example: 04cb8787-fe54-4e73-80d4-c17bf56537ee
+
+                    name:
+                        type: string
+                        example: Sports
+                        description: Group name
+
+                    description:
+                        type: string
+                        example: Everything you should get involved!
+                        description: About the Group                
+
+                    cover_photo:
+                        type: string
+                        example: c94f84619ce845f3b6398a30aa99c720.bmp
+                        description: File name
+
+                    group_icon:
+                        type: string
+                        example: d167f8ec77194efc8319e3455da9920f.jpg
+                        description: File name
+            """
+
+    if 'page' in request.args:
+        page = int(request.args.get('page'))
+    else:
+        page = 1
+
+    groups = Interest_Group.query\
+                .join(Membership)\
+                .join(User)\
+                .filter(User.id == current_user.get_id(), Membership.status == Membership.MEMBERSHIP_PENDING)\
                 .paginate(page=page, per_page=8, error_out=False).items
 
     return jsonify({'mygroups': [group.to_json() for group in groups]}), 200
