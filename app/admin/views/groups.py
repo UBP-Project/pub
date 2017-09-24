@@ -198,6 +198,11 @@ def accept_request(group_id, user_id):
     #who triggered this action?
     notification.add_actor(current_user.get_id())
 
+    user = User.query.get(user_id)
+    group = Interest_Group.query.get(group_id)
+
+    user.earn_point('Joined %s' % group.name, Points_Type.get_type_id('Joined Group'))
+
     membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
     membership.accept()
 

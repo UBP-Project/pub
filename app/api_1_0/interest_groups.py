@@ -1,9 +1,10 @@
 from flask import jsonify, request, url_for
 from app import db
 import json
-from app.models import Interest_Group, Membership, User, Activity
+from app.models import Interest_Group, Membership, User, Activity, Points_Type, Points
 from . import api
 from flask_login import login_required, current_user
+from app.notification import Notif
 import datetime
 from sqlalchemy import exc
 
@@ -950,10 +951,21 @@ def accept_request(group_id):
       404:
         description: Not Found
     """
-    user_id = request.form.get('user_id');
+    user_id = request.form.get('user_id')
+
+    #Notification
+    notification = Notif('interest_group', 'accepted_join_request', group_id)
+    #who triggered this action?
+    notification.add_actor(current_user.get_id())
+
+    user = User.query.get(user_id)
+    group = Interest_Group.query.get(group_id)
+
+    user.earn_point('Joined %s' % group.name, Points_Type.get_type_id('Joined Group'))
+
     membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
-    membership.status = 1
-    db.session.commit()
+    membership.accept()
+
     return jsonify({'status': 'Success'}), 200
 
 @api.route('/interest_groups/<uuid(strict=False):group_id>/decline', methods=['POST', 'GET'])

@@ -1,6 +1,6 @@
 from flask import jsonify, request, current_app, url_for
 from sqlalchemy import exc
-from app.models import Activity, User, User_Activity, Follow
+from app.models import Activity, User, User_Activity, Follow, Points_Type
 from app.api_1_0 import api
 from app import db
 import json
@@ -474,15 +474,15 @@ def going_to_activity_by(id):
       return jsonify({'status': 'Record already exists'}), 201
     else:
       try:
-          activity = Activity.query.get(activity_id)
+          activity = Activity.query.get(id)
 
           user_activity = User_Activity(
-              user_id     = self.id,
-              activity_id = activity_id,
+              user_id     = current_user.id,
+              activity_id = id,
               status      = 1 #going
           )
 
-          current_user.earn_point(1, 'Joined %s' % activity.title)
+          current_user.earn_point('Joined %s' % activity.title, Points_Type.get_type_id('Joined Activity'))
 
           db.session.add(user_activity)
           db.session.commit()
