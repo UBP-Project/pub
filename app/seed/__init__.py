@@ -6,3 +6,4 @@ def seed():
 	from app.seed import Follows
 	from app.seed import Notification_EntityType
 	from app.seed import Points_Type
+	from app.seed import Perks
