@@ -12,8 +12,11 @@ points = [
 	{
 		'name'	:	'Joined Group',
 		'value'	:	1
+	},
+	{
+		'name'	:	'Attended Activity',
+		'value'	:	20
 	}
-
 ]
 
 for point in points:

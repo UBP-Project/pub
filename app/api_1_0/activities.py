@@ -1,6 +1,6 @@
 from flask import jsonify, request, current_app, url_for
 from sqlalchemy import exc
-from app.models import Activity, User, User_Activity, Follow, Points_Type
+from app.models import Activity, User, User_Activity, Follow, Points_Type, Points
 from app.api_1_0 import api
 from app import db
 import json
@@ -761,12 +761,17 @@ def get_participation_status_by(id):
 def check_user(id):
   action = request.form.get('action')
   user_id = request.form.get('user_id')
-  print("USER ID", user_id)
+
+  user = User.query.get(user_id)
+  activity = Activity.query.get(id)
+
   user_activity = User_Activity.query.filter(User_Activity.activity_id == id, User_Activity.user_id == user_id).first()
   if action == 'check':
     user_activity.attended = True
+    user.earn_point('Attended %s' % activity.title, Points_Type.get_type_id('Attended Activity'))
   else:
     user_activity.attended = False
+    Points.query.filter(Points.event == 'Attended %s' % activity.title, Points.type == Points_Type.get_type_id('Attended Activity')).delete()
   db.session.commit()
   return jsonify({
     'activity_id': id,
