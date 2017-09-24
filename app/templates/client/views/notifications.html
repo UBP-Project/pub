@@ -52,13 +52,12 @@
             	for(var n in notifications){
 
             		var content = '';
+            		var actor = '';
+            		var picture = '';
+            		var action = '';
+            		var activity = '';
 
             		if(notifications[n].action == 'interested'){
-	            		var actor = '';
-	            		var picture = '';
-	            		var action = '';
-	            		var activity = '';
-
 	            		actor += '<a href="/profile/' + notifications[n].actor.id + '">' + notifications[n].actor.firstname + ' ' + notifications[n].actor.lastname + '</a>';
 
 	            		picture = '<div class="col-md-1"><img src="{{ url_for("static",filename="images/pub-default-img.jpg") }}" style="width: 60px; height: 60px; border-radius: 50%;"/></div>';
@@ -70,9 +69,51 @@
 	            		var time = '<br/><small style="color: #777;">' + notifications[n].object_timestamp + '</small>';
 
 	            		content += picture + '<div class="col-md-11" style="padding-top: 10px; padding-left: 30px;">' + actor + action + time + '</div>';
-
-		            	$('#notif-panel').append(start + content + end);
             		}
+
+     				else if(notifications[n].action == 'accepted_join_request'){
+     					actor += '<a href="/profile/' + notifications[n].actor.id + '">' + notifications[n].actor.firstname + ' ' + notifications[n].actor.lastname + '</a>';
+
+	            		picture = '<div class="col-md-1"><img src="{{ url_for("static",filename="images/pub-default-img.jpg") }}" style="width: 60px; height: 60px; border-radius: 50%;"/></div>';
+
+	            		group = '<a href="#">' + notifications[n].entity.name + '</a>';
+
+	            		action = ' accepted your join request to ' + group + '.';
+	            		
+	            		var time = '<br/><small style="color: #777;">' + notifications[n].object_timestamp + '</small>';
+
+	            		content += picture + '<div class="col-md-11" style="padding-top: 10px; padding-left: 30px;">' + actor + action + time + '</div>';
+     				}
+
+     				else if(notifications[n].action == 'followed'){
+     					actor += '<a href="/profile/' + notifications[n].actor.id + '">' + notifications[n].actor.firstname + ' ' + notifications[n].actor.lastname + '</a>';
+
+	            		picture = '<div class="col-md-1"><img src="{{ url_for("static",filename="images/pub-default-img.jpg") }}" style="width: 60px; height: 60px; border-radius: 50%;"/></div>';
+
+	            		user = '<a href="/profile/' +notifications[n].entity.id+ '">' + notifications[n].entity.firstname + ' ' + notifications[n].entity.lastname + '</a>';
+
+	            		action = ' followed ' + user + '.';
+	            		
+	            		var time = '<br/><small style="color: #777;">' + notifications[n].object_timestamp + '</small>';
+
+	            		content += picture + '<div class="col-md-11" style="padding-top: 10px; padding-left: 30px;">' + actor + action + time + '</div>';
+     				}
+
+     				else if(notifications[n].action == 'joined'){
+     					actor += '<a href="/profile/' + notifications[n].actor.id + '">' + notifications[n].actor.firstname + ' ' + notifications[n].actor.lastname + '</a>';
+
+	            		picture = '<div class="col-md-1"><img src="{{ url_for("static",filename="images/pub-default-img.jpg") }}" style="width: 60px; height: 60px; border-radius: 50%;"/></div>';
+
+	            		activity = '<a href="#">' + notifications[n].entity.title + '</a>';
+
+	            		action = ' joined ' + activity + '.';
+	            		
+	            		var time = '<br/><small style="color: #777;">' + notifications[n].object_timestamp + '</small>';
+
+	            		content += picture + '<div class="col-md-11" style="padding-top: 10px; padding-left: 30px;">' + actor + action + time + '</div>';
+     				}
+
+		            $('#notif-panel').append(start + content + end);
             	}
 
             } // end if

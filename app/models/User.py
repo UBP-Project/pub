@@ -1,6 +1,6 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, login_manager
-from app.models import Role, Permission, Follow, Points, Interest_Group, Membership, User_Activity, Activity
+from app.models import Role, Permission, Follow, Points, Interest_Group, Membership, User_Activity, Activity, Points_Type
 from sqlalchemy import func
 from sqlalchemy_utils import UUIDType
 from flask_login import UserMixin
@@ -104,7 +104,8 @@ class User(UserMixin, db.Model):
         db.session.commit()
 
     def total_points(self):
-        user_points = db.session.query(Points, func.sum(Points.value).label('points'))\
+        user_points = db.session.query(Points_Type, func.sum(Points_Type.value).label('points'))\
+            .join(Points)\
             .join(User)\
             .group_by(Points.user_id)\
             .filter(User.id == self.id)\

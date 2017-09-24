@@ -44,7 +44,6 @@ def get_notifications():
                         .order_by(Notification.timestamp.desc())\
                         .paginate(page=page, per_page=10, error_out=False)
 
-
     return jsonify(
         {
             'has_next': notifications.has_next,
