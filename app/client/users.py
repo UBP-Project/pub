@@ -127,6 +127,21 @@ def following(id):
         followings_count=len(followings),\
         followings=followings)
 
+@client.route('/profile/<uuid(strict=False):id>/points')
+@login_required
+def points(id):
+    user = User.query.get_or_404(id)
+    followers_follow = Follow.query.filter(Follow.following_id == id).all()
+    followers = []
+    for f in followers_follow:
+        followers.append(User.query.get(f.follower_id))
+    following_count = Follow.query.filter(Follow.follower_id == id).count()
+    is_following = True if Follow.query.filter(Follow.follower_id == current_user.get_id(),\
+        Follow.following_id == user.get_id()).first() is not None else False
+    return render_template("client/user/points.html", user=user, current_user=current_user,\
+        is_following=is_following, followers_count=len(followers), following_count=following_count,\
+        followers=followers)
+
 @client.route('/users-list')
 @login_required
 def users_list():

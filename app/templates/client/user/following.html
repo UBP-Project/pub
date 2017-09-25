@@ -32,11 +32,17 @@
 
             <div id="profile-btns" style="padding: 0px 20px;">
 
-                <div class="btn btn-xs" style="padding: 0px 20px;">
-                    <h6>Points</h6>
-                    <h4>{{ user.total_points() }}</h4>
-                </div>
-
+                {% if user.total_points() > 0 %}
+                    <a href="{{ url_for('client.points', id=user.id) }}" class="btn btn-xs following-count">
+                        <h6>Points</h6>
+                        <h4>{{ user.total_points() }}</h4>
+                    </a>
+                {% else %}
+                    <div class="btn btn-xs points">
+                        <h6>Points</h6>
+                        <h4>{{ user.total_points() }}</h4>
+                    </div>
+                {% endif %}
 
                 {% if followings_count > 0 %}
                     <a href="{{ url_for('client.following', id=user.id) }}" class="btn btn-xs" style="padding: 0px 20px;">
