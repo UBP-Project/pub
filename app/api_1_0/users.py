@@ -457,7 +457,7 @@ def unfollow_user(to_unfollow_id):
 @api.route('/users/<string:id>/followers', methods=['GET'])
 def get_followers(id):
     followers = current_user.get_followers()
-    followings_current_user = current_user.get_followings()
+    followings_current_user = current_user.get_following()
     for follower in followers:
         if follower in followings_current_user:
             follower.isFollowing = True
@@ -465,7 +465,15 @@ def get_followers(id):
             follower.isFollowing = False
 
     return jsonify({
-        'followers': [follow_item_to_json(follower) for follower in followers]
+            'followers': [{
+            'id'         : follower.id,
+            'firstname'  : follower.firstname,
+            'lastname'   : follower.lastname,
+            'department' : follower.department,
+            'position'   : follower.position,
+            'image'      : follower.image,
+            'isFollowing': follower.isFollowing
+        } for follower in followers]
     })
 
 @api.route('/users/<string:id>/followings', methods=['GET'])

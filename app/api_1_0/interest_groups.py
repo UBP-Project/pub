@@ -359,12 +359,18 @@ def get_group_members(id):
 
     """
     group = Interest_Group.query.get(id)
+
     leaders = User.query.join(Membership, Membership.user_id == User.id)\
-            .filter(Membership.group_id == group.id, Membership.status == 1, Membership.level == 1).all()
-    members = User.query.join(Membership, Membership.user_id == User.id)\
-            .filter(Membership.group_id == group.id, Membership.status == 1, Membership.level == 0).all()
+            .join(Interest_Group)\
+            .filter(Interest_Group.id == group.id, Membership.status == 1, Membership.level == 1).all()
+    
+    members = User.query.join(Membership)\
+            .join(Interest_Group)\
+            .filter(Interest_Group.id == group.id, Membership.status == 1, Membership.level == 0).all()
+
     managers =  User.query.join(Membership, Membership.user_id == User.id)\
-            .filter(Membership.group_id == group.id, Membership.status == 1, Membership.level == 2).all()
+            .join(Interest_Group)\
+            .filter(Interest_Group.id == group.id, Membership.status == 1, Membership.level == 2).all()
 
     return jsonify({
         'members': [ member.to_json() for member in members],
@@ -690,11 +696,9 @@ def get_members(id):
 
     group = Interest_Group.query.get_or_404(id)
 
-    members = User.query\
-        .join(Membership, User.id == Membership.user_id)\
-        .join(Interest_Group, Interest_Group.id == group.id)\
-        .filter(Membership.level == Membership.MEMBERSHIP_MEMBER, Membership.status == Membership.MEMBERSHIP_ACCEPTED)\
-        .all()
+    members = User.query.join(Membership)\
+            .join(Interest_Group)\
+            .filter(Interest_Group.id == group.id, Membership.status == 1, Membership.level == 0).all()
 
     return jsonify([
         user.to_json() for user in members
@@ -915,10 +919,9 @@ def get_group_leaders(id):
 
     group = Interest_Group.query.get_or_404(id)
 
-    leaders = User.query\
-        .join(Membership)\
-        .join(Interest_Group)\
-        .filter(Interest_Group.id == group.id, Membership.level == Membership.MEMBERSHIP_LEADER).all()    
+    leaders = User.query.join(Membership, Membership.user_id == User.id)\
+            .join(Interest_Group)\
+            .filter(Interest_Group.id == group.id, Membership.status == 1, Membership.level == 1).all()
 
     return jsonify([
         leader.to_json() for leader in leaders
