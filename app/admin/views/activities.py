@@ -108,7 +108,7 @@ def activities():
             Activity.end_date <= end_date).order_by(Activity.start_date)\
             .paginate(page=page, per_page=ACTIVITIES_PER_PAGE, error_out=False)
     else:
-        activities = Activity.query.filter(Activity.start_date >= datetime.now()).order_by(Activity.start_date)\
+        activities = Activity.query.order_by(Activity.start_date)\
             .paginate(page=page, per_page=ACTIVITIES_PER_PAGE, error_out=False)
 
     return render_template('admin/activity/activities.html', activities=activities, query=query,
