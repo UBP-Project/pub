@@ -72,7 +72,7 @@ def group(id):
 
 @client.route('/groups/<string:id>/edit', methods=['GET', 'POST'])
 def update_group(id):
-    can_modify_group(id, abort_on_false=True)
+    #can_modify_group(id, abort_on_false=True)
     form = UpdateInterestGroupForm()
     group = Interest_Group.query.get_or_404(id)
 
