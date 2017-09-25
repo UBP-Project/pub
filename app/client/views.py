@@ -78,6 +78,14 @@ def perks():
             .filter(Role.name == 'Manager', User.id == current_user.get_id()).first() is not None
     return render_template("client/perks/perks.html", isManager=isManager)
 
+@client.route('/perks/manage')
+@login_required
+def manage_perks():
+    isManager = User.query\
+            .join(Role, Role.id == User.role_id)\
+            .filter(Role.name == 'Manager', User.id == current_user.get_id()).first() is not None
+    return render_template("client/perks/manage.html", isManager=isManager)
+
 @client.route('/perks/create', methods=['GET', 'POST'])
 @login_required
 def create_perks():

@@ -119,19 +119,6 @@
         });
         $("#trianglify-cover").append(pattern.svg());
 
-        /*$.ajax({
-            url: '/api/v1.0/mypoints',
-            type: 'GET'
-        }).done(function(data) {
-            //console.log(data);
-            var points = data.points_history;
-            var total = data.total_points;
-            //console.log(points);
-
-        }).fail(function() {
-            console.log("error");
-        });*/
-
         var vm = new Vue({
             el: '#points',
             data: {
