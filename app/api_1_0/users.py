@@ -1,7 +1,7 @@
 from flask import jsonify, request, current_app, url_for
 from flask_login import login_required, current_user
 from sqlalchemy import exc
-from app.models import User, Follow, Notification, Interest_Group, Membership, Points
+from app.models import User, Follow, Notification, Interest_Group, Membership, Points, Activity, User_Activity
 from app.api_1_0 import api#, follow_notif
 from app import db
 import json
@@ -457,7 +457,7 @@ def unfollow_user(to_unfollow_id):
 @api.route('/users/<string:id>/followers', methods=['GET'])
 def get_followers(id):
     followers = current_user.get_followers()
-    followings_current_user = current_user.get_followings()
+    followings_current_user = current_user.get_following()
     for follower in followers:
         if follower in followings_current_user:
             follower.isFollowing = True
@@ -465,7 +465,15 @@ def get_followers(id):
             follower.isFollowing = False
 
     return jsonify({
-        'followers': [follow_item_to_json(follower) for follower in followers]
+            'followers': [{
+            'id'         : follower.id,
+            'firstname'  : follower.firstname,
+            'lastname'   : follower.lastname,
+            'department' : follower.department,
+            'position'   : follower.position,
+            'image'      : follower.image,
+            'isFollowing': follower.isFollowing
+        } for follower in followers]
     })
 
 @api.route('/users/<string:id>/followings', methods=['GET'])
@@ -482,18 +490,15 @@ def get_followings(id):
             following.isFollowing = False
 
     return jsonify({
-        'followings': [follow_item_to_json(following) for following in followings]
-    })
-
-def follow_item_to_json(follow_item):
-    return ({
-        'id'         : follow_item.id,
-        'firstname'  : follow_item.firstname,
-        'lastname'   : follow_item.lastname,
-        'department' : follow_item.department,
-        'position'   : follow_item.position,
-        'image'      : follow_item.image,
-        'isFollowing': follow_item.isFollowing
+        'followings': [{
+        'id'         : following.id,
+        'firstname'  : following.firstname,
+        'lastname'   : following.lastname,
+        'department' : following.department,
+        'position'   : following.position,
+        'image'      : following.image,
+        'isFollowing': following.isFollowing
+    } for following in followings]
     })
 
 @api.route('/leaderboard')
@@ -565,7 +570,8 @@ def leaderboard():
                 description: Flag for user's role
                 required: true
     """
-    leaders = db.session.query(Points, func.sum(Points.value).label('points'))\
+    leaders = db.session.query(Points_Type, func.sum(Points_Type.value).label('points'))\
+                .join(Points)\
                 .join(User)\
                 .add_columns(User.firstname, User.middlename, User.lastname, User.id, User.image)\
                 .group_by(Points.user_id)\
@@ -598,7 +604,12 @@ def my_joined_activities():
     ---
     tags:
       - users
-
+    parameters:
+      - name: page
+        in: query
+        type: integer
+        example: 1
+        required: true
     responses:
         200:
             description: OK
@@ -637,7 +648,21 @@ def my_joined_activities():
                         default: None
                         description: File name of image in uploads/activity_image folder
             """
-    return jsonify({'joined_activities': [activity.to_json() for activity in current_user.get_joined_activities()]}), 200
+    if 'page' in request.args:
+        page = int(request.args.get('page'))
+    else:
+        page = 1
+
+    activities = Activity.query\
+                .join(User_Activity)\
+                .join(User)\
+                .filter(User.id == current_user.get_id(), User_Activity.status == 1)\
+                .paginate(page=page, per_page=3, error_out=False)
+
+    return jsonify({
+        'has_next': activities.has_next,
+        'has_prev': activities.has_prev,
+        'joined_activities': [activity.to_json() for activity in activities.items]}), 200
 
 @api.route('/myactivities/interested')
 def my_interested_activities():
@@ -646,6 +671,12 @@ def my_interested_activities():
     ---
     tags:
       - users
+    parameters:
+      - name: page
+        in: query
+        type: integer
+        example: 1
+        required: true
 
     responses:
         200:
@@ -685,9 +716,23 @@ def my_interested_activities():
                         default: None
                         description: File name of image in uploads/activity_image folder
             """
-    return jsonify({'interested_activities': [activity.to_json() for activity in current_user.get_interested_activities()]}), 200
+    if 'page' in request.args:
+        page = int(request.args.get('page'))
+    else:
+        page = 1
 
-@api.route('/mygroups')
+    activities = Activity.query\
+                .join(User_Activity)\
+                .join(User)\
+                .filter(User.id == current_user.get_id(), User_Activity.status == 0)\
+                .paginate(page=page, per_page=3, error_out=False)
+
+    return jsonify({
+        'has_next': activities.has_next,
+        'has_prev': activities.has_prev,
+        'interested_activities': [activity.to_json() for activity in activities.items]}), 200
+
+@api.route('/mygroups/joined')
 @login_required
 def my_groups():
     """
@@ -743,6 +788,72 @@ def my_groups():
                 .join(Membership)\
                 .join(User)\
                 .filter(User.id == current_user.get_id(), Membership.status == Membership.MEMBERSHIP_ACCEPTED)\
-                .paginate(page=page, per_page=8, error_out=False).items
+                .paginate(page=page, per_page=4, error_out=False)
 
-    return jsonify({'mygroups': [group.to_json() for group in groups]}), 200
+    return jsonify({
+        'has_next': groups.has_next,
+        'has_prev': groups.has_prev,
+        'mygroups': [group.to_json() for group in groups.items]}), 200
+
+@api.route('/mygroups/pending')
+@login_required
+def my_pending_groups():
+    """
+    Get pending request to join groups by user
+    ---
+    tags:
+      - users
+
+    parameters:
+      - name: page
+        in: query
+        type: integer
+        example: 1
+        required: true
+    
+    responses:
+        200:
+            description: OK
+            schema:
+                id: groups
+                properties:
+                    id:
+                        type: string
+                        example: 04cb8787-fe54-4e73-80d4-c17bf56537ee
+
+                    name:
+                        type: string
+                        example: Sports
+                        description: Group name
+
+                    description:
+                        type: string
+                        example: Everything you should get involved!
+                        description: About the Group                
+
+                    cover_photo:
+                        type: string
+                        example: c94f84619ce845f3b6398a30aa99c720.bmp
+                        description: File name
+
+                    group_icon:
+                        type: string
+                        example: d167f8ec77194efc8319e3455da9920f.jpg
+                        description: File name
+            """
+
+    if 'page' in request.args:
+        page = int(request.args.get('page'))
+    else:
+        page = 1
+
+    groups = Interest_Group.query\
+                .join(Membership)\
+                .join(User)\
+                .filter(User.id == current_user.get_id(), Membership.status == Membership.MEMBERSHIP_PENDING)\
+                .paginate(page=page, per_page=4, error_out=False)
+
+    return jsonify({
+        'has_next': groups.has_next,
+        'has_prev': groups.has_prev,
+        'mygroups': [group.to_json() for group in groups.items]}), 200

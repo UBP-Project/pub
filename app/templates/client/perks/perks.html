@@ -18,35 +18,42 @@
                 </h3>
                 <hr/>
 
-				<!-- <div class="text-center" style="height: 400px;">
-					<h3><small>COMING SOON</small></h3>
-				</div> -->
+                <!-- <a href="/perks/354c8692-d6cf-4917-bb50-eaef895fa680/edit">
+                    <button class="btn btn-style-2 btn-sm pull-right" title="Edit Perks"><i class="fa fa-edit"></i></button>
+                </a> -->
 
-				<div class="row">
+				{% raw %}
+				<div id="perks_app" class="row">
 
-					{% raw %}
-					<div id="perks_app">
-						<div v-for="perk in perks" class="col-md-12" style="padding: 40px 50px;">
+					<template v-if="perks.length > 0">
+						<div v-for="perk in perks" class="col-md-12" style="padding: 20px 30px;">
 							<div class="row zoomify" style="border: 1px solid #d0d0d0; border-radius: 5px;">
 								<div class="col-md-5 no-padding" style="">
 									<img :src="'../../static/uploads/perks_images/' + perk.image"
 										style="object-fit: cover; height: 200px; width: 100%;">
 								</div>
-								<div class="col-md-7" style="background-color: #fff; height: 200px; padding: 15px;">
+								<div class="col-md-7" style="background-color: #fff; padding: 15px;">
 									<h4 style="margin: 0;"><strong>{{ perk.title }}</strong></h4>
-									<h4><small>{{ perk.description }}</small></h4>
-									<br/><br/><br/><br/>
+									<div style="height: 115px; overflow: scroll; overflow-y: auto; overflow-x: auto;">
+										<p style="font-size: 15px; color: gray;"><small>{{ perk.description }}</small></p>
+									</div>
 									<h5><small>{{ perk.timestamp }}</small></h5>
 								</div>
 							</div>
 						</div>
 						<div class="col-md-12 no-padding text-center show-more-box">
-	                        <button v-show="hasNext" class="btn btn-style-3" v-on:click="loadActivities">Show More</button>
+	                        <button v-show="hasNext" class="btn btn-style-3" v-on:click="loadPerks">Show More</button>
 	                    </div>
-					</div>
-					{% endraw %}
+	                </template>
+
+	                <template v-else>
+	                	<div class="col-md-12 no-content-box text-center">
+                        	<h2><small>NO PERKS FOR TODAY</small></h2>
+                    	</div>
+	                </template>
 
 				</div>
+				{% endraw %}
 
 			</div>
 		</div>
@@ -69,6 +76,7 @@
 					url: '../../api/v1.0/perks' + "?=page" + this.page,
 					type: 'GET'
 				}).done(data => {
+					console.log(data);
 					this.perks = data.perks;
 					this.hasNext = data.has_next;
 					this.page++;

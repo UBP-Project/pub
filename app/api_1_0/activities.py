@@ -1,6 +1,6 @@
 from flask import jsonify, request, current_app, url_for
 from sqlalchemy import exc
-from app.models import Activity, User, User_Activity, Follow
+from app.models import Activity, User, User_Activity, Follow, Points_Type, Points
 from app.api_1_0 import api
 from app import db
 import json
@@ -13,7 +13,6 @@ from werkzeug.utils import secure_filename
 
 import os
 import uuid
-from asyncio import get_event_loop
 
 @api.route('/activities', methods=['GET'])
 @login_required
@@ -76,7 +75,7 @@ def get_activities():
         page = 1
 
     activities = Activity.query\
-        .paginate(page = page, per_page = 8, error_out=False)
+        .paginate(page = page, per_page = 9, error_out=False)
 
     return jsonify({
       'activities': [ activity.to_json() for activity in activities.items ],
@@ -436,18 +435,14 @@ def get_going_by(id):
       .filter(User_Activity.activity_id == id).order_by(User.firstname).all()
 
     return jsonify({
-      'going_users': [user_activity_to_json(user) for user in going]
+      'going_users': [{
+        'firstname': user.firstname,
+        'lastname' : user.lastname,
+        'image'    : user.image,
+        'attended' : user.attended,
+        'id'       : user.id
+      } for user in going]
     })
-
-def user_activity_to_json(user_activity):
-  json = {
-    'firstname': user_activity.firstname,
-    'lastname' : user_activity.lastname,
-    'image'    : user_activity.image,
-    'attended' : user_activity.attended,
-    'id'       : user_activity.id
-  }
-  return json
 
 @api.route('/activities/<uuid(strict=False):id>/participants/going', methods=['POST'])
 @login_required
@@ -479,7 +474,18 @@ def going_to_activity_by(id):
       return jsonify({'status': 'Record already exists'}), 201
     else:
       try:
-          current_user.join_activity(id)
+          activity = Activity.query.get(id)
+
+          user_activity = User_Activity(
+              user_id     = current_user.id,
+              activity_id = id,
+              status      = 1 #going
+          )
+
+          current_user.earn_point('Joined %s' % activity.title, Points_Type.get_type_id('Joined Activity'))
+
+          db.session.add(user_activity)
+          db.session.commit()
           return jsonify({'status': 'Success'}), 200   
       except exc.SQLAlchemyError as e:
           print(e)
@@ -755,12 +761,17 @@ def get_participation_status_by(id):
 def check_user(id):
   action = request.form.get('action')
   user_id = request.form.get('user_id')
-  print("USER ID", user_id)
+
+  user = User.query.get(user_id)
+  activity = Activity.query.get(id)
+
   user_activity = User_Activity.query.filter(User_Activity.activity_id == id, User_Activity.user_id == user_id).first()
   if action == 'check':
     user_activity.attended = True
+    user.earn_point('Attended %s' % activity.title, Points_Type.get_type_id('Attended Activity'))
   else:
     user_activity.attended = False
+    Points.query.filter(Points.event == 'Attended %s' % activity.title, Points.type == Points_Type.get_type_id('Attended Activity')).delete()
   db.session.commit()
   return jsonify({
     'activity_id': id,

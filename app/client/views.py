@@ -4,11 +4,17 @@ from flask_login import login_user, login_required, logout_user, current_user
 from ..forms import LoginForm, GroupMembershipForm
 from . import client
 from app import db
-from app.models import User, Interest_Group, Activity, Membership, Role, Follow, Notification, Notification_EntityType, Notification_Object, Points
+from app.models import User, Interest_Group, Activity, Membership, Role, Follow, Notification, Notification_EntityType, Notification_Object, Points_Type, Points
 from ..auth import is_manager_or_leader
-from ..forms import UpdateUserFormClient, PasswordFormClient
+from ..forms import UpdateUserFormClient, PasswordFormClient, CreatePerkForm, UpdatePerkForm
 from ..utils import flash_errors
 from sqlalchemy.sql import func
+from app.notification import Notif
+from app.models import Perks
+from werkzeug.utils import secure_filename
+import uuid
+import os
+from sqlalchemy import or_
 
 @client.route('/', methods=['GET', 'POST'])
 @login_required
@@ -37,42 +43,7 @@ def login():
 @client.route('/notifications/')
 @login_required
 def notifications():
-
-    notifs = Notification.query\
-        .add_columns(Notification.id, Notification.status, Notification.timestamp, Notification.notification_object_id)\
-        .join(Notification_Object)\
-        .join(Notification_EntityType)\
-        .filter(Notification_Object.status == True)\
-        .filter(Notification.notifier_id == current_user.get_id())\
-        .add_columns(Notification_EntityType.action, Notification_EntityType.entity)\
-        .order_by(Notification.timestamp.desc())\
-        .all()
-
-    notifications = jsonify([
-            {
-                'notification_id'   : notification.id,
-                'status'            : notification.status,
-                'timestamp'         : notification.timestamp,
-                'object_id'         : notification.notification_object_id,
-                'action'            : notification.action,
-                'entity'            : notification.entity,
-                'actors'            : [
-                    {
-                        'id'           : actor.id,
-                        'firstname'    : actor.firstname,
-                        'middlename'   : actor.middlename,
-                        'lastname'     : actor.lastname,
-                        'email'        : actor.email,
-                        'department'   : actor.department,
-                        'position'     : actor.position,
-                        'birthday'     : actor.birthday
-                    } for actor in User.query.join(Notification_Change).join(Notification_Object).filter(Notification_Object.id == notification.notification_object_id).filter(Notification_Change.actor_id != current_user.get_id()).all()
-                ]
-            }
-            for notification in notifs
-        ])
-    print(str(notifications))
-    return render_template("client/views/notifications.html", user=current_user, notifications=notifications)
+    return render_template("client/views/notifications.html")
 
 @client.route('/leaderboard')
 @login_required
@@ -80,7 +51,8 @@ def leaderboard():
     # point_leaders = User.query.order_by(User.desc()).limit(10).all()
     # sample = User.query.join(Points).add_columns(func.sum(Points.value).label('points')).all()
 
-    point_leaders = db.session.query(Points, func.sum(Points.value).label('points'))\
+    point_leaders = db.session.query(Points_Type, func.sum(Points_Type.value).label('points'))\
+        .join(Points)\
         .join(User)\
         .group_by(Points.user_id)\
         .add_columns(User.id, User.firstname, User.lastname, User.image)\
@@ -101,12 +73,60 @@ def leaderboard():
 @client.route('/perks/')
 @login_required
 def perks():
-    return render_template("client/perks/perks.html")
+    isManager = User.query\
+            .join(Role, Role.id == User.role_id)\
+            .filter(Role.name == 'Manager', User.id == current_user.get_id()).first() is not None
+    return render_template("client/perks/perks.html", isManager=isManager)
 
-@client.route('/perks/create')
+@client.route('/perks/create', methods=['GET', 'POST'])
 @login_required
 def create_perks():
-    return render_template("client/perks/create.html")
+    form = CreatePerkForm()
+    if form.validate_on_submit():
+        image = form.image.data
+        image_filename = secure_filename(image.filename)
+        extension = image_filename.rsplit('.', 1)[1].lower()
+        image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
+        file_path             = os.path.join('app/static/uploads/perks_images', image_hashed_filename)
+        image.save(file_path)
+
+        perk = Perks(
+            title=form.title.data,
+            description=form.description.data,
+            image=image_hashed_filename
+        )
+        db.session.add(perk)
+        db.session.commit()
+        return redirect(url_for("client.perks"))
+    return render_template("client/perks/create.html", form=form)
+
+@client.route('/perks/<string:id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_perk(id):
+    form = UpdatePerkForm()
+    perk = Perks.query.get_or_404(id)
+
+    if request.method == 'POST' and request.form.get('delete') == 'delete':
+        db.session.delete(perk)
+        return redirect(url_for('client.perks'))
+
+    if form.validate_on_submit():
+        if form.image.data:
+            image = form.image.data
+            image_filename = secure_filename(image.filename)
+            extension = image_filename.rsplit('.', 1)[1].lower()
+            image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
+            file_path             = os.path.join('app/static/uploads/perks_images', image_hashed_filename)
+            image.save(file_path)
+            perk.image = image_hashed_filename
+        perk.title = form.title.data
+        perk.description = form.description.data
+        db.session.commit()
+        return redirect(url_for("client.perks"))
+    # load activity data to the form
+    form.title.data       = perk.title
+    form.description.data = perk.description
+    return render_template('client/perks/edit.html', form=form, perk=perk)
 
 @client.route('/logout')
 @login_required
