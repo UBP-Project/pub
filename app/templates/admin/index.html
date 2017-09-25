@@ -20,6 +20,11 @@
             {% for activity in upcoming_activities %}
                 {{ activity_card(activity) }}
             {% endfor %}
+            {% if upcoming_activities.count() == 0 %}
+            <div class="col-md-12 no-padding">
+                <h4>No upcoming activities.</h4>
+            </div>
+            {% endif %}
             <div class="col-md-12 no-padding">
                 <a href="{{ url_for('admin.activities') }}" class="btn btn-xs btn-style-3 pull-right">See All Activities</a>
             </div>
