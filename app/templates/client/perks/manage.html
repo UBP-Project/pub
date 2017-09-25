@@ -36,7 +36,7 @@
                                         <p style="font-size: 15px; color: gray;"><small>{{ perk.description }}</small></p>
                                     </div>
                                     <a :href="'/perks/'+ perk.id + '/edit'" style="text-decoration: none;">
-                                        <button class="btn btn-style-1 btn-sm" :title="'Edit ' + perk.title"><i class="fa fa-edit"></i></button>
+                                        <button class="btn btn-style-1 btn-sm" :title="'Edit ' + perk.title">EDIT &nbsp;<i class="fa fa-edit"></i></button>
                                     </a>
                                     <h5><small>{{ perk.timestamp }}</small></h5>
                                 </div>
@@ -50,7 +50,7 @@
 
                     <template v-else>
                         <div class="col-md-12 no-content-box text-center">
-                            <h2><small>NO PERKS FOR TODAY</small></h2>
+                            <h2><small>NO PERKS</small></h2>
                         </div>
                     </template>
 
