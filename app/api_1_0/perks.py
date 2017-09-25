@@ -3,7 +3,7 @@ from app.api_1_0 import api
 from flask import jsonify, request
 from flask_login import login_required
 
-PERKS_PER_PAGE = 8
+PERKS_PER_PAGE = 6
 
 @api.route('/perks', methods=['GET'])
 @login_required

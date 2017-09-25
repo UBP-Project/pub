@@ -25,6 +25,20 @@ def groups():
     return render_template("client/group/groups.html", # interest_groups=interest_groups,
         managed_groups=managed_groups, user=current_user, isManager=isManager)
 
+@client.route('/groups/manage')
+@login_required
+def manage_groups():
+    isManager = User.query\
+            .join(Role, Role.id == User.role_id)\
+            .filter(Role.name == 'Manager', User.id == current_user.get_id()).first() is not None
+
+    managed_groups = Interest_Group.query.join(Membership,\
+        Membership.group_id == Interest_Group.id).filter(Membership.level == 1,\
+        Membership.user_id == current_user.get_id()).all()
+
+    return render_template("client/group/manage.html", # interest_groups=interest_groups,
+        managed_groups=managed_groups, user=current_user, isManager=isManager)
+
 @client.route('/groups/<uuid(strict=False):id>', methods=['POST', 'GET'])
 @login_required
 def group(id):
@@ -58,7 +72,7 @@ def group(id):
 
 @client.route('/groups/<string:id>/edit', methods=['GET', 'POST'])
 def update_group(id):
-    can_modify_group(id, abort_on_false=True)
+    #can_modify_group(id, abort_on_false=True)
     form = UpdateInterestGroupForm()
     group = Interest_Group.query.get_or_404(id)
 

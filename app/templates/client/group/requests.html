@@ -21,19 +21,19 @@
             <div class="col-md-6">
                 <h1>{{ group["name"] }}</h1>
                 <h5><i>{{ group["about"] }}</i></h5>
-                {% if can_edit_group %}
+               
                     <a class="btn btn-sm btn-style-1" href="{{url_for('client.update_group', id=group.id)}}">
                         Edit this Group
                     </a>
-                {% endif %}
                 <br /><br /><br />
             </div>
             <div class="col-md-6 text-right group-controls">
-                {% if can_accept_requests %}
+                <a href="/groups/{{group.id}}" class="btn btn-sm btn-style-4" style="transition: 0s;">
+                        Back
+                    </a>
                     <a href="{{ url_for('client.group_requests', id=group.id) }}" class="btn btn-sm btn-style-3">
                         Requests
                     </a>
-                {% endif %}
                 <a href="{{ url_for('client.group_members', id=group.id) }}" class="btn btn-sm btn-style-3">
                     Members
                 </a>
@@ -56,7 +56,7 @@
                                         <td>{{ user['lastname'] }}</td>
                                         <td>{{ user['position'] }}</td>
                                         <td>{{ user['department'] }}</td>
-                                        <td v-if="canAcceptRequests" class="text-center">
+                                        <td class="text-center">
                                             <button class="btn btn-style-3" v-on:click="acceptRequest(user, index)">Accept</button>
                                             <button class="btn btn-style-1" v-on:click="declineRequest(user, index)">Decline</button>
                                         </td>
@@ -80,7 +80,7 @@
         el: "#requests_app",
         data: {
             requests: [],
-            canAcceptRequests: false
+            canAcceptRequests: true
         },
         methods: {
             loadRequests: function() {

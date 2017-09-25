@@ -80,6 +80,7 @@ def create_activity():
     return render_template("client/activity/create.html", form=form, groups=groups)
 
 @client.route('/activities/<string:id>/edit', methods=['GET', 'POST'])
+@login_required
 def edit_activity(id):
     can_modify_activity(id, abort_on_false=True)
     form                  = UpdateActivityFormClient()

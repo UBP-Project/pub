@@ -921,7 +921,7 @@ def get_group_leaders(id):
 
     leaders = User.query.join(Membership, Membership.user_id == User.id)\
             .join(Interest_Group)\
-            .filter(Interest_Group.id == group.id, Membership.status == 1, Membership.level == 1).all()
+            .filter(Interest_Group.id == group.id, Membership.status == 1, Membership.level != 0).all()
 
     return jsonify([
         leader.to_json() for leader in leaders

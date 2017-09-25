@@ -20,19 +20,18 @@
             <div class="col-md-6">
                 <h1>{{ group["name"] }}</h1>
                 <h5><i>{{ group["about"] }}</i></h5>
-                {% if can_edit_group %}
                     <a class="btn btn-sm btn-style-1" href="{{url_for('client.update_group', id=group.id)}}">
                         Edit this Group
                     </a>
-                {% endif %}
                 <br /><br /><br />
             </div>
             <div class="col-md-6 text-right group-controls">
-                {% if can_accept_requests %}
+                    <a href="/groups/manage" class="btn btn-sm btn-style-4" style="transition: 0s;">
+                        Back
+                    </a>
                     <a href="{{ url_for('client.group_requests', id=group.id) }}" class="btn btn-sm btn-style-3">
                         Requests
                     </a>
-                {% endif %}
                 <a href="{{ url_for('client.group_members', id=group.id) }}" class="btn btn-sm btn-style-3">
                     Members
                 </a>
@@ -48,13 +47,13 @@
             {% for activity in activities %}
                 <div class="col-md-3 no-padding">
                     <div class="activity-card"
-                    style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{url_for('static',filename='uploads/activity_images/' + activity.image) }})">
-                        <div>
-                            <h3><strong>{{ activity['title'] }}</strong></h3>
+                    style="height: 180px; background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{url_for('static',filename='uploads/activity_images/' + activity.image) }})">
+                        <div style="padding: 30px 10px;">
+                            <h3 style="color: #fff;"><strong>{{ activity['title'] }}</strong></h3>
                             <!-- <h6>{{ activity['description'] }}</h6> -->
-                            <h6><i>{{ activity['start_date']}} - {{ activity['end_date']}}</i></h6>
+                            <h6 style="color: lightgray;"><i>{{ activity['start_date']}} - {{ activity['end_date']}}</i></h6>
                         </div>
-                        <a class="btn btn-block btn-style-3" href="{{ url_for('admin.edit_activity', id=activity['id']) }}">
+                        <a class="btn btn-block btn-style-3" href="{{ url_for('client.edit_activity', id=activity['id']) }}">
                             Edit Activity
                         </a>
                     </div>

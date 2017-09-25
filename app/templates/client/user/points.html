@@ -1,6 +1,6 @@
 {% extends "./layout/client_base.html" %}
 
-{% block title %} {{ user['firstname'] }} {{ user['lastname'] }} {% endblock title %}
+{% block title %} {{ user['firstname'] }} {{ user['lastname'] }} Points {% endblock title %}
 
 {% block content %}
     <div class="row">
@@ -86,31 +86,19 @@
 
         <div class="row">
             {% raw %}
-            <div id="followers_app" class="col-md-offset-4 col-md-8" style="padding: 20px 0px;">
+            <div id="points" class="col-md-offset-4 col-md-8" style="padding: 20px 0px;">
                 <div class="row">
-                    <div v-for="follower in followers" class="col-md-6" style="padding: 0px;">
+
+                    <div v-for="point in points" class="col-md-6" style="padding: 0px;">
                         <div style="background-color: white; padding: 10px; margin: 5px;">
 
-                            <img v-if="follower.image" :src="'../../../static/uploads/profile_pictures/' + follower.image"
-                                style="width: 50px; height: 50px; border-radius: 25px;">
-
-                            <img v-else src="../../../static/images/pub-default-img.jpg"
-                                style="width: 50px; height: 50px; border-radius: 25px;">
-
-                            <button v-if="follower.isFollowing" class="pull-right btn btn-style-1" style="margin-top: 20px; height: 30px; padding: 0px 15px;" v-on:click="toggleFollow(follower)">Following</button>
-                            <button v-else class="pull-right btn btn-style-2" style="margin-top: 20px; height: 30px; padding: 0px 15px;" v-on:click="toggleFollow(follower)">Follow</button>
-                            
-                            <h4>
-                            <a :href="'../../profile/' + follower.id">
-                                {{ follower.firstname }} {{ follower.lastname }}
-                            </a>
-                            </h4>
-
-                            <p style="font-size: 12px;">{{ follower.position }}<br />
-                            {{ follower.department }}</p>
+                            <h4 style="color: #fd8103;" class="title"><strong>{{ point.event }}</strong></h4>
+                            <h5>Earned Points: {{ point.value }}</h5>
+                            <h5><small>{{ point.timestamp }}</small></h5>
                             
                         </div>
                     </div>
+
                 </div>
             </div>
             {% endraw %}
@@ -123,88 +111,36 @@
 {% block scripts %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/trianglify/0.4.0/trianglify.min.js"></script>
     <script>
+
         var pattern = Trianglify({
             width: $("#trianglify-cover").width(),
             height: $("#trianglify-cover").height(),
             seed: "{{ user['id'] }}"
         });
         $("#trianglify-cover").append(pattern.svg());
-    </script>
-    <script>
-        // Current Profile follow or unfollow
-        function set_buttons() {
-            $("#btn-follow").on('click', function() {
-                $.ajax({
-                    'url': '{{ url_for('api.follow_user', to_follow_id=user["id"]) }}',
-                    'type': 'POST'
-                }).done(function(data) {
-                    $("#btn-follow").remove();
-                    $("#profile-btns").append('<button id="btn-unfollow" class="btn btn-style-1" style="width: 100px">Following</button>');
-                    set_buttons();
-                });
-            });
 
-            $("#btn-unfollow").on('click', function() {
-                $.ajax({
-                    'url': '{{ url_for('api.unfollow_user', to_unfollow_id=user["id"]) }}',
-                    'type': 'DELETE'
-                }).done(function(data) {
-                    $("#btn-unfollow").remove();
-                    $("#profile-btns").append('<button id="btn-follow" class="btn btn-style-2" style="width: 100px">Follow</button>');
-                    set_buttons();
-                });
-            });
-
-            $("#btn-unfollow")
-                .mouseover(function() {
-                    $(this).text("Unfollow");
-                })
-                .mouseout(function() {
-                    $(this).text("Following");
-                });
-
-        }
-        // initialize buttons
-        set_buttons();
-    </script>
-    <script>
-        // Followers follow or unfollow
-        var followers_app = new Vue({
-            el: "#followers_app",
+        var vm = new Vue({
+            el: '#points',
             data: {
-                followers: []
+                points: []
             },
             methods: {
-                loadFollowers: function() {
+                loadPointHistory: function() {
                     $.ajax({
-                        url: "{{ url_for('api.get_followers', id=user.id) }}",
+                        url: "{{ url_for('api.mypoints') }}",
                         type: 'GET'
                     }).done(data => {
-                        this.followers = data.followers;
-                        console.log(this.followers);
+                        this.points.push.apply(this.points, data.points_history);
+                        console.log(this.points);
                     });
-                },
-                toggleFollow: function(follow_item) {
-                    if (follow_item.isFollowing) {
-                        $.ajax({
-                            url: "../../api/v1.0/users/" + follow_item.id + "/unfollow",
-                            type: 'DELETE'
-                        }).done(data => {
-                            follow_item.isFollowing = false;
-                        });
-                    } else {
-                        $.ajax({
-                            url: "../../api/v1.0/users/" + follow_item.id + "/follow",
-                            type: 'POST'
-                        }).done(data => {
-                            follow_item.isFollowing = true;
-                        });
-                    }
                 }
             }
         });
+
         $(document).ready(function() {
-            followers_app.loadFollowers();
-        })
+            vm.loadPointHistory();
+        });
+
+
     </script>
 {% endblock scripts %}

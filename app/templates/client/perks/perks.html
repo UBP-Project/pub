@@ -11,40 +11,38 @@
 
 				<h3>UNIONBANK PERKS
 					{% if isManager %}
-                    <a href="/perks/create">
-                        <button class="btn btn-style-2 btn-sm pull-right" title="Create Perks"><i class="fa fa-plus"></i></button>
-                    </a>
+					<span class="pull-right">
+	                    <a href="/perks/manage" style="text-decoration: none;">
+	                        <button class="btn btn-style-2 btn-sm" title="Manage Perks">MANAGE PERKS &nbsp;<i class="fa fa-gear"></i></button>
+	                    </a>
+                    </span>
                     {% endif %}
                 </h3>
                 <hr/>
 
-                <!-- <a href="/perks/354c8692-d6cf-4917-bb50-eaef895fa680/edit">
-                    <button class="btn btn-style-2 btn-sm pull-right" title="Edit Perks"><i class="fa fa-edit"></i></button>
-                </a> -->
-
 				{% raw %}
 				<div id="perks_app" class="row">
 
-					<template v-if="perks.length > 0">
-						<div v-for="perk in perks" class="col-md-12" style="padding: 20px 30px;">
-							<div class="row zoomify" style="border: 1px solid #d0d0d0; border-radius: 5px;">
-								<div class="col-md-5 no-padding" style="">
-									<img :src="'../../static/uploads/perks_images/' + perk.image"
-										style="object-fit: cover; height: 200px; width: 100%;">
-								</div>
-								<div class="col-md-7" style="background-color: #fff; padding: 15px;">
-									<h4 style="margin: 0;"><strong>{{ perk.title }}</strong></h4>
-									<div style="height: 115px; overflow: scroll; overflow-y: auto; overflow-x: auto;">
-										<p style="font-size: 15px; color: gray;"><small>{{ perk.description }}</small></p>
-									</div>
-									<h5><small>{{ perk.timestamp }}</small></h5>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-12 no-padding text-center show-more-box">
-	                        <button v-show="hasNext" class="btn btn-style-3" v-on:click="loadPerks">Show More</button>
-	                    </div>
-	                </template>
+					 <template v-if="perks.length > 0">
+                        <div v-for="perk in perks" class="col-md-6" style="padding: 10px;">
+                            <div class="row zoomify" style="border: 1px solid #d0d0d0; border-radius: 5px;">
+                                <div class="col-md-5 no-padding" style="overflow: hidden;">
+                                    <img :src="'../../static/uploads/perks_images/' + perk.image" style="object-fit: cover; min-height: 100%; max-height: 100%; height: 200px; width: 100%; min-width: 100%; max-width: 100%; overflow: hidden; border-radius: 3px 0 0 3px;" />
+                                </div>
+                                <div class="col-md-7" style="background-color: #fff; padding: 15px;">
+                                    <h4 class="title" style="margin: 0;"><strong>{{ perk.title }}</strong></h4>
+                                    <div style="height: 115px; overflow: scroll; overflow-y: auto; overflow-x: auto;">
+                                        <p style="font-size: 15px; color: gray;"><small>{{ perk.description }}</small></p>
+                                    </div>
+                                    <h5><small>{{ perk.timestamp }}</small></h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 no-padding text-center show-more-box">
+                        	<br/>
+                            <button v-show="hasNext" class="btn btn-style-3" v-on:click="loadPerks">Show More</button>
+                        </div>
+                    </template>
 
 	                <template v-else>
 	                	<div class="col-md-12 no-content-box text-center">
@@ -61,31 +59,32 @@
 	</div>
 
 {% endblock content %}
+
 {% block scripts %}
-<script>
-	var vm = new Vue({
-		el: "#perks_app",
-		data: {
-			perks: [],
-			page: 1,
-			hasNext: false
-		},
-		methods: {
-			loadPerks: function() {
-				$.ajax({
-					url: '../../api/v1.0/perks' + "?=page" + this.page,
-					type: 'GET'
-				}).done(data => {
-					console.log(data);
-					this.perks = data.perks;
-					this.hasNext = data.has_next;
-					this.page++;
-				});
+	<script>
+		var vm = new Vue({
+			el: "#perks_app",
+			data: {
+				perks: [],
+				page: 1,
+				hasNext: false
+			},
+			methods: {
+				loadPerks: function() {
+					$.ajax({
+						url: '../../api/v1.0/perks' + "?=page" + this.page,
+						type: 'GET'
+					}).done(data => {
+						//console.log(data);
+						this.perks = data.perks;
+						this.hasNext = data.has_next;
+						this.page++;
+					});
+				}
 			}
-		}
-	});
-	$(document).ready(function() {
-		vm.loadPerks();
-	})
-</script>
+		});
+		$(document).ready(function() {
+			vm.loadPerks();
+		})
+	</script>
 {% endblock scripts %}

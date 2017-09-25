@@ -11,9 +11,11 @@
 
                 <h3>INTEREST GROUPS
                     {% if isManager %}
-                    <a href="/groups/create">
-                        <button class="btn btn-style-2 btn-sm pull-right" title="Create Group"><i class="fa fa-plus"></i></button>
-                    </a>
+                    <span class="pull-right">
+                        <a href="/groups/manage" style="text-decoration: none;">
+                            <button class="btn btn-style-2 btn-sm" title="Manage Perks">MANAGE GROUPS &nbsp;<i class="fa fa-gear"></i></button>
+                        </a>
+                    </span>
                     {% endif %}
                 </h3>
                 <hr/>

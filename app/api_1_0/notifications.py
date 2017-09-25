@@ -33,16 +33,16 @@ def get_notifications():
         page = 1
 
     notifications = Notification_EntityType.query\
-                        .join(Notification_Object)\
-                        .add_columns(Notification_EntityType.entity, Notification_EntityType.action)\
-                        .add_columns(Notification_Object.id.label('object_id'), Notification_Object.timestamp.label('object_timestamp'), Notification_Object.entity_id.label('entity_id'))\
-                        .join(Notification)\
-                        .join(User, Notification.actor_id == User.id)\
-                        .add_columns(Notification.actor_id)\
-                        .join(Follow, User.id == Follow.follower_id)\
-                        .filter(Notification_Object.status == True)\
-                        .order_by(Notification.timestamp.desc())\
-                        .paginate(page=page, per_page=10, error_out=False)
+        .join(Notification_Object)\
+        .join(Notification)\
+        .join(User)\
+        .join(Follow, User.id == Follow.following_id)\
+        .add_columns(Notification_EntityType.entity, Notification_EntityType.action)\
+        .add_columns(Notification_Object.id.label('object_id'), Notification_Object.timestamp.label('object_timestamp'), Notification_Object.entity_id.label('entity_id'))\
+        .add_columns(Notification.actor_id)\
+        .filter(Notification_Object.status == True, Follow.follower_id == current_user.get_id())\
+        .order_by(Notification.timestamp.desc())\
+        .paginate(page=page, per_page=10, error_out=False)
 
     return jsonify(
         {
