@@ -13,7 +13,7 @@
 					{% if isManager %}
 					<span class="pull-right">
 	                    <a href="/perks/manage" style="text-decoration: none;">
-	                        <button class="btn btn-style-1 btn-sm" title="Manage Perks"><i class="fa fa-gear"></i></button>
+	                        <button class="btn btn-style-2 btn-sm" title="Manage Perks"><i class="fa fa-gear"></i></button>
 	                    </a>
                     </span>
                     {% endif %}
@@ -24,7 +24,7 @@
 				<div id="perks_app" class="row">
 
 					 <template v-if="perks.length > 0">
-                        <div v-for="perk in perks" class="col-md-6" style="padding: 20px 10px;">
+                        <div v-for="perk in perks" class="col-md-6" style="padding: 10px;">
                             <div class="row zoomify" style="border: 1px solid #d0d0d0; border-radius: 5px;">
                                 <div class="col-md-5 no-padding" style="overflow: hidden;">
                                     <img :src="'../../static/uploads/perks_images/' + perk.image" style="object-fit: cover; min-height: 100%; max-height: 100%; height: 200px; width: 100%; min-width: 100%; max-width: 100%; overflow: hidden; border-radius: 3px 0 0 3px;" />
@@ -39,6 +39,7 @@
                             </div>
                         </div>
                         <div class="col-md-12 no-padding text-center show-more-box">
+                        	<br/>
                             <button v-show="hasNext" class="btn btn-style-3" v-on:click="loadPerks">Show More</button>
                         </div>
                     </template>
@@ -74,7 +75,7 @@
 						url: '../../api/v1.0/perks' + "?=page" + this.page,
 						type: 'GET'
 					}).done(data => {
-						console.log(data);
+						//console.log(data);
 						this.perks = data.perks;
 						this.hasNext = data.has_next;
 						this.page++;

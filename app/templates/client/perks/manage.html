@@ -12,10 +12,10 @@
                 <h3>MANAGE PERKS
                     <span class="pull-right">
                         <a href="/perks/create" style="text-decoration: none;">
-                            <button class="btn btn-style-2 btn-sm" title="Create Perks"><i class="fa fa-plus"></i></button>
+                            <button class="btn btn-style-1 btn-sm" title="Create Perks">CREATE PERKS &nbsp;<i class="fa fa-plus"></i></button>
                         </a>
                         <a href="/perks" style="text-decoration: none;">
-                            <button class="btn btn-style-4 btn-sm">Cancel</button>
+                            <button class="btn btn-style-4 btn-sm" title="Back To Perks">Cancel</button>
                         </a>
                     </span>
                 </h3>
@@ -24,12 +24,8 @@
                 {% raw %}
                 <div id="perks_app" class="row">
 
-                    <style>
-                        
-                    </style>
-
                     <template v-if="perks.length > 0">
-                        <div v-for="perk in perks" class="col-md-6" style="padding: 20px 10px;">
+                        <div v-for="perk in perks" class="col-md-6" style="padding: 10px;">
                             <div class="row zoomify" style="border: 1px solid #d0d0d0; border-radius: 5px;">
                                 <div class="col-md-5 no-padding" style="overflow: hidden;">
                                     <img :src="'../../static/uploads/perks_images/' + perk.image" style="object-fit: cover; min-height: 100%; max-height: 100%; height: 200px; width: 100%; min-width: 100%; max-width: 100%; overflow: hidden; border-radius: 3px 0 0 3px;" />
@@ -47,6 +43,7 @@
                             </div>
                         </div>
                         <div class="col-md-12 no-padding text-center show-more-box">
+                            <br/>
                             <button v-show="hasNext" class="btn btn-style-3" v-on:click="loadPerks">Show More</button>
                         </div>
                     </template>
