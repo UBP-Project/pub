@@ -921,7 +921,7 @@ def get_group_leaders(id):
 
     leaders = User.query.join(Membership, Membership.user_id == User.id)\
             .join(Interest_Group)\
-            .filter(Interest_Group.id == group.id, Membership.status == 1, Membership.level == 1).all()
+            .filter(Interest_Group.id == group.id, Membership.status == 1, Membership.level != 0).all()
 
     return jsonify([
         leader.to_json() for leader in leaders
@@ -1185,3 +1185,23 @@ def remove_member(group_id):
     db.session.commit()
     return jsonify({'status': 'Success'}), 200
 
+@api.route('/interest_groups/<string:id>/non_members')
+def get_non_members(id):
+    users = User.query.all()
+    group_members = User.query.join(Membership, Membership.user_id == User.id)\
+        .filter(Membership.group_id == id).all()
+    non_members = []
+    for user in users:
+        if user not in group_members:
+            non_members.append(user)
+    return jsonify({'non_members': [ user.to_json() for user in non_members ]})
+
+@api.route('/interest_groups/add_member', methods=['POST'])
+def add_member():
+    user_id = request.form.get('user_id')
+    group_id = request.form.get('group_id')
+    membership = Membership(user_id=user_id,
+        group_id=group_id, status=1, level=0)
+    db.session.add(membership)
+    db.session.commit()
+    return jsonify({'status': 'Success'}), 200

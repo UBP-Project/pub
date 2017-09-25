@@ -398,16 +398,10 @@ def follow_user(to_follow_id):
         db.session.commit()
        
         #Notification
-        notification = Notif('user', 'followed_you', to_follow_id)
+        notification = Notif('user', 'followed', to_follow_id)
 
         #who triggered this action?
         notification.add_actor(current_user.get_id())
-
-        # for follower in followers:
-        #     notif = Notification(user_id=follower.get_id(), content=content, url=url)
-        #     db.session.add(notif)
-
-        # db.session.commit()
 
         return jsonify({'status': 'Success'}), 200
     except exc.IntegrityError as d:
@@ -787,7 +781,8 @@ def my_groups():
     groups = Interest_Group.query\
                 .join(Membership)\
                 .join(User)\
-                .filter(User.id == current_user.get_id(), Membership.status == Membership.MEMBERSHIP_ACCEPTED)\
+                .filter(User.id == current_user.get_id(),
+                    Membership.status == Membership.MEMBERSHIP_ACCEPTED)\
                 .paginate(page=page, per_page=4, error_out=False)
 
     return jsonify({
