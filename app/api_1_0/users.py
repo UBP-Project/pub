@@ -781,7 +781,8 @@ def my_groups():
     groups = Interest_Group.query\
                 .join(Membership)\
                 .join(User)\
-                .filter(User.id == current_user.get_id(), Membership.status == Membership.MEMBERSHIP_ACCEPTED)\
+                .filter(User.id == current_user.get_id(),
+                    Membership.status == Membership.MEMBERSHIP_ACCEPTED)\
                 .paginate(page=page, per_page=4, error_out=False)
 
     return jsonify({
