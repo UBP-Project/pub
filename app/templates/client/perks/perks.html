@@ -32,10 +32,11 @@
 									<img :src="'../../static/uploads/perks_images/' + perk.image"
 										style="object-fit: cover; height: 200px; width: 100%;">
 								</div>
-								<div class="col-md-7" style="background-color: #fff; height: 200px; padding: 15px;">
+								<div class="col-md-7" style="background-color: #fff; padding: 15px;">
 									<h4 style="margin: 0;"><strong>{{ perk.title }}</strong></h4>
-									<h4><small>{{ perk.description }}</small></h4>
-									<br/><br/><br/>
+									<div style="height: 115px; overflow: scroll; overflow-y: auto; overflow-x: auto;">
+										<p style="font-size: 15px; color: gray;"><small>{{ perk.description }}</small></p>
+									</div>
 									<h5><small>{{ perk.timestamp }}</small></h5>
 								</div>
 							</div>

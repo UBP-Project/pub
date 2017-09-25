@@ -1,47 +1,8 @@
-{% extends "./layout/client_base.html" %}
-{% block title %} {{ group["name"] }} {% endblock %}
-{% block content %}
-    <div class="row admin-page" style="background-color: white">
-
-        <div class="row">
-            <div class="cover-photo">
-                <img src="{{ url_for('static', filename='uploads/covers/' + group.cover_photo) }}" />
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12 group-icon text-center no-padding">
-                <img src="{{ url_for('static', filename='uploads/group_icons/' + group.group_icon) }}" />
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6 no-padding">
-                <h1>{{ group["name"] }}</h1>
-                <h5><i>{{ group["about"] }}</i></h5>
-                {% if can_edit_group %}
-                    <a class="btn btn-sm btn-style-1" href="{{url_for('client.update_group', id=group.id)}}">
-                        Edit this Group
-                    </a>
-                {% endif %}
-                <br /><br /><br />
-            </div>
-            <div class="col-md-6 text-right group-controls no-padding-right">
-                {% if can_accept_requests %}
-                    <a href="{{ url_for('client.group_requests', id=group.id) }}" class="btn btn-sm btn-style-3">
-                        Requests
-                    </a>
-                {% endif %}
-                <a href="{{ url_for('client.group_members', id=group.id) }}" class="btn btn-sm btn-style-3">
-                    Members
-                </a>
-            </div>
-        </div>
-
-        {% raw %}
+{% macro members_table() %}
+    {% raw %}
         <div class="row" id="members_app">
             <div class="col-md-12 members-list no-padding">
-                <div class="dropdown">
+                <div class="dropdown col-md-10">
                   <h3 v-if="view == 'members'" data-toggle="dropdown" class="">Group Members ({{ members.length }}) <span class="caret"></span></h3>
                   <h3 v-if="view == 'leaders'" data-toggle="dropdown" class="">Group Leaders ({{ leaders.length }}) <span class="caret"></span></h3>
                   <h3 v-if="view == 'managers'" data-toggle="dropdown" class="">Group Managers ({{ managers.length }}) <span class="caret"></span></h3>
@@ -50,6 +11,9 @@
                     <li v-on:click="changeView('leaders')"><a>Leaders ({{ leaders.length }})</a></li>
                     <li v-on:click="changeView('managers')"><a>Managers ({{ managers.length }})</a></li>
                   </ul>
+                </div>
+                <div class="col-md-2">
+                    <button class="pull-right btn btn-sm btn-style-3" style="margin-top: 20px;" type="button" data-toggle="modal" data-target="#add_members_modal">Add Group Members <span class="fa fa-plus-circle"></span></button>
                 </div>
                 <table class="users table row table-hover table-condensed">
                         <tbody class="row">
@@ -61,10 +25,10 @@
                                 <td>{{ user['lastname'] }}</td>
                                 <td>{{ user['position'] }}</td>
                                 <td>{{ user['department'] }}</td>
-                                <td v-if="canEditGroup" class="text-center">
-                                    <button class="btn btn-style-3" v-on:click="setLeader(user, index)">Set as Leader</button>
+                                <td class="text-center">
+                                    <button class="btn btn-sm btn-style-3" v-on:click="setLeader(user, index)">Set as Leader</button>
                                 </td>
-                                <td v-if="canEditGroup" >
+                                <td>
                                     <span class="fa fa-times-circle" style="cursor: pointer;" v-on:click="removeFromGroup(user, index)"></span>
                                 </td>
                             </tr>
@@ -77,10 +41,10 @@
                                 <td>{{ user['lastname'] }}</td>
                                 <td>{{ user['position'] }}</td>
                                 <td>{{ user['department'] }}</td>
-                                <td v-if="canEditGroup" class="text-center">
-                                    <button class="btn btn-style-3" v-on:click="removeLeader(user, index)">Remove as Leader</button>
+                                <td class="text-center">
+                                    <button class="btn btn-sm btn-style-1" v-on:click="removeLeader(user, index)">Remove Leader</button>
                                 </td>
-                                <td v-if="canEditGroup" >
+                                <td>
                                     <span class="fa fa-times-circle" style="cursor: pointer;" v-on:click="removeFromGroup(user, index)"></span>
                                 </td>
                             </tr>
@@ -93,15 +57,47 @@
                                 <td>{{ user['lastname'] }}</td>
                                 <td>{{ user['position'] }}</td>
                                 <td>{{ user['department'] }}</td>
+                                <td>
+                                    <span class="fa fa-times-circle" style="cursor: pointer;" v-on:click="removeFromGroup(user, index)"></span>
+                                </td>
                             </tr>
                         </tbody>
                 </table>
-            </div>
-        </div>
-        {% endraw %}
-    </div>
-{% endblock %}
-{% block scripts %}
+            </div> <!-- End of Members list -->
+
+            <!-- Users list modal -->
+            <div id="add_members_modal" class="modal fade" role="dialog">
+              <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header" style="padding-bottom: 5px;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add Members</h4>
+                    <input type="text" v-model="query_non_members" class="form-control" placeholder="Search Users"
+                        style="margin-top: 10px;"/>
+                  </div>
+
+                  <!-- All users list -->
+                  <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
+                    <div v-for="(user, index) in non_members_list" class="col-md-12" style="padding: 8px;">
+                        <img v-if="user.image" :src="'../../../static/uploads/profile_pictures/' + user.image" class="circle-img-sm" />
+                        <img v-else src="../../../static/images/pub-default-img.jpg" class="circle-img-sm" />
+                        <span>{{ user.firstname }} {{ user.lastname }}</span>
+                        <span><button type="button" class="btn btn-style-1 pull-right" v-on:click="addToGroup(user)">Add to Group</button></span>
+                    </div> <!-- end of all users -->
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div> <!-- End of Users list modal -->
+        </div> <!-- End of #members_app -->
+    {% endraw %}
+{% endmacro %}
+
+{% macro members_table_script(group) %}
 <script>
     var vm = new Vue({
         el: "#members_app",
@@ -110,11 +106,13 @@
             leaders: [],
             managers: [],
             view: "members",
-            canEditGroup: false
+            non_members: [],
+            query_non_members: ""
         },
         methods: {
             init: function() {
                 this.loadMembers();
+                this.loadNonMembers();
             },
             loadMembers: function() {
                 $.ajax({
@@ -164,16 +162,55 @@
                         this.leaders.splice(index, 1);
                     else
                         this.managers.splice(index, 1);
+                    this.non_members.push(user);
                 });
             },
             changeView: function(member_type) {
                 this.view = member_type;
+            },
+            // Add Members
+            loadNonMembers: function() {
+                $.ajax({
+                    url: '../../../api/v1.0/interest_groups/' + "{{ group.id }}" + '/non_members',
+                    type: 'GET' 
+                }).done(data => {
+                    this.non_members = this.non_members.concat(data.non_members);
+                });
+            },
+            addToGroup: function(user) {
+                $.ajax({
+                    url: "{{ url_for('api.add_member')}}",
+                    type: 'POST',
+                    data: {
+                        user_id: user.id,
+                        group_id: "{{ group.id }}"
+                    }
+                }).done(data => {
+                    this.members.push(user);
+                    this.non_members.forEach((non_member, index) => {
+                        if (user == non_member) {
+                            this.non_members.splice(index, 1);
+                            return;
+                        }
+                    });
+                });
+            }
+        },
+        computed: {
+            non_members_list: function() {
+                if (this.query_non_members.length > 0)
+                    return this.non_members.filter(user => {
+                        return user.firstname.includes(this.query_non_members) || user.lastname.includes(this.query_non_members);
+                    });
+                else 
+                    return this.non_members.sort((a,b) => {
+                        return a.firstname.localeCompare(b.firstname);
+                    });
             }
         }
     });
     $(document).ready(function() {
         vm.init();
-        vm.canEditGroup = "{{ can_edit_group }}" == "True" ? true : false;
     })
 </script>
-{% endblock scripts %}
+{% endmacro %}
