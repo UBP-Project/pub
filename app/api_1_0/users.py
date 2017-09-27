@@ -439,7 +439,7 @@ def unfollow_user(to_unfollow_id):
         Follow.following_id==to_unfollow_id).delete()
 
     #Notification
-    notification = Notif.notif_object(entity='user', action='followed_you', entity_id=to_unfollow_id)
+    notification = Notif.notif_object(entity='user', action='followed', entity_id=to_unfollow_id)
 
     #who triggered this action?
     if notification:
