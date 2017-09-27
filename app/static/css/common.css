@@ -22,3 +22,21 @@ table.users td {
     margin: 3px;
     color: #0e0058;
 }
+
+.activity-card {
+    background-color: white;
+    height: 250px !important;
+    padding: 5px 10px;
+    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) );
+    color: white;
+    background-size: cover;
+    background-repeat: no-repeat;
+    margin-bottom: 5px;
+    border-left: 1px solid white;
+    /*box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);*/
+/*    border-radius: 2px;*/
+}
+
+.activity-card div {
+    height: 180px;
+}
