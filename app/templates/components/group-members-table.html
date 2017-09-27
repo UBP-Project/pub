@@ -1,7 +1,7 @@
 {% macro members_table() %}
     {% raw %}
         <div class="row" id="members_app">
-            <div class="col-md-12 members-list no-padding">
+            <div class="col-md-12 members-list">
                 <div class="dropdown col-md-10">
                   <h3 v-if="view == 'members'" data-toggle="dropdown" class="">Group Members ({{ members.length }}) <span class="caret"></span></h3>
                   <h3 v-if="view == 'leaders'" data-toggle="dropdown" class="">Group Leaders ({{ leaders.length }}) <span class="caret"></span></h3>

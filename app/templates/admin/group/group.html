@@ -1,9 +1,5 @@
-{% if 'admin' in request.path %}
-    {% extends "/layout/admin_base.html" %}
-{% else %}
-    {% extends "/layout/base.html" %}
-{% endif %}
-
+{% extends "/layout/admin_base.html" %}
+{% from 'components/group-header.html' import group_header %}
 {% block title %} {{ group["name"] }} {% endblock %}
 
 {% block content %}
@@ -16,39 +12,7 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="cover-photo">
-                <img src="{{ url_for('static', filename='uploads/covers/' + group.cover_photo) }}" />
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12 group-icon text-center no-padding">
-                <img src="{{ url_for('static', filename='uploads/group_icons/' + group.group_icon) }}" />
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6 no-padding">
-                <h1>{{ group["name"] }}</h1>
-                <h5><i>{{ group["about"] }}</i></h5>
-                <a class="btn btn-sm btn-style-1" href="{{url_for('admin.update_group', id=group.id)}}">Edit this Group</a>
-                <br /><br /><br />
-            </div>
-            <div class="col-md-6 text-right group-controls no-padding-right">
-                <a href="{{ url_for('admin.group_requests', id=group.id) }}" class="btn btn-sm btn-style-3">
-                    Requests
-                </a>
-                <a href="{{ url_for('admin.group_members', id=group.id) }}" class="btn btn-sm btn-style-3">
-                    Members
-                </a>
-                <!-- 
-                <button class="btn btn-sm btn-style-3">
-                    Leaders
-                </button>
-                -->
-            </div>
-        </div>
+        {{ group_header(group, current_user) }}
 
         <div class="row">
             

@@ -1,0 +1,49 @@
+{% macro group_header(group, current_user) %}
+    <div class="row">
+        <div class="cover-photo">
+            <img src="{{ url_for('static', filename='uploads/covers/' + group.cover_photo) }}" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 group-icon text-center no-padding">
+            <img src="{{ url_for('static', filename='uploads/group_icons/' + group.group_icon) }}" />
+        </div>
+    </div>
+
+    {% if current_user.is_administrator() %}
+        <div class="row">
+            <div class="col-md-6">
+                <a href="{{ url_for('admin.group', id=group.id) }}"><h1>{{ group["name"] }}</h1></a>
+                <h5><i>{{ group["about"] }}</i></h5>
+                <a class="btn btn-sm btn-style-1" href="{{ url_for('admin.update_group', id=group.id) }}">Edit this Group</a>
+                <br /><br /><br />
+            </div>
+            <div class="col-md-6 text-right group-controls" style="padding: 20px;">
+                <a href="{{ url_for('admin.group_requests', id=group.id) }}" class="btn btn-sm btn-style-3">
+                    Requests
+                </a>
+                <a href="{{ url_for('admin.group_members', id=group.id) }}" class="btn btn-sm btn-style-3">
+                    Members
+                </a>
+            </div>
+        </div>
+    {% else %}
+        <div class="row">
+            <div class="col-md-6">
+                <a href="{{ url_for('client.group', id=group.id) }}"><h1>{{ group["name"] }}</h1></a>
+                <h5><i>{{ group["about"] }}</i></h5>
+                <a class="btn btn-sm btn-style-1" href="{{ url_for('client.update_group', id=group.id) }}">Edit this Group</a>
+                <br /><br /><br />
+            </div>
+            <div class="col-md-6 text-right group-controls" style="padding: 20px;">
+                <a href="{{ url_for('client.group_requests', id=group.id) }}" class="btn btn-sm btn-style-3">
+                    Requests
+                </a>
+                <a href="{{ url_for('client.group_members', id=group.id) }}" class="btn btn-sm btn-style-3">
+                    Members
+                </a>
+            </div>
+        </div>
+    {% endif %}
+{% endmacro %}

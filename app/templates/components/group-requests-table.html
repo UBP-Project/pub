@@ -1,0 +1,78 @@
+{% macro group_requests_table() %}
+    <div class="row" id="requests_app" >    
+        <div class="row" v-if="requests.length > 0" >
+            <div class="col-md-12">
+                <h3 style="font-family: 'Roboto Condensed Bold'">Group Membership Request</h3>
+                <table class="users table row table-hover table-condensed">
+                    {% raw %}
+                        <tbody class="row">
+                            <tr class="user-table-item row" v-for="(user, index) in requests">
+                                <td v-if="user.image"><img class="circle-img-sm" :src="'../../../static/uploads/profile_pictures/' + user.image" /></td>
+                                <td v-else><img class="circle-img-sm" :src="'../../../static/images/pub-default-img.jpg'" /></td>
+                                <td>{{ user['firstname'] }}</td>  
+                                <td>{{ user['middlename'] }}</td>
+                                <td>{{ user['lastname'] }}</td>
+                                <td>{{ user['position'] }}</td>
+                                <td>{{ user['department'] }}</td>
+                                <td v-if="can_accept" class="text-center">
+                                    <button class="btn btn-style-3" v-on:click="acceptRequest(user, index)">Accept</button>
+                                    <button class="btn btn-style-1" v-on:click="declineRequest(user, index)">Decline</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    {% endraw %}
+                </table>
+            </div>
+        </div>
+        <div v-else class="col-md-12">
+            <h4 >No membership requests.</h4>
+        </div>
+    </div>
+{% endmacro %}
+{% macro group_requests_table_script(group) %}
+<script>
+    var vm = new Vue({
+        el: "#requests_app",
+        data: {
+            requests: [],
+            can_accept: false
+        },
+        methods: {
+            loadRequests: function() {
+                $.ajax({
+                    url: "{{ url_for('api.get_requests', group_id=group.id) }}",    
+                    type: 'GET'
+                }).done(data => {
+                    this.requests = data.requests;
+                    this.can_accept = data.can_accept;
+                });
+            },
+            acceptRequest: function(user, index) {
+                $.ajax({
+                    url: "../../../api/v1.0/interest_groups/" + "{{ group.id }}" + "/accept",
+                    type: 'POST',
+                    data: {
+                        'user_id': user.user_id
+                    }
+                }).done(data => {
+                    this.requests.splice(index, 1);
+                });
+            },
+            declineRequest: function(user, index) {
+                $.ajax({
+                    url: "../../../api/v1.0/interest_groups/" + "{{ group.id }}" + "/decline",
+                    type: 'POST',
+                    data: {
+                        'user_id': user.user_id
+                    }
+                }).done(data => {
+                    this.requests.splice(index, 1);
+                });
+            }
+        }
+    });
+    $(document).ready(function() {
+        vm.loadRequests();
+    })
+</script>
+{% endmacro %}

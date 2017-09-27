@@ -1,119 +1,14 @@
-{% if 'admin' in request.path %}
-    {% extends "/layout/admin_base.html" %}
-{% else %}
-    {% extends "/layout/base.html" %}
-{% endif %}
-
+{% extends "/layout/admin_base.html" %}
+{% from 'components/group-header.html' import group_header %}
+{% from 'components/group-requests-table.html' import group_requests_table, group_requests_table_script %}
 {% block title %} {{ group["name"] }} {% endblock %}
 
 {% block content %}
-    <div class="row admin-page">
-
-        <div class="row">
-            <div class="cover-photo">
-                <img src="{{ url_for('static', filename='uploads/covers/' + group.cover_photo) }}" />
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12 group-icon text-center no-padding">
-                <img src="{{ url_for('static', filename='uploads/group_icons/' + group.group_icon) }}" />
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6 no-padding">
-                <h1>{{ group["name"] }}</h1>
-                <h5><i>{{ group["about"] }}</i></h5>
-                <a class="btn btn-sm btn-style-1" href="{{url_for('admin.update_group', id=group.id)}}">Edit this Group</a>
-                <br /><br /><br />
-            </div>
-            <div class="col-md-6 text-right group-controls no-padding-right">
-                <a href="{{ url_for('admin.group_requests', id=group.id) }}" class="btn btn-sm btn-style-3">
-                    Requests
-                </a>
-                <a href="{{ url_for('admin.group_members', id=group.id) }}" class="btn btn-sm btn-style-3">
-                    Members
-                </a>
-            </div>
-        </div>
-
-        <div class="row">    
-            {% if membership_requests|length > 0 %}
-                <div class="row">
-                    <div class="col-md-12 no-padding">
-                        <h3 style="font-family: 'Roboto Condensed Bold'">Group Membership Request</h3>
-                        <table class="users table row table-hover table-condensed">
-                            {% raw %}
-                                <tbody id="requests_app" class="row">
-                                    <tr class="user-table-item row" v-for="(user, index) in requests">
-                                        <td v-if="user.image"><img class="circle-img-sm" :src="'../../../static/uploads/profile_pictures/' + user.image" /></td>
-                                        <td v-else><img class="circle-img-sm" :src="'../../../static/images/pub-default-img.jpg'" /></td>
-                                        <td>{{ user['firstname'] }}</td>  
-                                        <td>{{ user['middlename'] }}</td>
-                                        <td>{{ user['lastname'] }}</td>
-                                        <td>{{ user['position'] }}</td>
-                                        <td>{{ user['department'] }}</td>
-                                        <td class="text-center">
-                                            <button class="btn btn-style-3" v-on:click="acceptRequest(user, index)">Accept</button>
-                                            <button class="btn btn-style-1" v-on:click="declineRequest(user, index)">Decline</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            {% endraw %}
-                        </table>
-                    </div>
-                </div>
-            {% else %}
-                <h4>No membership requests.</h4>
-            {% endif %}
-
-                <br /><br />
-        </div>
+    <div class="row admin-page"> 
+        {{ group_header(group, current_user) }}
+        {{ group_requests_table() }}
     </div>
 {% endblock %}
 {% block scripts %}
-<script>
-    var vm = new Vue({
-        el: "#requests_app",
-        data: {
-            requests: []
-        },
-        methods: {
-            loadRequests: function() {
-                $.ajax({
-                    url: "{{ url_for('api.get_requests', group_id=group.id) }}",    
-                    type: 'GET'
-                }).done(data => {
-                    this.requests = data.requests;
-                });
-            },
-            acceptRequest: function(user, index) {
-                $.ajax({
-                    url: "../../../api/v1.0/interest_groups/" + "{{ group.id }}" + "/accept",
-                    type: 'POST',
-                    data: {
-                        'user_id': user.user_id
-                    }
-                }).done(data => {
-                    this.requests.splice(index, 1);
-                });
-            },
-            declineRequest: function(user, index) {
-                $.ajax({
-                    url: "../../../api/v1.0/interest_groups/" + "{{ group.id }}" + "/decline",
-                    type: 'POST',
-                    data: {
-                        'user_id': user.user_id
-                    }
-                }).done(data => {
-                    this.requests.splice(index, 1);
-                });
-            }
-        }
-    });
-    $(document).ready(function() {
-        vm.loadRequests();
-    })
-</script>
+    {{ group_requests_table_script(group) }}
 {% endblock scripts %}

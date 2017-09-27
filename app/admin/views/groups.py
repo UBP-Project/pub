@@ -18,7 +18,7 @@ GROUPS_PER_PAGE = 16
 @admin.route('/groups')
 @admin_required
 def groups():
-
+    
     query = None
     if request.args.get('query') is not None:
         query = request.args.get('query')

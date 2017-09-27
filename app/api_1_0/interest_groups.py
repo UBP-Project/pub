@@ -7,6 +7,7 @@ from flask_login import login_required, current_user
 from app.notification import Notif
 import datetime
 from sqlalchemy import exc
+from ..auth import can_accept_requests
 
 from app.utils import is_valid_extension
 from werkzeug.utils import secure_filename
@@ -1053,6 +1054,7 @@ def get_requests(group_id):
             User.id.label("user_id"), Membership.group_id)\
         .filter(Membership.group_id == group_id, Membership.status == 0).all()
     return jsonify({
+        'can_accept': can_accept_requests(group_id),
         'requests': [{
             'group_id'  : request.group_id,
             'user_id'   : request.user_id,
