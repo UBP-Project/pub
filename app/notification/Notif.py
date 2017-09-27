@@ -1,5 +1,5 @@
 from app import db
-from app.models import Activity, Interest_Group, User, Notification, Notification_EntityType, Notification_Object
+from app.models import Activity, Interest_Group, User, Notification, Entity, Notification_Object
 from threading import Thread
 from functools import wraps
 from flask import jsonify
@@ -11,8 +11,8 @@ class Notif():
 	def __init__(self, entity, action, entity_id):
 
 		#get the id of entity type
-		entity_type = Notification_EntityType.query\
-			.filter(Notification_EntityType.entity == entity, Notification_EntityType.action == action)\
+		entity_type = Entity.query\
+			.filter(Entity.entity == entity, Entity.action == action)\
 			.first()
 
 		#check if this object is already created
@@ -43,8 +43,8 @@ class Notif():
 	def notif_object(entity, action, entity_id):
 
 		#get the id of entity type
-		entity_type = Notification_EntityType.query\
-			.filter(Notification_EntityType.entity == entity, Notification_EntityType.action == action)\
+		entity_type = Entity.query\
+			.filter(Entity.entity == entity, Entity.action == action)\
 			.first()
 
 		return Notification_Object.query\

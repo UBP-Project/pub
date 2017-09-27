@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 
 from sqlalchemy import exc
 
-from app.models import User, Follow, Notification, Notification_Object, Notification_EntityType
+from app.models import User, Follow, Notification, Notification_Object, Entity
 from app.api_1_0 import api
 from app.notification import Notif
 from app import db
@@ -32,12 +32,12 @@ def get_notifications():
     else:
         page = 1
 
-    notifications = Notification_EntityType.query\
+    notifications = Entity.query\
         .join(Notification_Object)\
         .join(Notification)\
         .join(User)\
         .join(Follow, User.id == Follow.following_id)\
-        .add_columns(Notification_EntityType.entity, Notification_EntityType.action)\
+        .add_columns(Entity.entity, Entity.action)\
         .add_columns(Notification_Object.id.label('object_id'), Notification_Object.timestamp.label('object_timestamp'), Notification_Object.entity_id.label('entity_id'))\
         .add_columns(Notification.actor_id)\
         .filter(Notification_Object.status == True, Follow.follower_id == current_user.get_id())\
