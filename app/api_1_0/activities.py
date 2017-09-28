@@ -482,7 +482,7 @@ def going_to_activity_by(id):
               status      = 1 #going
           )
 
-          current_user.earn_point('Joined %s' % activity.title, 'activity', activity.id, 'going')
+          current_user.earn_point('Joined %s' % activity.title, 'activity', activity.id, 'goingf')
 
           db.session.add(user_activity)
           db.session.commit()
@@ -522,7 +522,7 @@ def cancel_going_to_activity_by(id):
         db.session.commit()
 
         #Notification
-        notification = Notif.notif_object(entity='activity', action='joined', entity_id=id)
+        notification = Notif.notif_object(entity='activity', action='going', entity_id=id)
 
         #who triggered this action?
         if notification:
