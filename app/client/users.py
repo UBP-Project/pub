@@ -21,8 +21,7 @@ def view_profile(id):
     is_following = True if Follow.query.filter(Follow.follower_id == current_user.get_id(),\
         Follow.following_id == user.get_id()).first() is not None else False
             
-    return render_template("client/user/profile.html", user=user, current_user=current_user,\
-        is_following=is_following, followers_count=followers_count, following_count=following_count)
+    return render_template("client/user/profile.html", user=user, current_user=current_user, is_following=is_following, followers_count=followers_count, following_count=following_count)
 
 @client.route('/profile/<uuid(strict=False):id>/edit', methods=['POST', 'GET'])
 @login_required

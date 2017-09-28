@@ -51,8 +51,7 @@ def leaderboard():
     # point_leaders = User.query.order_by(User.desc()).limit(10).all()
     # sample = User.query.join(Points).add_columns(func.sum(Points.value).label('points')).all()
 
-    point_leaders = db.session.query(Points_Type, func.sum(Points_Type.value).label('points'))\
-        .join(Points)\
+    point_leaders = db.session.query(Points, func.sum(Points.value).label('points'))\
         .join(User)\
         .group_by(Points.user_id)\
         .add_columns(User.id, User.firstname, User.lastname, User.image)\

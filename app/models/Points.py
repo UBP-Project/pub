@@ -15,7 +15,7 @@ class Points_Type(db.Model):
 	# value = db.Column(db.Integer)
 
 	def __init__(self, entity_type_id, entity_id, value):  
-		self.entity_type_id    = entity_type_id
+		self.entity_type_id = entity_type_id
 		self.entity_id = entity_id
 		self.value = value
 
@@ -53,7 +53,6 @@ class Points(db.Model):
 			'event'		: self.event,
 			'value'		: self.value
 		}
-
 		return json
 
 	@staticmethod

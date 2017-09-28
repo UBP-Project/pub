@@ -85,6 +85,11 @@ groups = [
 for g in groups:
 # for i in range(0, 20):
 	group = Interest_Group.from_json(g)
-	group.set_points('accepted_join_request', random.randint(10, 20))
 	db.session.add(group)
+db.session.commit()
+
+groups = Interest_Group.query.all()
+
+for group in groups:
+	group.set_points('accepted_join_request', random.randint(10, 20))
 db.session.commit()

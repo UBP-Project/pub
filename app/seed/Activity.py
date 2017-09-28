@@ -118,7 +118,12 @@ activities = [
 for a in activities:
 # for i in range(0, 15):
 	activity = Activity.from_json(a)
-	activity.set_points('attended', random.randint(5, 10))
-	activity.set_points('joined', random.randint(5, 10))
 	db.session.add(activity)
+db.session.commit()
+
+activities = Activity.query.all()
+
+for activity in activities:
+	activity.set_points('attended', random.randint(5, 10))
+	activity.set_points('going', random.randint(5, 10))
 db.session.commit()

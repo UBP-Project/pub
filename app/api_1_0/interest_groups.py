@@ -965,7 +965,7 @@ def accept_request(group_id):
     user = User.query.get(user_id)
     group = Interest_Group.query.get(group_id)
 
-    user.earn_point('Joined %s' % group.name, Points_Type.get_type_id('Joined Group'))
+    user.earn_point('Joined %s' % group.name, 'interest_group', group_id, 'accepted_join_request')
 
     membership = Membership.query.filter(Membership.group_id == group_id, Membership.user_id == user_id).first()
     membership.accept()

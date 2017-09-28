@@ -43,10 +43,10 @@ def activity_join(activity_count=10, user_count=100):
             if exists:
                 continue
             else:
-                notification = Notif('activity', 'joined', activity.id)
+                notification = Notif('activity', 'going', activity.id)
                 notification.add_actor(user.id)
 
-                user.earn_point('Joined %s' % activity.title, 'activity', activity.id, 'joined')
+                user.earn_point('Joined %s' % activity.title, 'activity', activity.id, 'going')
                 db.session.add(user_activity)
 
                 print(user.firstname, user.lastname, "is going to", activity.title)

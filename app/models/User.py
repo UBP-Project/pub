@@ -99,14 +99,8 @@ class User(UserMixin, db.Model):
                     .filter(Follow.follower_id == self.id).all()
 
     def earn_point(self, event, entity, entity_id, action):
-        print("Event: " + event)
-        print("Entity: " + entity)
-        print("Entity ID: " + str(entity_id))
-        print("Action: " +action)
-        print("\n")
         #check the current value of the points_type table
-        point_type = Points_Type.query.join(Entity).filter(Points_Type.entity_id == str(entity_id), Entity.entity == entity, Entity.action == action).first()
-        print(point_type)
+        point_type = Points_Type.query.join(Entity).filter(Points_Type.entity_id == entity_id, Entity.entity == entity, Entity.action == action).first()
 
         if point_type is not None:
             point = Points(self.id, event, value = point_type.value)
@@ -117,8 +111,7 @@ class User(UserMixin, db.Model):
         db.session.commit()
 
     def total_points(self):
-        user_points = db.session.query(Points_Type, func.sum(Points_Type.value).label('points'))\
-            .join(Points)\
+        user_points = db.session.query(Points, func.sum(Points.value).label('points'))\
             .join(User)\
             .group_by(Points.user_id)\
             .filter(User.id == self.id)\

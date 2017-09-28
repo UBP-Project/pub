@@ -482,7 +482,7 @@ def going_to_activity_by(id):
               status      = 1 #going
           )
 
-          current_user.earn_point('Joined %s' % activity.title, Points_Type.get_type_id('Joined Activity'))
+          current_user.earn_point('Joined %s' % activity.title, 'activity', activity.id, 'going')
 
           db.session.add(user_activity)
           db.session.commit()

@@ -37,8 +37,6 @@ class Interest_Group(db.Model):
     def set_points(self, action, value):
         entity_type = Entity.query.filter(Entity.entity == 'interest_group', Entity.action == action).first()
         points_type = Points_Type(entity_type.id, entity_id = self.id, value = value)
-        print(entity_type)
-        print(points_type)
         db.session.add(points_type)
         db.session.commit()
 

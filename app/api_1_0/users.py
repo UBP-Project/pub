@@ -483,17 +483,19 @@ def get_followings(id):
         else:
             following.isFollowing = False
 
-    return jsonify({
-        'followings': [{
-        'id'         : following.id,
-        'firstname'  : following.firstname,
-        'lastname'   : following.lastname,
-        'department' : following.department,
-        'position'   : following.position,
-        'image'      : following.image,
-        'isFollowing': following.isFollowing
-    } for following in followings]
-    })
+    return jsonify(
+        {
+            'followings': [{
+            'id'         : following.id,
+            'firstname'  : following.firstname,
+            'lastname'   : following.lastname,
+            'department' : following.department,
+            'position'   : following.position,
+            'image'      : following.image,
+            'isFollowing': following.isFollowing
+        } for following in followings]
+        }
+    )
 
 @api.route('/leaderboard')
 @login_required
@@ -564,8 +566,7 @@ def leaderboard():
                 description: Flag for user's role
                 required: true
     """
-    leaders = db.session.query(Points_Type, func.sum(Points_Type.value).label('points'))\
-                .join(Points)\
+    leaders = db.session.query(Points, func.sum(Points.value).label('points'))\
                 .join(User)\
                 .add_columns(User.firstname, User.middlename, User.lastname, User.id, User.image)\
                 .group_by(Points.user_id)\

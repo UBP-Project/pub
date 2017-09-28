@@ -9,7 +9,7 @@ entity_types = [
 	},
 	{
 		'entity'	: 'activity',
-		'action'	: 'joined'
+		'action'	: 'going'
 	},
 	{
 		'entity'	: 'activity',

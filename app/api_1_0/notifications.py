@@ -38,7 +38,7 @@ def get_notifications():
         .join(User)\
         .join(Follow, User.id == Follow.following_id)\
         .add_columns(Entity.entity, Entity.action)\
-        .add_columns(Notification_Object.id.label('object_id'), Notification_Object.timestamp.label('object_timestamp'), Notification_Object.entity_id.label('entity_id'))\
+        .add_columns(Notification_Object.id.label('object_id'), Notification_Object.timestamp.label('object_timestamp'), Notification_Object.entity_id)\
         .add_columns(Notification.actor_id)\
         .filter(Notification_Object.status == True, Follow.follower_id == current_user.get_id())\
         .order_by(Notification.timestamp.desc())\
