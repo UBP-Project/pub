@@ -5,19 +5,19 @@ from datetime import datetime
 
 class Points_Type(db.Model):
 	__tablename__ = 'points_type'
-	id = db.Column(UUIDType(binary=False), default=uuid.uuid4, primary_key=True)
+	id 				= db.Column(UUIDType(binary=False), default=uuid.uuid4, primary_key=True)
 	entity_type_id  = db.Column(db.Integer, db.ForeignKey('entity.id'))
 	entity_id       = db.Column(UUIDType(binary=False))
 	value			= db.Column(db.Integer())
-
 
  	# timestamp       = db.Column(db.DateTime)
 	# name = db.Column(db.String(50))
 	# value = db.Column(db.Integer)
 
-	def __init__(self, entity_type_id, entity_id):
+	def __init__(self, entity_type_id, entity_id, value):  
 		self.entity_type_id    = entity_type_id
 		self.entity_id = entity_id
+		self.value = value
 
 	def __repr__(self):
 		return '<Points_Type %r>' % self.id
@@ -29,7 +29,7 @@ class Points_Type(db.Model):
 	# @staticmethod
 	# def get_type_id(name):
 	# 	return Points_Type.query.filter(Points_Type.name == name).first().id
-
+	
 class Points(db.Model):
 	__tablename__ = 'points'
 	id 			= db.Column(UUIDType(binary=False), default=uuid.uuid4, primary_key=True)
@@ -38,9 +38,8 @@ class Points(db.Model):
 	value		= db.Column(db.Integer())
 	timestamp	= db.Column(db.DateTime, default=datetime.utcnow())
 
-	def __init__(self, user_id, event, value):
+	def __init__(self, user_id, event, value = 1):
 		self.user_id = user_id
-		self.type = type
 		self.event = event
 		self.value = value
 

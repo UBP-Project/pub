@@ -1,6 +1,6 @@
 from app import db
 from app.models import Interest_Group
-
+import random
 groups = [
 	{
 		'name'			: 'Sports',
@@ -85,5 +85,6 @@ groups = [
 for g in groups:
 # for i in range(0, 20):
 	group = Interest_Group.from_json(g)
+	group.set_points('accepted_join_request', random.randint(10, 20))
 	db.session.add(group)
 db.session.commit()

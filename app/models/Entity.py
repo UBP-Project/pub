@@ -1,6 +1,5 @@
 from flask import url_for
 from app import db
-from app.models import User, Follow
 from sqlalchemy_utils import UUIDType
 from datetime import datetime
 from flask_login import login_required
@@ -22,7 +21,7 @@ class Entity(db.Model):
             .first()
         
     def __repr__(self):
-        return '<Entity: %r, Action: %r>' % self.entity, self.action
+        return '<Entity: %r>' % self.id
 
     def from_json(json_entity):
         entity    = json_entity.get('entity')

@@ -46,8 +46,7 @@ def activity_join(activity_count=10, user_count=100):
                 notification = Notif('activity', 'joined', activity.id)
                 notification.add_actor(user.id)
 
-                user.earn_point('Joined %s' % activity.title, Points_Type.get_type_id('Joined Activity'))
-
+                user.earn_point('Joined %s' % activity.title, 'activity', activity.id, 'joined')
                 db.session.add(user_activity)
 
                 print(user.firstname, user.lastname, "is going to", activity.title)
@@ -91,7 +90,7 @@ def join_group(group_count=5, user_count=100):
                 continue
             else:
                 db.session.add(membership)
-                user.earn_point('Joined %s' % group.name, Points_Type.get_type_id('Joined Group'))
+                user.earn_point('Joined %s' % group.name, 'interest_group', group.id, 'accepted_join_request')
                 print(user.firstname, user.lastname, "joins group: ", group.name)
     db.session.commit()
 
@@ -127,9 +126,9 @@ def group_activities(group_count=10, activity_count=3):
     db.session.commit()
 
 def all():
-    follow()
     activity_join()
     activity_interested()
     join_group()
     join_group_pending()
+    follow()
     # group_activities()

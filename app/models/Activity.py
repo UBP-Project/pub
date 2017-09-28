@@ -1,4 +1,5 @@
 from app import db
+from app.models import Entity, Points, Points_Type
 from datetime import datetime
 from sqlalchemy_utils import UUIDType
 import uuid
@@ -33,6 +34,7 @@ class Activity(db.Model):
         self.address     = address
         self.group_id    = group_id
         self.image       = image
+
         if current_user.is_authenticated:
             self.creator_id  = current_user.get_id()
         else:
@@ -53,6 +55,12 @@ class Activity(db.Model):
             'image'      : self.image
         }
         return json_post
+
+    def set_points(self, action, value):
+        entity = Entity.query.filter(Entity.entity == 'activity', Entity.action == action).first()
+        points_type = Points_Type(entity.id, self.id, value)
+        db.session.add(points_type)
+        db.session.commit()
 
     @staticmethod
     def from_json(json_activity):
