@@ -32,8 +32,7 @@
                                     </div>
                                     <div class="card-desc">
                                         <h4 class="text-center title">{{ activity.title}}</h4>
-                                        <p v-if="activity.description">{{ activity.description }}</p>
-                                        <p v-else><i><small>No description</small></i></p>
+                                        <h5 class="text-center"><small>{{ activity.start_date }}</small></h5>
                                     </div>
                                 </div>
                             </div> <!-- END OF ACTIVITY CARD -->
@@ -69,9 +68,12 @@
 
                                                 <div class="tab-content">
                                                     <div role="tabpanel" class="tab-pane active" :id="'act-desc-' + activity.id">
-                                                        <p v-if="activity.description">{{ activity.description }}</p>
-                                                        <p v-else><i><small>No description</small></i></p>
-                                                        {{ activity.description }}
+                                                        <template v-if="activity.description">
+                                                            <div v-html="activity.description"></div>
+                                                        </template>
+                                                        <template v-else>
+                                                            <p><i><small>No description</small></i></p>
+                                                        </template>
                                                     </div>
                                                     <div role="tabpanel" class="tab-pane" :id="'act-interested-' + activity.id">
                                                         <div class="row">
@@ -189,6 +191,7 @@
                         activity.isInterested     = false;
                         activity.isGoing          = false;
                     });
+                    //console.log(data);
                     this.activities.push.apply(this.activities, data.activities); // append activities
                     this.activities_page++;
                     this.hasNext = data.has_next;
@@ -200,7 +203,7 @@
                     url: '/api/v1.0/activities/'+ activity.id + '/participants/going',
                     type: 'GET'
                 }).done(function(data) {
-                    console.log(data);
+                    //console.log(data);
                     activity.going_users = data.going_users;
                 }).fail(function() {
                     console.log("error");
