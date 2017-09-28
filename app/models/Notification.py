@@ -6,33 +6,10 @@ from datetime import datetime
 from flask_login import login_required
 import uuid
 
-class Notification_EntityType(db.Model):
-    __tablename__   = 'notification_entity_type'
-    id              = db.Column(db.Integer, primary_key=True)
-    entity          = db.Column(db.String(50))
-    action          = db.Column(db.String(50))
-
-    def __init__(self, entity, action):
-        self.entity = entity
-        self.action = action
-
-    def get_entity(name, action):
-        return Notification_EntityType.query\
-            .filter(entity == name)\
-            .first()
-        
-    def __repr__(self):
-        return '<Notification_Object %r>' % self.id
-
-    def from_json(json_entity):
-        entity    = json_entity.get('entity')
-        action    = json_entity.get('action')
-        return Notification_EntityType(entity, action)
-
 class Notification_Object(db.Model):
     __tablename__   = 'notification_object'
     id              = db.Column(UUIDType(binary=False), default=uuid.uuid4, primary_key=True)
-    entity_type_id  = db.Column(db.Integer, db.ForeignKey('notification_entity_type.id'))
+    entity_type_id  = db.Column(db.Integer, db.ForeignKey('entity.id'))
     entity_id       = db.Column(UUIDType(binary=False))
     timestamp       = db.Column(db.DateTime)
     status          = db.Column(db.Boolean)

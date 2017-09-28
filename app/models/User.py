@@ -1,6 +1,6 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, login_manager
-from app.models import Role, Permission, Follow, Points, Interest_Group, Membership, User_Activity, Activity, Points_Type
+from app.models import Role, Permission, Follow, Points, Interest_Group, Membership, User_Activity, Activity, Points_Type, Entity
 from sqlalchemy import func
 from sqlalchemy_utils import UUIDType
 from flask_login import UserMixin
@@ -98,14 +98,20 @@ class User(UserMixin, db.Model):
         return self.query.join(Follow, Follow.following_id == User.id)\
                     .filter(Follow.follower_id == self.id).all()
 
-    def earn_point(self, event, type):
-        point = Points(self.id, event, type)
+    def earn_point(self, event, entity, entity_id, action):
+        #check the current value of the points_type table
+        point_type = Points_Type.query.join(Entity).filter(Points_Type.entity_id == entity_id, Entity.entity == entity, Entity.action == action).first()
+
+        if point_type is not None:
+            point = Points(self.id, event, value = point_type.value)
+        else:
+            print("Giving default point value")
+            point = Points(self.id, event)
         db.session.add(point)
         db.session.commit()
 
     def total_points(self):
-        user_points = db.session.query(Points_Type, func.sum(Points_Type.value).label('points'))\
-            .join(Points)\
+        user_points = db.session.query(Points, func.sum(Points.value).label('points'))\
             .join(User)\
             .group_by(Points.user_id)\
             .filter(User.id == self.id)\

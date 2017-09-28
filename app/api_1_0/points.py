@@ -37,17 +37,16 @@ def mypoints():
             description: Not Found
     """
 
-	points = db.session.query(Points_Type, func.sum(Points_Type.value).label('points'))\
-			.join(Points).join(User)\
+	points = db.session.query(Points, func.sum(Points.value).label('points'))\
+			.join(User)\
 			.group_by(Points.user_id)\
 			.filter(User.id == current_user.get_id())\
 			.first()\
 			.points
 
-	points_history = Points_Type.query\
-			.join(Points)\
+	points_history = Points.query\
 			.join(User)\
-			.add_columns(Points.id, Points.timestamp, Points.event, Points_Type.value)\
+			.add_columns(Points.id, Points.timestamp, Points.event, Points.value)\
 			.filter(User.id == current_user.get_id())\
 			.order_by(Points.timestamp.desc())\
 			.all()

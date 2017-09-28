@@ -99,7 +99,7 @@
 	            		content += picture + '<div class="col-md-11" style="padding-top: 10px; padding-left: 30px;">' + actor + action + time + '</div>';
      				}
 
-     				else if(notifications[n].action == 'joined'){
+     				else if(notifications[n].action == 'going'){
      					actor += '<a href="/profile/' + notifications[n].actor.id + '">' + notifications[n].actor.firstname + ' ' + notifications[n].actor.lastname + '</a>';
 
 	            		picture = '<div class="col-md-1"><img src="{{ url_for("static",filename="images/pub-default-img.jpg") }}" style="width: 60px; height: 60px; border-radius: 50%;"/></div>';

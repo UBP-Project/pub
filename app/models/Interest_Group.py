@@ -1,4 +1,5 @@
 from app import db
+from app.models import Entity, Points_Type, Points
 from datetime import datetime# from app.models.guid import GUID
 from sqlalchemy_utils import UUIDType
 import uuid
@@ -32,6 +33,12 @@ class Interest_Group(db.Model):
             'group_icon' : self.group_icon
         }
         return json_post
+
+    def set_points(self, action, value):
+        entity_type = Entity.query.filter(Entity.entity == 'interest_group', Entity.action == action).first()
+        points_type = Points_Type(entity_type.id, entity_id = self.id, value = value)
+        db.session.add(points_type)
+        db.session.commit()
 
     @staticmethod
     def from_json(json_interest_group):

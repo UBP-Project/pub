@@ -1,5 +1,5 @@
 from app import db
-from app.models import Notification_EntityType
+from app.models import Entity
 
 
 entity_types = [
@@ -9,11 +9,15 @@ entity_types = [
 	},
 	{
 		'entity'	: 'activity',
-		'action'	: 'joined'
+		'action'	: 'going'
 	},
 	{
 		'entity'	: 'activity',
 		'action'	: 'interested'
+	},
+	{
+		'entity'	: 'activity',
+		'action'	: 'attended'
 	},
 	{
 		'entity'	: 'interest_group',
@@ -42,6 +46,6 @@ entity_types = [
 ]
 
 for e in entity_types:
-	entity_type = Notification_EntityType.from_json(e)
+	entity_type = Entity.from_json(e)
 	db.session.add(entity_type)
 db.session.commit()
