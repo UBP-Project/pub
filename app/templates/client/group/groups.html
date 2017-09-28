@@ -60,6 +60,7 @@
                                             </div>
 
                                             <h2 class="text-center">{{ group.name }}</h2>
+                                            <button v-show="group.can_manage"><span class="fa fa-edit"></span></button>
 
                                             <div class="content">
                                                 <ul class="nav nav-tabs" role="tablist">
@@ -223,6 +224,7 @@
                         group.population = 0;
                         vm.groupPopulation(group);
                     });
+                    console.log(data.interest_groups);
                     this.groups.push.apply(this.groups, data.interest_groups);
                     this.groups_page++;
                     this.hasNext = data.has_next;

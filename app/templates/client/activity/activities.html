@@ -71,6 +71,7 @@
                                                     <div role="tabpanel" class="tab-pane active" :id="'act-desc-' + activity.id">
                                                         <p v-if="activity.description">{{ activity.description }}</p>
                                                         <p v-else><i><small>No description</small></i></p>
+                                                        {{ activity.description }}
                                                     </div>
                                                     <div role="tabpanel" class="tab-pane" :id="'act-interested-' + activity.id">
                                                         <div class="row">
@@ -118,7 +119,7 @@
 
                                         <!-- FOOTER -->
                                         <div class="modal-footer">
-
+                                            <a :href="'/activities/' + activity.id + '/attendance'">Attendance</a>
                                             <button v-if="activity.isInterested" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
                                                 NOT INTERESTED
                                             </button>

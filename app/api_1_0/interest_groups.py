@@ -7,7 +7,7 @@ from flask_login import login_required, current_user
 from app.notification import Notif
 import datetime
 from sqlalchemy import exc
-from ..auth import can_accept_requests
+from ..auth import can_accept_requests, can_modify_group
 
 from app.utils import is_valid_extension
 from werkzeug.utils import secure_filename
@@ -93,6 +93,7 @@ def get_interest_groups():
     return jsonify({
       'interest_groups': [ 
             {
+                'can_manage': can_modify_group(group.id),
                 'id': group.id,
                 'name': group.name,
                 'about': group.about,
@@ -165,7 +166,15 @@ def get_groups():
     groups = Interest_Group.query\
         .paginate(page = page, per_page = 12, error_out=False)
     return jsonify({
-      'interest_groups': [ group.to_json() for group in groups.items ],
+      'interest_groups': [
+        {
+            'can_manage': can_modify_group(group.id),
+            'id': group.id,
+            'name': group.name,
+            'about': group.about,
+            'cover_photo': group.cover_photo,
+            'group_icon': group.group_icon
+        } for group in groups.items ],
       'has_next': groups.has_next,
       'has_prev': groups.has_prev
     })
