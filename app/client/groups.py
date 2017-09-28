@@ -143,6 +143,18 @@ def create_group():
         db.session.add(interest_group)
         db.session.commit()
 
+        # insert leaders
+        leader_ids = form.leader_ids.data.split(',')
+        for leader_id in leader_ids:
+            membership = Membership(
+                group_id = interest_group.id,
+                user_id = leader_id,
+                status = 1,
+                level = 1
+            )
+            db.session.add(membership)
+        db.session.commit();
+
         # set manager of group via membership
         membership = Membership(
             user_id=current_user.get_id(),
