@@ -41,8 +41,17 @@
                     class="form-control input-md",
                     required="true") }}
                 
-                <br />
-                {{ form.submit(class="btn btn-style-1") }}
+                <div class="col-sm-12 no-padding-left">
+                    <div class="col-sm-6 no-padding">
+                        <label>Points on joining this group:</label>
+                        {{ form.joined_point(class="form-control") }}
+                    </div>
+                </div>
+            
+                <div class="col-md-12 no-padding">
+                    <hr />
+                    {{ form.submit(class="btn btn-style-1") }}
+                </div>
             </div>
             {{ form.cover_photo(class="hidden") }}
             {{ form.group_icon(class="hidden") }}

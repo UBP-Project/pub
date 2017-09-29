@@ -46,6 +46,8 @@ def can_modify_group(group_id, abort_on_false=False):
     return can_access
 
 def is_manager(abort_on_false=False):
+    if is_admin():
+        return True
     isManager = User.query\
             .join(Role, Role.id == User.role_id)\
             .filter(Role.name == 'Manager', User.id == current_user.get_id()).first() is not None

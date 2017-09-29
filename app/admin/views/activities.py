@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, request
 from .. import admin
 from ...forms import CreateActivityForm, UpdateActivityForm
 from app import db
-from app.models import User, Activity, Permission, Interest_Group
+from app.models import User, Activity, Permission, Interest_Group, Entity, Points_Type
 from ...decorators import admin_required, permission_required
 from ...utils import flash_errors, is_valid_extension
 from werkzeug.utils import secure_filename
@@ -44,7 +44,12 @@ def create_activity():
         print(activity)
         db.session.add(activity)
         db.session.commit()
-        # flash("Success Creating Activity")
+        
+        # set activity point on: interested, going, attended
+        activity.set_points('going', form.going_point.data)
+        activity.set_points('interested', form.interested_point.data)
+        activity.set_points('attended', form.attended_point.data)
+        
         return redirect(url_for("admin.activities"))
     flash_errors(form)
     return render_template('admin/activity/create.html', form=form, groups=groups)
@@ -141,15 +146,24 @@ def edit_activity(id):
         activity.address     = form.address.data
         activity.group_id    = None if form.group.data == "None" else uuid.UUID(form.group.data).hex
         db.session.commit()
+
+        # edit points per activity action
+        activity.edit_points('going', form.going_point.data)
+        activity.edit_points('interested', form.interested_point.data)
+        activity.edit_points('attended', form.attended_point.data)
+
         return redirect(url_for('admin.activities'))
 
     # load activity data to the form
-    form.title.data       = activity.title
-    form.description.data = activity.description
-    form.start_date.data  = activity.start_date
-    form.end_date.data    = activity.end_date
-    form.address.data     = activity.address
-    form.group.data       = activity.group_id
+    form.title.data            = activity.title
+    form.description.data      = activity.description
+    form.start_date.data       = activity.start_date
+    form.end_date.data         = activity.end_date
+    form.address.data          = activity.address
+    form.group.data            = activity.group_id
+    form.going_point.data      = activity.get_points('going')
+    form.interested_point.data = activity.get_points('interested')
+    form.attended_point.data   = activity.get_points('attended')
     flash_errors(form)
     return render_template('admin/activity/edit.html', form=form, activity=activity)
 

@@ -59,8 +59,9 @@ hr {
 
 input[type='text'], input[type='password'],
 input[type='email'], input[type='date'],
+input[type='number']
 .form-control {
-    border-radius: 0px;
+    border-radius: 0px !important;
 /*    margin: 10px;*/
 /*    max-width: 90%;*/
 }

@@ -62,6 +62,23 @@ class Activity(db.Model):
         db.session.add(points_type)
         db.session.commit()
 
+    def edit_points(self, action, value):
+        points_type = Points_Type.query\
+            .join(Entity, Entity.id == Points_Type.entity_type_id)\
+            .filter(Points_Type.entity_id == self.id,
+                Entity.entity=='activity', 
+                Entity.action==action).first()
+        points_type.value = value
+        db.session.commit()
+
+    def get_points(self, action):
+        points_type = Points_Type.query\
+            .join(Entity, Entity.id == Points_Type.entity_type_id)\
+            .filter(Points_Type.entity_id == self.id,
+                Entity.entity=='activity', 
+                Entity.action==action).first()
+        return points_type.value
+
     @staticmethod
     def from_json(json_activity):
         title       = json_activity.get('title')

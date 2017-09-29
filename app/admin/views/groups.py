@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, request
 from .. import admin
 from ...forms import CreateInterestGroupForm, UpdateInterestGroupForm
 from app import db
-from app.models import User, Interest_Group, Membership, Activity
+from app.models import User, Interest_Group, Membership, Activity, Points_Type, Entity
 from ...decorators import admin_required
 from ...utils import flash_errors, is_valid_extension
 from werkzeug.utils import secure_filename
@@ -83,6 +83,9 @@ def create_group():
         db.session.add(interest_group)
         db.session.commit()
 
+        # set points
+        interest_group.set_points('accepted_join_request', form.joined_point.data)
+
         # insert leaders
         leader_ids = form.leader_ids.data.split(',')
         for leader_id in leader_ids:
@@ -135,9 +138,14 @@ def update_group(id):
         group.name = form.name.data
         group.about = form.about.data
         db.session.commit()
+
+        # edit group points
+        group.edit_points('accepted_join_request', form.joined_point.data)
+
         return redirect(url_for('admin.group', id=id))
     form.name.data = group.name
     form.about.data = group.about
+    form.joined_point.data = group.get_points('accepted_join_request')
     return render_template('admin/group/edit.html', form=form, group=group)
 
 # Actions

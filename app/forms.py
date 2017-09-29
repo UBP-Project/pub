@@ -1,11 +1,12 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, SelectField
 from wtforms.validators import Required, UUID
-from wtforms.fields.html5 import EmailField, DateField
+from wtforms.fields.html5 import EmailField, DateField, IntegerField
 from wtforms.widgets import TextArea
 from flask_wtf.file import FileField, FileRequired
 from .models import Interest_Group, Role, Membership
 from flask_login import current_user
+from .auth import is_manager
 
 
 class LoginForm(FlaskForm):
@@ -55,9 +56,10 @@ class PasswordFormClient(FlaskForm):
     submit = SubmitField("Change Password")
 
 class InterestGroupMixin():
-    name        = StringField("Group Name", validators=[Required()])
-    about       = StringField("About Group", widget=TextArea(), validators=[Required()])
-    leader_ids  = StringField("Leader Ids")
+    name         = StringField("Group Name", validators=[Required()])
+    about        = StringField("About Group", widget=TextArea(), validators=[Required()])
+    leader_ids   = StringField("Leader Ids")
+    joined_point = IntegerField('Points on join', default=0)
 
 class CreateInterestGroupForm(FlaskForm, InterestGroupMixin):
     cover_photo = FileField("Cover Photo", validators=[FileRequired()])
@@ -70,12 +72,15 @@ class UpdateInterestGroupForm(FlaskForm, InterestGroupMixin):
     submit = SubmitField("Save Changes")
 
 class ActivityMixin():
-    title       = StringField("Activity Title", validators=[Required()])
-    description = StringField("Activity Description", widget=TextArea(), validators=[Required()])
-    start_date  = DateField("Start Date", validators=[Required()])
-    end_date    = DateField("End Date", validators=[Required()])
-    address     = StringField("Address", validators=[Required()])
-    group       = SelectField('Group', choices=[])
+    title            = StringField("Activity Title", validators=[Required()])
+    description      = StringField("Activity Description", widget=TextArea(), validators=[Required()])
+    start_date       = DateField("Start Date", validators=[Required()])
+    end_date         = DateField("End Date", validators=[Required()])
+    address          = StringField("Address", validators=[Required()])
+    group            = SelectField('Group', choices=[])
+    interested_point = IntegerField('Points on interested', default=0)
+    going_point      = IntegerField('Points on going', default=10)
+    attended_point   = IntegerField('Points on attended', default=20)
 
 class CreateActivityForm(FlaskForm, ActivityMixin):
     image = FileField("Activity Image", validators=[FileRequired()])
@@ -106,11 +111,15 @@ class UpdateActivityForm(FlaskForm, ActivityMixin):
 
 class UpdateActivityFormClient(FlaskForm, ActivityMixin):
     image  = FileField("Activity Image")
-    submit = SubmitField("Create Activity")
+    submit = SubmitField("Save Changes")
 
     def __init__(self, *args, **kwargs):
         super(UpdateActivityFormClient, self).__init__(*args, **kwargs)
-        groups = Interest_Group.query.join(Membership, Membership.group_id == Interest_Group.id)\
+        if  is_manager():
+            groups = Interest_Group.query.all()
+            print("Is manager")
+        else:
+            groups = Interest_Group.query.join(Membership, Membership.group_id == Interest_Group.id)\
             .filter(Membership.level == 1 or Membership.level == 2).all()
         self.group.choices = [(str(group.id), group.name) for group in groups]
 

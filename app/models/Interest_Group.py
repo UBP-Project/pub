@@ -40,6 +40,23 @@ class Interest_Group(db.Model):
         db.session.add(points_type)
         db.session.commit()
 
+    def edit_points(self, action, value):
+        points_type = Points_Type.query\
+            .join(Entity, Entity.id == Points_Type.entity_type_id)\
+            .filter(Points_Type.entity_id == self.id,
+                Entity.entity=='interest_group', 
+                Entity.action==action).first()
+        points_type.value = value
+        db.session.commit()
+
+    def get_points(self, action):
+        points_type = Points_Type.query\
+            .join(Entity, Entity.id == Points_Type.entity_type_id)\
+            .filter(Points_Type.entity_id == self.id,
+                Entity.entity=='interest_group', 
+                Entity.action==action).first()
+        return points_type.value
+
     @staticmethod
     def from_json(json_interest_group):
         name        = json_interest_group.get('name')
