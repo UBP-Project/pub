@@ -12,11 +12,50 @@
 				<h3>NOTIFICATIONS</h3>
 				<hr/>
 
-				<div class="row">
-					<div class="col-md-12 col-sm-12 box-content" id="notif-panel">
-						
-					</div>
+				{% raw %}
+				<div id="notifs" class="row">
+
+					 <template v-if="notifications.length > 0">
+                        <div v-for="notif in notifications" class="col-md-12" style="padding: 10px;">
+                            <div class="row">
+                            	<div v-if="notif.actor.image" class="col-md-1">
+                            		<img :src="'user_images_folder' + notif.actor.image" style="width: 40px; height: 40px; border-radius: 50%;"/>
+                            	</div>
+                            	<div v-else class="col-md-1">
+                            		<img src="/static/images/pub-default-img.jpg" style="width: 40px; height: 40px; border-radius: 50%;"/>
+                            	</div>
+                            	<div class="col-md-11" style="font-size: 12px; padding-top: 5px;">
+                            		<template v-if="notif.action == 'followed'">
+                            			<a :href="'/profile/' + notif.actor.id">{{ notif.actor.firstname }} {{ notif.actor.lastname }}</a> followed <a :href="'/profile/' + notif.entity.id">{{ notif.entity.firstname }} {{ notif.entity.lastname }}</a>
+                            			<h6 style="margin: 0;"><small>{{ notif.object_timestamp }}</small></h6>
+                            		</template>
+                            		<template v-else="notif.action == 'interested'">
+                            			<a :href="'/profile/' + notif.actor.id">{{ notif.actor.firstname }} {{ notif.actor.lastname }}</a> is interested to <a :href="'/profile/' + notif.entity.id">{{ notif.entity.title }}</a>
+                            		</template>
+                            		<template v-else="notif.action == 'going'">
+                            			<a :href="'/profile/' + notif.actor.id">{{ notif.actor.firstname }} {{ notif.actor.lastname }}</a> is going to <a :href="'/profile/' + notif.entity.id">{{ notif.entity.title }}</a>
+                            		</template>
+                            		<template v-else="notif.action == 'accepted_join_request'">
+                            			<a :href="'/profile/' + notif.actor.id">{{ notif.actor.firstname }} {{ notif.actor.lastname }}</a> accepted your join request to <a :href="'/profile/' + notif.entity.id">{{ notif.entity.name }}</a>
+                            		</template>
+                            		<template v-else><small>Something went wrong. This is an undefined notification.</small></template>
+                            	</div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 no-padding text-center show-more-box">
+                        	<br/>
+                            <button v-show="hasNext" class="btn btn-style-3" v-on:click="loadNotifs">Show More</button>
+                        </div>
+                    </template>
+
+	                <template v-else>
+	                	<div class="col-md-12 no-content-box text-center">
+                        	<h2><small>NO NOTIFICATIONS TO SHOW</small></h2>
+                    	</div>
+	                </template>
+
 				</div>
+				{% endraw %}
 
 			</div>
 		</div>
@@ -28,8 +67,46 @@
 {% block scripts %}
 
 	<script>
+		var vm = new Vue({
+			el: "#notifs",
+			data: {
+				notifications: [],
+				page: 1,
+				hasNext: false,
+				user_images_folder: '/static/uploads/profile_pictures/'
+			},
+			methods: {
+				loadNotifs: function() {
+					$.ajax({
+						url: '/api/v1.0/notifications' + "?=page" + this.page,
+						type: 'GET'
+					}).done(data => {
+						console.log(data);
+						this.notifications = data.notifications;
+						this.hasNext = data.has_next;
+						this.page++;
+					});
+				}
+			}
+		});
+		$(document).ready(function() {
+			vm.loadNotifs();
+		})
+	</script>
+	
+	
+
+
+
+
+
+
+
+
+
+	<script>
 		
-	function init_notifications() {
+	/*function init_notifications() {
 		$.ajax({
             url: '/api/v1.0/notifications',
             type: 'GET'
@@ -123,7 +200,7 @@
         });
 	}
 
-	init_notifications();
+	init_notifications();*/
 
 	</script>
 
