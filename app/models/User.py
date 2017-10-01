@@ -110,6 +110,10 @@ class User(UserMixin, db.Model):
         db.session.add(point)
         db.session.commit()
 
+    def remove_point(self, event):
+        points = Points.query.filter(Points.user_id == self.id, Points.event == event).delete()
+        db.session.commit()
+
     def total_points(self):
         user_points = db.session.query(Points, func.sum(Points.value).label('points'))\
             .join(User)\

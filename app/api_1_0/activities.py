@@ -69,6 +69,7 @@ def get_activities():
                   description: File name of image in uploads/activity_image folder
 
     """
+    ACTIVITY_PER_PAGE = 9
 
     if 'page' in request.args:
         page = int(request.args.get('page'))
@@ -76,8 +77,8 @@ def get_activities():
         page = 1
 
     activities = Activity.query\
-        .order_by(Activity.start_date.desc())\
-        .paginate(page=page, per_page=9, error_out=False)
+            .order_by(Activity.start_date.desc())\
+            .paginate(page=page, per_page=9, error_out=False)
 
     return jsonify({
         'activities': [activity.to_json() for activity in activities.items],
@@ -493,8 +494,12 @@ def going_to_activity_by(id):
                 status=1  # going
             )
 
-            current_user.earn_point('Joined %s' %
-                                    activity.title, 'activity', activity.id, 'goingf')
+            # Notification
+            notification = Notif('activity', 'going', id)
+            # who triggered this action?
+            notification.add_actor(current_user.get_id())
+
+            current_user.earn_point('Joined %s' % activity.title, 'activity', activity.id, 'going')
 
             db.session.add(user_activity)
             db.session.commit()
@@ -529,7 +534,7 @@ def cancel_going_to_activity_by(id):
         500:
             description: Internal Server Error
     """
-    activity = User_Activity.query.filter_by(
+    user_activity = User_Activity.query.filter_by(
         user_id=current_user.get_id(), activity_id=id, status=1).delete()
 
     try:
@@ -542,6 +547,8 @@ def cancel_going_to_activity_by(id):
         # who triggered this action?
         if notification:
             notification.set_inactive()
+
+        current_user.remove_point('Joined %s' % Activity.query.get(id).title)
 
         return jsonify({'status': 'Success'}), 200
     except exc.SQLAlchemyError as e:

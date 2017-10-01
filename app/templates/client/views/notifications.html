@@ -14,7 +14,6 @@
 
 				{% raw %}
 				<div id="notifs" class="row">
-
 					 <template v-if="notifications.length > 0">
                         <div v-for="notif in notifications" class="col-md-12" style="padding: 10px;">
                             <div class="row">
@@ -29,15 +28,16 @@
                             			<a :href="'/profile/' + notif.actor.id">{{ notif.actor.firstname }} {{ notif.actor.lastname }}</a> followed <a :href="'/profile/' + notif.entity.id">{{ notif.entity.firstname }} {{ notif.entity.lastname }}</a>.
                             			<h6 style="margin: 0;"><small>{{ notif.object_timestamp }}</small></h6>
                             		</template>
-                            		<template v-else="notif.action == 'interested'">
+                            		<template v-else-if="notif.action == 'interested'">
                             			<a :href="'/profile/' + notif.actor.id">{{ notif.actor.firstname }} {{ notif.actor.lastname }}</a> is interested to <a :href="'/profile/' + notif.entity.id">{{ notif.entity.title }}</a>.
                             			<h6 style="margin: 0;"><small>{{ notif.object_timestamp }}</small></h6>
                             		</template>
-                            		<template v-else="notif.action == 'going'">
+                            		<template v-else-if="notif.action == 'going'">
                             			<a :href="'/profile/' + notif.actor.id">{{ notif.actor.firstname }} {{ notif.actor.lastname }}</a> is going to <a :href="'/profile/' + notif.entity.id">{{ notif.entity.title }}</a>.
                             			<h6 style="margin: 0;"><small>{{ notif.object_timestamp }}</small></h6>
                             		</template>
-                            		<template v-else="notif.action == 'accepted_join_request'">
+                            		
+                            		<template v-else-if="notif.action == 'accepted_join_request'">
                             			<a :href="'/profile/' + notif.actor.id">{{ notif.actor.firstname }} {{ notif.actor.lastname }}</a> accepted your join request to <a :href="'/profile/' + notif.entity.id">{{ notif.entity.name }}</a>.
                             			<h6 style="margin: 0;"><small>{{ notif.object_timestamp }}</small></h6>
                             		</template>
@@ -84,7 +84,6 @@
 						url: '/api/v1.0/notifications' + "?page=" + this.page,
 						type: 'GET'
 					}).done(data => {
-						//console.log(data);
 						this.notifications.push.apply(this.notifications, data.notifications);
 						this.hasNext = data.has_next;
 						this.page++;
