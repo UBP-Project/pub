@@ -12,9 +12,9 @@
 				<h3>UNIONBANK PERKS
 					{% if isManager %}
 					<span class="pull-right">
-	                    <a href="/perks/manage" style="text-decoration: none;">
-	                        <button class="btn btn-style-2 btn-sm" title="Manage Perks">MANAGE PERKS &nbsp;<i class="fa fa-gear"></i></button>
-	                    </a>
+	                    <a href="/perks/create" style="text-decoration: none;">
+                            <button class="btn btn-style-1 btn-sm" title="Create Perks">CREATE PERKS &nbsp;<i class="fa fa-plus"></i></button>
+                        </a>
                     </span>
                     {% endif %}
                 </h3>
@@ -31,9 +31,12 @@
                                 </div>
                                 <div class="col-md-7" style="background-color: #fff; padding: 15px;">
                                     <h4 class="title" style="margin: 0;"><strong>{{ perk.title }}</strong></h4>
-                                    <div style="height: 115px; overflow: scroll; overflow-y: auto; overflow-x: auto;">
+                                    <div style="height: 70px; overflow: scroll; overflow-y: auto; overflow-x: auto;">
                                         <p style="font-size: 15px; color: gray;"><small>{{ perk.description }}</small></p>
                                     </div>
+                                    <a v-show="is_manager" :href="'/perks/'+ perk.id + '/edit'" style="text-decoration: none;">
+                                        <button class="btn btn-style-1 btn-sm" :title="'Edit ' + perk.title">EDIT &nbsp;<i class="fa fa-edit"></i></button>
+                                    </a>
                                     <h5><small>{{ perk.timestamp }}</small></h5>
                                 </div>
                             </div>
@@ -67,7 +70,8 @@
 			data: {
 				perks: [],
 				page: 1,
-				hasNext: false
+				hasNext: false,
+				is_manager: false
 			},
 			methods: {
 				loadPerks: function() {
@@ -84,6 +88,7 @@
 		});
 		$(document).ready(function() {
 			vm.loadPerks();
+			vm.is_manager = "{{ isManager }}" == "True" ? true : false;
 		})
 	</script>
 {% endblock scripts %}
