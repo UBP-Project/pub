@@ -52,7 +52,13 @@
                                                 <!-- <img src="{{ url_for('static',filename='uploads/activity_images/' + activity.image) }}" /> -->
                                                <img :src="activity_images_folder + activity.image" />
                                             </div>
-                                            <h2 class="text-center">{{ activity.title}}</h2>
+                                            <span class="row">
+                                                <span class="col-md-2 col-lg-2 col-sm-2"><h2 class="text-center"></h2></span>
+                                                <span class="col-md-8 col-lg-8 col-sm-8"><h2 class="text-center">{{ activity.title}}</h2></span>
+                                                <span class="col-md-2 col-lg-2 col-sm-2 text-center" style="padding: 20px 15px 10px 15px;">
+                                                        <a href="#" class="btn btn-style-1" style="padding: 3px 8px 3px 9px;"><i class="fa fa-edit"></i></a>
+                                                </span>
+                                            </span>
                                             <div class="content">
                                                 <ul class="nav nav-tabs" role="tablist">
                                                     <li role="presentation" class="active act-li">
@@ -220,7 +226,8 @@
                     url: '/api/v1.0/activities/'+ activity.id + '/participants/interested',
                     type: 'GET'
                 }).done(function(data) {
-                     activity.interested_users = data;
+                    //console.log(data);
+                    activity.interested_users = data;
                 }).fail(function() {
                     console.log("error");
                 });
