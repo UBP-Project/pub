@@ -100,10 +100,17 @@
                                                             <template v-if="activity.going_users.length > 0">
                                                                 <div v-for="going_user in activity.going_users" class="col-md-6 mini-container">
                                                                     <a :href="'/profile/' + going_user.id">
-                                                                        <div>
-                                                                            <img v-if="going_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+going_user.image">
-                                                                            <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
-                                                                            <span>{{ going_user.firstname }} {{ going_user.lastname }}</span>
+                                                                        <div class="row" style="padding: 8px 20px; margin: 0;" :title="going_user.firstname + ' ' + going_user.lastname">
+                                                                            <span class="col-md-2" style="padding: 0;">
+                                                                                <img v-if="going_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+going_user.image">
+                                                                                <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
+                                                                            </span>
+                                                                            <span class="col-md-9 title" style="padding: 5px 10px;">
+                                                                                {{ going_user.firstname }} {{ going_user.lastname }}
+                                                                            </span>
+                                                                            <span class="col-md-1" style="padding: 5px;">
+                                                                                <i v-show="going_user.attended" class="fa fa-check" style="color: #39ad39; font-size: 15px;" title="Attended this activity"></i>
+                                                                            </span>
                                                                         </div>
                                                                     </a>
                                                                 </div>
@@ -203,7 +210,7 @@
                     url: '/api/v1.0/activities/'+ activity.id + '/participants/going',
                     type: 'GET'
                 }).done(function(data) {
-                    //console.log(data);
+                    console.log(data);
                     activity.going_users = data.going_users;
                 }).fail(function() {
                     console.log("error");
