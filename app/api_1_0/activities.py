@@ -796,14 +796,14 @@ def check_user(id):
 
     user_activity = User_Activity.query.filter(
         User_Activity.activity_id == id, User_Activity.user_id == user_id).first()
+
     if action == 'check':
         user_activity.attended = True
-        user.earn_point('Attended %s' % activity.title,
-                        Points_Type.get_type_id('Attended Activity'))
+        user.earn_point('Attended %s' % activity.title, 'activity', activity.id, 'attended')
     else:
         user_activity.attended = False
-        Points.query.filter(Points.event == 'Attended %s' % activity.title,
-                            Points.type == Points_Type.get_type_id('Attended Activity')).delete()
+        user.remove_point('Attended %s' % activity.title)
+        
     db.session.commit()
     return jsonify({
         'activity_id': id,
