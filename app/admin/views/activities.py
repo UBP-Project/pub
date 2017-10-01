@@ -49,10 +49,13 @@ def create_activity():
             image=image_hashed_filename)
         db.session.add(activity)
         db.session.commit()
+        db.session.refresh(activity)
+
         # set activity point on: interested, going, attended
         activity.set_points('going', form.going_point.data)
         activity.set_points('interested', form.interested_point.data)
         activity.set_points('attended', form.attended_point.data)
+
         # after creating the activity return to list of activities
         return redirect(url_for("admin.activities"))
     return render_template('admin/activity/create.html',
