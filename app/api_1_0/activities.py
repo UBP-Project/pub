@@ -76,6 +76,7 @@ def get_activities():
         page = 1
 
     activities = Activity.query\
+        .order_by(Activity.start_date.desc())\
         .paginate(page=page, per_page=9, error_out=False)
 
     return jsonify({

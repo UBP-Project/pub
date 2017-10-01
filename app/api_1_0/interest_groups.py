@@ -8,104 +8,13 @@ from app.notification import Notif
 import datetime
 from sqlalchemy import exc
 from ..auth import can_accept_requests, can_modify_group
+from sqlalchemy import func
 
 from app.utils import is_valid_extension
 from werkzeug.utils import secure_filename
 import os
 import uuid
-
-@api.route('/interest_groups')
-@login_required
-def get_interest_groups():
-    """
-    Get list of Groups
-    ---
-    tags:
-      - groups
-
-    parameters:
-      - name: page
-        in: query
-        example: 1
-        default: 1
-
-    responses:
-      200:
-        description: OK
-        schema:
-          id: interest_groups
-          properties:
-            has_next:
-                type: boolean
-                example: True
-            has_prev:
-                type: boolean
-                example: True
-            interest_groups:
-                properties:
-                    id:
-                        type: string
-                        example: 04cb8787-fe54-4e73-80d4-c17bf56537ee
-
-                    name:
-                        type: string
-                        example: Sports
-                        description: Group name
-
-                    description:
-                        type: string
-                        example: Everything you should get involved!
-                        description: About the Group                
-
-                    cover_photo:
-                        type: string
-                        example: c94f84619ce845f3b6398a30aa99c720.bmp
-                        description: File name
-
-                    group_icon:
-                        type: string
-                        example: d167f8ec77194efc8319e3455da9920f.jpg
-                        description: File name
-
-                    membership_status:
-                        type: string
-                        example: d167f8ec77194efc8319e3455da9920f.jpg
-                        description: File name
-    """
-    if 'page' in request.args:
-        page = int(request.args.get('page'))
-    else:
-        page = 1
-
-    interest_groups = Interest_Group.query\
-        .outerjoin(Membership) \
-        .outerjoin(User) \
-        .with_entities(
-            Interest_Group.id,              \
-            Interest_Group.name,            \
-            Interest_Group.about,           \
-            Interest_Group.cover_photo,     \
-            Interest_Group.group_icon,      \
-            Membership.status
-            )  \
-        .paginate(page = page, per_page = 12, error_out=False)
-
-    return jsonify({
-      'interest_groups': [ 
-            {
-                'can_manage': can_modify_group(group.id),
-                'id': group.id,
-                'name': group.name,
-                'about': group.about,
-                'cover_photo': group.cover_photo,
-                'group_icon': group.group_icon,
-                'membership_status': group.status
-            }
-            for group in interest_groups.items ],
-      'has_next': interest_groups.has_next,
-      'has_prev': interest_groups.has_prev
-    }), 200
-       
+ 
 @api.route('/groups', methods=['GET'])
 @login_required
 def get_groups():
@@ -163,8 +72,10 @@ def get_groups():
         page = int(request.args.get('page'))
     else:
         page = 1
+
     groups = Interest_Group.query\
         .paginate(page = page, per_page = 12, error_out=False)
+
     return jsonify({
       'interest_groups': [
         {
@@ -627,92 +538,6 @@ def delete_interest_group(id):
         db.session.rollback()
         return jsonify({'status': 'error'}), 404
 
-@api.route('/interest_groups/<uuid(strict=False):id>/members')
-@login_required
-def get_members(id):
-    """
-    Get all members of a Group
-    ---
-    tags:
-      - groups
-
-    parameters:
-
-        - name: id
-          in: path
-          description: Group ID
-          type: string
-          required: true
-          default: 27e2200d-0da1-4dbf-bc9c-7c930ea1d75c
-
-    responses:
-        200:
-            description: OK
-            schema:
-                id: users
-                properties:
-                    id:
-                        type: string
-                        example: 0f5b5ff8-afa2-43f7-8066-8ec3075c4c0c
-
-                    firstname:
-                        type: string
-                        example: Juan
-                        description: First Name
-
-                    middlename:
-                        type: string
-                        example: y
-                        description: Middle Name
-
-                    lastname:
-                        type: string
-                        example: dela Cruz
-                        description: Last Name    
-                        
-                    email:
-                        type: string
-                        example: jdc@gmail.com
-                        description: User Email
-
-                    password_hash:
-                        type: string
-                        example: pbkdf2:sha1:1000$lnFVjrjG$b8cd6a98d9ab806eb52ca0066d275d59ee18e6f5
-                        description: User Password
-
-                    department:
-                        type: string
-                        example: Talen Acquisition
-                        description: UnionBank Dept
-
-                    position:
-                        type: string
-                        example: Head
-                        descripton: User's Position
-                    
-                    birthday:
-                        type: string
-                        format: date
-                        example: '1998-02-01'
-                        description: User Birthday
-
-                    role_id:
-                        type: string
-                        example: 04cb8787-fe54-4e73-80d4-c17bf56537ee
-                        description: Corresponding values for Administrator, Manager, and User
-        500:
-            description: Error
-    """
-
-    group = Interest_Group.query.get_or_404(id)
-
-    members = User.query.join(Membership)\
-            .join(Interest_Group)\
-            .filter(Interest_Group.id == group.id, Membership.status == 1, Membership.level == 0).all()
-
-    return jsonify([
-        user.to_json() for user in members
-    ])
 
 @api.route('/interest_groups/<uuid(strict=False):id>/role')
 @login_required
@@ -902,39 +727,6 @@ def group_activities_by(id):
 
     return jsonify([
         activity.to_json() for activity in activities
-    ])
-
-@api.route('/interest_groups/<uuid(strict=False):id>/leaders', methods=['GET'])
-def get_group_leaders(id):
-    """
-    Get the list of leaders of the group
-    ---
-    tags:
-      - groups
-
-    parameters:
-      - name: id
-        in: path
-        description: Group ID
-        type: string
-        required: true
-        default: 0f5b5ff8-afa2-43f7-8066-8ec3075c4c0c
-
-    responses:
-      200:
-        description: OK
-      404:
-        description: Not Found
-    """
-
-    group = Interest_Group.query.get_or_404(id)
-
-    leaders = User.query.join(Membership, Membership.user_id == User.id)\
-            .join(Interest_Group)\
-            .filter(Interest_Group.id == group.id, Membership.status == 1, Membership.level != 0).all()
-
-    return jsonify([
-        leader.to_json() for leader in leaders
     ])
 
 @api.route('/interest_groups/<uuid(strict=False):group_id>/accept', methods=['POST'])
@@ -1216,3 +1008,53 @@ def add_member():
     db.session.add(membership)
     db.session.commit()
     return jsonify({'status': 'Success'}), 200
+
+@api.route('/interest_groups/<uuid(strict=False):id>/population')
+@login_required
+def get_population(id):
+    """
+    Get number of members and leaders
+    ---
+    tags:
+      - groups
+
+    parameters:
+      - name: id
+        in: path
+        example: 04cb8787-fe54-4e73-80d4-c17bf56537ee
+        required: true
+        type: string
+        description: Group id
+        
+    responses:
+      200:
+        description: OK
+        schema:
+            id: population
+            properties:
+                members:
+                    type: integer
+                    default: 0
+                leaders:
+                    type: integer
+                    default: 0
+                total:
+                    type: integer
+                    default: 0
+            
+    """
+    group = Interest_Group.query.get_or_404(id)
+
+    members = User.query.join(Membership)\
+            .join(Interest_Group)\
+            .filter(Interest_Group.id == group.id, Membership.status == 1, Membership.level == 0).count()
+
+    leaders = User.query.join(Membership, Membership.user_id == User.id)\
+            .join(Interest_Group)\
+            .filter(Interest_Group.id == group.id, Membership.status == 1, Membership.level != 0).count()
+
+    return jsonify({
+        'members' : members,
+        'leaders' : leaders,
+        'total'   : members + leaders
+    }), 200

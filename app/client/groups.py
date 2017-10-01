@@ -19,8 +19,9 @@ def groups():
             .filter(Role.name == 'Manager', User.id == current_user.get_id()).first() is not None
 
     managed_groups = Interest_Group.query.join(Membership,\
-        Membership.group_id == Interest_Group.id).filter(Membership.level == 1,\
-        Membership.user_id == current_user.get_id()).all()
+        Membership.group_id == Interest_Group.id)\
+        .filter(Membership.level == 1, Membership.user_id == current_user.get_id())\
+        .all()
 
     return render_template("client/group/groups.html", # interest_groups=interest_groups,
         managed_groups=managed_groups, user=current_user, isManager=isManager)
