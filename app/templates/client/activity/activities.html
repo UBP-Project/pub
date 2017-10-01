@@ -28,10 +28,15 @@
                             <div class="col-md-3 col-lg-4 col-sm-6 card-container" v-on:click="loadActivityInfo(activity)">
                                 <div class="card zoomify" data-toggle="modal" :data-target="'#activity-' + activity.id">
                                     <div class="card-img">
-                                        <span style="color: green; font-size: 35px; position: absolute; top: 5px; right: 15px;">
-                                            <i class="fa fa-check-circle-o"></i>
-                                        </span>
-                                        <img :src="activity_images_folder + activity.image" class="img-responsive" />
+                                        <template v-if="today > activity.end_date">
+                                            <img :src="activity_images_folder + activity.image" class="img-responsive" style="-webkit-filter: grayscale(100%); filter: grayscale(100%);"/>
+                                            <span style="color: green; font-size: 35px; position: absolute; top: 5px; right: 15px;">
+                                                    <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
+                                            </span>
+                                        </template>
+                                        <template v-else>
+                                            <img :src="activity_images_folder + activity.image" class="img-responsive"/>
+                                        </template>
                                     </div>
                                     <div class="card-desc">
                                         <h4 class="text-center title">{{ activity.title}}</h4>
@@ -52,13 +57,21 @@
                                         <!-- BODY -->
                                         <div class="modal-body">
                                             <div class="img-container">
-                                               <img :src="activity_images_folder + activity.image" />
+                                               <template v-if="today > activity.end_date">
+                                                    <img :src="activity_images_folder + activity.image" class="img-responsive" style="-webkit-filter: grayscale(100%); filter: grayscale(100%);"/>
+                                                    <span style="color: green; font-size: 35px; position: absolute; top: 5px; right: 15px;">
+                                                            <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
+                                                    </span>
+                                                </template>
+                                                <template v-else>
+                                                    <img :src="activity_images_folder + activity.image"/>
+                                                </template>
                                             </div>
                                             <span class="row">
                                                 <span class="col-md-2 col-lg-2 col-sm-2 hidden-xs" style="border: none;"><h2 class="text-center"></h2></span>
                                                 <span class="col-md-8 col-lg-8 col-sm-8"><h2 class="text-center">{{ activity.title}}</h2></span>
                                                 <span class="col-md-2 col-lg-2 col-sm-2 text-center" style="padding: 20px 15px 10px 15px;">
-                                                        <a href="#" class="btn btn-style-3" style="padding: 2px 7px 2px 8px; font-size: 15px;" title="Edit Activity"><i class="fa fa-edit"></i></a>
+                                                        <a :href="'/activities/' + activity.id + '/edit'" class="btn btn-style-3" style="padding: 2px 7px 2px 8px; font-size: 15px;" title="Edit Activity"><i class="fa fa-edit"></i></a>
                                                 </span>
                                             </span>
                                             <div class="content">
@@ -139,7 +152,7 @@
 
                                             <span class="row">
                                                 <span class="col-md-4" style="padding: 0; text-align: left;">
-                                                    <a class="btn btn-style-3" :href="'/activities/' + activity.id + '/summary'" title="Attendance List"><i class="fa fa-list"></i></a>
+                                                    <a v-if="today > activity.end_date" class="btn btn-style-3" :href="'/activities/' + activity.id + '/summary'" title="Attendance List"><i class="fa fa-list"></i></a>
                                                     <a class="btn btn-style-3" :href="'/activities/' + activity.id + '/attendance'" title="Check Attendance">ATTENDANCE</a>
                                                 </span>
                                                 <span class="col-md-8 pull-right" style="padding: 0;">
@@ -194,6 +207,7 @@
         var vm = new Vue({
           el: '#app',
           data: {
+            today: null,
             activities: [],
             activities_page: 1,
             hasNext: false,
@@ -214,7 +228,7 @@
                         activity.isInterested     = false;
                         activity.isGoing          = false;
                     });
-                    //console.log(data);
+                    console.log(data);
                     this.activities.push.apply(this.activities, data.activities); // append activities
                     this.activities_page++;
                     this.hasNext = data.has_next;
@@ -283,10 +297,16 @@
                          activity.isInterested = true;
                     });
                 }
+            },
+            getDateToday: function() {
+                t = new Date();
+                today = t;
+                console.log(t);
             }
           }
         });
         $(document).ready(function() {
+            vm.getDateToday();
             vm.loadActivities();
         });
     </script>
