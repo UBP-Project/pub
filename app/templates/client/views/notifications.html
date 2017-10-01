@@ -81,11 +81,11 @@
 			methods: {
 				loadNotifs: function() {
 					$.ajax({
-						url: '/api/v1.0/notifications' + "?=page" + this.page,
+						url: '/api/v1.0/notifications' + "?page=" + this.page,
 						type: 'GET'
 					}).done(data => {
-						console.log(data);
-						this.notifications = data.notifications;
+						//console.log(data);
+						this.notifications.push.apply(this.notifications, data.notifications);
 						this.hasNext = data.has_next;
 						this.page++;
 					});
