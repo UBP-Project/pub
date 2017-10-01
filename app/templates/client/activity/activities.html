@@ -56,7 +56,7 @@
                                                 <span class="col-md-2 col-lg-2 col-sm-2"><h2 class="text-center"></h2></span>
                                                 <span class="col-md-8 col-lg-8 col-sm-8"><h2 class="text-center">{{ activity.title}}</h2></span>
                                                 <span class="col-md-2 col-lg-2 col-sm-2 text-center" style="padding: 20px 15px 10px 15px;">
-                                                        <a href="#" class="btn btn-style-1" style="padding: 3px 8px 3px 9px;"><i class="fa fa-edit"></i></a>
+                                                        <a href="#" class="btn btn-style-3" style="padding: 3px 8px 3px 9px;" title="Edit Activity"><i class="fa fa-edit"></i></a>
                                                 </span>
                                             </span>
                                             <div class="content">
@@ -134,21 +134,28 @@
 
                                         <!-- FOOTER -->
                                         <div class="modal-footer">
-                                            <a :href="'/activities/' + activity.id + '/attendance'">Attendance</a>
-                                            <button v-if="activity.isInterested" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
-                                                NOT INTERESTED
-                                            </button>
-                                            <button v-else type="button" class="btn btn-style-2" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
-                                                INTERESTED
-                                            </button>
 
-                                            <!-- GOING BTNS -->
-                                            <button v-if="activity.isGoing" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleGoing(activity)">
-                                                LEAVE ACTIVITY
-                                            </button>
-                                            <button v-else type="button" class="btn btn-style-2" :id="activity.id" value="cgoing" v-on:click="toggleGoing(activity)">
-                                                JOIN ACTIVITY
-                                            </button>
+                                            <span class="row">
+                                                <span class="col-md-3" style="padding: 0; text-align: left;">
+                                                    <a class="btn btn-style-3" :href="'/activities/' + activity.id + '/attendance'">ATTENDANCE</a>
+                                                </span>
+                                                <span class="col-md-9 pull-right" style="padding: 0;">
+                                                    <button v-if="activity.isInterested" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
+                                                        NOT INTERESTED
+                                                    </button>
+                                                    <button v-else type="button" class="btn btn-style-2" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
+                                                        INTERESTED
+                                                    </button>
+
+                                                    <!-- GOING BTNS -->
+                                                    <button v-if="activity.isGoing" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleGoing(activity)">
+                                                        LEAVE ACTIVITY
+                                                    </button>
+                                                    <button v-else type="button" class="btn btn-style-2" :id="activity.id" value="cgoing" v-on:click="toggleGoing(activity)">
+                                                        JOIN ACTIVITY
+                                                    </button>
+                                                </span>
+                                            </span>
                                             <!-- END OF GOING BTNS -->
 
                                         </div> <!-- end of modal-footer -->
