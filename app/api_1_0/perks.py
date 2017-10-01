@@ -12,11 +12,11 @@ def get_perks():
     if 'page' in request.args:
         page = int(request.args.get('page'))
     else:
-         page = 1
+        page = 1
 
-
+    print(page)
     perks = Perks.query.order_by(Perks.timestamp)\
-        .paginate(page = page, per_page=PERKS_PER_PAGE, error_out=False)
+        .paginate(page=page, per_page=PERKS_PER_PAGE, error_out=False)
         
     return jsonify({
         'perks': [ perk.to_json() for perk in perks.items ],

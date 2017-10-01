@@ -72,11 +72,10 @@
 			methods: {
 				loadPerks: function() {
 					$.ajax({
-						url: '../../api/v1.0/perks' + "?=page" + this.page,
+						url: '../../api/v1.0/perks' + "?page=" + this.page,
 						type: 'GET'
 					}).done(data => {
-						//console.log(data);
-						this.perks = data.perks;
+						this.perks.push.apply(this.perks, data.perks); // append perks
 						this.hasNext = data.has_next;
 						this.page++;
 					});

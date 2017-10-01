@@ -32,8 +32,9 @@ def create_activity():
         image_filename = secure_filename(image.filename)
         extension = image_filename.rsplit('.', 1)[1].lower()
         image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
-        file_path = os.path.join(
-            'app/static/uploads/activity_images', image_hashed_filename)
+        
+        file_path = os.path.join('app/static/uploads/activity_images', image_hashed_filename)
+
         image.save(file_path)
 
         # create the activity

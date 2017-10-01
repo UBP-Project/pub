@@ -15,9 +15,7 @@ from ..auth import is_manager_or_leader, can_modify_activity, is_manager
 @login_required
 def activities():
     show_create = is_manager_or_leader()
-    print(show_create)
-    activities = Activity.query.all()
-    return render_template("client/activity/activities.html", activities=activities,\
+    return render_template("client/activity/activities.html",
         show_create=show_create, user=current_user)
 
 @client.route('/myactivities/')
