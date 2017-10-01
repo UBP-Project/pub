@@ -12,8 +12,8 @@
                 <h3>INTEREST GROUPS
                     {% if isManager %}
                     <span class="pull-right">
-                        <a href="/groups/manage" style="text-decoration: none;">
-                            <button class="btn btn-style-2 btn-sm" title="Manage Perks">MANAGE GROUPS &nbsp;<i class="fa fa-gear"></i></button>
+                        <a href="/groups/create" style="text-decoration: none;">
+                            <button class="btn btn-style-1 btn-sm" title="Create Perks">CREATE GROUP &nbsp;<i class="fa fa-plus"></i></button>
                         </a>
                     </span>
                     {% endif %}
@@ -36,7 +36,6 @@
                                     </div>
                                     <div class="group-desc">
                                         <h4 class="title">{{ group.name }}</h4>
-                                        <!-- FIX THIS SECTION: SHOW NUMBER OF MEMBERS -->
                                         <p><i class="fa fa-user"></i> {{ group.population }}</p>
                                     </div>
                                 </div>
@@ -145,6 +144,8 @@
                                                                 </div>
                                                             </div>
                                                             <!-- END OF ACTIVITY CARD -->
+                                                            
+                                                            
                                                         </template>
                                                         <template v-else>
                                                             <div>

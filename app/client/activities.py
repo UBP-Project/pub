@@ -14,9 +14,8 @@ from ..auth import is_manager_or_leader, can_modify_activity, is_manager
 @client.route('/activities/')
 @login_required
 def activities():
-    show_create = is_manager_or_leader()
     return render_template("client/activity/activities.html",
-        show_create=show_create, user=current_user)
+        can_manage_activity = is_manager_or_leader(), user=current_user)
 
 @client.route('/myactivities/')
 @login_required
