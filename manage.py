@@ -6,6 +6,7 @@ from app.seed import seed
 from flask_script import Manager, Shell, Server
 from flask_migrate import Migrate, MigrateCommand
 import simulate
+import test
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 manager = Manager(app)
@@ -18,7 +19,8 @@ def make_shell_context():
     return dict(app=app, db=db, Interest_Group=Interest_Group,
         User=User, Role=Role,
         seed=seed,
-        simulate=simulate)
+        simulate=simulate,
+        test=test)
     
 manager.add_command("shell", Shell(make_context=make_shell_context))
 

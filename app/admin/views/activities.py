@@ -1,25 +1,26 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, redirect, url_for, request
 from .. import admin
 from ...forms import CreateActivityForm, UpdateActivityForm
 from app import db
-from app.models import User, Activity, Permission, Interest_Group, Entity, Points_Type
-from ...decorators import admin_required, permission_required
+from app.models import Activity, Interest_Group
+from ...decorators import admin_required
 from ...utils import flash_errors, is_valid_extension
 from werkzeug.utils import secure_filename
 import os
 import uuid
 from datetime import datetime
-from sqlalchemy import or_, func
+from sqlalchemy import or_
 
 ACTIVITIES_PER_PAGE = 16
+
 
 @admin.route('/activities/<uuid(strict=False):id>')
 @admin_required
 def activity(id):
     activity = Activity.query.get_or_404(id)
-    if activity is not None:
-        return render_template("admin/activity/view_activity.html", activity=activity)
-    return redirect(url_for("admin.index"))
+    return render_template("admin/activity/view_activity.html",
+                           activity=activity)
+
 
 @admin.route('/activities/create', methods=['GET', 'POST'])
 @admin_required
@@ -27,32 +28,35 @@ def create_activity():
     form = CreateActivityForm()
     groups = Interest_Group.query.all()
     if request.method == 'POST':
-        image                 = form.image.data
-        image_filename        = secure_filename(image.filename)
-        extension             = image_filename.rsplit('.', 1)[1].lower()
+        image = form.image.data
+        image_filename = secure_filename(image.filename)
+        extension = image_filename.rsplit('.', 1)[1].lower()
         image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
-        file_path             = os.path.join('app/static/uploads/activity_images', image_hashed_filename)
+        file_path = os.path.join(
+            'app/static/uploads/activity_images', image_hashed_filename)
         image.save(file_path)
+
+        # create the activity
         activity = Activity(
-            title = form.title.data,
-            description = form.description.data,
-            start_date = form.start_date.data,
-            end_date = form.start_date.data,
-            address = form.address.data,
-            group_id = None if form.group.data == "None" else uuid.UUID(form.group.data).hex,
-            image = image_hashed_filename)
-        print(activity)
+            title=form.title.data,
+            description=form.description.data,
+            start_date=form.start_date.data,
+            end_date=form.start_date.data,
+            address=form.address.data,
+            group_id=None if form.group.data == "None" else uuid.UUID(
+                form.group.data).hex,
+            image=image_hashed_filename)
         db.session.add(activity)
         db.session.commit()
-        
         # set activity point on: interested, going, attended
         activity.set_points('going', form.going_point.data)
         activity.set_points('interested', form.interested_point.data)
         activity.set_points('attended', form.attended_point.data)
-        
+        # after creating the activity return to list of activities
         return redirect(url_for("admin.activities"))
-    flash_errors(form)
-    return render_template('admin/activity/create.html', form=form, groups=groups)
+    return render_template('admin/activity/create.html',
+                           form=form, groups=groups)
+
 
 @admin.route('/activities')
 @admin_required
@@ -78,26 +82,27 @@ def activities():
     else:
         page = 1
 
-    # filters activities base on the parameters: query, start_date, and end_date
+    # filters activities base on the
+    #   parameters: query, start_date, and end_date
     if query is not None and start_date is not None and end_date is not None:
         activities = Activity.query.filter(
-            or_(Activity.title.ilike("%"+q+"%"),
-            Activity.description.ilike("%"+q+"%")),
+            or_(Activity.title.ilike("%" + q + "%"),
+                Activity.description.ilike("%" + q + "%")),
             Activity.start_date >= start_date,
             Activity.end_date <= end_date)\
             .order_by(Activity.start_date)\
             .paginate(page=page, per_page=ACTIVITIES_PER_PAGE, error_out=False)
     elif query is not None and start_date is not None:
         activities = Activity.query.filter(
-            or_(Activity.title.ilike("%"+q+"%"),
-            Activity.description.ilike("%"+q+"%")),
+            or_(Activity.title.ilike("%" + q + "%"),
+                Activity.description.ilike("%" + q + "%")),
             Activity.start_date >= start_date).order_by(Activity.start_date)\
             .paginate(page=page, per_page=ACTIVITIES_PER_PAGE, error_out=False)
     elif query is not None:
         activities = Activity.query.filter(
-            or_(Activity.title.ilike("%"+q+"%"),
-            Activity.description.ilike("%"+q+"%"))
-            ).order_by(Activity.start_date)\
+            or_(Activity.title.ilike("%" + q + "%"),
+                Activity.description.ilike("%" + q + "%")))\
+            .order_by(Activity.start_date)\
             .paginate(page=page, per_page=ACTIVITIES_PER_PAGE, error_out=False)
     elif start_date is not None and end_date is not None:
         activities = Activity.query.filter(
@@ -116,14 +121,16 @@ def activities():
         activities = Activity.query.order_by(Activity.start_date)\
             .paginate(page=page, per_page=ACTIVITIES_PER_PAGE, error_out=False)
 
-    return render_template('admin/activity/activities.html', activities=activities, query=query,
-        start_date=start_date_str, end_date=end_date_str);
+    return render_template('admin/activity/activities.html',
+                           activities=activities, query=query,
+                           start_date=start_date_str, end_date=end_date_str)
+
 
 @admin.route('/activities/<string:id>/edit', methods=['GET', 'POST'])
 @admin_required
 def edit_activity(id):
-    form                  = UpdateActivityForm()
-    activity              = Activity.query.get_or_404(id)
+    form = UpdateActivityForm()
+    activity = Activity.query.get_or_404(id)
 
     if request.method == 'POST' and request.form.get('delete') == 'delete':
         db.session.delete(activity)
@@ -131,20 +138,23 @@ def edit_activity(id):
 
     if request.method == 'POST':
         if form.image.data is not None:
-            image                 = form.image.data
-            image_filename        = secure_filename(image.filename)
+            image = form.image.data
+            image_filename = secure_filename(image.filename)
             if is_valid_extension(image_filename):
-                extension             = image_filename.rsplit('.', 1)[1].lower()
+                extension = image_filename.rsplit('.', 1)[1].lower()
                 image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
-                file_path             = os.path.join('app/static/uploads/activity_images', image_hashed_filename)
+                file_path = os.path.join('app/static/uploads/activity_images',
+                                         image_hashed_filename)
                 image.save(file_path)
-                activity.image   = image_hashed_filename
-        activity.title       = form.title.data      
+                activity.image = image_hashed_filename
+        activity.title = form.title.data
         activity.description = form.description.data
-        activity.start_date  = form.start_date.data 
-        activity.end_date    = form.end_date.data   
-        activity.address     = form.address.data
-        activity.group_id    = None if form.group.data == "None" else uuid.UUID(form.group.data).hex
+        activity.start_date = form.start_date.data
+        activity.end_date = form.end_date.data
+        activity.address = form.address.data
+        activity.group_id = None \
+            if form.group.data == "None" \
+            else uuid.UUID(form.group.data).hex
         db.session.commit()
 
         # edit points per activity action
@@ -155,16 +165,22 @@ def edit_activity(id):
         return redirect(url_for('admin.activities'))
 
     # load activity data to the form
-    form.title.data            = activity.title
-    form.description.data      = activity.description
-    form.start_date.data       = activity.start_date
-    form.end_date.data         = activity.end_date
-    form.address.data          = activity.address
-    form.group.data            = activity.group_id
-    form.going_point.data      = activity.get_points('going')
+    form.title.data = activity.title
+    form.description.data = activity.description
+    form.start_date.data = activity.start_date
+    form.end_date.data = activity.end_date
+    form.address.data = activity.address
+    form.group.data = activity.group_id
+    form.going_point.data = activity.get_points('going')
     form.interested_point.data = activity.get_points('interested')
-    form.attended_point.data   = activity.get_points('attended')
+    form.attended_point.data = activity.get_points('attended')
     flash_errors(form)
-    return render_template('admin/activity/edit.html', form=form, activity=activity)
+    return render_template('admin/activity/edit.html',
+                           form=form, activity=activity)
 
-    
+
+@admin.route('/activities/<string:id>/attendance')
+@admin_required
+def attendance(id):
+    activity = Activity.query.get_or_404(id)
+    return render_template('admin/activity/attendance.html', activity=activity)
