@@ -75,7 +75,7 @@
 						url: '../../api/v1.0/perks' + "?page=" + this.page,
 						type: 'GET'
 					}).done(data => {
-						this.perks.push.apply(this.perks, data.perks); // append perks
+						this.perks.push.apply(this.perks, data.perks);
 						this.hasNext = data.has_next;
 						this.page++;
 					});

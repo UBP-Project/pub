@@ -137,6 +137,12 @@ def attendance(id):
     activity = Activity.query.get_or_404(id)
     return render_template("attendance/checklist.html", activity=activity)
 
+@client.route('/activities/<string:id>/summary')
+@login_required
+def summary(id):
+    activity = Activity.query.get_or_404(id)
+    return render_template("attendance/summary.html", activity=activity)
+
 @client.route('/activity-list')
 @login_required
 def activity_list():

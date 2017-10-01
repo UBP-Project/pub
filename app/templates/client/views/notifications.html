@@ -84,8 +84,7 @@
 						url: '/api/v1.0/notifications' + "?page=" + this.page,
 						type: 'GET'
 					}).done(data => {
-						console.log(data);
-						this.notifications.push.apply(this.notifications, data.notifications); // append notifications
+						this.notifications.push.apply(this.notifications, data.notifications);
 						this.hasNext = data.has_next;
 						this.page++;
 					});
