@@ -1,6 +1,6 @@
-{% extends "./layout/client_base.html" %}
+{% extends "/layout/admin_base.html" %}
 {% from 'components/attendance.html' import attendance, attendance_script %}
-{% block title %} {{ activity.title }} {% endblock title %}
+{% block title %}Admin Page{% endblock %}
 
 {% block content %}
     {{ attendance(activity) }}

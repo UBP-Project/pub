@@ -14,6 +14,7 @@ from werkzeug.utils import secure_filename
 import os
 import uuid
 
+
 @api.route('/activities', methods=['GET'])
 @login_required
 def get_activities():
@@ -75,14 +76,16 @@ def get_activities():
         page = 1
 
     activities = Activity.query\
-        .paginate(page = page, per_page = 9, error_out=False)
+        .order_by(Activity.start_date.desc())\
+        .paginate(page=page, per_page=9, error_out=False)
 
     return jsonify({
-      'activities': [ activity.to_json() for activity in activities.items ],
-      'has_next': activities.has_next,
-      'has_prev': activities.has_prev
+        'activities': [activity.to_json() for activity in activities.items],
+        'has_next': activities.has_next,
+        'has_prev': activities.has_prev
     })
-       
+
+
 @api.route('/activities', methods=['POST'])
 @login_required
 def new_activity():
@@ -148,31 +151,33 @@ def new_activity():
             description: Internal Server Error
     """
 
-    image                 = request.files.get('image')
-    image_filename        = secure_filename(image.filename)
+    image = request.files.get('image')
+    image_filename = secure_filename(image.filename)
 
     if is_valid_extension(image_filename):
-        extension             = image_filename.rsplit('.', 1)[1].lower()
+        extension = image_filename.rsplit('.', 1)[1].lower()
         image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
-        file_path             = os.path.join('app/static/uploads/activity_images', image_hashed_filename)
+        file_path = os.path.join(
+            'app/static/uploads/activity_images', image_hashed_filename)
         image.save(file_path)
         activity = Activity(
-            title       = request.form.get('title'),
-            description = request.form.get('description'),
-            start_date  = request.form.get('start_date'),
-            end_date    = request.form.get('end_date'),
-            address     = request.form.get('address'),
-            group_id    = request.form.get('group_id'),
-            image       = image_hashed_filename
+            title=request.form.get('title'),
+            description=request.form.get('description'),
+            start_date=request.form.get('start_date'),
+            end_date=request.form.get('end_date'),
+            address=request.form.get('address'),
+            group_id=request.form.get('group_id'),
+            image=image_hashed_filename
         )
         db.session.add(activity)
 
     try:
         db.session.commit()
-        return "Success" # change this to better message format
+        return "Success"  # change this to better message format
     except exc.SQLAlchemyError:
         db.session.rollback()
-        return jsonify({'status':'error'}), 500
+        return jsonify({'status': 'error'}), 500
+
 
 @api.route('/activities/<uuid(strict=False):id>', methods=['GET'])
 @login_required
@@ -227,6 +232,7 @@ def get_activity_by(id):
     """
     activity = Activity.query.get_or_404(id)
     return jsonify(activity.to_json())
+
 
 @api.route('/activities/<uuid(strict=False):id>', methods=['PUT'])
 @login_required
@@ -302,31 +308,33 @@ def edit_activity_by(id):
       500:
         description: Error
     """
-    activity  = Activity.query.get_or_404(id)
+    activity = Activity.query.get_or_404(id)
 
     if 'image' in request.files:
-        image                 = request.files.get('image')
-        image_filename        = secure_filename(image.filename)
+        image = request.files.get('image')
+        image_filename = secure_filename(image.filename)
         if is_valid_extension(image_filename):
-            extension             = image_filename.rsplit('.', 1)[1].lower()
+            extension = image_filename.rsplit('.', 1)[1].lower()
             image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
-            file_path             = os.path.join('app/static/uploads/activity_images', image_hashed_filename)
+            file_path = os.path.join(
+                'app/static/uploads/activity_images', image_hashed_filename)
             image.save(file_path)
-            activity.image   = image_hashed_filename
-            
-    activity.title       = request.form.get('title')      
+            activity.image = image_hashed_filename
+
+    activity.title = request.form.get('title')
     activity.description = request.form.get('description')
-    activity.start_date  = request.form.get('start_date')
-    activity.end_date    = request.form.get('end_date')   
-    activity.address     = request.form.get('address')   
-    activity.group_id    = request.form.get('group_id')
+    activity.start_date = request.form.get('start_date')
+    activity.end_date = request.form.get('end_date')
+    activity.address = request.form.get('address')
+    activity.group_id = request.form.get('group_id')
 
     try:
         db.session.commit()
-        return "Success" # change this to better message format
+        return "Success"  # change this to better message format
     except exc.SQLAlchemyError:
         db.session.rollback()
-        return jsonify({'status':'error'}), 500
+        return jsonify({'status': 'error'}), 500
+
 
 @api.route('/activities/<uuid(strict=False):id>', methods=['DELETE'])
 @login_required
@@ -355,6 +363,7 @@ def delete_activity_by(id):
     db.session.commit()
     return "Deleted"
 
+
 @api.route('/activities/<uuid(strict=False):id>/participants/going')
 @login_required
 def get_going_by(id):
@@ -368,7 +377,7 @@ def get_going_by(id):
       - in: path
         name: id
         description: Group ID
-    
+
     responses:
       200:
         description: OK
@@ -388,7 +397,7 @@ def get_going_by(id):
             middlename:
                 type: string
                 example: Clinton
-            
+
             lastname:
                 type: string
                 example: dela Cruz
@@ -429,20 +438,21 @@ def get_going_by(id):
                 required: true
     """
     activity = Activity.query.get_or_404(id)
-    
+
     going = User_Activity.query.join(User, User_Activity.user_id == User.id)\
-      .add_columns(User.firstname, User.lastname, User.image, User.id, User_Activity.attended)\
-      .filter(User_Activity.activity_id == id).order_by(User.firstname).all()
+        .add_columns(User.firstname, User.lastname, User.image, User.id, User_Activity.attended)\
+        .filter(User_Activity.activity_id == id).order_by(User.firstname).all()
 
     return jsonify({
-      'going_users': [{
-        'firstname': user.firstname,
-        'lastname' : user.lastname,
-        'image'    : user.image,
-        'attended' : user.attended,
-        'id'       : user.id
-      } for user in going]
+        'going_users': [{
+            'firstname': user.firstname,
+            'lastname': user.lastname,
+            'image': user.image,
+            'attended': user.attended,
+            'id': user.id
+        } for user in going]
     })
+
 
 @api.route('/activities/<uuid(strict=False):id>/participants/going', methods=['POST'])
 @login_required
@@ -466,31 +476,34 @@ def going_to_activity_by(id):
             description: Record already exists
         500:
             description: Internal Server Error
-    """    
-    activity = User_Activity.query.filter_by(user_id=current_user.get_id(), activity_id=id, status=1).first()
+    """
+    activity = User_Activity.query.filter_by(
+        user_id=current_user.get_id(), activity_id=id, status=1).first()
 
     if activity is not None:
-      #check if the status is going
-      return jsonify({'status': 'Record already exists'}), 201
+        # check if the status is going
+        return jsonify({'status': 'Record already exists'}), 201
     else:
-      try:
-          activity = Activity.query.get(id)
+        try:
+            activity = Activity.query.get(id)
 
-          user_activity = User_Activity(
-              user_id     = current_user.id,
-              activity_id = id,
-              status      = 1 #going
-          )
+            user_activity = User_Activity(
+                user_id=current_user.id,
+                activity_id=id,
+                status=1  # going
+            )
 
-          current_user.earn_point('Joined %s' % activity.title, 'activity', activity.id, 'goingf')
+            current_user.earn_point('Joined %s' %
+                                    activity.title, 'activity', activity.id, 'goingf')
 
-          db.session.add(user_activity)
-          db.session.commit()
-          return jsonify({'status': 'Success'}), 200   
-      except exc.SQLAlchemyError as e:
-          print(e)
-          db.session().rollback()
-          return jsonify({'status': 'Internal Server Error'}), 500
+            db.session.add(user_activity)
+            db.session.commit()
+            return jsonify({'status': 'Success'}), 200
+        except exc.SQLAlchemyError as e:
+            print(e)
+            db.session().rollback()
+            return jsonify({'status': 'Internal Server Error'}), 500
+
 
 @api.route('/activities/<uuid(strict=False):id>/participants/going', methods=['DELETE'])
 @login_required
@@ -515,24 +528,27 @@ def cancel_going_to_activity_by(id):
             description: Record already exists
         500:
             description: Internal Server Error
-    """    
-    activity = User_Activity.query.filter_by(user_id=current_user.get_id(), activity_id=id).delete()
+    """
+    activity = User_Activity.query.filter_by(
+        user_id=current_user.get_id(), activity_id=id, status=1).delete()
 
     try:
         db.session.commit()
 
-        #Notification
-        notification = Notif.notif_object(entity='activity', action='going', entity_id=id)
+        # Notification
+        notification = Notif.notif_object(
+            entity='activity', action='going', entity_id=id)
 
-        #who triggered this action?
+        # who triggered this action?
         if notification:
-          notification.set_inactive()
+            notification.set_inactive()
 
-        return jsonify({'status': 'Success'}), 200        
+        return jsonify({'status': 'Success'}), 200
     except exc.SQLAlchemyError as e:
         print(e)
         db.session().rollback()
         return jsonify({'status': 'error'}), 500
+
 
 @api.route('/activities/<uuid(strict=False):id>/participants/interested')
 @login_required
@@ -547,7 +563,7 @@ def get_interested(id):
       - in: path
         name: id
         description: Group ID
-    
+
     responses:
       200:
         description: OK
@@ -572,7 +588,7 @@ def get_interested(id):
                 type: string
                 example: dela Cruz
                 description: Last Name    
-                
+
             email:
                 type: string
                 example: jdc@gmail.com
@@ -592,7 +608,7 @@ def get_interested(id):
                 type: string
                 example: Head
                 descripton: User's Position
-            
+
             birthday:
                 type: string
                 format: date
@@ -616,6 +632,7 @@ def get_interested(id):
         user.to_json() for user in interested
     ])
 
+
 @api.route('/activities/<uuid(strict=False):id>/participants/interested', methods=['POST'])
 @login_required
 def interested_to_activity_by(id):
@@ -638,31 +655,31 @@ def interested_to_activity_by(id):
             description: Record already exists
         500:
             description: Internal Server Error
-    """    
-    activity = User_Activity.query.filter_by(user_id=current_user.get_id(), activity_id=id, status=0).first()
-    
+    """
+    activity = User_Activity.query.filter_by(
+        user_id=current_user.get_id(), activity_id=id, status=0).first()
+
     if activity is not None:
-        #check if the status is interested
+        # check if the status is interested
         return jsonify({'status': 'Record already exists'}), 201
     else:
         new_user_activity = User_Activity(
             user_id=current_user.get_id(),
             activity_id=id,
-            status = 0 #interested
+            status=0  # interested
         )
         db.session.add(new_user_activity)
         activity = Activity.query\
-          .join(User_Activity)\
-          .join(User, User.id == current_user.get_id())\
-          .first()
-
+            .join(User_Activity)\
+            .join(User, User.id == current_user.get_id())\
+            .first()
 
     try:
         db.session.commit()
 
-        #Notification
+        # Notification
         notification = Notif('activity', 'interested', id)
-        #who triggered this action?
+        # who triggered this action?
         notification.add_actor(current_user.get_id())
 
         return jsonify({'status': 'Success'}), 200
@@ -670,6 +687,7 @@ def interested_to_activity_by(id):
         print(e)
         db.session().rollback()
         return jsonify({'error': 'Internal Server Error'}), 500
+
 
 @api.route('/activities/<uuid(strict=False):id>/participants/interested', methods=['DELETE'])
 @login_required
@@ -693,23 +711,26 @@ def cancel_interested_to_activity_by(id):
             description: Record already exists
         500:
             description: Internal Server Error
-    """    
-    activity = User_Activity.query.filter_by(user_id=current_user.get_id(), activity_id=id, status=0).delete()
+    """
+    activity = User_Activity.query.filter_by(
+        user_id=current_user.get_id(), activity_id=id, status=0).delete()
 
     try:
         db.session.commit()
 
-        #Notification
-        notification = Notif.notif_object(entity='activity', action='interested', entity_id=id)
+        # Notification
+        notification = Notif.notif_object(
+            entity='activity', action='interested', entity_id=id)
 
-        #who triggered this action?
+        # who triggered this action?
         if notification:
-          notification.set_inactive()
+            notification.set_inactive()
 
         return jsonify({'status': 'Success'}), 200
     except exc.SQLAlchemyError as e:
         db.session().rollback()
         return jsonify({'status': 'error'}), 500
+
 
 @api.route('/activities/<uuid(strict=False):id>/participation')
 @login_required
@@ -752,29 +773,33 @@ def get_participation_status_by(id):
         .filter_by(user_id=current_user.get_id(), activity_id=id, status=0).first()
 
     return jsonify({
-            'going' : True if going else False,
-            'interested' : True if interested else False
-        })
+        'going': True if going else False,
+        'interested': True if interested else False
+    })
+
 
 @api.route("/activities/<string:id>/checklist", methods=['POST'])
 @login_required
 def check_user(id):
-  action = request.form.get('action')
-  user_id = request.form.get('user_id')
+    action = request.form.get('action')
+    user_id = request.form.get('user_id')
 
-  user = User.query.get(user_id)
-  activity = Activity.query.get(id)
+    user = User.query.get(user_id)
+    activity = Activity.query.get(id)
 
-  user_activity = User_Activity.query.filter(User_Activity.activity_id == id, User_Activity.user_id == user_id).first()
-  if action == 'check':
-    user_activity.attended = True
-    user.earn_point('Attended %s' % activity.title, Points_Type.get_type_id('Attended Activity'))
-  else:
-    user_activity.attended = False
-    Points.query.filter(Points.event == 'Attended %s' % activity.title, Points.type == Points_Type.get_type_id('Attended Activity')).delete()
-  db.session.commit()
-  return jsonify({
-    'activity_id': id,
-    'user_id': user_id,
-    'action': action
-  }), 200
+    user_activity = User_Activity.query.filter(
+        User_Activity.activity_id == id, User_Activity.user_id == user_id).first()
+    if action == 'check':
+        user_activity.attended = True
+        user.earn_point('Attended %s' % activity.title,
+                        Points_Type.get_type_id('Attended Activity'))
+    else:
+        user_activity.attended = False
+        Points.query.filter(Points.event == 'Attended %s' % activity.title,
+                            Points.type == Points_Type.get_type_id('Attended Activity')).delete()
+    db.session.commit()
+    return jsonify({
+        'activity_id': id,
+        'user_id': user_id,
+        'action': action
+    }), 200

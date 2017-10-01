@@ -145,7 +145,7 @@
                     )}}
                     <a href="/profile/{{current_user.get_id()}}"><button class="btn btn-default">Cancel</button></a>
                 </div>
-                {{ form.image(style="display: none") }}
+                {{ form.image(style="display: none;") }}
             </form>
         </div>
 
@@ -173,6 +173,16 @@
         $("#dp-label").on('click', function(e) {
             e.preventDefault();
             $("#image").trigger('click');
+        });
+
+        $("#image").on('change', function() {
+            var reader = new FileReader();
+             reader.onload = function()
+             {
+              var output = document.getElementById('dp');
+              output.src = reader.result;
+             }
+             reader.readAsDataURL(event.target.files[0]);
         });
     </script>
     <!-- <script src="{{ url_for('static', filename='js/client/profile.js') }}"></script> -->

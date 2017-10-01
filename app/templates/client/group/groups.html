@@ -222,6 +222,7 @@
                         group.membership_status = -1;
                         // group.cover = "background-image: url('/static/uploads/covers/" + group.cover_photo + "');"
                         group.population = 0;
+
                         vm.groupPopulation(group);
                     });
                     console.log(data.interest_groups);
@@ -234,39 +235,22 @@
 
                 // load group members
                 $.ajax({
-                    url: "/api/v1.0/interest_groups/" + group.id + "/members",
+                    url: "/api/v1.0/interest_groups/" + group.id + "/population",
                     type: 'GET'
                 }).done(data => {
-                    group.population += data.length;
-                });
-
-                // load group leader
-                $.ajax({
-                    url: "/api/v1.0/interest_groups/" + group.id + "/leaders",
-                    type: 'GET'
-                }).done(data => {
-                    group.population += data.length;
-                    //console.log(group.name + " member count = " + group.population);
+                    group.population = data.total;
                 });
 
             },
             loadGroupInfo: function(group) {
                 // load group members
                 $.ajax({
-                    url: "/api/v1.0/interest_groups/" + group.id + "/members",
+                    url: "/api/v1.0/groups/" + group.id + "/members",
                     type: 'GET'
                 }).done(data => {
-                    group.members = data;
+                    group.members = data.members;
+                    group.leaders = data.leaders
                     //console.log("Members: " + data);
-                });
-
-                // load group leader
-                $.ajax({
-                    url: "/api/v1.0/interest_groups/" + group.id + "/leaders",
-                    type: 'GET'
-                }).done(data => {
-                    group.leaders = data;
-                    //console.log("Leader: "+ data);
                 });
 
                 // load Activities
