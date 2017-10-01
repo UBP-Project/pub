@@ -3,6 +3,7 @@
 {% block title %} {{ user['firstname'] }} {{ user['lastname'] }} {% endblock title %}
 
 {% block content %}
+
     <div class="row">
         <div class="col-md-3 profile-info">
             {% if user.image %}
@@ -20,7 +21,7 @@
             <p>{{ user['position'] }} <br /> {{ user['department'] }}</p>
         </div>
 
-        <div class="col-md-12 text-right" style="background-color: white; padding: 0px;">
+        <div class="col-md-12 text-right cover">
 
             <!-- Check if user has set cover photo
             <img src="{{ url_for('static', filename='images/building.png') }}"
