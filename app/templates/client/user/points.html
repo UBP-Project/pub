@@ -90,7 +90,8 @@
                         <div style="background-color: white; padding: 10px; margin: 5px;">
 
                             <h4 style="color: #fd8103;" class="title" :title="point.event"><strong>{{ point.event }}</strong></h4>
-                            <h5>Earned Points: {{ point.value }}</h5>
+                            <h5 v-if="point.value == 1">Earned {{ point.value }} point </h5>
+                            <h5 v-else>Earned {{ point.value }} points </h5>
                             <h5><small>{{ point.timestamp }}</small></h5>
                             
                         </div>
@@ -124,7 +125,7 @@
             methods: {
                 loadPointHistory: function() {
                     $.ajax({
-                        url: "{{ url_for('api.mypoints') }}",
+                        url: "{{ url_for('api.points', id = user.id) }}",
                         type: 'GET'
                     }).done(data => {
                         this.points.push.apply(this.points, data.points_history);

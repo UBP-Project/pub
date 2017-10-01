@@ -72,7 +72,7 @@ class Activity(db.Model):
                     Entity.entity == 'activity',
                     Entity.action == action).first()
         if points_type is None:
-            set_points(action, value)
+            self.set_points(action, value)
         else:
             points_type.value = value
             db.session.commit()
