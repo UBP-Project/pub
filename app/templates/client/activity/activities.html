@@ -28,6 +28,9 @@
                             <div class="col-md-3 col-lg-4 col-sm-6 card-container" v-on:click="loadActivityInfo(activity)">
                                 <div class="card zoomify" data-toggle="modal" :data-target="'#activity-' + activity.id">
                                     <div class="card-img">
+                                        <span style="color: green; font-size: 35px; position: absolute; top: 5px; right: 15px;">
+                                            <i class="fa fa-check-circle-o"></i>
+                                        </span>
                                         <img :src="activity_images_folder + activity.image" class="img-responsive" />
                                     </div>
                                     <div class="card-desc">
@@ -49,11 +52,10 @@
                                         <!-- BODY -->
                                         <div class="modal-body">
                                             <div class="img-container">
-                                                <!-- <img src="{{ url_for('static',filename='uploads/activity_images/' + activity.image) }}" /> -->
                                                <img :src="activity_images_folder + activity.image" />
                                             </div>
                                             <span class="row">
-                                                <span class="col-md-2 col-lg-2 col-sm-2"><h2 class="text-center"></h2></span>
+                                                <span class="col-md-2 col-lg-2 col-sm-2 hidden-xs" style="border: none;"><h2 class="text-center"></h2></span>
                                                 <span class="col-md-8 col-lg-8 col-sm-8"><h2 class="text-center">{{ activity.title}}</h2></span>
                                                 <span class="col-md-2 col-lg-2 col-sm-2 text-center" style="padding: 20px 15px 10px 15px;">
                                                         <a href="#" class="btn btn-style-3" style="padding: 2px 7px 2px 8px; font-size: 15px;" title="Edit Activity"><i class="fa fa-edit"></i></a>
@@ -137,7 +139,7 @@
 
                                             <span class="row">
                                                 <span class="col-md-4" style="padding: 0; text-align: left;">
-                                                    <a class="btn btn-style-3" :href="'/activities/' + activity.id + '/attendance'" title="Attendance List" style="font-size: 20px; padding: 2px 7px;"><i class="fa fa-list"></i></a>
+                                                    <a class="btn btn-style-3" :href="'/activities/' + activity.id + '/summary'" title="Attendance List"><i class="fa fa-list"></i></a>
                                                     <a class="btn btn-style-3" :href="'/activities/' + activity.id + '/attendance'" title="Check Attendance">ATTENDANCE</a>
                                                 </span>
                                                 <span class="col-md-8 pull-right" style="padding: 0;">
