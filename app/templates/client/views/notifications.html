@@ -26,17 +26,20 @@
                             	</div>
                             	<div class="col-md-11" style="font-size: 12px; padding-top: 5px;">
                             		<template v-if="notif.action == 'followed'">
-                            			<a :href="'/profile/' + notif.actor.id">{{ notif.actor.firstname }} {{ notif.actor.lastname }}</a> followed <a :href="'/profile/' + notif.entity.id">{{ notif.entity.firstname }} {{ notif.entity.lastname }}</a>
+                            			<a :href="'/profile/' + notif.actor.id">{{ notif.actor.firstname }} {{ notif.actor.lastname }}</a> followed <a :href="'/profile/' + notif.entity.id">{{ notif.entity.firstname }} {{ notif.entity.lastname }}</a>.
                             			<h6 style="margin: 0;"><small>{{ notif.object_timestamp }}</small></h6>
                             		</template>
                             		<template v-else="notif.action == 'interested'">
-                            			<a :href="'/profile/' + notif.actor.id">{{ notif.actor.firstname }} {{ notif.actor.lastname }}</a> is interested to <a :href="'/profile/' + notif.entity.id">{{ notif.entity.title }}</a>
+                            			<a :href="'/profile/' + notif.actor.id">{{ notif.actor.firstname }} {{ notif.actor.lastname }}</a> is interested to <a :href="'/profile/' + notif.entity.id">{{ notif.entity.title }}</a>.
+                            			<h6 style="margin: 0;"><small>{{ notif.object_timestamp }}</small></h6>
                             		</template>
                             		<template v-else="notif.action == 'going'">
-                            			<a :href="'/profile/' + notif.actor.id">{{ notif.actor.firstname }} {{ notif.actor.lastname }}</a> is going to <a :href="'/profile/' + notif.entity.id">{{ notif.entity.title }}</a>
+                            			<a :href="'/profile/' + notif.actor.id">{{ notif.actor.firstname }} {{ notif.actor.lastname }}</a> is going to <a :href="'/profile/' + notif.entity.id">{{ notif.entity.title }}</a>.
+                            			<h6 style="margin: 0;"><small>{{ notif.object_timestamp }}</small></h6>
                             		</template>
                             		<template v-else="notif.action == 'accepted_join_request'">
-                            			<a :href="'/profile/' + notif.actor.id">{{ notif.actor.firstname }} {{ notif.actor.lastname }}</a> accepted your join request to <a :href="'/profile/' + notif.entity.id">{{ notif.entity.name }}</a>
+                            			<a :href="'/profile/' + notif.actor.id">{{ notif.actor.firstname }} {{ notif.actor.lastname }}</a> accepted your join request to <a :href="'/profile/' + notif.entity.id">{{ notif.entity.name }}</a>.
+                            			<h6 style="margin: 0;"><small>{{ notif.object_timestamp }}</small></h6>
                             		</template>
                             		<template v-else><small>Something went wrong. This is an undefined notification.</small></template>
                             	</div>
@@ -92,116 +95,6 @@
 		$(document).ready(function() {
 			vm.loadNotifs();
 		})
-	</script>
-	
-	
-
-
-
-
-
-
-
-
-
-	<script>
-		
-	/*function init_notifications() {
-		$.ajax({
-            url: '/api/v1.0/notifications',
-            type: 'GET'
-        })
-        .done(function(data) {
-            console.log("success");
-            console.log(data);
-
-            var has_next = data.has_next;
-            var has_prev = data.has_prev;
-            var notifications = data.notifications;
-
-            if(notifications.length == 0) {
-            	document.getElementById('notif-panel').innerHTML = '<div class="text-center" style="height: 300px; padding-top: 70px;"><h2><small>NO NOTIFICATIONS TO SHOW</small></h2></div>';
-            } else {
-
-    			var start = '<div class="row" style="padding: 10px;">';
-            	var end = '</div><hr style="margin: 10px 20px 20px 20px; border-top: 1px solid #ddd;"/>';
-
-            	for(var n in notifications){
-
-            		var content = '';
-            		var actor = '';
-            		var picture = '';
-            		var action = '';
-            		var activity = '';
-
-            		if(notifications[n].action == 'interested'){
-	            		actor += '<a href="/profile/' + notifications[n].actor.id + '">' + notifications[n].actor.firstname + ' ' + notifications[n].actor.lastname + '</a>';
-
-	            		picture = '<div class="col-md-1"><img src="{{ url_for("static",filename="images/pub-default-img.jpg") }}" style="width: 60px; height: 60px; border-radius: 50%;"/></div>';
-
-	            		activity = '<a href="#">' + notifications[n].entity.title + '</a>';
-
-	            		action = ' is interested to ' + activity + '.';
-	            		
-	            		var time = '<br/><small style="color: #777;">' + notifications[n].object_timestamp + '</small>';
-
-	            		content += picture + '<div class="col-md-11" style="padding-top: 10px; padding-left: 30px;">' + actor + action + time + '</div>';
-            		}
-
-     				else if(notifications[n].action == 'accepted_join_request'){
-     					actor += '<a href="/profile/' + notifications[n].actor.id + '">' + notifications[n].actor.firstname + ' ' + notifications[n].actor.lastname + '</a>';
-
-	            		picture = '<div class="col-md-1"><img src="{{ url_for("static",filename="images/pub-default-img.jpg") }}" style="width: 60px; height: 60px; border-radius: 50%;"/></div>';
-
-	            		group = '<a href="#">' + notifications[n].entity.name + '</a>';
-
-	            		action = ' accepted your join request to ' + group + '.';
-	            		
-	            		var time = '<br/><small style="color: #777;">' + notifications[n].object_timestamp + '</small>';
-
-	            		content += picture + '<div class="col-md-11" style="padding-top: 10px; padding-left: 30px;">' + actor + action + time + '</div>';
-     				}
-
-     				else if(notifications[n].action == 'followed'){
-     					actor += '<a href="/profile/' + notifications[n].actor.id + '">' + notifications[n].actor.firstname + ' ' + notifications[n].actor.lastname + '</a>';
-
-	            		picture = '<div class="col-md-1"><img src="{{ url_for("static",filename="images/pub-default-img.jpg") }}" style="width: 60px; height: 60px; border-radius: 50%;"/></div>';
-
-	            		user = '<a href="/profile/' +notifications[n].entity.id+ '">' + notifications[n].entity.firstname + ' ' + notifications[n].entity.lastname + '</a>';
-
-	            		action = ' followed ' + user + '.';
-	            		
-	            		var time = '<br/><small style="color: #777;">' + notifications[n].object_timestamp + '</small>';
-
-	            		content += picture + '<div class="col-md-11" style="padding-top: 10px; padding-left: 30px;">' + actor + action + time + '</div>';
-     				}
-
-     				else if(notifications[n].action == 'going'){
-     					actor += '<a href="/profile/' + notifications[n].actor.id + '">' + notifications[n].actor.firstname + ' ' + notifications[n].actor.lastname + '</a>';
-
-	            		picture = '<div class="col-md-1"><img src="{{ url_for("static",filename="images/pub-default-img.jpg") }}" style="width: 60px; height: 60px; border-radius: 50%;"/></div>';
-
-	            		activity = '<a href="#">' + notifications[n].entity.title + '</a>';
-
-	            		action = ' joined ' + activity + '.';
-	            		
-	            		var time = '<br/><small style="color: #777;">' + notifications[n].object_timestamp + '</small>';
-
-	            		content += picture + '<div class="col-md-11" style="padding-top: 10px; padding-left: 30px;">' + actor + action + time + '</div>';
-     				}
-
-		            $('#notif-panel').append(start + content + end);
-            	}
-
-            } // end if
-        })
-        .fail(function() {
-             console.log("error");
-        });
-	}
-
-	init_notifications();*/
-
 	</script>
 
 {% endblock scripts %}
