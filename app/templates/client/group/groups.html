@@ -59,8 +59,15 @@
                                                 <img class="grp-icon-img" :src="group_icons_folder + group.group_icon" style="position: absolute; top: 25px; margin-left: -100px;">
                                             </div>
 
-                                            <h2 class="text-center">{{ group.name }}</h2>
-                                            <button v-show="group.can_manage"><span class="fa fa-edit"></span></button>
+                                            <span class="row">
+                                                <span class="col-md-2 col-lg-2 col-sm-2 hidden-xs" style="border: none;"><h2 class="text-center"></h2></span>
+                                                <span class="col-md-8 col-lg-8 col-sm-8"><h2 class="text-center">{{ group.name }}</h2></span>
+                                                <span class="col-md-2 col-lg-2 col-sm-2 text-center" style="padding: 20px 15px 10px 15px;">
+                                                        <a :href="'/groups/' + group.id" class="btn btn-style-3" style="padding: 4px 8px; font-size: 15px;" title="Manage Group"><i class="fa fa-gear"></i></a>
+                                                </span>
+                                            </span>
+                                            <!-- <h2 class="text-center">{{ group.name }}</h2>
+                                            <button v-show="group.can_manage"><span class="fa fa-edit"></span></button> -->
 
                                             <div class="content">
                                                 <ul class="nav nav-tabs" role="tablist">
