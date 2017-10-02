@@ -101,22 +101,6 @@ def create_group():
     is_manager(abort_on_false=True) # 403 -Forbiden if not a manager
     form = CreateInterestGroupForm()
     if form.validate_on_submit():
-        # handle upload group cover
-        cover                 = form.cover_photo.data
-        cover_filename        = secure_filename(cover.filename)
-        extension             = cover_filename.rsplit('.', 1)[1].lower()
-        cover_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
-        file_path             = os.path.join('app/static/uploads/covers', cover_hashed_filename)
-        cover.save(file_path)
-
-        # handle upload user icon
-        icon                 = form.group_icon.data
-        icon_filename        = secure_filename(icon.filename)
-        extension            = icon_filename.rsplit('.', 1)[1].lower()
-        icon_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
-        file_path            = os.path.join('app/static/uploads/group_icons', icon_hashed_filename)
-        icon.save(file_path)
-
         interest_group = Interest_Group(
             name=form.name.data,
             about=form.about.data,
@@ -124,6 +108,10 @@ def create_group():
             group_icon=icon_hashed_filename)
         db.session.add(interest_group)
         db.session.commit()
+
+        # set images
+        interest_group.set_icon(form.group_icon.data)
+        interest_group.set_cover(form.cover_photo.data)
 
         # set points
         interest_group.set_points('accepted_join_request', form.joined_point.data)

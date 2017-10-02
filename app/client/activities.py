@@ -60,6 +60,25 @@ def create_activity():
         image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
         file_path             = os.path.join('app/static/uploads/activity_images', image_hashed_filename)
         image.save(file_path)
+
+        image = Image.open(file_path)
+
+        sizes = [
+            (600, 250), #modal cover photo
+            (260, 200)  #card
+        ]
+
+        #resize image
+        for size in sizes:
+            new_image = image.resize(size)
+
+            directory = 'app/static/uploads/activity_images/' + str(size[0]) + 'x'+ str(size[1]) + '/'
+
+            if not os.path.isdir(directory):
+                os.makedirs(directory)
+
+            new_image.save(os.path.join(directory, image_hashed_filename))
+
         activity = Activity(
             title = form.title.data,
             description = form.description.data,
@@ -68,7 +87,7 @@ def create_activity():
             address = form.address.data,
             group_id = None if form.group.data == "None" else uuid.UUID(form.group.data).hex,
             image = image_hashed_filename)
-        print(activity)
+        
         db.session.add(activity)
         db.session.commit()
         
@@ -99,7 +118,25 @@ def edit_activity(id):
                 extension             = image_filename.rsplit('.', 1)[1].lower()
                 image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
                 file_path             = os.path.join('app/static/uploads/activity_images', image_hashed_filename)
+                
                 image.save(file_path)
+
+                sizes = [
+                    (600, 250), #modal cover photo
+                    (260, 200)  #card
+                ]
+
+                #resize image
+                for size in sizes:
+                    new_image = image.resize(size)
+
+                    directory = 'app/static/uploads/activity_images/' + str(size[0]) + 'x'+ str(size[1]) + '/'
+
+                    if not os.path.isdir(directory):
+                        os.makedirs(directory)
+
+                    new_image.save(os.path.join(directory, image_hashed_filename))
+
                 activity.image   = image_hashed_filename
         activity.title       = form.title.data      
         activity.description = form.description.data

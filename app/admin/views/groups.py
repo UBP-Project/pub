@@ -69,15 +69,19 @@ def create_group():
             about=form.about.data)
         db.session.add(interest_group)
         db.session.commit()
+
         # set images
         interest_group.set_icon(form.group_icon.data)
         interest_group.set_cover(form.cover_photo.data)
+
         # set points
-        interest_group.set_points('accepted_join_request',
-                                  form.joined_point.data)
+        interest_group.set_points('accepted_join_request',form.joined_point.data)
+
         # form.leader_ids.data - comma separated leader ids
         leader_ids = form.leader_ids.data.split(',')
+
         interest_group.set_leaders(leader_ids)
+
         return redirect(url_for("admin.groups"))
     return render_template('admin/group/create.html', form=form)
 

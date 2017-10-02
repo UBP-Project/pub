@@ -1,6 +1,10 @@
 from app import db
 from app.models import Interest_Group
 import random
+from PIL import Image
+from werkzeug.utils import secure_filename
+import os
+import uuid
 groups = [
 	{
 		'name'			: 'Sports',
@@ -83,7 +87,56 @@ groups = [
 ]
 
 for g in groups:
-# for i in range(0, 20):
+	icon_filename = g.get('group_icon')
+	extension = icon_filename.rsplit('.', 1)[1].lower()
+	icon_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
+	file_path = os.path.join('app/static/uploads/group_icons',icon_hashed_filename)
+
+	icon_sizes = [
+		(130, 130), #card icon
+		(200, 200), #modal icon
+	]
+
+	icon = Image.open(os.path.join('app/static/uploads/group_icons/', g.get('group_icon')))
+
+	#resize icon
+	for size in icon_sizes:
+		new_image = icon.resize(size, Image.ANTIALIAS)
+
+		directory = 'app/static/uploads/group_icons/' + str(size[0]) + 'x'+ str(size[1]) + '/'
+
+		if not os.path.isdir(directory):
+			os.makedirs(directory)
+
+		new_image.save(os.path.join(directory, icon_hashed_filename), quality=100)
+
+	g['group_icon'] = icon_hashed_filename
+
+	cover_filename = g.get('cover_photo')
+	extension = cover_filename.rsplit('.', 1)[1].lower()
+	cover_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
+	file_path = os.path.join('app/static/uploads/covers',cover_hashed_filename)
+
+	cover_sizes = [
+		(200, 170), #card cover
+		(600, 250)  #modal cover
+	]
+
+	cover = Image.open(os.path.join('app/static/uploads/covers/', g.get('cover_photo')))
+
+	#resize icon
+	for size in cover_sizes:
+		new_image = cover.resize(size, Image.ANTIALIAS)
+
+		directory = 'app/static/uploads/covers/' + str(size[0]) + 'x'+ str(size[1]) + '/'
+
+		if not os.path.isdir(directory):
+			os.makedirs(directory)
+
+		new_image.save(os.path.join(directory, cover_hashed_filename), quality=100)
+
+	g['cover_photo'] = cover_hashed_filename
+
 	group = Interest_Group.from_json(g)
 	db.session.add(group)
 db.session.commit()

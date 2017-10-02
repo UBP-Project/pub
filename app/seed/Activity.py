@@ -2,6 +2,10 @@ from app import db
 from app.models import Activity, Interest_Group
 from datetime	import datetime
 import random
+from app.utils import is_valid_extension
+from PIL import Image
+import os
+import uuid
 
 
 activities = [
@@ -116,7 +120,30 @@ activities = [
 ]
 
 for a in activities:
-# for i in range(0, 15):
+	image_filename        = a.get('image')
+	extension             = image_filename.rsplit('.', 1)[1].lower()
+	image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
+	file_path             = os.path.join('app/static/uploads/activity_images', image_hashed_filename)
+
+	sizes = [
+		(600, 250), #modal cover photo
+		(260, 200)  #card
+	]
+
+	image = Image.open(os.path.join('app/static/uploads/activity_images/', a.get('image')))
+
+	#resize image
+	for size in sizes:
+		new_image = image.resize(size)
+
+		directory = 'app/static/uploads/activity_images/' + str(size[0]) + 'x'+ str(size[1]) + '/'
+
+		if not os.path.isdir(directory):
+		    os.makedirs(directory)
+
+		new_image.save(os.path.join(directory, image_hashed_filename))
+
+	a['image'] = image_hashed_filename
 	activity = Activity.from_json(a)
 	db.session.add(activity)
 db.session.commit()

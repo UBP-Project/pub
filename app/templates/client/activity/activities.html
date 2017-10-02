@@ -29,13 +29,13 @@
                                 <div class="card zoomify" data-toggle="modal" :data-target="'#activity-' + activity.id">
                                     <div class="card-img">
                                         <template v-if="today > activity.end_date">
-                                            <img :src="activity_images_folder + activity.image" class="img-responsive" style="-webkit-filter: grayscale(100%); filter: grayscale(100%);"/>
+                                            <img :src="activity_card_mages_folder + activity.image" class="img-responsive" style="-webkit-filter: grayscale(100%); filter: grayscale(100%);"/>
                                             <span style="color: green; font-size: 35px; position: absolute; top: 5px; right: 15px;">
                                                     <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
                                             </span>
                                         </template>
                                         <template v-else>
-                                            <img :src="activity_images_folder + activity.image" class="img-responsive"/>
+                                            <img :src="activity_card_images_folder + activity.image" class="img-responsive"/>
                                         </template>
                                     </div>
                                     <div class="card-desc">
@@ -58,13 +58,13 @@
                                         <div class="modal-body">
                                             <div class="img-container">
                                                <template v-if="today > activity.end_date">
-                                                    <img :src="activity_images_folder + activity.image" class="img-responsive" style="-webkit-filter: grayscale(100%); filter: grayscale(100%);"/>
+                                                    <img :src="activity_modal_images_folder + activity.image" class="img-responsive" style="-webkit-filter: grayscale(100%); filter: grayscale(100%);"/>
                                                     <span style="color: green; font-size: 35px; position: absolute; top: 5px; right: 15px;">
                                                             <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
                                                     </span>
                                                 </template>
                                                 <template v-else>
-                                                    <img :src="activity_images_folder + activity.image"/>
+                                                    <img :src="activity_modal_images_folder + activity.image"/>
                                                 </template>
                                             </div>
                                             <span class="row">
@@ -211,7 +211,8 @@
             activities: [],
             activities_page: 1,
             hasNext: false,
-            activity_images_folder: '/static/uploads/activity_images/',
+            activity_card_images_folder: '/static/uploads/activity_images/260x200/',
+            activity_modal_images_folder: '/static/uploads/activity_images/600x250/',
             user_images_folder: '/static/uploads/profile_pictures/',
             can_manage_activity: false,
             is_manager: false

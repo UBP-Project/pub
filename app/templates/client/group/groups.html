@@ -31,8 +31,8 @@
                             <div class="col-md-3 col-sm-6 group-card" v-on:click="loadGroupInfo(group)">
                                 <div class="zoomify group-panel grp-icon" data-toggle="modal" :data-target="'#group-' + group.id" :id="group.id">
                                     <div class="group-img">
-                                        <img :src="group_covers_folder + group.cover_photo" style="height: 100%; width: 100%; min-width: 100%;">
-                                        <img class="img-icon" :src="group_icons_folder + group.group_icon" style="z-index: 5; margin-top: -180px;" width="120px" height="120px">
+                                        <img :src="group_card_covers_folder + group.cover_photo" style="height: 100%; width: 100%; min-width: 100%;">
+                                        <img class="img-icon" :src="group_card_icons_folder + group.group_icon" style="z-index: 5; margin-top: -180px;" width="120px" height="120px">
                                     </div>
                                     <div class="group-desc">
                                         <h4 class="title">{{ group.name }}</h4>
@@ -54,8 +54,8 @@
                                         <div class="modal-body">
 
                                             <div class="img-container text-center" :style="group.cover">
-                                                <img :src="group_covers_folder + group.cover_photo" style="min-height: 100%;">
-                                                <img class="grp-icon-img" :src="group_icons_folder + group.group_icon" style="position: absolute; top: 25px; margin-left: -100px;">
+                                                <img :src="group_modal_covers_folder + group.cover_photo" style="min-height: 100%;">
+                                                <img class="grp-icon-img" :src="group_modal_icons_folder + group.group_icon" style="position: absolute; top: 25px; margin-left: -100px;">
                                             </div>
 
                                             <span class="row">
@@ -139,13 +139,13 @@
                                                                     <div style="height: 160px; border-radius: 5px; border: 1px solid #d0d0d0;">
                                                                         <div style="height: 70%; overflow: hidden;">
                                                                             <template v-if="today > activity.end_date">
-                                                                                <img :src="activity_images_folder + activity.image" class="img-responsive" style="-webkit-filter: grayscale(100%); filter: grayscale(100%); min-height: 100%; max-width: 100%; border-radius: 5px 5px 0 0;"/>
+                                                                                <img :src="activity_card_images_folder + activity.image" class="img-responsive" style="-webkit-filter: grayscale(100%); filter: grayscale(100%); min-height: 100%; max-width: 100%; border-radius: 5px 5px 0 0;"/>
                                                                                 <span style="color: green; font-size: 35px; position: absolute; top: 5px; right: 15px;">
                                                                                         <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
                                                                                 </span>
                                                                             </template>
                                                                             <template v-else>
-                                                                                <img :src="activity_images_folder + activity.image" class="img-responsive" style="min-height: 100%; max-width: 100%; border-radius: 5px 5px 0 0;"/>
+                                                                                <img :src="activity_card_images_folder + activity.image" class="img-responsive" style="min-height: 100%; max-width: 100%; border-radius: 5px 5px 0 0;"/>
                                                                             </template>
                                                                         </div>
                                                                         <div style="height: 30%; padding: 7px;">
@@ -204,13 +204,13 @@
                                                 <div class="modal-body">
                                                     <div class="img-container">
                                                        <template v-if="today > activity.end_date">
-                                                            <img :src="activity_images_folder + activity.image" class="img-responsive" style="-webkit-filter: grayscale(100%); filter: grayscale(100%);"/>
+                                                            <img :src="activity_modal_images_folder + activity.image" class="img-responsive" style="-webkit-filter: grayscale(100%); filter: grayscale(100%);"/>
                                                             <span style="color: green; font-size: 35px; position: absolute; top: 5px; right: 15px;">
                                                                     <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
                                                             </span>
                                                         </template>
                                                         <template v-else>
-                                                            <img :src="activity_images_folder + activity.image"/>
+                                                            <img :src="activity_modal_images_folder + activity.image"/>
                                                         </template>
                                                     </div>
                                                     <span class="row">
@@ -363,10 +363,13 @@
             groups_page: 1,
             hasNext: false,
             is_manager: false,
-            group_icons_folder: '/static/uploads/group_icons/',
-            group_covers_folder: '/static/uploads/covers/',
+            group_modal_icons_folder: '/static/uploads/group_icons/200x200/',
+            group_modal_covers_folder: '/static/uploads/covers/600x250/',
+            activity_modal_images_folder: '/static/uploads/activity_images/600x250/',
+            group_card_icons_folder: '/static/uploads/group_icons/130x130/',
+            group_card_covers_folder: '/static/uploads/covers/200x170/',
+            activity_card_images_folder: '/static/uploads/activity_images/260x200/',
             user_images_folder: '/static/uploads/profile_pictures/',
-            activity_images_folder: '/static/uploads/activity_images/',
             default_img: "background-image: url('/static/images/pub-default-img.jpg');",
             parent_modal_id: null
           },

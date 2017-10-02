@@ -22,7 +22,7 @@
                             <div class="col-md-3 col-lg-4 col-sm-6 card-container" v-on:click="loadActivityInfo(activity)">
                                 <div class="card zoomify" data-toggle="modal" :data-target="'#activity-joined-' + activity.id">
                                     <div class="card-img">
-                                        <img :src="activity_images_folder + activity.image" class="img-responsive" />
+                                        <img :src="activity_card_images_folder + activity.image" class="img-responsive" />
                                     </div>
                                     <div class="card-desc">
                                         <h4 class="text-center title">{{ activity.title}}</h4>
@@ -45,7 +45,7 @@
                                         <div class="modal-body">
                                             <div class="img-container">
                                                 <!-- <img src="{{ url_for('static',filename='uploads/activity_images/' + activity.image) }}" /> -->
-                                               <img :src="activity_images_folder + activity.image" />
+                                               <img :src="activity_modal_images_folder + activity.image" />
                                             </div>
                                             <h2 class="text-center">{{ activity.title}}</h2>
                                             <div class="content">
@@ -175,7 +175,7 @@
                             <div class="col-md-3 col-lg-4 col-sm-6 card-container" v-on:click="loadActivityInfo(activity)">
                                 <div class="card zoomify" data-toggle="modal" :data-target="'#activity-interested-' + activity.id">
                                     <div class="card-img">
-                                        <img :src="activity_images_folder + activity.image" class="img-responsive" />
+                                        <img :src="activity_card_images_folder + activity.image" class="img-responsive" />
                                     </div>
                                     <div class="card-desc">
                                         <h4 class="text-center title">{{ activity.title}}</h4>
@@ -198,7 +198,7 @@
                                         <div class="modal-body">
                                             <div class="img-container">
                                                 <!-- <img src="{{ url_for('static',filename='uploads/activity_images/' + activity.image) }}" /> -->
-                                               <img :src="activity_images_folder + activity.image" />
+                                               <img :src="activity_modal_images_folder + activity.image" />
                                             </div>
                                             <h2 class="text-center">{{ activity.title}}</h2>
                                             <div class="content">
@@ -304,7 +304,8 @@
             activities: [],
             activities_page: 1,
             hasNext: false,
-            activity_images_folder: '/static/uploads/activity_images/',
+            activity_card_images_folder: '/static/uploads/activity_images/260x200/',
+            activity_modal_images_folder: '/static/uploads/activity_images/600x250/',
             user_images_folder: '/static/uploads/profile_pictures/'
           },
           methods: {
@@ -398,7 +399,8 @@
             activities: [],
             activities_page: 1,
             hasNext: false,
-            activity_images_folder: '/static/uploads/activity_images/',
+            activity_card_images_folder: '/static/uploads/activity_images/260x200/',
+            activity_modal_images_folder: '/static/uploads/activity_images/600x250/',
             user_images_folder: '/static/uploads/profile_pictures/'
           },
           methods: {

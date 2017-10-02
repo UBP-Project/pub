@@ -10,9 +10,14 @@ import os
 import uuid
 from datetime import datetime
 from sqlalchemy import or_
+from PIL import Image
 
 ACTIVITIES_PER_PAGE = 16
 
+IMAGE_SIZES = [
+    (600, 250), #modal cover photo
+    (260, 200)  #card
+]
 
 @admin.route('/activities/<uuid(strict=False):id>')
 @admin_required
@@ -37,6 +42,19 @@ def create_activity():
 
         image.save(file_path)
 
+        image = Image.open(file_path)
+
+        #resize image
+        for size in IMAGE_SIZES:
+            new_image = image.resize(size)
+
+            directory = 'app/static/uploads/activity_images/' + str(size[0]) + 'x'+ str(size[1]) + '/'
+
+            if not os.path.isdir(directory):
+                os.makedirs(directory)
+
+            new_image.save(os.path.join(directory, image_hashed_filename))
+            
         # create the activity
         activity = Activity(
             title=form.title.data,
