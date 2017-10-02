@@ -15,6 +15,7 @@ from werkzeug.utils import secure_filename
 import uuid
 import os
 from sqlalchemy import or_
+from ..auth import is_manager
 
 @client.route('/', methods=['GET', 'POST'])
 @login_required
@@ -72,18 +73,7 @@ def leaderboard():
 @client.route('/perks/')
 @login_required
 def perks():
-    isManager = User.query\
-            .join(Role, Role.id == User.role_id)\
-            .filter(Role.name == 'Manager', User.id == current_user.get_id()).first() is not None
-    return render_template("client/perks/perks.html", isManager=isManager)
-
-@client.route('/perks/manage')
-@login_required
-def manage_perks():
-    isManager = User.query\
-            .join(Role, Role.id == User.role_id)\
-            .filter(Role.name == 'Manager', User.id == current_user.get_id()).first() is not None
-    return render_template("client/perks/manage.html", isManager=isManager)
+    return render_template("client/perks/perks.html", is_manager=is_manager())
 
 @client.route('/perks/create', methods=['GET', 'POST'])
 @login_required
@@ -104,7 +94,7 @@ def create_perks():
         )
         db.session.add(perk)
         db.session.commit()
-        return redirect(url_for("client.manage_perks"))
+        return redirect(url_for("client.perks"))
     return render_template("client/perks/create.html", form=form)
 
 @client.route('/perks/<string:id>/edit', methods=['GET', 'POST'])
@@ -129,7 +119,7 @@ def edit_perk(id):
         perk.title = form.title.data
         perk.description = form.description.data
         db.session.commit()
-        return redirect(url_for("client.manage_perks"))
+        return redirect(url_for("client.perks"))
     # load activity data to the form
     form.title.data       = perk.title
     form.description.data = perk.description
