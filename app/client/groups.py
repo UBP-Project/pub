@@ -14,31 +14,7 @@ import uuid
 @client.route('/groups')
 @login_required
 def groups():
-    isManager = User.query\
-            .join(Role, Role.id == User.role_id)\
-            .filter(Role.name == 'Manager', User.id == current_user.get_id()).first() is not None
-
-    managed_groups = Interest_Group.query.join(Membership,\
-        Membership.group_id == Interest_Group.id)\
-        .filter(Membership.level == 1, Membership.user_id == current_user.get_id())\
-        .all()
-
-    return render_template("client/group/groups.html", # interest_groups=interest_groups,
-        managed_groups=managed_groups, user=current_user, isManager=isManager)
-
-@client.route('/groups/manage')
-@login_required
-def manage_groups():
-    isManager = User.query\
-            .join(Role, Role.id == User.role_id)\
-            .filter(Role.name == 'Manager', User.id == current_user.get_id()).first() is not None
-
-    managed_groups = Interest_Group.query.join(Membership,\
-        Membership.group_id == Interest_Group.id).filter(Membership.level == 1,\
-        Membership.user_id == current_user.get_id()).all()
-
-    return render_template("client/group/manage.html", # interest_groups=interest_groups,
-        managed_groups=managed_groups, user=current_user, isManager=isManager)
+    return render_template("client/group/groups.html", user=current_user, is_manager=is_manager())
 
 @client.route('/groups/<uuid(strict=False):id>', methods=['POST', 'GET'])
 @login_required

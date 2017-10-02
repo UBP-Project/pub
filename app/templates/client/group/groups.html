@@ -10,7 +10,7 @@
             <div class="group-box">
 
                 <h3>INTEREST GROUPS
-                    {% if isManager %}
+                    {% if is_manager %}
                     <span class="pull-right">
                         <a href="/groups/create" style="text-decoration: none;">
                             <button class="btn btn-style-1 btn-sm" title="Create Perks">CREATE GROUP &nbsp;<i class="fa fa-plus"></i></button>
@@ -62,7 +62,7 @@
                                                 <span class="col-md-2 col-lg-2 col-sm-2 hidden-xs" style="border: none;"><h2 class="text-center"></h2></span>
                                                 <span class="col-md-8 col-lg-8 col-sm-8"><h2 class="text-center">{{ group.name }}</h2></span>
                                                 <span class="col-md-2 col-lg-2 col-sm-2 text-center" style="padding: 20px 15px 10px 15px;">
-                                                        <a v-show="group.isLeader" :href="'/groups/' + group.id" class="btn btn-style-3" style="padding: 4px 8px; font-size: 15px;" title="Manage Group"><i class="fa fa-gear"></i></a>
+                                                        <a v-show="group.isLeader || is_manager" :href="'/groups/' + group.id" class="btn btn-style-3" style="padding: 4px 8px; font-size: 15px;" title="Manage Group"><i class="fa fa-gear"></i></a>
                                                 </span>
                                             </span>
                                             <!-- <h2 class="text-center">{{ group.name }}</h2>
@@ -209,6 +209,7 @@
             groups: [],
             groups_page: 1,
             hasNext: false,
+            is_manager: false,
             group_icons_folder: '/static/uploads/group_icons/',
             group_covers_folder: '/static/uploads/covers/',
             user_images_folder: '/static/uploads/profile_pictures/',
@@ -305,6 +306,7 @@
 
         $(document).ready(function() {
             vm.loadGroups();
+            vm.is_manager = "{{ is_manager }}" == "True" ? true : false;
         });
 
     </script> 
