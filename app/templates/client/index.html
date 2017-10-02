@@ -37,7 +37,7 @@
                             <h4><small>{{feed_item.group_about}}</small></h4>
                         </div>
                         <div class="col-md-5">
-                            <img class="pull-right" :src="group_icons_folder + feed_item.group_icon" style="width: 250px; height: 250px; border-radius: 50%;">
+                            <img class="pull-right" :src="group_modal_icons_folder + feed_item.group_icon" style="width: 250px; height: 250px; border-radius: 50%;">
                         </div>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
             el: '#app',
             data: {
                 profile_images_folder: '/static/uploads/profile_pictures/',
-                group_icons_folder: '/static/uploads/group_icons/',
+                group_modal_icons_folder: '/static/uploads/group_icons/200x200/',
                 feed: [],
                 default_user_img: '/static/images/pub-default-img.jpg'
             },

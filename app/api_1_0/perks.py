@@ -14,8 +14,7 @@ def get_perks():
     else:
         page = 1
 
-    print(page)
-    perks = Perks.query.order_by(Perks.timestamp)\
+    perks = Perks.query.order_by(Perks.timestamp.desc())\
         .paginate(page=page, per_page=PERKS_PER_PAGE, error_out=False)
         
     return jsonify({

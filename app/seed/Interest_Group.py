@@ -98,6 +98,7 @@ for g in groups:
 	]
 
 	icon = Image.open(os.path.join('app/static/uploads/group_icons/', g.get('group_icon')))
+	icon.save(file_path, Image.ANTIALIAS)
 
 	#resize icon
 	for size in icon_sizes:
@@ -123,6 +124,7 @@ for g in groups:
 	]
 
 	cover = Image.open(os.path.join('app/static/uploads/covers/', g.get('cover_photo')))
+	cover.save(file_path, Image.ANTIALIAS)
 
 	#resize icon
 	for size in cover_sizes:

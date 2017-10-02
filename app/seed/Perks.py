@@ -13,5 +13,4 @@ perks = [
 
 for perk in perks:
 	db.session.add(Perks.from_json(perk))
-
 db.session.commit()
