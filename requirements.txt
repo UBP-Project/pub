@@ -34,13 +34,10 @@ pycryptodome==3.4.6
 PyMySQL==0.7.11
 python-dateutil==2.6.1
 python-editor==1.0.3
-python-engineio==1.7.0
-python-socketio==1.8.0
 pytz==2017.2
 PyYAML==3.12
 six==1.10.0
 SQLAlchemy==1.1.5
 SQLAlchemy-Utils==0.32.14
-uWSGI==2.0.15
 Werkzeug==0.11.15
 WTForms==2.1
