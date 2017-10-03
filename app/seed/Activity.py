@@ -136,14 +136,14 @@ for a in activities:
 
 	#resize image
 	for size in sizes:
-		new_image = image.resize(size)
+		new_image = image.resize(size, Image.ANTIALIAS)
 
 		directory = 'app/static/uploads/activity_images/' + str(size[0]) + 'x'+ str(size[1]) + '/'
 
 		if not os.path.isdir(directory):
 		    os.makedirs(directory)
 
-		new_image.save(os.path.join(directory, image_hashed_filename))
+		new_image.save(os.path.join(directory, image_hashed_filename), quality=100)
 
 	a['image'] = image_hashed_filename
 	activity = Activity.from_json(a)
