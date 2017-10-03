@@ -134,8 +134,8 @@
     
                                                             <div v-for="activity in group.activities">
 
-                                                                <!-- ACTIVITY CARD -->
-                                                                <div class="col-md-3 col-lg-4 col-sm-6 card-container" data-toggle="modal" :data-target="'#group-activity-' + activity.id">
+                                                                <!-- ACTIVITY CARD ( :data-target="'#group-activity-' + activity.id"  ) -->
+                                                                <div class="col-md-3 col-lg-4 col-sm-6 card-container" data-toggle="modal" v-on:click="openActivityModal(activity.id)">
                                                                     <div style="height: 160px; border-radius: 5px; border: 1px solid #d0d0d0;">
                                                                         <div style="height: 70%; overflow: hidden;">
                                                                             <template v-if="today > activity.end_date">
@@ -410,8 +410,8 @@
             },
             loadGroupInfo: function(group) {
 
-                parent_modal_id = group.id;
-                console.log(parent_modal_id);
+                parent_modal_id = '#group-' + group.id;
+                //console.log('PARENT: ' + parent_modal_id);
 
                 // load group members
                 $.ajax({
@@ -466,19 +466,31 @@
                 t = new Date();
                 today = t;
                 console.log(t);
+            },
+            openActivityModal: function(id) {
+                var activityModal = '#group-activity-' + id;
+                $(activityModal).modal('show');
+                $(parent_modal_id).modal('hide');
+                console.log(activityModal);
             }
           }
         });
 
+
+        /*$('.group-card').bind('click', function (event) {
+            parent_modal_id = event.currentTarget.id;
+            console.log(parent_modal_id);
+        });*/
+
         /* Manage activity modal */
-        $('.grp-activity-modal').on('show.bs.modal', function (event) {
-            $('#group-' + vm.parent_modal_id).modal('hide');
-            //console.log('Hide modal #group-' + vm.parent_modal_id);
+        /*$('.grp-activity-modal').on('show.bs.modal', function (event) {
+            $('#group-' + parent_modal_id).modal('hide');
+            console.log('Hide modal #group-' + parent_modal_id);
         });
         $('.grp-activity-modal').on('hide.bs.modal', function (event) {
-            $('#group-' + vm.parent_modal_id).modal('show');
-            //console.log('Show modal #group-' + vm.parent_modal_id);
-        });
+            $('#group-' + parent_modal_id).modal('show');
+            console.log('Show modal #group-' + parent_modal_id);
+        });*/
         /* Manage =activity modal - end */
 
         $(document).ready(function() {
