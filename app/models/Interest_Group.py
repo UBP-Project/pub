@@ -42,7 +42,7 @@ class Interest_Group(db.Model):
         entity_type = Entity.query.filter(
             Entity.entity == 'interest_group', Entity.action == action).first()
         points_type = Points_Type(
-            entity_type.id, entity_id=self.id, value=value)
+            entity_type.id, self.id, value)
         db.session.add(points_type)
         db.session.commit()
 

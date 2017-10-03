@@ -131,7 +131,8 @@ for a in activities:
 	]
 
 	image = Image.open(os.path.join('app/static/uploads/activity_images/', a.get('image')))
-	activity.save(file_path, Image.ANTIALIAS)
+	
+	image.save(file_path)
 
 	#resize image
 	for size in sizes:
