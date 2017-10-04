@@ -11,47 +11,90 @@
             {% raw %}
             <div class="group-box" id="app">
 
-                <h3>ACTIVITY SUMMARY
-                    <a v-show="is_manager || is_leader" :href="'/activities/' + activity_id + '/attendance'">
-                        <button class="btn btn-style-2 btn-sm pull-right" title="Check Attendance"><i class="fa fa-bars"></i></button>
+                <h3>ACTIVITY SUMMARY 
+                    <a v-show="is_leader || is_manager" :href="'/activities/' + activity_id + '/attendance'">
+                        <button class="btn btn-style-3 btn-sm pull-right" title="Attendance Checklist"><i class="fa fa-check-square-o"></i></button>
                     </a>
                 </h3>
                 <hr/>
 
-                <div class="row" id="app">
-                    <div class="col-md-4">
-                        <h4 class="text-center" style="color: #564C89;">Interested Users <span style="color: #fd8103;">( {{ interested_users.length }} )</span></h4>
-                        <template v-if="interested_users.length > 0">
-                            <div v-for="interested in interested_users">
-                                <p>{{ interested.firstname }} {{ interested.lastname }}</p>
-                            </div>
-                        </template>
-                        <template v-else>
-                            <p>No one is interested</p>
-                        </template>
+                <ul class="nav nav-tabs nav-justified" style="padding: 10px 20px 0;">
+                    <li><a data-toggle="tab" href="#attendance-list"><h4 class="text-center" style="color: #564C89;">Attendance <span style="color: #fd8103;">( {{ attendee_count }} )</span></h4></a></li>
+                    <li><a data-toggle="tab" href="#going-list"><h4 class="text-center" style="color: #564C89;">Going Users <span style="color: #fd8103;">( {{ going_users.length }} )</span></h4></a></li>
+                    <li><a data-toggle="tab" href="#interested-list"><h4 class="text-center" style="color: #564C89;">Interested Users <span style="color: #fd8103;">( {{ interested_users.length }} )</span></h4></a></li>
+                </ul>
+
+                <div class="tab-content" style="padding: 20px;">
+
+                    <div id="attendance-list" class="tab-pane fade in active row">
+                        <div class="col-md-12" style="padding: 0;">
+                            <template v-if="attendee_count > 0" class="row">
+                                <div v-for="going in going_users" v-show="going.attended" class="col-md-4" style="padding: 5px;">
+                                    <a :href="'/profile/' + going.id" style="text-decoration: none;">
+                                        <div style="padding: 10px; border: 1px solid #d0d0d0; color: #777; border-radius: 5px;">
+                                            <img v-if="going.image" class="img-circle" width="40px" height="40px" :src="user_images_folder + going.image">
+                                            <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="40px" height="40px" class="img-circle">
+                                            <span style="padding-left: 10px;">{{ going.firstname }} {{ going.lastname }}</span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </template>
+                            <template v-else>
+                                <p>No one attended the activity.</p>
+                            </template>
+                        </div>
+                        <div v-show="attendee_count > 0" class="col-md-12 text-center">
+                            <br/>
+                            <h5><small>xxx Nothing follows xxx</small></h5>
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <h4 class="text-center" style="color: #564C89;">Going Users <span style="color: #fd8103;">( {{ going_users.length }} )</span></h4>
-                        <template v-if="going_users.length > 0">
-                            <div v-for="going in going_users">
-                                <p>{{ going.firstname }} {{ going.lastname }}</p>
-                            </div>
-                        </template>
-                        <template v-else>
-                            <p>No one is going.</p>
-                        </template>
+
+                    <div id="going-list" class="tab-pane fade row">
+                        <div class="col-md-12" style="padding: 0;">
+                            <template v-if="going_users.length > 0" class="row">
+                                <div v-for="going in going_users" class="col-md-4" style="padding: 5px;">
+                                    <a :href="'/profile/' + going.id" style="text-decoration: none;">
+                                        <div style="padding: 10px; border: 1px solid #d0d0d0; color: #777; border-radius: 5px;">
+                                            <img v-if="going.image" class="img-circle" width="40px" height="40px" :src="user_images_folder + going.image">
+                                            <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="40px" height="40px" class="img-circle">
+                                            <span style="padding-left: 10px;">{{ going.firstname }} {{ going.lastname }}</span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </template>
+                            <template v-else>
+                                <p>No one is going.</p>
+                            </template>
+                        </div>
+                        <div v-show="going_users.length > 0" class="col-md-12 text-center">
+                            <br/>
+                            <h5><small>xxx Nothing follows xxx</small></h5>
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <h4 class="text-center" style="color: #564C89;">Attendance <span style="color: #fd8103;">( {{ attendee_count }} )</span></h4>
-                        <template v-if="going_users.length > 0">
-                            <div v-for="going in going_users">
-                                <p v-show="going.attended">{{ going.firstname }} {{ going.lastname }}</p>
-                            </div>
-                        </template>
-                        <template v-else>
-                            <p>No one attended the activity.</p>
-                        </template>
+
+                    <div id="interested-list" class="tab-pane fade row">
+                        <div class="col-md-12" style="padding: 0;">
+                            <template v-if="interested_users.length > 0" class="row">
+                                <div v-for="interested in interested_users" class="col-md-4" style="padding: 5px;">
+                                    <a :href="'/profile/' + interested.id" style="text-decoration: none;">
+                                        <div style="padding: 10px; border: 1px solid #d0d0d0; color: #777; border-radius: 5px;">
+                                            <img v-if="interested.image" class="img-circle" width="40px" height="40px" :src="user_images_folder + interested.image">
+                                            <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="40px" height="40px" class="img-circle">
+                                            <span style="padding-left: 10px;">{{ interested.firstname }} {{ interested.lastname }}</span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </template>
+                            <template v-else>
+                                <p>No one is interested.</p>
+                            </template>
+                        </div>
+                        <div v-show="interested_users.length > 0" class="col-md-12 text-center">
+                            <br/>
+                            <h5><small>xxx Nothing follows xxx</small></h5>
+                        </div>
                     </div>
+
                 </div>
 
             </div>
@@ -74,7 +117,8 @@
             attendee_count: 0,
             can_manage_activity: false,
             is_manager: false,
-            is_leader: false
+            is_leader: false,
+            user_images_folder: '/static/uploads/profile_pictures/'
           },
           methods: {
             loadAttendance: function(activity_id) {
@@ -121,7 +165,7 @@
                 }).done(function(data) {
                     for(var i = 0; i < data.leaders.length; i++) {
                         if (data.leaders[i].id == '{{current_user.get_id()}}') {
-                            is_leader = true;
+                            this.is_leader = true;
                             break;
                         }
                     }
