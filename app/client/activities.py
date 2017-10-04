@@ -55,31 +55,6 @@ def create_activity():
 
     groups = Interest_Group.query.all()
     if request.method == 'POST':
-        image                 = form.image.data
-        image_filename        = secure_filename(image.filename)
-        extension             = image_filename.rsplit('.', 1)[1].lower()
-        image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
-        file_path             = os.path.join('app/static/uploads/activity_images', image_hashed_filename)
-        image.save(file_path)
-
-        image = Image.open(file_path)
-
-        sizes = [
-            (600, 250), #modal cover photo
-            (260, 200)  #card
-        ]
-
-        #resize image
-        for size in sizes:
-            new_image = image.resize(size)
-
-            directory = 'app/static/uploads/activity_images/' + str(size[0]) + 'x'+ str(size[1]) + '/'
-
-            if not os.path.isdir(directory):
-                os.makedirs(directory)
-
-            new_image.save(os.path.join(directory, image_hashed_filename))
-
         activity = Activity(
             title = form.title.data,
             description = form.description.data,
@@ -87,11 +62,13 @@ def create_activity():
             end_date = form.start_date.data,
             address = form.address.data,
             group_id = None if form.group.data == "None" else uuid.UUID(form.group.data).hex,
-            image = image_hashed_filename)
-        
+            image = None)
+
         db.session.add(activity)
         db.session.commit()
-        
+
+        activity.set_image(form.image.data)
+
         # set activity point on: interested, going, attended
         activity.set_points('going', form.going_point.data)
         activity.set_points('interested', form.interested_point.data)
@@ -118,34 +95,7 @@ def edit_activity(id):
 
     if request.method == 'POST':
         if form.image.data is not None:
-            image                 = form.image.data
-            image_filename        = secure_filename(image.filename)
-            if is_valid_extension(image_filename):
-                extension             = image_filename.rsplit('.', 1)[1].lower()
-                image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
-                file_path             = os.path.join('app/static/uploads/activity_images', image_hashed_filename)
-                
-                image.save(file_path)
-
-                image = Image.open(file_path)
-
-                sizes = [
-                    (600, 250), #modal cover photo
-                    (260, 200)  #card
-                ]
-
-                #resize image
-                for size in sizes:
-                    new_image = image.resize(size)
-
-                    directory = 'app/static/uploads/activity_images/' + str(size[0]) + 'x'+ str(size[1]) + '/'
-
-                    if not os.path.isdir(directory):
-                        os.makedirs(directory)
-
-                    new_image.save(os.path.join(directory, image_hashed_filename))
-
-                activity.image   = image_hashed_filename
+            activity.set_image(form.data.image)
         activity.title       = form.title.data      
         activity.description = form.description.data
         activity.start_date  = form.start_date.data 
@@ -174,10 +124,11 @@ def edit_activity(id):
     flash_errors(form)
     return render_template('client/activity/edit.html', form=form, activity=activity)
 
+
 @client.route('/activities/<string:id>/attendance')
 @login_required
 def attendance(id):
-    is_manager_or_leader(abort_on_false=True) # Forbidden if not a leader or manager
+    is_manager_or_leader(abort_on_false=True)  # Forbidden if not a leader or manager
     activity = Activity.query.get_or_404(id)
     return render_template("attendance/checklist.html", activity=activity)
 
@@ -194,4 +145,3 @@ def activity_list():
     return jsonify({
         'activities': [activity.to_json() for activity in activities]
     })
-    

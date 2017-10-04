@@ -116,22 +116,24 @@ class Interest_Group(db.Model):
         icon.save(file_path)
 
         icon_sizes = [
-            (130, 130), #card icon
-            (200, 200), #modal icon
+            (130, 130),  # card icon
+            (200, 200),  # modal icon
         ]
 
         icon = Image.open(file_path)
 
-        #resize icon
+        # resize icon
         for size in icon_sizes:
             new_image = icon.resize(size, Image.ANTIALIAS)
 
-            directory = 'app/static/uploads/group_icons/' + str(size[0]) + 'x'+ str(size[1]) + '/'
+            directory = 'app/static/uploads/group_icons/' + \
+                str(size[0]) + 'x' + str(size[1]) + '/'
 
             if not os.path.isdir(directory):
                 os.makedirs(directory)
 
-            new_image.save(os.path.join(directory, icon_hashed_filename), quality=100)
+            new_image.save(os.path.join(
+                directory, icon_hashed_filename), quality=100)
 
         self.group_icon = icon_hashed_filename
         db.session.commit()
@@ -146,22 +148,24 @@ class Interest_Group(db.Model):
         cover.save(file_path)
 
         cover_sizes = [
-            (200, 170), #card cover
-            (600, 250)  #modal cover
+            (200, 170),  # card cover
+            (600, 250)  # modal cover
         ]
 
         cover = Image.open(file_path)
 
-        #resize icon
+        # resize icon
         for size in cover_sizes:
             new_image = cover.resize(size, Image.ANTIALIAS)
 
-            directory = 'app/static/uploads/covers/' + str(size[0]) + 'x'+ str(size[1]) + '/'
+            directory = 'app/static/uploads/covers/' + \
+                str(size[0]) + 'x' + str(size[1]) + '/'
 
             if not os.path.isdir(directory):
                 os.makedirs(directory)
 
-            new_image.save(os.path.join(directory, cover_hashed_filename), quality=100)
+            new_image.save(os.path.join(
+                directory, cover_hashed_filename), quality=100)
 
         self.cover_photo = cover_hashed_filename
         db.session.commit()
