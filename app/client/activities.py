@@ -10,6 +10,7 @@ import uuid
 from . import client
 from flask_login import current_user, login_required
 from ..auth import is_manager_or_leader, can_modify_activity, is_manager
+from PIL import Image
 
 @client.route('/activities/')
 @login_required
@@ -48,9 +49,9 @@ def create_activity():
     is_manager_or_leader(abort_on_false=True) # Forbidden if not a leader or manager
 
     if is_manager():
-        form = CreateActivityForm() #all the groups 
+        form = CreateActivityForm() # all the groups 
     else:
-        form = CreateActivityFormClient() #limited only to groups led
+        form = CreateActivityFormClient() # limited only to groups led
 
     groups = Interest_Group.query.all()
     if request.method == 'POST':
