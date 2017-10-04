@@ -41,7 +41,7 @@ def activity(id):
         .filter(User_Activity.activity_id == id, User_Activity.status == 0).all()
     return render_template('client/activity/activity.html', activity=activity,
         going_users=going_users, interested_users=interested_users,
-        can_edit_activity=is_manager_or_leader(), creator=creator)
+        can_edit_activity=can_modify_activity(id), creator=creator)
 
 @client.route('/activities/create', methods=['GET', 'POST'])
 @login_required
@@ -185,7 +185,7 @@ def attendance(id):
 @login_required
 def summary(id):
     activity = Activity.query.get_or_404(id)
-    return render_template("attendance/summary.html", activity=activity)
+    return render_template("attendance/summary.html", can_manage_activity = can_modify_activity(id), is_manager = is_manager(), user=current_user, activity=activity)
 
 @client.route('/activity-list')
 @login_required

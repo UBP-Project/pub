@@ -71,7 +71,7 @@
                                                 <span class="col-md-2 col-lg-2 col-sm-2 hidden-xs" style="border: none;"><h2 class="text-center"></h2></span>
                                                 <span class="col-md-8 col-lg-8 col-sm-8"><h2 class="text-center">{{ activity.title}}</h2></span>
                                                 <span class="col-md-2 col-lg-2 col-sm-2 text-center" style="padding: 20px 15px 10px 15px;">
-                                                        <a v-show="is_manager || activity.isLeader" :href="'/activities/' + activity.id" class="btn btn-style-3" style="padding: 4px 8px; font-size: 15px;" title="Manage Activity"><i class="fa fa-gear"></i></a>
+                                                        <a v-show="(is_manager || activity.isLeader)" :href="'/activities/' + activity.id" class="btn btn-style-3" title="Manage Activity"><i class="fa fa-gear"></i></a>
                                                 </span>
                                             </span>
                                             <div class="content">
@@ -152,8 +152,8 @@
 
                                             <span class="row">
                                                 <span class="col-md-4" style="padding: 0; text-align: left;">
-                                                    <a v-if="today > activity.end_date" class="btn btn-style-3" :href="'/activities/' + activity.id + '/summary'" title="Attendance List"><i class="fa fa-list"></i></a>
-                                                    <a v-show="is_manager || activity.isLeader" class="btn btn-style-3" :href="'/activities/' + activity.id + '/attendance'" title="Check Attendance">ATTENDANCE</a>
+                                                    <a v-if="((today > activity.end_date) || is_manager || activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + activity.id + '/summary'" title="Activity Summary"><i class="fa fa-calendar-check-o"></i></a>
+                                                    <a v-show="(is_manager || activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + activity.id + '/attendance'" title="Attendance Checklist"><i class="fa fa-check-square-o"></i></a>
                                                 </span>
                                                 <span class="col-md-8 pull-right" style="padding: 0;">
                                                     <button v-if="activity.isInterested" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
@@ -246,7 +246,7 @@
                 }).done(function(data) {
                     //group.leaders = data.leaders;
                     //console.log(data.leaders);
-                    activity.isLeader = data.going_users;
+                    //activity.isLeader = data.going_users;
                     for(var i = 0; i < data.leaders.length; i++) {
                         if (data.leaders[i].id == '{{current_user.get_id()}}') {
                             activity.isLeader = true;
