@@ -29,7 +29,7 @@
 
                             <!-- GROUP CARD -->
                             <div class="col-md-3 col-sm-6 group-card" v-on:click="loadGroupInfo(group)" :id="group.id">
-                                <div class="zoomify group-panel grp-icon" data-toggle="modal" :data-target="'#group-' + group.id" :id="group.id">
+                                <div class="zoomify group-panel grp-icon" data-toggle="modal" :data-target="'#group-' + group.id">
                                     <div class="group-img">
                                         <img :src="group_card_covers_folder + group.cover_photo" style="height: 100%; width: 100%; min-width: 100%;">
                                         <img class="img-icon" :src="group_card_icons_folder + group.group_icon" style="z-index: 5; margin-top: -180px;" width="120px" height="120px">
@@ -134,25 +134,27 @@
     
                                                             <div v-for="activity in group.activities">
 
-                                                                <!-- ACTIVITY CARD ( v-on:click="openActivityModal(activity.id)"  ) -->
-                                                                <div class="col-md-3 col-lg-4 col-sm-6 card-container" data-toggle="modal" :data-target="'#group-activity-' + activity.id">
-                                                                    <div style="height: 160px; border-radius: 5px; border: 1px solid #d0d0d0;">
-                                                                        <div style="height: 70%; overflow: hidden;">
-                                                                            <template v-if="today > activity.end_date">
-                                                                                <img :src="activity_card_images_folder + activity.image" class="img-responsive" style="-webkit-filter: grayscale(100%); filter: grayscale(100%); min-height: 100%; max-width: 100%; border-radius: 5px 5px 0 0;"/>
-                                                                                <span style="color: green; font-size: 35px; position: absolute; top: 5px; right: 15px;">
-                                                                                        <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
-                                                                                </span>
-                                                                            </template>
-                                                                            <template v-else>
-                                                                                <img :src="activity_card_images_folder + activity.image" class="img-responsive" style="min-height: 100%; max-width: 100%; border-radius: 5px 5px 0 0;"/>
-                                                                            </template>
-                                                                        </div>
-                                                                        <div style="height: 30%; padding: 7px;">
-                                                                            <h5 class="text-center title">{{ activity.title }}</h5>
+                                                                <!-- ACTIVITY CARD  -->
+                                                                <a :href="'/activities/' + activity.id" :title="activity.title">
+                                                                    <div class="col-md-3 col-lg-4 col-sm-6 card-container">
+                                                                        <div style="height: 160px; border-radius: 5px; border: 1px solid #d0d0d0;">
+                                                                            <div style="height: 70%; overflow: hidden;">
+                                                                                <template v-if="today > activity.end_date">
+                                                                                    <img :src="activity_card_images_folder + activity.image" class="img-responsive" style="-webkit-filter: grayscale(100%); filter: grayscale(100%); min-height: 100%; max-width: 100%; border-radius: 5px 5px 0 0;"/>
+                                                                                    <span style="color: green; font-size: 35px; position: absolute; top: 5px; right: 15px;">
+                                                                                            <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
+                                                                                    </span>
+                                                                                </template>
+                                                                                <template v-else>
+                                                                                    <img :src="activity_card_images_folder + activity.image" class="img-responsive" style="min-height: 100%; max-width: 100%; border-radius: 5px 5px 0 0;"/>
+                                                                                </template>
+                                                                            </div>
+                                                                            <div style="height: 30%; padding: 7px;">
+                                                                                <h5 class="text-center title">{{ activity.title }}</h5>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
+                                                                </a>
                                                                 <!-- END OF ACTIVITY CARD -->
 
                                                             </div> <!-- end of activity listing -->
@@ -188,146 +190,6 @@
                                 </div>
                             </div> <!-- END OF GROUP MODAL -->
 
-                            <div v-if="group.activities.length > 0">
-                                <div v-for="activity in group.activities">
-
-                                    <!-- ACTIVITY MODAL -->
-                                    <div class="modal fade grp-activity-modal" :id="'group-activity-' + activity.id" role="dialog">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <!-- HEADER -->
-                                                <div class="modal-header">
-                                                    <span><b>ACTIVITY</b></span>
-                                                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
-                                                </div>
-                                                <!-- BODY -->
-                                                <div class="modal-body">
-                                                    <div class="img-container">
-                                                       <template v-if="today > activity.end_date">
-                                                            <img :src="activity_modal_images_folder + activity.image" class="img-responsive" style="-webkit-filter: grayscale(100%); filter: grayscale(100%);"/>
-                                                            <span style="color: green; font-size: 35px; position: absolute; top: 5px; right: 15px;">
-                                                                    <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
-                                                            </span>
-                                                        </template>
-                                                        <template v-else>
-                                                            <img :src="activity_modal_images_folder + activity.image"/>
-                                                        </template>
-                                                    </div>
-                                                    <span class="row">
-                                                        <span class="col-md-2 col-lg-2 col-sm-2 hidden-xs" style="border: none;"><h2 class="text-center"></h2></span>
-                                                        <span class="col-md-8 col-lg-8 col-sm-8"><h2 class="text-center">{{ activity.title}}</h2></span>
-                                                        <span class="col-md-2 col-lg-2 col-sm-2 text-center" style="padding: 20px 15px 10px 15px;">
-                                                                <a v-show="is_manager || activity.isLeader" :href="'/activities/' + activity.id" class="btn btn-style-3" style="padding: 4px 8px; font-size: 15px;" title="Manage Activity"><i class="fa fa-gear"></i></a>
-                                                        </span>
-                                                    </span>
-                                                    <div class="content">
-                                                        <ul class="nav nav-tabs" role="tablist">
-                                                            <li role="presentation" class="active act-li">
-                                                                <a :href="'#act-desc-' + activity.id" role="tab" data-toggle="tab">Description</a>
-                                                            </li>
-                                                            <li role="presentation" class="act-li">
-                                                                <a :href="'#act-interested-' + activity.id" role="tab" data-toggle="tab">Interested</a>
-                                                            </li>
-                                                            <li role="presentation" class="act-li">
-                                                                <a :href="'#act-going-' + activity.id" role="tab" data-toggle="tab">Going</a>
-                                                            </li>
-                                                        </ul>
-
-                                                        <div class="tab-content">
-                                                            <div role="tabpanel" class="tab-pane active" :id="'act-desc-' + activity.id">
-                                                                <template v-if="activity.description">
-                                                                    <div v-html="activity.description"></div>
-                                                                </template>
-                                                                <template v-else>
-                                                                    <p><i><small>No description</small></i></p>
-                                                                </template>
-                                                            </div>
-                                                            <div role="tabpanel" class="tab-pane" :id="'act-interested-' + activity.id">
-                                                                <div class="row">
-                                                                    <!-- <template v-if="activity.interested_users.length > 0">
-                                                                        <div v-for="interested_user in activity.interested_users" class="col-md-6 mini-container">
-                                                                            <a :href="'/profile/' + interested_user.id">
-                                                                                <div>
-                                                                                    <img v-if="interested_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+interested_user.image">
-                                                                                    <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
-                                                                                    <span>{{ interested_user.firstname }} {{interested_user.lastname}}</span>
-                                                                                </div>
-                                                                            </a>
-                                                                        </div>
-                                                                    </template>
-                                                                    <template v-else>
-                                                                         <div style="padding-left: 10px;">
-                                                                            <i><small>No interested users.</small></i>
-                                                                        </div>
-                                                                    </template> -->
-                                                                </div>
-                                                            </div>
-                                                            <div role="tabpanel" class="tab-pane" :id="'act-going-' + activity.id">
-                                                                <div class="row">
-                                                                    <!-- <template v-if="activity.going_users.length > 0">
-                                                                        <div v-for="going_user in activity.going_users" class="col-md-6 mini-container">
-                                                                            <a :href="'/profile/' + going_user.id">
-                                                                                <div class="row" style="padding: 8px 20px; margin: 0;" :title="going_user.firstname + ' ' + going_user.lastname">
-                                                                                    <span class="col-md-2" style="padding: 0;">
-                                                                                        <img v-if="going_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+going_user.image">
-                                                                                        <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
-                                                                                    </span>
-                                                                                    <span class="col-md-9 title" style="padding: 5px 10px;">
-                                                                                        {{ going_user.firstname }} {{ going_user.lastname }}
-                                                                                    </span>
-                                                                                    <span class="col-md-1" style="padding: 5px;">
-                                                                                        <i v-show="going_user.attended" class="fa fa-check" style="color: #39ad39; font-size: 15px;" title="Attended this activity"></i>
-                                                                                    </span>
-                                                                                </div>
-                                                                            </a>
-                                                                        </div>
-                                                                    </template>
-                                                                    <template v-else>
-                                                                         <div style="padding-left: 10px;">
-                                                                            <i><small>No going users.</small></i>
-                                                                        </div>
-                                                                    </template> -->
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- FOOTER -->
-                                                <div class="modal-footer">
-
-                                                    <span class="row">
-                                                        <span class="col-md-4" style="padding: 0; text-align: left;">
-                                                            <a v-if="today > activity.end_date" class="btn btn-style-3" :href="'/activities/' + activity.id + '/summary'" title="Attendance List"><i class="fa fa-list"></i></a>
-                                                            <a v-show="is_manager || activity.isLeader" class="btn btn-style-3" :href="'/activities/' + activity.id + '/attendance'" title="Check Attendance">ATTENDANCE</a>
-                                                        </span>
-                                                        <span class="col-md-8 pull-right" style="padding: 0;">
-                                                            <button v-if="activity.isInterested" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
-                                                                NOT INTERESTED
-                                                            </button>
-                                                            <button v-else type="button" class="btn btn-style-2" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
-                                                                INTERESTED
-                                                            </button>
-
-                                                            <!-- GOING BTNS -->
-                                                            <button v-if="activity.isGoing" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleGoing(activity)">
-                                                                LEAVE ACTIVITY
-                                                            </button>
-                                                            <button v-else type="button" class="btn btn-style-2" :id="activity.id" value="cgoing" v-on:click="toggleGoing(activity)">
-                                                                JOIN ACTIVITY
-                                                            </button>
-                                                        </span>
-                                                    </span>
-                                                    <!-- END OF GOING BTNS -->
-
-                                                </div> <!-- end of modal-footer -->
-                                            </div>
-                                        </div>
-                                    </div> <!-- end of ACTIVITY MODAL -->
-
-                                </div> <!-- activity of group loop -->
-                            </div>
-
                         </div> <!-- end of group-listing -->
 
                         <div class="show-more-box col-md-12">
@@ -358,7 +220,6 @@
         var vm = new Vue({
           el: '#app',
           data: {
-            today: null,
             groups: [],
             groups_page: 1,
             hasNext: false,
@@ -370,8 +231,7 @@
             group_card_covers_folder: '/static/uploads/covers/200x170/',
             activity_card_images_folder: '/static/uploads/activity_images/260x200/',
             user_images_folder: '/static/uploads/profile_pictures/',
-            default_img: "background-image: url('/static/images/pub-default-img.jpg');",
-            parent_modal_id: null
+            default_img: "background-image: url('/static/images/pub-default-img.jpg');"
           },
           methods: {
             loadGroups: function() {
@@ -409,9 +269,6 @@
 
             },
             loadGroupInfo: function(group) {
-
-                parent_modal_id = group.id;
-                console.log('PARENT: ' + parent_modal_id);
 
                 // load group members
                 $.ajax({
@@ -461,51 +318,12 @@
                         group.membership_status = "pending";
                     });
                 }
-            },
-            getDateToday: function() {
-                t = new Date();
-                today = t;
-                console.log(t);
-            }/*,
-            openActivityModal: function(id) {
-                var activityModal = '#group-activity-' + id;
-                $(activityModal).modal('show');
-                $(parent_modal_id).modal('hide');
-                console.log(activityModal);
-            }*/
-          }/*,
-          mounted: function() {
-            $('.grp-activity-modal').on('show.bs.modal', (event) => {
-                $('#group-' + parent_modal_id).modal('hide');
-                console.log('Hide modal #group-' + parent_modal_id);
-            });
-            $('.grp-activity-modal').on('hide.bs.modal', (event) => {
-                $('#group-' + parent_modal_id).modal('show');
-                console.log('Show modal #group-' + parent_modal_id);
-            });
-          }*/
+            }
+          }
         });
-
-
-        /*$('.group-card').bind('click', function (event) {
-            parent_modal_id = event.currentTarget.id;
-            console.log(parent_modal_id);
-        });*/
-
-        /* Manage activity modal */
-        $('.grp-activity-modal').on('show.bs.modal', function (event) {
-            $('#group-' + vm.parent_modal_id).modal('hide');
-            console.log('Hide modal #group-' + parent_modal_id);
-        });
-        $('.grp-activity-modal').on('hide.bs.modal', function (event) {
-            $('#group-' + vm.parent_modal_id).modal('show');
-            console.log('Show modal #group-' + parent_modal_id);
-        });
-        /* Manage =activity modal - end */
 
         $(document).ready(function() {
             vm.loadGroups();
-            vm.getDateToday();
             vm.is_manager = "{{ is_manager }}" == "True" ? true : false;
         });
 

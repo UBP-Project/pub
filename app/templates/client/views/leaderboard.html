@@ -19,7 +19,7 @@
 						<br/>
 						{% if point_leaders %}
 							{% for leader in point_leaders %}
-								<a href="{{ url_for('client.view_profile', id=leader.id) }}">
+								<a href="{{ url_for('client.points', id=leader.id) }}">
 									<div class="zoomify user-card-1">
 										{% if leader.image %}
 											<img src="{{ url_for('static', filename='uploads/profile_pictures/' + leader.image )}}">
@@ -41,7 +41,7 @@
 						<br/>
 						{% if followed_leaders %}
 							{% for leader in followed_leaders %}
-								<a href="{{ url_for('client.view_profile', id=leader.id) }}">
+								<a href="{{ url_for('client.followers', id=leader.id) }}">
 									<div class="zoomify user-card-2">
 										{% if leader.image %}
 											<img src="{{ url_for('static', filename='uploads/profile_pictures/' + leader.image )}}">
