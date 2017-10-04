@@ -12,7 +12,7 @@
             <div class="group-box" id="app">
 
                 <h3>ACTIVITY SUMMARY 
-                    <a v-show="is_leader || is_manager" :href="'/activities/' + activity_id + '/attendance'">
+                    <a v-show="can_manage_activity" :href="'/activities/' + activity_id + '/attendance'">
                         <button class="btn btn-style-3 btn-sm pull-right" title="Attendance Checklist"><i class="fa fa-check-square-o"></i></button>
                     </a>
                 </h3>
