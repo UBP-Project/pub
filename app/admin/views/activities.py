@@ -11,6 +11,7 @@ import uuid
 from datetime import datetime
 from sqlalchemy import or_
 from PIL import Image
+from ...auth import can_modify_activity, is_manager
 
 ACTIVITIES_PER_PAGE = 16
 
@@ -206,3 +207,12 @@ def edit_activity(id):
 def attendance(id):
     activity = Activity.query.get_or_404(id)
     return render_template('admin/activity/attendance.html', activity=activity)
+
+
+@admin.route('/activities/<string:id>/summary')
+@admin_required
+def summary(id):
+    activity = Activity.query.get_or_404(id)
+    return render_template('attendance/summary.html', activity=activity,
+        can_manage_activity = can_modify_activity(id),
+        is_manager = is_manager())

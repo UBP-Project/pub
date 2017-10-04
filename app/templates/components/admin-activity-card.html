@@ -9,8 +9,8 @@
             <h6>To: {{ activity['start_date']|datetime_with_day}}</i></h6>
         </div>
         <div class="text-right">
-            <a style="margin-bottom: 5px;" class="btn btn-xs btn-style-1" href="{{ url_for('admin.attendance', id=activity['id']) }}">
-                View Attendance
+            <a style="margin-bottom: 5px;" class="btn btn-xs btn-style-1" href="{{ url_for('admin.summary', id=activity['id']) }}">
+                View Summary
             </a>
             <a class="btn btn-block btn-style-3" href="{{ url_for('admin.edit_activity', id=activity['id']) }}">
                 Edit Activity

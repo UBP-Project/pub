@@ -136,7 +136,9 @@ def attendance(id):
 @login_required
 def summary(id):
     activity = Activity.query.get_or_404(id)
-    return render_template("attendance/summary.html", can_manage_activity = can_modify_activity(id), is_manager = is_manager(), user=current_user, activity=activity)
+    return render_template("attendance/summary.html",
+        can_manage_activity = can_modify_activity(id),
+        is_manager = is_manager(), user=current_user, activity=activity)
 
 @client.route('/activity-list')
 @login_required

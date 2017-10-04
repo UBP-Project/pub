@@ -1,4 +1,8 @@
-{% extends "./layout/client_base.html" %}
+{% if 'admin' in request.path %}
+    {% extends "./layout/admin_base.html" %}
+{% else %}
+    {% extends "./layout/client_base.html" %}
+{% endif %}
 
 {% block title %} {{ activity.title }} Summary {% endblock title %}
 
@@ -12,7 +16,7 @@
             <div class="group-box" id="app">
 
                 <h3>ACTIVITY SUMMARY - {{activity_title}}
-                    <a v-show="can_manage_activity" :href="'/activities/' + activity_id + '/attendance'">
+                    <a v-show="can_manage_activity" href="./attendance">
                         <button class="btn btn-style-3 btn-sm pull-right" title="Attendance Checklist"><i class="fa fa-check-square-o"></i></button>
                     </a>
                 </h3>
