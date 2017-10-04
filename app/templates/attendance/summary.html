@@ -11,7 +11,7 @@
             {% raw %}
             <div class="group-box" id="app">
 
-                <h3>ACTIVITY SUMMARY 
+                <h3>ACTIVITY SUMMARY - {{activity_title}}
                     <a v-show="can_manage_activity" :href="'/activities/' + activity_id + '/attendance'">
                         <button class="btn btn-style-3 btn-sm pull-right" title="Attendance Checklist"><i class="fa fa-check-square-o"></i></button>
                     </a>
@@ -19,7 +19,7 @@
                 <hr/>
 
                 <ul class="nav nav-tabs nav-justified" style="padding: 10px 20px 0;">
-                    <li><a data-toggle="tab" href="#attendance-list"><h4 class="text-center" style="color: #564C89;">Attendance <span style="color: #fd8103;">( {{ attendee_count }} )</span></h4></a></li>
+                    <li class="active"><a data-toggle="tab" href="#attendance-list"><h4 class="text-center" style="color: #564C89;">Attendance <span style="color: #fd8103;">( {{ attendee_count }} )</span></h4></a></li>
                     <li><a data-toggle="tab" href="#going-list"><h4 class="text-center" style="color: #564C89;">Going Users <span style="color: #fd8103;">( {{ going_users.length }} )</span></h4></a></li>
                     <li><a data-toggle="tab" href="#interested-list"><h4 class="text-center" style="color: #564C89;">Interested Users <span style="color: #fd8103;">( {{ interested_users.length }} )</span></h4></a></li>
                 </ul>
@@ -112,12 +112,12 @@
           el: '#app',
           data: {
             activity_id: null,
+            activity_title: null,
             interested_users: [],
             going_users: [],
             attendee_count: 0,
             can_manage_activity: false,
             is_manager: false,
-            is_leader: false,
             user_images_folder: '/static/uploads/profile_pictures/'
           },
           methods: {
@@ -156,29 +156,12 @@
                     console.log("error");
                 });
 
-            }, // loadAttendance         
-            checkIfLeader: function(group_id) {
-                 // check if leader
-                $.ajax({
-                    url: '/api/v1.0/groups/'+ group_id + '/members',
-                    type: 'GET'
-                }).done(function(data) {
-                    for(var i = 0; i < data.leaders.length; i++) {
-                        if (data.leaders[i].id == '{{current_user.get_id()}}') {
-                            this.is_leader = true;
-                            break;
-                        }
-                    }
-                }).fail(function() {
-                    console.log("error");
-                });
-            }
-
+            } // loadAttendance
            }
         });
         $(document).ready(function() {
             vm.loadAttendance('{{activity.id}}');
-            vm.checkIfLeader('{{activity.group_id}}');
+            vm.activity_title = '{{activity.title}}';
             vm.can_manage_activity = "{{ can_manage_activity }}" == "True" ? true : false;
             vm.is_manager = "{{ is_manager }}" == "True" ? true : false;
         });
