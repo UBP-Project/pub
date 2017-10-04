@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from .. import admin
-from ..forms import CreateActivityFormClient, UpdateActivityFormClient, CreateActivityForm
+from ..forms import CreateActivityFormClient, UpdateActivityForm, UpdateActivityFormClient, CreateActivityForm
 from app import db
 from app.models import User, Activity, Permission, Interest_Group, Role, User_Activity
 from ..utils import flash_errors, is_valid_extension

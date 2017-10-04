@@ -46,3 +46,22 @@ table.users td {
     height       : 50px;
     border-radius: 25px;
 }
+
+
+.form-page label {
+    font-family: 'Roboto Condensed Bold';
+    font-size: 14px;
+}
+
+.form-page input[type='text'], .form-page input[type='password'],
+.form-page input[type='email'], .form-page input[type='date'],
+.form-page select, .form-page textarea,
+.form-page input[type='number']
+.form-control {
+    border-radius: 0px !important;
+    margin-bottom: 10px;
+}
+
+.form-page .trumbowyg-box {
+    margin-top: 0px;
+}

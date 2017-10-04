@@ -1,15 +1,12 @@
-{% macro create_perk(form) %}
-    <form class="row form-page activity-form group-box" style="padding: 20px; background-color: white"  method="post" enctype="multipart/form-data" name="create_perk">
+{% macro edit_perk(form, perk) %}
+    <form class="row form-page activity-form group-box" style="padding: 20px; background-color: white;" method="post" enctype="multipart/form-data" name="create_perk">
         {{ form.hidden_tag() }}
 
-        <div class="col-md-12 no-padding">
-                <h3 class="pull-left">CREATE PERK</h3>
-                <div style="margin-top: 10px;">
-                    {{ form.submit(
-                        class="btn btn-style-1 pull-right"
-                    )}}
-                </div>
-        </div>
+        <h3>EDIT PERKS - <span style="color: #aaa;">{{ perk.title }}</span>
+                {{ form.submit(
+                    class="btn btn-style-1 pull-right"
+                )}}
+        </h3>
 
         <div class="col-md-12 no-padding">
             <hr />
@@ -26,7 +23,7 @@
 
             <div class="col-md-12 no-padding">
                 <label>Description</label>
-                <div id="description-editor" class="wysiwyg-editor" placeholder="Describe this perk">
+                <div id="description-editor" class="wysiwyg-editor" placeholder="Describe this activity">
 
                 </div>
                 {{ form.description(
@@ -41,9 +38,13 @@
 
         <div class="col-md-6 no-padding-right" style="padding: 0px;">
             <div class="img-upload">
-                <br /><br ?>
+                <br /><br />
                 <div class="col-md-12 no-padding-right text-center">
-                    <img id="preview" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"/>
+                    {% if perk.image %}
+                        <img id="preview" src="{{ url_for('static', filename='uploads/perks_images/' + perk.image) }}"/>
+                    {% else %}
+                        <img id="preview" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"/>
+                    {% endif %}
                     <div id="upload-btn" class="text">
                         <button class="btn btn-style-1">Choose Perk Image</button>
                     </div>
@@ -53,9 +54,38 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-md-12 no-padding">
+            <br /><br /><br />
+            <hr />
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-confirmation">
+                Delete this Perk
+            </button>
+        </div>
+    </form>
+
+    <!-- Delete Activity confirmation modal -->
+    <form method="post" class="modal fade" id="delete-confirmation" role="dialog">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4>Confirm Delete</h4>
+            </div>
+            <div class="modal-body">
+              <p>Delete Perk: {{ perk.title }}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="submit" name="delete" value="delete" class="btn btn-danger">
+                    Delete this Perk
+                </button>
+            </div>
+          </div>
+        </div>
     </form>
 {% endmacro %}
-{% macro create_perk_script() %}
+{% macro edit_perk_script() %}
     <script>
         $(document).ready(function() {
             $('#description-editor').trumbowyg({
@@ -95,4 +125,3 @@
         });
     </script>
 {% endmacro %}
-
