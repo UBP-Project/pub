@@ -8,6 +8,7 @@ from flask_login import current_user
 from werkzeug.utils import secure_filename
 import os
 from PIL import Image
+from app.models import User, Role
 
 
 class Activity(db.Model):
@@ -25,7 +26,7 @@ class Activity(db.Model):
         onupdate="CASCADE"), nullable=True)
     image = db.Column(db.String(200))
     timestamp = db.Column(db.DateTime, default=datetime.utcnow())
-    creator_id = db.Column(UUIDType(binary=False), nullable=True)
+    creator_id = db.Column(UUIDType(binary=False), db.ForeignKey('user.id', ondelete="CASCADE", onupdate="CASCADE"), nullable=True)
 
     def __init__(self, title, description, start_date, end_date, address, image, group_id=None):
         self.title = title
@@ -39,7 +40,9 @@ class Activity(db.Model):
         if current_user.is_authenticated:
             self.creator_id = current_user.get_id()
         else:
-            self.creator_id = None
+            admin = User.User.query.join(Role, Role.id == User.User.role_id)\
+                .filter(Role.name == 'Administrator').first()
+            self.creator_id = admin.id
 
     def __repr__(self):
         return '<Activity %r>' % self.title
@@ -53,7 +56,8 @@ class Activity(db.Model):
             'end_date': self.end_date,
             'address': self.address,
             'group_id': self.group_id,
-            'image': self.image
+            'image': self.image,
+            'timestamp': self.timestamp
         }
         return json_post
 

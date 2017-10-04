@@ -16,6 +16,7 @@
             </div>
 
             {% raw %}
+            <!-- Feed view for join group
             <div id="app">
                 <div v-for="feed_item in feed" class="feed-item">
                     <div class="row">
@@ -27,7 +28,7 @@
                             <h5>
                                 <a :href="'profile/' + feed_item.user_id">{{ feed_item.user_firstname }} {{ feed_item.user_lastname }}</a>
                                 joins
-                                <!-- <a :href="'groups/' + feed_item.group_id">{{ feed_item.group_name }} Group</a> -->
+                                <a :href="'groups/' + feed_item.group_id">{{ feed_item.group_name }} Group</a>
                                 <a :href="'#'">{{ feed_item.group_name }} Group</a>
                                 <br />
                                 <small>{{ feed_item.timestamp }}</small>
@@ -42,6 +43,14 @@
                     </div>
                 </div>
             </div>
+            <!- End of Feed view for join group -->
+            
+            <div id="app">
+                <div v-for="feed in sorted_feeds">
+                    {{ feed.timestamp }} {{ feed.type }}
+                </div>           
+            </div>     
+
             {% endraw %}
 
 		</div>
@@ -56,7 +65,7 @@
             data: {
                 profile_images_folder: '/static/uploads/profile_pictures/',
                 group_modal_icons_folder: '/static/uploads/group_icons/200x200/',
-                feed: [],
+                feeds: [],
                 default_user_img: '/static/images/pub-default-img.jpg'
             },
             methods: {
@@ -66,8 +75,31 @@
                         type: 'GET'
                     }).done(data => {
                         console.log(data);
-                        this.feed = data.feed
-                    })
+                        data.new_activities.forEach((el) => {
+                            el.type = 'new_activity';
+                        });
+                        data.new_perks.forEach((el) => {
+                            el.type = 'new_perk';
+                        });
+                        data.new_groups.forEach((el) => {
+                            el.type = 'new_group';
+                        });
+                        data.new_memberships.forEach((el) => {
+                            el.type = 'new_membership';
+                        });
+                        this.feeds.push.apply(this.feeds, data.new_activities);
+                        this.feeds.push.apply(this.feeds, data.new_perks);
+                        this.feeds.push.apply(this.feeds, data.new_groups);
+                        this.feeds.push.apply(this.feeds, data.new_memberships);
+                    });
+                },
+            },
+            computed: {
+                sorted_feeds: function() {
+                    this.feeds.sort( (a, b) => {
+                        return new Date(b.timestamp) - new Date(a.timestamp);
+                    });
+                    return this.feeds;
                 }
             }
         });

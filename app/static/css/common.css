@@ -55,6 +55,7 @@ table.users td {
 
 .form-page input[type='text'], .form-page input[type='password'],
 .form-page input[type='email'], .form-page input[type='date'],
+.form-page input[type='number'],
 .form-page select, .form-page textarea,
 .form-page input[type='number']
 .form-control {

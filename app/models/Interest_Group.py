@@ -34,7 +34,8 @@ class Interest_Group(db.Model):
             'name': self.name,
             'about': self.about,
             'cover_photo': self.cover_photo,
-            'group_icon': self.group_icon
+            'group_icon': self.group_icon,
+            'timestamp': self.timestamp
         }
         return json_post
 
