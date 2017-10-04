@@ -103,9 +103,7 @@ def create_group():
     if form.validate_on_submit():
         interest_group = Interest_Group(
             name=form.name.data,
-            about=form.about.data,
-            cover_photo=cover_hashed_filename,
-            group_icon=icon_hashed_filename)
+            about=form.about.data)
         db.session.add(interest_group)
         db.session.commit()
 
@@ -118,6 +116,7 @@ def create_group():
 
         # insert leaders
         leader_ids = form.leader_ids.data.split(',')
+        print(leader_ids)
         for leader_id in leader_ids:
             membership = Membership(
                 group_id = interest_group.id,
