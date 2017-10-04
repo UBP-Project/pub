@@ -1,17 +1,32 @@
 {% macro attendance(activity) %}
     <div id="app" class="checklist">
-        <div class="col-md-12 no-padding">
+        <div class="col-md-12 no-padding group-box">
             <div class="row">
+                <h3>ACTIVITY ATTENDANCE - {{activity.title}}
+                    <a v-show="can_manage_activity" href="./attendance">
+                        <button class="btn btn-style-3 btn-sm pull-right" title="Attendance Checklist"><i class="fa fa-check-square-o"></i></button>
+                    </a>
+                </h3>
+                <hr/>
                 <div class="col-md-8 col-md-offset-2 text-center">
-                    <h2>Attendance Checklist</h2>
-                    <h4>Activity: {{ activity.title }}</h4>
                     {% raw %}
-                    <input class="form-control input-lg" placeholder="Search Participants" v-model="query"/>
-                    <br /><br />
+                    <br>
+                    <input class="form-control input-lg" placeholder="Search Going Users" v-model="query"/>
+                    <br />
                 </div>
                 
                 <div class="row card-container" style="background-color: white;">
-                    <div v-for="user in going_users" class="col-md-6 col-md-offset-3 checklist-item card-container" :hidden="!show_all">
+                    <div v-for="user in going_users" class="col-md-8 col-md-offset-2 checklist-item card-container" :hidden="!show_all">
+                        <a :href="'../../../profile/' + user.id">
+                            <img v-if="user.image" :src="'/static/uploads/profile_pictures/' + user.image">
+                            <img v-else :src="default_img">
+                            <span>{{ user.firstname }} {{ user.lastname }}</span>
+                        </a>
+                        <i v-if="user.attended" class="fa fa-check-circle" aria-hidden="true"></i>
+                        <input v-on:click="toggleCheck(user)" type="checkbox" class="pull-right" :checked="user.attended">
+                        <hr />
+                    </div>
+                    <div v-for="user in search_items" class="col-md-8 col-md-offset-2 checklist-item card-container" :hidden="show_all">
                         <img v-if="user.image" :src="'/static/uploads/profile_pictures/' + user.image">
                         <img v-else :src="default_img">
                         <span>{{ user.firstname }} {{ user.lastname }}</span>
@@ -19,18 +34,14 @@
                         <input v-on:click="toggleCheck(user)" type="checkbox" class="pull-right" :checked="user.attended">
                         <hr />
                     </div>
-                    <div v-for="user in search_items" class="col-md-6 col-md-offset-3 checklist-item card-container" :hidden="show_all">
-                        <img v-if="user.image" :src="'/static/uploads/profile_pictures/' + user.image">
-                        <img v-else :src="default_img">
-                        <span>{{ user.firstname }} {{ user.lastname }}</span>
-                        <i v-if="user.attended" class="fa fa-check-circle" aria-hidden="true"></i>
-                        <input v-on:click="toggleCheck(user)" type="checkbox" class="pull-right" :checked="user.attended">
-                        <hr />
+                    <div v-show="going_users.length == 0" class="col-md-6 col-md-offset-3 text-center card-container">
+                        <h3>No going users.</h3>
                     </div>
                     <div v-if="!show_all && search_items.length == 0" class="col-md-6 col-md-offset-3 text-center">
                     <h4>No search results for "{{ query }}"</h4>
                     </div>
                 </div>
+                <br>
                 {% endraw %}
             </div>
         </div>
@@ -46,7 +57,8 @@
                 default_img: "{{ url_for('static', filename='images/pub-default-img.jpg') }}",
                 query: "",
                 show_all: true,
-                search_items: []
+                search_items: [],
+                can_manage_activity: false
             },
             watch: {
                 query: function() {
