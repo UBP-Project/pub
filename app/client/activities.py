@@ -105,7 +105,12 @@ def create_activity():
 @login_required
 def edit_activity(id):
     can_modify_activity(id, abort_on_false=True)
-    form                  = UpdateActivityFormClient()
+
+    if is_manager():
+        form = UpdateActivityForm() # all the groups 
+    else:
+        form = UpdateActivityFormClient() # limited only to groups led
+
     activity              = Activity.query.get_or_404(id)
     if request.method == 'POST' and request.form.get('delete') == 'delete':
         db.session.delete(activity)
@@ -121,6 +126,8 @@ def edit_activity(id):
                 file_path             = os.path.join('app/static/uploads/activity_images', image_hashed_filename)
                 
                 image.save(file_path)
+
+                image = Image.open(file_path)
 
                 sizes = [
                     (600, 250), #modal cover photo
