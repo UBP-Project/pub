@@ -1,84 +1,10 @@
 {% extends "/layout/admin_base.html" %}
+{% from 'components/perk-create.html' import create_perk, create_perk_script %}
 {% block title %}Admin Page{% endblock %}
 
 {% block content %}
-    <form class="row admin-form activity-form" style="padding: 0px" method="post" enctype="multipart/form-data" name="create_perk">
-        {{ form.hidden_tag() }}
-
-        <div class="col-md-12 no-padding">
-                <h1 class="pull-left">Create Perk</h1>
-                <div style="margin-top: 25px;">
-                    {{ form.submit(
-                        class="btn btn-style-1 pull-right"
-                    )}}
-                </div>
-        </div>
-
-        <div class="col-md-12 no-padding">
-            <hr />
-        </div>
-
-        <div class="col-md-6 no-padding">
-            <div class="col-md-12 no-padding">
-                <label>Title</label>
-                {{ form.title(
-                    placeholder="Title",
-                    class="form-control",
-                    required="true") }}
-            </div>
-
-            <div class="col-md-12 no-padding">
-                <label>Description</label>
-                {{ form.description(
-                    placeholder="About this Group",
-                    class="form-control input-md",
-                    required="true") }}
-            </div>
-
-            
-
-        </div>
-
-        <div class="col-md-6 no-padding-right" style="padding: 0px;">
-            <div class="img-upload">
-                <br /><br ?>
-                <div class="col-md-12 no-padding-right text-center">
-                    <img id="preview" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"/>
-                    <div id="upload-btn" class="text">
-                        <button class="btn btn-style-1">Choose Perk Image</button>
-                    </div>
-                    {{ form.image(
-                        placeholder="Perk Image",
-                    )}}
-                </div>
-            </div>
-        </div>
-    </form>
-
+    {{ create_perk(form) }}
 {% endblock %}
-
 {% block scripts %}
-    <script>
-        $(document).ready(function() {
-            $("#image").on('change', function() {
-                var reader = new FileReader();
-                 reader.onload = function()
-                 {
-                  var output = document.getElementById('preview');
-                  output.src = reader.result;
-                 }
-                 reader.readAsDataURL(event.target.files[0]);
-            });
-
-            $("#preview").on('click', function() {
-                $("#image").trigger('click');
-            });
-
-            $("#upload-btn").on('click', function(e) {
-                e.preventDefault();
-                $("#image").trigger('click');
-            });
-
-        });
-    </script>
+    {{ create_perk_script() }}
 {% endblock %}

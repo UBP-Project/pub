@@ -1,0 +1,98 @@
+{% macro create_perk(form) %}
+    <form class="row admin-form activity-form" style="padding: 20px; background-color: white"  method="post" enctype="multipart/form-data" name="create_perk">
+        {{ form.hidden_tag() }}
+
+        <div class="col-md-12 no-padding">
+                <h1 class="pull-left">Create Perk</h1>
+                <div style="margin-top: 25px;">
+                    {{ form.submit(
+                        class="btn btn-style-1 pull-right"
+                    )}}
+                </div>
+        </div>
+
+        <div class="col-md-12 no-padding">
+            <hr />
+        </div>
+
+        <div class="col-md-6 no-padding">
+            <div class="col-md-12 no-padding">
+                <label>Title</label>
+                {{ form.title(
+                    placeholder="Title",
+                    class="form-control",
+                    required="true") }}
+            </div>
+
+            <div class="col-md-12 no-padding">
+                <label>Description</label>
+                <div id="description-editor" class="wysiwyg-editor" placeholder="Describe this perk">
+
+                </div>
+                {{ form.description(
+                    placeholder="Description",
+                    class="none",   
+                    hidden="true") }}
+            </div>
+
+            
+
+        </div>
+
+        <div class="col-md-6 no-padding-right" style="padding: 0px;">
+            <div class="img-upload">
+                <br /><br ?>
+                <div class="col-md-12 no-padding-right text-center">
+                    <img id="preview" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"/>
+                    <div id="upload-btn" class="text">
+                        <button class="btn btn-style-1">Choose Perk Image</button>
+                    </div>
+                    {{ form.image(
+                        placeholder="Perk Image",
+                    )}}
+                </div>
+            </div>
+        </div>
+    </form>
+{% endmacro %}
+{% macro create_perk_script() %}
+    <script>
+        $(document).ready(function() {
+            $('#description-editor').trumbowyg({
+                btns: [
+                    'btnGrp-semantic',
+                    ['superscript', 'subscript'],
+                    ['link'],
+                    // ['insertImage'],
+                    'btnGrp-lists',
+                    ['fullscreen']
+                ]
+            });
+
+            $("#submit").on('click', function(e) {
+                $("#description").text($("#description-editor").trumbowyg('html'));
+            });
+
+            $("#image").on('change', function() {
+                var reader = new FileReader();
+                 reader.onload = function()
+                 {
+                  var output = document.getElementById('preview');
+                  output.src = reader.result;
+                 }
+                 reader.readAsDataURL(event.target.files[0]);
+            });
+
+            $("#preview").on('click', function() {
+                $("#image").trigger('click');
+            });
+
+            $("#upload-btn").on('click', function(e) {
+                e.preventDefault();
+                $("#image").trigger('click');
+            });
+
+        });
+    </script>
+{% endmacro %}
+

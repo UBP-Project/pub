@@ -62,7 +62,7 @@ def create_activity():
             end_date = form.start_date.data,
             address = form.address.data,
             group_id = None if form.group.data == "None" else uuid.UUID(form.group.data).hex,
-            image = None)
+            image ='placeholder-activity.jpg')
 
         db.session.add(activity)
         db.session.commit()
