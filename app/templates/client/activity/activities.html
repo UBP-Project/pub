@@ -152,8 +152,13 @@
 
                                             <span class="row">
                                                 <span class="col-md-4" style="padding: 0; text-align: left;">
-                                                    <a v-if="today > activity.end_date" class="btn btn-style-3" :href="'/activities/' + activity.id + '/summary'" title="Attendance List"><i class="fa fa-list"></i></a>
+                                                    <a v-if="today > activity.end_date" class="btn btn-style-3" :href="'/activities/' + activity.id + '/summary'" title="Activity Summary"><i class="fa fa-calendar-check-o"></i></a>
                                                     <a v-show="is_manager || activity.isLeader" class="btn btn-style-3" :href="'/activities/' + activity.id + '/attendance'" title="Check Attendance">ATTENDANCE</a>
+
+                                                    <!-- TEST -->
+                                                    <a class="btn btn-style-3" :href="'/activities/' + activity.id + '/summary'" title="Activity Summary"><i class="fa fa-calendar-check-o"></i></a>
+                                                    <a class="btn btn-style-3" :href="'/activities/' + activity.id + '/attendance'" title="Check Attendance">ATTENDANCE</a>
+
                                                 </span>
                                                 <span class="col-md-8 pull-right" style="padding: 0;">
                                                     <button v-if="activity.isInterested" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">

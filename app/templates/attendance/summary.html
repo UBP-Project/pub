@@ -7,20 +7,136 @@
     <div class="row">
 
         <div class="col-md-12">
-            <div class="group-box">
 
-                <h3>ATTENDANCE SUMMARY</h3>
+            {% raw %}
+            <div class="group-box" id="app">
+
+                <h3>ACTIVITY SUMMARY
+                    <a v-show="is_manager || is_leader" :href="'/activities/' + activity_id + '/attendance'">
+                        <button class="btn btn-style-2 btn-sm pull-right" title="Check Attendance"><i class="fa fa-bars"></i></button>
+                    </a>
+                </h3>
                 <hr/>
 
-                <div class="row">
-                    <div class="col-md-6">
-                        
+                <div class="row" id="app">
+                    <div class="col-md-4">
+                        <h4 class="text-center" style="color: #564C89;">Interested Users <span style="color: #fd8103;">( {{ interested_users.length }} )</span></h4>
+                        <template v-if="interested_users.length > 0">
+                            <div v-for="interested in interested_users">
+                                <p>{{ interested.firstname }} {{ interested.lastname }}</p>
+                            </div>
+                        </template>
+                        <template v-else>
+                            <p>No one is interested</p>
+                        </template>
+                    </div>
+                    <div class="col-md-4">
+                        <h4 class="text-center" style="color: #564C89;">Going Users <span style="color: #fd8103;">( {{ going_users.length }} )</span></h4>
+                        <template v-if="going_users.length > 0">
+                            <div v-for="going in going_users">
+                                <p>{{ going.firstname }} {{ going.lastname }}</p>
+                            </div>
+                        </template>
+                        <template v-else>
+                            <p>No one is going.</p>
+                        </template>
+                    </div>
+                    <div class="col-md-4">
+                        <h4 class="text-center" style="color: #564C89;">Attendance <span style="color: #fd8103;">( {{ attendee_count }} )</span></h4>
+                        <template v-if="going_users.length > 0">
+                            <div v-for="going in going_users">
+                                <p v-show="going.attended">{{ going.firstname }} {{ going.lastname }}</p>
+                            </div>
+                        </template>
+                        <template v-else>
+                            <p>No one attended the activity.</p>
+                        </template>
                     </div>
                 </div>
 
             </div>
+            {% endraw %}
+
         </div>
 
     </div>
 
 {% endblock content %}
+
+{% block scripts %}
+    <script>
+        var vm = new Vue({
+          el: '#app',
+          data: {
+            activity_id: null,
+            interested_users: [],
+            going_users: [],
+            attendee_count: 0,
+            can_manage_activity: false,
+            is_manager: false,
+            is_leader: false
+          },
+          methods: {
+            loadAttendance: function(activity_id) {
+                //console.log(activity_id);
+                this.activity_id = activity_id;
+
+                // load interested users
+                $.ajax({
+                    url: '/api/v1.0/activities/'+ activity_id + '/participants/interested',
+                    type: 'GET'
+                }).done(data => {
+                    //interested_users = data;
+                    this.interested_users.push.apply(this.interested_users, data);
+                    console.log(this.interested_users);
+                }).fail(function() {
+                    console.log("error");
+                });
+
+                // load going users
+                $.ajax({
+                    url: '/api/v1.0/activities/'+ activity_id + '/participants/going',
+                    type: 'GET'
+                }).done(data => {
+                    //going_users = data.going_users;
+                    this.going_users.push.apply(this.going_users, data.going_users);
+                    console.log(this.going_users);
+
+                    for(var i = 0; i < data.going_users.length; i++) {
+                        if (data.going_users[i].attended) {
+                            this.attendee_count++;
+                        }
+                    }
+
+                }).fail(function() {
+                    console.log("error");
+                });
+
+            }, // loadAttendance         
+            checkIfLeader: function(group_id) {
+                 // check if leader
+                $.ajax({
+                    url: '/api/v1.0/groups/'+ group_id + '/members',
+                    type: 'GET'
+                }).done(function(data) {
+                    for(var i = 0; i < data.leaders.length; i++) {
+                        if (data.leaders[i].id == '{{current_user.get_id()}}') {
+                            is_leader = true;
+                            break;
+                        }
+                    }
+                }).fail(function() {
+                    console.log("error");
+                });
+            }
+
+           }
+        });
+        $(document).ready(function() {
+            vm.loadAttendance('{{activity.id}}');
+            vm.checkIfLeader('{{activity.group_id}}');
+            vm.can_manage_activity = "{{ can_manage_activity }}" == "True" ? true : false;
+            vm.is_manager = "{{ is_manager }}" == "True" ? true : false;
+        });
+    </script>
+{% endblock scripts %}
