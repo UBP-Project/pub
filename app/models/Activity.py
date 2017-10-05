@@ -10,7 +10,6 @@ import os
 from PIL import Image
 from app.models import User, Role
 
-
 class Activity(db.Model):
 
     __tablename__ = 'activity'
