@@ -81,36 +81,14 @@ def get_activities():
     else:
         page = 1
 
-    query = Activity.query\
+    activities = Activity.query\
             .order_by(Activity.start_date.desc())\
             .paginate(page=page, per_page=9, error_out=False)
 
-    activities = []
-
-    current_date = datetime.utcnow()
-
-    for a in query.items:
-      activity = a.to_json()
-
-      start_date = dateutil.parser.parse(str(activity.get('start_date')))
-      end_date = dateutil.parser.parse(str(activity.get('end_date')))
-      
-      if end_date < current_date:
-        activity['status'] = 2 #done
-
-      elif (start_date <= current_date) and (end_date >= current_date):
-        activity['status'] = 1 #happening
-
-      else:
-        activity['status'] = 0 #upcoming
-
-      activities.append(activity)
-
-    print(activities)
     return jsonify({
-        'activities': activities,
-        'has_next': query.has_next,
-        'has_prev': query.has_prev
+        'activities': [activity.to_json() for activity in activities.items],
+        'has_next': activities.has_next,
+        'has_prev': activities.has_prev
     })
 
 @api.route('/activities', methods=['POST'])
