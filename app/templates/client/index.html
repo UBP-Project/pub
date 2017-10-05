@@ -25,12 +25,13 @@
                     </div>
                 </div>
 
-                <div v-for="feed in sorted_feeds">
+                <div v-for="(feed, index) in sorted_feeds">
                     <div class="row">
+
                         <div class="col-md-6" style="padding: 0 10px 20px 0;">
                             <div style="background-color: #fff; height: 320px;">
                                 
-                                <template v-if="feed.type === 'new_group'">
+                                <!-- <template v-if="feed.type === 'new_group'">
                                     <div style="height: 150px; max-width: 100%; overflow: hidden;">
                                         <img :src="'/static/uploads/covers/600x250/' + feed.cover_photo">
                                     </div>
@@ -82,19 +83,27 @@
                                         </a>
                                     </div>
                                     <span style="background-color: #fff; position: absolute; right: 20px; top: 10px; padding: 0 10px;"><h6><small>{{feed.timestamp}}</small></h6></span>
-                                </template>
+                                </template> -->
                                 <template v-else-if="feed.type === 'new_perk'">
-                                    <div class="row zoomify perks-inner-card" data-toggle="modal" :data-target="'#perks-' + feed.id">
-                                        <div class="col-md-5 no-padding perks-col-1">
-                                            <img :src="'../../static/uploads/perks_images/164x200/' + feed.image"/>
-                                        </div>
-                                        <div class="col-md-7 perks-col-2">
-                                            <h4 class="title"><strong>{{ feed.title }}</strong></h4>
-                                            <div class="perks-desc">
-                                                <p><small><i>Click for description</i></small></p>
+                                    <span style="background-color: #fff; position: absolute; right: 20px; top: 10px; padding: 0 10px;"><h6><small>{{feed.timestamp}}</small></h6></span>
+                                    <div style="padding: 10px 20px 0;"><h4><b style="color: #564C89;">UNIONBANK PERKS</b></h4></div>
+                                    <div class="text-center" style="padding: 10px 20px 5px;">
+                                        <div class="row perks-inner-card" data-toggle="modal" :data-target="'#perks-' + feed.id" style="box-shadow: 0 2px 2px #999;">
+                                            <div class="col-md-5 no-padding perks-col-1" style="height: 200px;">
+                                                <img :src="'../../static/uploads/perks_images/164x200/' + feed.image"/>
                                             </div>
-                                            <h5 class="title" class="perks-timestamp"><small>{{ feed.timestamp }}</small></h5>
+                                            <div class="col-md-7 perks-col-2 text-left">
+                                                <h4 class="title"><strong>{{ feed.title }}</strong></h4>
+                                                <div class="perks-desc">
+                                                    <p><small><i>Click for description</i></small></p>
+                                                </div>
+                                                <h5 class="title" class="perks-timestamp"><small>{{ feed.timestamp }}</small></h5>
+                                            </div>
                                         </div>
+                                        <hr style="margin: 7px; border-top: 1px solid #c0c0c0;" />
+                                        <a data-toggle="modal" :data-target="'#perks-' + feed.id" :title="'View ' + feed.title" style="text-decoration: none; cursor: pointer;">
+                                            <span style="font-size: 13px; color: #564C89;"><b>Toggle to view this new perks!</b><span>
+                                        </a>
                                     </div>
                                     <!-- PERKS MODAL -->
                                     <div class="modal fade grp-modal" :id="'perks-' + feed.id" role="dialog">
@@ -133,11 +142,42 @@
                                         </div>
                                     </div> <!-- END OF PERKS MODAL -->
                                 </template>
+                                <template v-if="feed.type === 'new_membership'">
+                                    <div style="height: 150px; max-width: 100%; overflow: hidden;">
+                                        <img :src="'/static/uploads/covers/600x250/' + feed.group_cover">
+                                    </div>
+
+                                    <div style="width: 100%; position: absolute; top: 65px; padding-right: 10px; left: -110px;" class="text-center">
+                                        <a :href="'/groups/' + feed.group_id" :title="'View ' + feed.group_name" style="text-decoration: none;">
+                                            <img v-if="feed.user_image" :src="'/static/uploads/group_icons/130x130/' + feed.user_image" style="border: 5px solid #fff; height: 130px; width: 130px;" class="img-circle">
+                                            <img v-else :src="'/static/images/pub-default-img.jpg'" style="border: 5px solid #fff; height: 130px; width: 130px;" class="img-circle">
+                                        </a>
+                                    </div>
+
+                                    <div style="width: 100%; position: absolute; top: 100px; padding-right: 10px; right: -130px;" class="text-center">
+                                        <a :href="'/groups/' + feed.group_id" :title="'View ' + feed.group_name" style="text-decoration: none;">
+                                            <img :src="'/static/uploads/group_icons/130x130/' + feed.group_icon" style="border: 5px solid #fff; height: 100px; width: 100px;" class="img-circle">
+                                        </a>
+                                    </div>
+                                    <div class="text-center" style="padding: 45px 20px 5px;">
+                                        <h4 class="title text-left">
+                                            <a :href="'/profile/' + feed.user_id" style="text-decoration: none;" :title="feed.user_firstname + ' ' + feed.user_lastname"> {{ feed.user_firstname }} {{ feed.user_lastname }} </a> joins
+                                            <a :href="'/groups/' + feed.group_id" :title="'View ' + feed.group_name" style="text-decoration: none; color: #333;">
+                                                <b>{{ feed.group_name }}</b>
+                                            </a>
+                                        </h4>
+
+                                        <h4 v-if="feed.about" class="title"><small>{{ feed.group_about }}</small></h4>
+                                        <h4 v-else class="title"><small><i>Group has no description</i></small></h4>
+                                        <hr style="margin: 7px; border-top: 1px solid #c0c0c0;" />
+                                        <a :href="'/profile/' + feed.user_id" :title="'View ' + feed.group_name" style="text-decoration: none;">
+                                            <span style="font-size: 13px; color: #564C89;"><b>New member of the group!</b><span>
+                                        </a>
+                                        <span style="background-color: #fff; position: absolute; right: 20px; top: 10px; padding: 0 10px;"><h6><small>{{feed.timestamp}}</small></h6></span>
+                                    </div>
+                                </template>
 
                                 <!--
-                                <template v-if="feed.type === 'new_membership'">
-                                    new  membership
-                                </template>
                                 <template v-if="feed.type === 'new_user_activity'">
                                     {{ feed.name }}
                                 </template> -->
@@ -149,7 +189,18 @@
 
                         <!-- This is the second column -->
                         <div class="col-md-6" style="padding: 0 0 10px 10px; top: 160px;">
-                            <div style="background-color: #fff; height: 320px;"></div>
+                            <div style="background-color: #fff; height: 320px;">
+                                
+                                
+                                <!--
+                                <template v-if="feed.type === 'new_membership'">
+                                    new  membership
+                                </template>
+                                <template v-if="feed.type === 'new_user_activity'">
+                                    {{ feed.name }}
+                                </template> -->
+
+                            </div>
                         </div>
                     </div>
                     
@@ -202,6 +253,11 @@
                         return new Date(b.timestamp) - new Date(a.timestamp);
                     });
                     return this.feeds;
+                },
+                is_odd: function(index) {
+                    var val = false;
+                    val = ((index % 2) != 0);
+                    return val;
                 }
             }
         });
