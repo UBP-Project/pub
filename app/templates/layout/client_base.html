@@ -10,10 +10,8 @@
     <title>PUB | {% block title %}{% endblock title %}</title>
 
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
-    <!-- <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script> -->
     <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/vue.js') }}"></script>
-    <!-- <script src="https://unpkg.com/vue"></script> -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.min.css') }}">
@@ -145,7 +143,7 @@
                             <a href="/groups">Interest Groups</a>
                         </li>
                         <li>
-                            <a href="/my-groups">My Interest Groups</a>
+                            <a href="/mygroups">My Interest Groups</a>
                         </li>
                     </ul>
                 </div>
@@ -156,7 +154,7 @@
                             <a href="/activities">Activities</a>
                         </li>
                         <li>
-                            <a href="#">My Activities</a>
+                            <a href="/myactivities">My Activities</a>
                         </li>
                     </ul>
                 </div>
