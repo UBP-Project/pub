@@ -22,15 +22,22 @@
                             <div class="col-md-3 col-lg-4 col-sm-6 card-container" v-on:click="loadActivityInfo(activity)">
                                 <div class="card zoomify" data-toggle="modal" :data-target="'#activity-joined-' + activity.id">
                                     <div class="card-img">
-                                        <img :src="activity_card_images_folder + activity.image" class="img-responsive" />
+                                        <template v-if="activity.status = '2'">
+                                            <img :src="activity_card_images_folder + activity.image" class="img-responsive activity-filter-marker"/>
+                                            <span class="activity-marker-icon">
+                                                    <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
+                                            </span>
+                                        </template>
+                                        <template v-else>
+                                            <img :src="activity_card_images_folder + activity.image" class="img-responsive"/>
+                                        </template>
                                     </div>
                                     <div class="card-desc">
                                         <h4 class="text-center title">{{ activity.title}}</h4>
-                                        <p v-if="activity.description">{{ activity.description }}</p>
-                                        <p v-else><i><small>No description</small></i></p>
+                                        <h5 class="text-center"><small class="text-wrap">{{ activity.start_date }}</small></h5>
                                     </div>
                                 </div>
-                            </div> <!-- END OF ACTIVITY CARD -->    
+                            </div> <!-- END OF ACTIVITY CARD -->
 
                             <!-- ACTIVITY MODAL -->
                             <div class="modal fade" :id="'activity-joined-' + activity.id" role="dialog">
@@ -44,10 +51,23 @@
                                         <!-- BODY -->
                                         <div class="modal-body">
                                             <div class="img-container">
-                                                <!-- <img src="{{ url_for('static',filename='uploads/activity_images/' + activity.image) }}" /> -->
-                                               <img :src="activity_modal_images_folder + activity.image" />
+                                               <template v-if="activity.status='2'">
+                                                    <img :src="activity_modal_images_folder + activity.image" class="img-responsive activity-filter-marker"/>
+                                                    <span class="activity-marker-icon">
+                                                            <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
+                                                    </span>
+                                                </template>
+                                                <template v-else>
+                                                    <img :src="activity_modal_images_folder + activity.image"/>
+                                                </template>
                                             </div>
-                                            <h2 class="text-center">{{ activity.title}}</h2>
+                                            <span class="row">
+                                                <span class="col-md-2 col-lg-2 col-sm-2 hidden-xs left-pad"><h2 class="text-center"></h2></span>
+                                                <span class="col-md-8 col-lg-8 col-sm-8"><h2 class="text-center">{{ activity.title}}</h2></span>
+                                                <span class="col-md-2 col-lg-2 col-sm-2 text-center right-pad">
+                                                        <a v-show="(is_manager || activity.isLeader)" :href="'/activities/' + activity.id" class="btn btn-style-3" title="Manage Activity"><i class="fa fa-gear"></i></a>
+                                                </span>
+                                            </span>
                                             <div class="content">
                                                 <ul class="nav nav-tabs" role="tablist">
                                                     <li role="presentation" class="active act-li">
@@ -63,24 +83,34 @@
 
                                                 <div class="tab-content">
                                                     <div role="tabpanel" class="tab-pane active" :id="'act-desc-joined-' + activity.id">
-                                                        <p v-if="activity.description">{{ activity.description }}</p>
-                                                        <p v-else><i><small>No description</small></i></p>
+                                                        <template v-if="activity.description">
+                                                            <div v-html="activity.description"></div>
+                                                        </template>
+                                                        <template v-else>
+                                                            <p><i><small>No description</small></i></p>
+                                                        </template>
                                                     </div>
                                                     <div role="tabpanel" class="tab-pane" :id="'act-interested-joined-' + activity.id">
                                                         <div class="row">
                                                             <template v-if="activity.interested_users.length > 0">
                                                                 <div v-for="interested_user in activity.interested_users" class="col-md-6 mini-container">
                                                                     <a :href="'/profile/' + interested_user.id">
-                                                                        <div>
-                                                                            <img v-if="interested_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+interested_user.image">
-                                                                            <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
-                                                                            <span>{{ interested_user.firstname }} {{interested_user.lastname}}</span>
+                                                                        <div class="row user-mini-box" :title="interested_user.firstname + ' ' + interested_user.lastname">
+                                                                            <span class="col-md-2 user-mini-box-img">
+                                                                                <img v-if="interested_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder + interested_user.image">
+                                                                                <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
+                                                                            </span>
+                                                                            <span class="col-md-9 title user-mini-box-name">
+                                                                                {{ interested_user.firstname }} {{ interested_user.lastname }}
+                                                                            </span>
+                                                                            <span class="col-md-1">
+                                                                            </span>
                                                                         </div>
                                                                     </a>
                                                                 </div>
                                                             </template>
                                                             <template v-else>
-                                                                 <div style="padding-left: 10px;">
+                                                                 <div class="no-users-activity">
                                                                     <i><small>No interested users.</small></i>
                                                                 </div>
                                                             </template>
@@ -91,16 +121,23 @@
                                                             <template v-if="activity.going_users.length > 0">
                                                                 <div v-for="going_user in activity.going_users" class="col-md-6 mini-container">
                                                                     <a :href="'/profile/' + going_user.id">
-                                                                        <div>
-                                                                            <img v-if="going_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+going_user.image">
-                                                                            <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
-                                                                            <span>{{ going_user.firstname }} {{ going_user.lastname }}</span>
+                                                                        <div class="row user-mini-box" :title="going_user.firstname + ' ' + going_user.lastname">
+                                                                            <span class="col-md-2 user-mini-box-img">
+                                                                                <img v-if="going_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+going_user.image">
+                                                                                <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
+                                                                            </span>
+                                                                            <span class="col-md-9 title user-mini-box-name">
+                                                                                {{ going_user.firstname }} {{ going_user.lastname }}
+                                                                            </span>
+                                                                            <span class="col-md-1 user-mini-box-mark">
+                                                                                <i v-show="going_user.attended" class="fa fa-check check-indicator"  title="Attended this activity"></i>
+                                                                            </span>
                                                                         </div>
                                                                     </a>
                                                                 </div>
                                                             </template>
                                                             <template v-else>
-                                                                 <div style="padding-left: 10px;">
+                                                                 <div class="no-users-activity">
                                                                     <i><small>No going users.</small></i>
                                                                 </div>
                                                             </template>
@@ -113,20 +150,28 @@
                                         <!-- FOOTER -->
                                         <div class="modal-footer">
 
-                                            <button v-if="activity.isInterested" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
-                                                NOT INTERESTED
-                                            </button>
-                                            <button v-else type="button" class="btn btn-style-2" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
-                                                INTERESTED
-                                            </button>
+                                            <span class="row">
+                                                <span class="col-md-4 activity-manage-btns">
+                                                    <a v-if="( (activity.status = '2') || is_manager || activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + activity.id + '/summary'" title="Activity Summary"><i class="fa fa-calendar-check-o"></i></a>
+                                                    <a v-show="(is_manager || activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + activity.id + '/attendance'" title="Attendance Checklist"><i class="fa fa-check-square-o"></i></a>
+                                                </span>
+                                                <span class="col-md-8 pull-right box-no-padding">
+                                                    <button v-if="activity.isInterested" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
+                                                        NOT INTERESTED
+                                                    </button>
+                                                    <button v-else type="button" class="btn btn-style-2" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
+                                                        INTERESTED
+                                                    </button>
 
-                                            <!-- GOING BTNS -->
-                                            <button v-if="activity.isGoing" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleGoing(activity)">
-                                                LEAVE ACTIVITY
-                                            </button>
-                                            <button v-else type="button" class="btn btn-style-2" :id="activity.id" value="cgoing" v-on:click="toggleGoing(activity)">
-                                                JOIN ACTIVITY
-                                            </button>
+                                                    <!-- GOING BTNS -->
+                                                    <button v-if="activity.isGoing" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleGoing(activity)">
+                                                        LEAVE ACTIVITY
+                                                    </button>
+                                                    <button v-else type="button" class="btn btn-style-2" :id="activity.id" value="cgoing" v-on:click="toggleGoing(activity)">
+                                                        JOIN ACTIVITY
+                                                    </button>
+                                                </span>
+                                            </span>
                                             <!-- END OF GOING BTNS -->
 
                                         </div> <!-- end of modal-footer -->
@@ -135,9 +180,9 @@
                             </div> <!-- end of ACTIVITY MODAL -->
                         </div> <!-- END of activity_list -->
 
-                        <div class="show-more-box col-md-12">
+                        <div class="col-md-12 text-center show-more-box">
                             <button v-show="hasNext" class="btn btn-style-3" v-on:click="loadActivities">Show More</button>
-                        </div> <!-- end of show more div -->
+                        </div>
 
                     </template>
 
@@ -175,12 +220,19 @@
                             <div class="col-md-3 col-lg-4 col-sm-6 card-container" v-on:click="loadActivityInfo(activity)">
                                 <div class="card zoomify" data-toggle="modal" :data-target="'#activity-interested-' + activity.id">
                                     <div class="card-img">
-                                        <img :src="activity_card_images_folder + activity.image" class="img-responsive" />
+                                        <template v-if="activity.status = '2'">
+                                            <img :src="activity_card_images_folder + activity.image" class="img-responsive activity-filter-marker"/>
+                                            <span class="activity-marker-icon">
+                                                    <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
+                                            </span>
+                                        </template>
+                                        <template v-else>
+                                            <img :src="activity_card_images_folder + activity.image" class="img-responsive"/>
+                                        </template>
                                     </div>
                                     <div class="card-desc">
                                         <h4 class="text-center title">{{ activity.title}}</h4>
-                                        <p v-if="activity.description">{{ activity.description }}</p>
-                                        <p v-else><i><small>No description</small></i></p>
+                                        <h5 class="text-center"><small class="text-wrap">{{ activity.start_date }}</small></h5>
                                     </div>
                                 </div>
                             </div> <!-- END OF ACTIVITY CARD -->
@@ -197,10 +249,23 @@
                                         <!-- BODY -->
                                         <div class="modal-body">
                                             <div class="img-container">
-                                                <!-- <img src="{{ url_for('static',filename='uploads/activity_images/' + activity.image) }}" /> -->
-                                               <img :src="activity_modal_images_folder + activity.image" />
+                                               <template v-if="activity.status='2'">
+                                                    <img :src="activity_modal_images_folder + activity.image" class="img-responsive activity-filter-marker"/>
+                                                    <span class="activity-marker-icon">
+                                                            <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
+                                                    </span>
+                                                </template>
+                                                <template v-else>
+                                                    <img :src="activity_modal_images_folder + activity.image"/>
+                                                </template>
                                             </div>
-                                            <h2 class="text-center">{{ activity.title}}</h2>
+                                            <span class="row">
+                                                <span class="col-md-2 col-lg-2 col-sm-2 hidden-xs left-pad"><h2 class="text-center"></h2></span>
+                                                <span class="col-md-8 col-lg-8 col-sm-8"><h2 class="text-center">{{ activity.title}}</h2></span>
+                                                <span class="col-md-2 col-lg-2 col-sm-2 text-center right-pad">
+                                                        <a v-show="(is_manager || activity.isLeader)" :href="'/activities/' + activity.id" class="btn btn-style-3" title="Manage Activity"><i class="fa fa-gear"></i></a>
+                                                </span>
+                                            </span>
                                             <div class="content">
                                                 <ul class="nav nav-tabs" role="tablist">
                                                     <li role="presentation" class="active act-li">
@@ -216,33 +281,64 @@
 
                                                 <div class="tab-content">
                                                     <div role="tabpanel" class="tab-pane active" :id="'act-desc-interested-' + activity.id">
-                                                        <p v-if="activity.description">{{ activity.description }}</p>
-                                                        <p v-else><i><small>No description</small></i></p>
+                                                        <template v-if="activity.description">
+                                                            <div v-html="activity.description"></div>
+                                                        </template>
+                                                        <template v-else>
+                                                            <p><i><small>No description</small></i></p>
+                                                        </template>
                                                     </div>
                                                     <div role="tabpanel" class="tab-pane" :id="'act-interested-interested-' + activity.id">
                                                         <div class="row">
-                                                            <div v-for="interested_user in activity.interested_users" class="col-md-6 mini-container">
-                                                                <a :href="'/profile/' + interested_user.id">
-                                                                    <div>
-                                                                        <img v-if="interested_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+interested_user.image">
-                                                                        <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
-                                                                        <span>{{ interested_user.firstname }} {{interested_user.lastname}}</span>
-                                                                    </div>
-                                                                </a>
-                                                            </div>
+                                                            <template v-if="activity.interested_users.length > 0">
+                                                                <div v-for="interested_user in activity.interested_users" class="col-md-6 mini-container">
+                                                                    <a :href="'/profile/' + interested_user.id">
+                                                                        <div class="row user-mini-box" :title="interested_user.firstname + ' ' + interested_user.lastname">
+                                                                            <span class="col-md-2 user-mini-box-img">
+                                                                                <img v-if="interested_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder + interested_user.image">
+                                                                                <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
+                                                                            </span>
+                                                                            <span class="col-md-9 title user-mini-box-name">
+                                                                                {{ interested_user.firstname }} {{ interested_user.lastname }}
+                                                                            </span>
+                                                                            <span class="col-md-1">
+                                                                            </span>
+                                                                        </div>
+                                                                    </a>
+                                                                </div>
+                                                            </template>
+                                                            <template v-else>
+                                                                 <div class="no-users-activity">
+                                                                    <i><small>No interested users.</small></i>
+                                                                </div>
+                                                            </template>
                                                         </div>
                                                     </div>
                                                     <div role="tabpanel" class="tab-pane" :id="'act-going-interested-' + activity.id">
                                                         <div class="row">
-                                                            <div v-for="going_user in activity.going_users" class="col-md-6 mini-container">
-                                                                <a :href="'/profile/' + going_user.id">
-                                                                    <div>
-                                                                        <img v-if="going_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+going_user.image">
-                                                                        <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
-                                                                        <span>{{ going_user.firstname }} {{ going_user.lastname }}</span>
-                                                                    </div>
-                                                                </a>
-                                                            </div>
+                                                            <template v-if="activity.going_users.length > 0">
+                                                                <div v-for="going_user in activity.going_users" class="col-md-6 mini-container">
+                                                                    <a :href="'/profile/' + going_user.id">
+                                                                        <div class="row user-mini-box" :title="going_user.firstname + ' ' + going_user.lastname">
+                                                                            <span class="col-md-2 user-mini-box-img">
+                                                                                <img v-if="going_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+going_user.image">
+                                                                                <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
+                                                                            </span>
+                                                                            <span class="col-md-9 title user-mini-box-name">
+                                                                                {{ going_user.firstname }} {{ going_user.lastname }}
+                                                                            </span>
+                                                                            <span class="col-md-1 user-mini-box-mark">
+                                                                                <i v-show="going_user.attended" class="fa fa-check check-indicator"  title="Attended this activity"></i>
+                                                                            </span>
+                                                                        </div>
+                                                                    </a>
+                                                                </div>
+                                                            </template>
+                                                            <template v-else>
+                                                                 <div class="no-users-activity">
+                                                                    <i><small>No going users.</small></i>
+                                                                </div>
+                                                            </template>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -252,20 +348,28 @@
                                         <!-- FOOTER -->
                                         <div class="modal-footer">
 
-                                            <button v-if="activity.isInterested" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
-                                                NOT INTERESTED
-                                            </button>
-                                            <button v-else type="button" class="btn btn-style-2" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
-                                                INTERESTED
-                                            </button>
+                                            <span class="row">
+                                                <span class="col-md-4 activity-manage-btns">
+                                                    <a v-if="( (activity.status = '2') || is_manager || activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + activity.id + '/summary'" title="Activity Summary"><i class="fa fa-calendar-check-o"></i></a>
+                                                    <a v-show="(is_manager || activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + activity.id + '/attendance'" title="Attendance Checklist"><i class="fa fa-check-square-o"></i></a>
+                                                </span>
+                                                <span class="col-md-8 pull-right box-no-padding">
+                                                    <button v-if="activity.isInterested" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
+                                                        NOT INTERESTED
+                                                    </button>
+                                                    <button v-else type="button" class="btn btn-style-2" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
+                                                        INTERESTED
+                                                    </button>
 
-                                            <!-- GOING BTNS -->
-                                            <button v-if="activity.isGoing" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleGoing(activity)">
-                                                LEAVE ACTIVITY
-                                            </button>
-                                            <button v-else type="button" class="btn btn-style-2" :id="activity.id" value="cgoing" v-on:click="toggleGoing(activity)">
-                                                JOIN ACTIVITY
-                                            </button>
+                                                    <!-- GOING BTNS -->
+                                                    <button v-if="activity.isGoing" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleGoing(activity)">
+                                                        LEAVE ACTIVITY
+                                                    </button>
+                                                    <button v-else type="button" class="btn btn-style-2" :id="activity.id" value="cgoing" v-on:click="toggleGoing(activity)">
+                                                        JOIN ACTIVITY
+                                                    </button>
+                                                </span>
+                                            </span>
                                             <!-- END OF GOING BTNS -->
 
                                         </div> <!-- end of modal-footer -->
@@ -274,9 +378,9 @@
                             </div> <!-- end of ACTIVITY MODAL -->
                         </div> <!-- END of activity_list -->
 
-                        <div class="show-more-box col-md-12">
+                        <div class="col-md-12 text-center show-more-box">
                             <button v-show="hasNext" class="btn btn-style-3" v-on:click="loadActivities">Show More</button>
-                        </div> <!-- end of show more div -->
+                        </div>
 
                     </template>
 
@@ -306,7 +410,9 @@
             hasNext: false,
             activity_card_images_folder: '/static/uploads/activity_images/260x200/',
             activity_modal_images_folder: '/static/uploads/activity_images/600x250/',
-            user_images_folder: '/static/uploads/profile_pictures/'
+            user_images_folder: '/static/uploads/profile_pictures/',
+            can_manage_activity: false,
+            is_manager: false
           },
           methods: {
             loadActivities: function() {
@@ -315,25 +421,39 @@
                     type: 'GET'
                 }).done(data => {
                     data.joined_activities.forEach((activity) => {
-                        // add neccessary field for display
                         activity.going_users      = [];
                         activity.interested_users = [];
                         activity.isInterested     = false;
                         activity.isGoing          = false;
+                        activity.isLeader         = false;
                     });
-                    this.activities.push.apply(this.activities, data.joined_activities); // append activities
+                    console.log(data);
+                    this.activities.push.apply(this.activities, data.joined_activities);
                     this.activities_page++;
                     this.hasNext = data.has_next;
                 });
-                //console.log(this.activities);
             },
             loadActivityInfo: function(activity) {
+                $.ajax({
+                    url: '/api/v1.0/groups/'+ activity.group_id + '/members',
+                    type: 'GET'
+                }).done(function(data) {
+                    for(var i = 0; i < data.leaders.length; i++) {
+                        if (data.leaders[i].id == '{{current_user.get_id()}}') {
+                            activity.isLeader = true;
+                            console.log('You are a leader of this group');
+                            break;
+                        }
+                    }
+                }).fail(function() {
+                    console.log("error");
+                });
                 // load going users
                 $.ajax({
                     url: '/api/v1.0/activities/'+ activity.id + '/participants/going',
                     type: 'GET'
                 }).done(function(data) {
-                    console.log(data);
+                    //console.log(data);
                     activity.going_users = data.going_users;
                 }).fail(function() {
                     console.log("error");
@@ -343,7 +463,8 @@
                     url: '/api/v1.0/activities/'+ activity.id + '/participants/interested',
                     type: 'GET'
                 }).done(function(data) {
-                     activity.interested_users = data;
+                    //console.log(data);
+                    activity.interested_users = data;
                 }).fail(function() {
                     console.log("error");
                 });
@@ -401,7 +522,9 @@
             hasNext: false,
             activity_card_images_folder: '/static/uploads/activity_images/260x200/',
             activity_modal_images_folder: '/static/uploads/activity_images/600x250/',
-            user_images_folder: '/static/uploads/profile_pictures/'
+            user_images_folder: '/static/uploads/profile_pictures/',
+            can_manage_activity: false,
+            is_manager: false
           },
           methods: {
             loadActivities: function() {
@@ -410,25 +533,39 @@
                     type: 'GET'
                 }).done(data => {
                     data.interested_activities.forEach((activity) => {
-                        // add neccessary field for display
                         activity.going_users      = [];
                         activity.interested_users = [];
                         activity.isInterested     = false;
                         activity.isGoing          = false;
+                        activity.isLeader         = false;
                     });
-                    this.activities.push.apply(this.activities, data.interested_activities); // append activities
+                    console.log(data);
+                    this.activities.push.apply(this.activities, data.interested_activities);
                     this.activities_page++;
                     this.hasNext = data.has_next;
                 });
-                //console.log(this.activities);
             },
             loadActivityInfo: function(activity) {
+                $.ajax({
+                    url: '/api/v1.0/groups/'+ activity.group_id + '/members',
+                    type: 'GET'
+                }).done(function(data) {
+                    for(var i = 0; i < data.leaders.length; i++) {
+                        if (data.leaders[i].id == '{{current_user.get_id()}}') {
+                            activity.isLeader = true;
+                            console.log('You are a leader of this group');
+                            break;
+                        }
+                    }
+                }).fail(function() {
+                    console.log("error");
+                });
                 // load going users
                 $.ajax({
                     url: '/api/v1.0/activities/'+ activity.id + '/participants/going',
                     type: 'GET'
                 }).done(function(data) {
-                    console.log(data);
+                    //console.log(data);
                     activity.going_users = data.going_users;
                 }).fail(function() {
                     console.log("error");
@@ -438,7 +575,8 @@
                     url: '/api/v1.0/activities/'+ activity.id + '/participants/interested',
                     type: 'GET'
                 }).done(function(data) {
-                     activity.interested_users = data;
+                    //console.log(data);
+                    activity.interested_users = data;
                 }).fail(function() {
                     console.log("error");
                 });
@@ -490,7 +628,11 @@
 
         $(document).ready(function() {
             joined.loadActivities();
+            joined.can_manage_activity = "{{ can_manage_activity }}" == "True" ? true : false;
+            joined.is_manager = "{{ is_manager }}" == "True" ? true : false;
             interested.loadActivities();
+            interested.can_manage_activity = "{{ can_manage_activity }}" == "True" ? true : false;
+            interested.is_manager = "{{ is_manager }}" == "True" ? true : false;
         });
     </script>
 {% endblock scripts %}

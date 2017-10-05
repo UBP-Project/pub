@@ -131,7 +131,9 @@ def new_user_activity(start_ts, end_ts):
         .join(Activity, Activity.id == User_Activity.activity_id)\
         .add_columns(Activity.title, Activity.image.label("act_image"),
                      Activity.id.label("act_id"),
-                     Activity.description.label("act_desc"))\
+                     Activity.description.label("act_desc"),
+                     Activity.start_date.label("act_start"),
+                     Activity.end_date.label("act_end"))\
         .filter(Follow.follower_id == current_user.get_id(),
                 User_Activity.timestamp > start_ts, User_Activity.timestamp < end_ts)\
         .order_by(Membership.timestamp.desc())\
@@ -149,8 +151,10 @@ def user_activity_to_json(item):
         'activity_id': item.act_id,
         'activity_title': item.title,
         'activity_description': item.act_desc,
-        'activity_image': item.act_desc,
-        'status': item.status,
+        'activity_image': item.act_image,
+        'activity_start': item.act_start,
+        'activity_end': item.act_end,
+        'status': 'going' if item.status == 1 else 'interested',
         'attended': item.attended
     }
     return f
