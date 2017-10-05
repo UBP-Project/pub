@@ -95,15 +95,18 @@ def get_activities():
       start_date = dateutil.parser.parse(str(activity.get('start_date')))
       end_date = dateutil.parser.parse(str(activity.get('end_date')))
       
-      if(start_date > current_date):
-        activity['status'] = 0 #upcoming
-      elif (start_date <= current_date) and (end_date > current_date):
-        activity['status'] = 1 #happening
-      else:
+      if end_date < current_date:
         activity['status'] = 2 #done
+
+      elif (start_date <= current_date) and (end_date >= current_date):
+        activity['status'] = 1 #happening
+
+      else:
+        activity['status'] = 0 #upcoming
 
       activities.append(activity)
 
+    print(activities)
     return jsonify({
         'activities': activities,
         'has_next': query.has_next,

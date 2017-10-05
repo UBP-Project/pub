@@ -39,7 +39,7 @@ activities = [
 	{
 		'title'			: 'Zumba Zumba',
 		'description'	: 'UnionBank Zumba sa Umaga',
-		'start_date'	: '2017-10-07',
+		'start_date'	: '2017-10-04',
 		'end_date'		: '2017-10-07',
 		'address'		: '48th Floor, UnionBank Plaza',
 		'group_id'		: Interest_Group.query.filter(Interest_Group.name=='Zumba').first().id,

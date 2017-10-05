@@ -229,13 +229,13 @@
                     type: 'GET'
                 }).done(data => {
                     data.activities.forEach((activity) => {
+                        console.log(activity);
                         activity.going_users      = [];
                         activity.interested_users = [];
                         activity.isInterested     = false;
                         activity.isGoing          = false;
                         activity.isLeader         = false;
                     });
-                    console.log(data);
                     this.activities.push.apply(this.activities, data.activities);
                     this.activities_page++;
                     this.hasNext = data.has_next;
