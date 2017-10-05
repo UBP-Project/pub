@@ -142,38 +142,7 @@ def create_group():
 @client.route('/mygroups/')
 @login_required
 def mygroups():
-    
-    isManager = User.query\
-            .join(Role, Role.id == User.role_id)\
-            .filter(Role.name == 'Manager', User.id == current_user.get_id()).first() is not None
-
-    interest_groups_query = Interest_Group.query\
-        .paginate(page = 1 , per_page = 12, error_out=False).items
-
-    interest_groups = []
-
-    for g in interest_groups_query:
-        group = g.to_json()
-        membership = Membership.query \
-            .filter(Membership.group_id == group['id'], Membership.user_id == current_user.get_id())\
-            .with_entities(
-                Membership.status
-            ).first()
-        if membership is not None:
-            group['status'] = membership.status
-        else:
-            group['status'] = None
-        interest_groups.append(group)
-
-    managed_groups = Interest_Group.query.join(Membership,\
-        Membership.group_id == Interest_Group.id).filter(Membership.level == 1,\
-        Membership.user_id == current_user.get_id()).all()
- 
-    interest_groups = Interest_Group.query.join(Membership,\
-        Membership.group_id == Interest_Group.id).filter(Membership.level != 1,\
-        Membership.user_id == current_user.get_id()).all()
-
-    return render_template("client/group/mygroups.html", interest_groups=interest_groups, managed_groups=managed_groups, user=current_user)
+    return render_template("client/group/mygroups.html", user=current_user, is_manager=is_manager())
 
 
 @client.route('/groups/<uuid(strict=False):id>/requests', methods=['POST', 'GET'])

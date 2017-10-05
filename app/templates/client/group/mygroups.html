@@ -10,10 +10,12 @@
 			<div class="group-box">
 
 				<h3>MY INTEREST GROUPS
-                    {% if isManager %}
-                    <a href="/groups/create">
-                        <button class="btn btn-style-2 btn-sm pull-right" title="Create Group"><i class="fa fa-plus"></i></button>
-                    </a>
+                    {% if is_manager %}
+                    <span class="pull-right">
+                        <a href="/groups/create" class="group-create-btn">
+                            <button class="btn btn-style-2 btn-sm" title="Create Perks">CREATE GROUP &nbsp;<i class="fa fa-plus"></i></button>
+                        </a>
+                    </span>
                     {% endif %}
                 </h3>
 
@@ -27,15 +29,14 @@
                         <div v-for="group in groups" id="group_list">
 
                             <!-- GROUP CARD -->
-                            <div class="col-md-3 col-sm-6 group-card" v-on:click="loadGroupInfo(group)">
-                                <div class="zoomify group-panel grp-icon" data-toggle="modal" :data-target="'#group-' + group.id" :id="group.id">
+                            <div class="col-md-3 col-sm-6 group-card" v-on:click="loadGroupInfo(group)" :id="group.id">
+                                <div class="zoomify group-panel grp-icon" data-toggle="modal" :data-target="'#group-' + group.id">
                                     <div class="group-img">
-                                        <img :src="group_card_covers_folder + group.cover_photo" style="height: 100%; width: 100%; min-width: 100%;">
-                                        <img class="img-icon" :src="group_card_icons_folder + group.group_icon" style="z-index: 5; margin-top: -180px;" width="120px" height="120px">
+                                        <img :src="group_card_covers_folder + group.cover_photo" class="group-card-img">
+                                        <img class="img-icon group-card-icon" :src="group_card_icons_folder + group.group_icon" width="120px" height="120px">
                                     </div>
                                     <div class="group-desc">
                                         <h4 class="title">{{ group.name }}</h4>
-                                        <!-- FIX THIS SECTION: SHOW NUMBER OF MEMBERS -->
                                         <p><i class="fa fa-user"></i> {{ group.population }}</p>
                                     </div>
                                 </div>
@@ -54,11 +55,17 @@
                                         <div class="modal-body">
 
                                             <div class="img-container text-center" :style="group.cover">
-                                                <img :src="group_modal_covers_folder + group.cover_photo" style="min-height: 100%;">
-                                                <img class="grp-icon-img" :src="group_modal_icons_folder + group.group_icon" style="position: absolute; top: 25px; margin-left: -100px;">
+                                                <img :src="group_modal_covers_folder + group.cover_photo" class="group-modal-img">
+                                                <img class="grp-icon-img group-modal-icon" :src="group_modal_icons_folder + group.group_icon">
                                             </div>
 
-                                            <h2 class="text-center">{{ group.name }}</h2>
+                                            <span class="row">
+                                                <span class="col-md-2 col-lg-2 col-sm-2 hidden-xs left-pad"><h2 class="text-center"></h2></span>
+                                                <span class="col-md-8 col-lg-8 col-sm-8"><h2 class="text-center">{{ group.name }}</h2></span>
+                                                <span class="col-md-2 col-lg-2 col-sm-2 text-center right-pad">
+                                                        <a v-show="(group.isLeader || is_manager)" :href="'/groups/' + group.id" class="btn btn-style-3 manage-group-link" title="Manage Group"><i class="fa fa-gear"></i></a>
+                                                </span>
+                                            </span>
 
                                             <div class="content">
                                                 <ul class="nav nav-tabs" role="tablist">
@@ -81,7 +88,7 @@
                                                     </div>
 
                                                     <div role="tabpanel" class="tab-pane" :id="'grp-members-' + group.id">
-                                                        <div class="row" style="padding-bottom: 30px;">
+                                                        <div class="row group-members-tab">
                                                             <h5><strong>Leaders</strong></h5>
                                                             <template v-if="group.leaders.length > 0">
                                                                 <div v-for="leader in group.leaders" class="col-md-6 mini-container">
@@ -95,12 +102,12 @@
                                                                 </div>
                                                             </template>
                                                             <template v-else>
-                                                                <div style="padding-left: 10px;">
+                                                                <div class="no-members-tab">
                                                                     <i><small>This group has no leaders.</small></i>
                                                                 </div>
                                                             </template>
                                                         </div>
-                                                        <div class="row" style="padding-bottom: 30px;">
+                                                        <div class="row group-members-panel">
                                                             <h5><strong>Members</strong></h5>
                                                             <template v-if="group.members.length > 0">
                                                                 <div v-for="member in group.members" class="col-md-6 mini-container">
@@ -114,7 +121,7 @@
                                                                 </div>
                                                             </template>
                                                             <template v-else>
-                                                                <div style="padding-left: 10px;">
+                                                                <div class="no-members-tab">
                                                                     <i><small>This group has no members.</small></i>
                                                                 </div>
                                                             </template>
@@ -122,20 +129,35 @@
                                                     </div>
 
                                                     <div role="tabpanel" class="tab-pane" :id="'grp-activities-' + group.id">
-                                                        <h5><strong>Group Activities</strong></h5>
                                                         <template v-if="group.activities.length > 0">
-                                                            <!-- ACTIVITY CARD -->
-                                                            <div v-for="activity in group.activities" class="col-md-3 col-lg-4 col-sm-6 card-container">
-                                                                <div style="height: 160px; border-radius: 5px; border: 1px solid #d0d0d0;">
-                                                                    <div style="height: 70%; overflow: hidden;">
-                                                                        <img :src="activity_images_folder + activity.image" class="img-responsive" style="min-height: 100%; max-width: 100%; border-radius: 5px 5px 0 0;" />
+    
+                                                            <div v-for="activity in group.activities">
+
+                                                                <!-- ACTIVITY CARD  -->
+                                                                <a :href="'/activities/' + activity.id" :title="activity.title">
+                                                                    <div class="col-md-3 col-lg-4 col-sm-6 card-container">
+                                                                        <div class="group-activity-card">
+                                                                            <div class="group-activity-inner-con">
+                                                                                <template v-if="false">
+                                                                                    <img :src="activity_card_images_folder + activity.image" class="img-responsive activity-filter-marker"/>
+                                                                                    <span class="activity-marker-icon">
+                                                                                            <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
+                                                                                    </span>
+                                                                                </template>
+                                                                                <template v-else>
+                                                                                    <img :src="activity_card_images_folder + activity.image" class="img-responsive not-done-activity"/>
+                                                                                </template>
+                                                                            </div>
+                                                                            <div class="group-activity-title">
+                                                                                <h5 class="text-center title">{{ activity.title }}</h5>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
-                                                                    <div style="height: 30%; padding: 7px;">
-                                                                        <h5 class="text-center title">{{ activity.title }}</h5>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <!-- END OF ACTIVITY CARD -->
+                                                                </a>
+                                                                <!-- END OF ACTIVITY CARD -->
+
+                                                            </div> <!-- end of activity listing -->
+                                                            
                                                         </template>
                                                         <template v-else>
                                                             <div>
@@ -208,15 +230,14 @@
                         <div v-for="group in groups" id="group_list">
 
                             <!-- GROUP CARD -->
-                            <div class="col-md-3 col-sm-6 group-card" v-on:click="loadGroupInfo(group)">
-                                <div class="zoomify group-panel grp-icon" data-toggle="modal" :data-target="'#group-' + group.id" :id="group.id">
+                            <div class="col-md-3 col-sm-6 group-card" v-on:click="loadGroupInfo(group)" :id="group.id">
+                                <div class="zoomify group-panel grp-icon" data-toggle="modal" :data-target="'#group-' + group.id">
                                     <div class="group-img">
-                                        <img :src="group_card_covers_folder + group.cover_photo" style="height: 100%; width: 100%; min-width: 100%;">
-                                        <img class="img-icon" :src="group_card_icons_folder + group.group_icon" style="z-index: 5; margin-top: -180px;" width="120px" height="120px">
+                                        <img :src="group_card_covers_folder + group.cover_photo" class="group-card-img">
+                                        <img class="img-icon group-card-icon" :src="group_card_icons_folder + group.group_icon" width="120px" height="120px">
                                     </div>
                                     <div class="group-desc">
                                         <h4 class="title">{{ group.name }}</h4>
-                                        <!-- FIX THIS SECTION: SHOW NUMBER OF MEMBERS -->
                                         <p><i class="fa fa-user"></i> {{ group.population }}</p>
                                     </div>
                                 </div>
@@ -235,11 +256,17 @@
                                         <div class="modal-body">
 
                                             <div class="img-container text-center" :style="group.cover">
-                                                <img :src="group_modal_covers_folder + group.cover_photo" style="min-height: 100%;">
-                                                <img class="grp-icon-img" :src="group_modal_icons_folder + group.group_icon" style="position: absolute; top: 25px; margin-left: -100px;">
+                                                <img :src="group_modal_covers_folder + group.cover_photo" class="group-modal-img">
+                                                <img class="grp-icon-img group-modal-icon" :src="group_modal_icons_folder + group.group_icon">
                                             </div>
 
-                                            <h2 class="text-center">{{ group.name }}</h2>
+                                            <span class="row">
+                                                <span class="col-md-2 col-lg-2 col-sm-2 hidden-xs left-pad"><h2 class="text-center"></h2></span>
+                                                <span class="col-md-8 col-lg-8 col-sm-8"><h2 class="text-center">{{ group.name }}</h2></span>
+                                                <span class="col-md-2 col-lg-2 col-sm-2 text-center right-pad">
+                                                        <a v-show="(group.isLeader || is_manager)" :href="'/groups/' + group.id" class="btn btn-style-3 manage-group-link" title="Manage Group"><i class="fa fa-gear"></i></a>
+                                                </span>
+                                            </span>
 
                                             <div class="content">
                                                 <ul class="nav nav-tabs" role="tablist">
@@ -262,7 +289,7 @@
                                                     </div>
 
                                                     <div role="tabpanel" class="tab-pane" :id="'grp-members-' + group.id">
-                                                        <div class="row" style="padding-bottom: 30px;">
+                                                        <div class="row group-members-tab">
                                                             <h5><strong>Leaders</strong></h5>
                                                             <template v-if="group.leaders.length > 0">
                                                                 <div v-for="leader in group.leaders" class="col-md-6 mini-container">
@@ -276,12 +303,12 @@
                                                                 </div>
                                                             </template>
                                                             <template v-else>
-                                                                <div style="padding-left: 10px;">
+                                                                <div class="no-members-tab">
                                                                     <i><small>This group has no leaders.</small></i>
                                                                 </div>
                                                             </template>
                                                         </div>
-                                                        <div class="row" style="padding-bottom: 30px;">
+                                                        <div class="row group-members-panel">
                                                             <h5><strong>Members</strong></h5>
                                                             <template v-if="group.members.length > 0">
                                                                 <div v-for="member in group.members" class="col-md-6 mini-container">
@@ -295,7 +322,7 @@
                                                                 </div>
                                                             </template>
                                                             <template v-else>
-                                                                <div style="padding-left: 10px;">
+                                                                <div class="no-members-tab">
                                                                     <i><small>This group has no members.</small></i>
                                                                 </div>
                                                             </template>
@@ -303,20 +330,35 @@
                                                     </div>
 
                                                     <div role="tabpanel" class="tab-pane" :id="'grp-activities-' + group.id">
-                                                        <h5><strong>Group Activities</strong></h5>
                                                         <template v-if="group.activities.length > 0">
-                                                            <!-- ACTIVITY CARD -->
-                                                            <div v-for="activity in group.activities" class="col-md-3 col-lg-4 col-sm-6 card-container">
-                                                                <div style="height: 160px; border-radius: 5px; border: 1px solid #d0d0d0;">
-                                                                    <div style="height: 70%; overflow: hidden;">
-                                                                        <img :src="activity_card_images_folder + activity.image" class="img-responsive" style="min-height: 100%; max-width: 100%; border-radius: 5px 5px 0 0;" />
+    
+                                                            <div v-for="activity in group.activities">
+
+                                                                <!-- ACTIVITY CARD  -->
+                                                                <a :href="'/activities/' + activity.id" :title="activity.title">
+                                                                    <div class="col-md-3 col-lg-4 col-sm-6 card-container">
+                                                                        <div class="group-activity-card">
+                                                                            <div class="group-activity-inner-con">
+                                                                                <template v-if="false">
+                                                                                    <img :src="activity_card_images_folder + activity.image" class="img-responsive activity-filter-marker"/>
+                                                                                    <span class="activity-marker-icon">
+                                                                                            <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
+                                                                                    </span>
+                                                                                </template>
+                                                                                <template v-else>
+                                                                                    <img :src="activity_card_images_folder + activity.image" class="img-responsive not-done-activity"/>
+                                                                                </template>
+                                                                            </div>
+                                                                            <div class="group-activity-title">
+                                                                                <h5 class="text-center title">{{ activity.title }}</h5>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
-                                                                    <div style="height: 30%; padding: 7px;">
-                                                                        <h5 class="text-center title">{{ activity.title }}</h5>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <!-- END OF ACTIVITY CARD -->
+                                                                </a>
+                                                                <!-- END OF ACTIVITY CARD -->
+
+                                                            </div> <!-- end of activity listing -->
+                                                            
                                                         </template>
                                                         <template v-else>
                                                             <div>
@@ -380,12 +422,13 @@
             groups: [],
             groups_page: 1,
             hasNext: false,
+            is_manager: false,
             group_modal_icons_folder: '/static/uploads/group_icons/200x200/',
             group_modal_covers_folder: '/static/uploads/covers/600x250/',
+            activity_modal_images_folder: '/static/uploads/activity_images/600x250/',
             group_card_icons_folder: '/static/uploads/group_icons/130x130/',
             group_card_covers_folder: '/static/uploads/covers/200x170/',
             activity_card_images_folder: '/static/uploads/activity_images/260x200/',
-            activity_modal_images_folder: '/static/uploads/activity_images/600x250/',
             user_images_folder: '/static/uploads/profile_pictures/',
             default_img: "background-image: url('/static/images/pub-default-img.jpg');"
           },
@@ -395,17 +438,17 @@
                     url: "{{ url_for('api.my_groups') }}" + "?page=" + this.groups_page,
                     type: 'GET'
                 }).done(data => {
+                    // console.log(data);
                     data.mygroups.forEach((group) => {
                         group.members = [];
                         group.leaders = [];
                         //group.managers = [];
                         group.activities = [];
                         group.membership_status = -1;
-                        //group.cover = "background-image: url('/static/uploads/covers/" + group.cover_photo + "');"
                         group.population = 0;
                         joined.groupPopulation(group);
+                        group.isLeader = false;
                     });
-
                     this.groups.push.apply(this.groups, data.mygroups);
                     this.groups_page++;
                     this.hasNext = data.has_next;
@@ -413,15 +456,17 @@
             },
             groupPopulation: function(group) {
 
+                // load group members
                 $.ajax({
                     url: "/api/v1.0/interest_groups/" + group.id + "/population",
                     type: 'GET'
                 }).done(data => {
-                    group.population += data.total;
+                    group.population = data.total;
                 });
 
             },
             loadGroupInfo: function(group) {
+
                 // load group members
                 $.ajax({
                     url: "/api/v1.0/groups/" + group.id + "/members",
@@ -429,6 +474,12 @@
                 }).done(data => {
                     group.members = data.members;
                     group.leaders = data.leaders;
+                    for(var i = 0; i < data.leaders.length; i++) {
+                        if (data.leaders[i].id == '{{current_user.get_id()}}') {
+                            group.isLeader = true;
+                            break;
+                        }
+                    }
                 });
 
                 // load Activities
@@ -445,7 +496,6 @@
                     type: 'GET'
                 }).done(data => {
                     group.membership_status = data.membership_status;
-                    //console.log("Grp_status = " + data.membership_status);
                 });
             },
             toggleGroupMembership: function(group) {
@@ -474,12 +524,13 @@
             groups: [],
             groups_page: 1,
             hasNext: false,
+            is_manager: false,
             group_modal_icons_folder: '/static/uploads/group_icons/200x200/',
             group_modal_covers_folder: '/static/uploads/covers/600x250/',
+            activity_modal_images_folder: '/static/uploads/activity_images/600x250/',
             group_card_icons_folder: '/static/uploads/group_icons/130x130/',
             group_card_covers_folder: '/static/uploads/covers/200x170/',
             activity_card_images_folder: '/static/uploads/activity_images/260x200/',
-            activity_modal_images_folder: '/static/uploads/activity_images/600x250/',
             user_images_folder: '/static/uploads/profile_pictures/',
             default_img: "background-image: url('/static/images/pub-default-img.jpg');"
           },
@@ -489,19 +540,19 @@
                     url: "{{ url_for('api.my_pending_groups') }}" + "?page=" + this.groups_page,
                     type: 'GET'
                 }).done(data => {
+                    // console.log(data);
                     data.mygroups.forEach((group) => {
                         group.members = [];
                         group.leaders = [];
                         //group.managers = [];
                         group.activities = [];
                         group.membership_status = -1;
-                        //group.cover = "background-image: url('/static/uploads/covers/" + group.cover_photo + "');"
                         group.population = 0;
                         pending.groupPopulation(group);
+                        group.isLeader = false;
                     });
-
                     this.groups.push.apply(this.groups, data.mygroups);
-                    this.groups_page = this.groups_page + 1;
+                    this.groups_page++;
                     this.hasNext = data.has_next;
                 });
             },
@@ -514,8 +565,10 @@
                 }).done(data => {
                     group.population = data.total;
                 });
+
             },
             loadGroupInfo: function(group) {
+
                 // load group members
                 $.ajax({
                     url: "/api/v1.0/groups/" + group.id + "/members",
@@ -523,7 +576,12 @@
                 }).done(data => {
                     group.members = data.members;
                     group.leaders = data.leaders;
-                    //console.log("Members: " + data);
+                    for(var i = 0; i < data.leaders.length; i++) {
+                        if (data.leaders[i].id == '{{current_user.get_id()}}') {
+                            group.isLeader = true;
+                            break;
+                        }
+                    }
                 });
 
                 // load Activities
@@ -540,7 +598,6 @@
                     type: 'GET'
                 }).done(data => {
                     group.membership_status = data.membership_status;
-                    //console.log("Grp_status = " + data.membership_status);
                 });
             },
             toggleGroupMembership: function(group) {
@@ -566,6 +623,8 @@
         $(document).ready(function() {
             joined.loadGroups();
             pending.loadGroups();
+            joined.is_manager = "{{ is_manager }}" == "True" ? true : false;
+            pending.is_manager = "{{ is_manager }}" == "True" ? true : false;
         });
 
     </script> 
