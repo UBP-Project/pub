@@ -67,13 +67,7 @@
 {% endblock %}
 {% block scripts %}
 <script>
-    {% if start_date %}
-        var picker_start = new Pikaday({ field: document.getElementById('datepicker_start'),
-            defaultDate: "{{ start_date }}"
-        });
-    {% else %}
-        var picker_start = new Pikaday({ field: document.getElementById('datepicker_start') });
-    {% endif %}
+    var picker_start = new Pikaday({ field: document.getElementById('datepicker_start') });
     var picker_end = new Pikaday({ field: document.getElementById('datepicker_end') });
 </script>
 {% endblock scripts %}

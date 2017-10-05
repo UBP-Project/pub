@@ -91,7 +91,7 @@
                         </div>
                     </div> <!-- END OF PERKS MODAL -->
 
-	                <template v-else>
+	                <template v-if="perks.length == 0">
 	                	<div class="col-md-12 no-content-box text-center">
                         	<h2><small>NO PERKS FOR TODAY</small></h2>
                     	</div>
