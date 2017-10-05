@@ -103,6 +103,9 @@
                 $("#description").text($("#description-editor").trumbowyg('html'));
             });
 
+            // load initial data
+            $("#description-editor").trumbowyg('html', $("#description").text());
+
             $("#image").on('change', function() {
                 var reader = new FileReader();
                  reader.onload = function()

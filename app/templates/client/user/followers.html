@@ -98,8 +98,10 @@
                             <img v-else src="../../../static/images/pub-default-img.jpg"
                                 style="width: 50px; height: 50px; border-radius: 25px;">
 
-                            <button v-if="follower.isFollowing" class="pull-right btn btn-style-1" style="margin-top: 20px; height: 30px; padding: 0px 15px;" v-on:click="toggleFollow(follower)">Following</button>
-                            <button v-else class="pull-right btn btn-style-2" style="margin-top: 20px; height: 30px; padding: 0px 15px;" v-on:click="toggleFollow(follower)">Follow</button>
+                            <div v-if="follower.id != cur_user_id">
+                                <button v-if="follower.isFollowing" class="pull-right btn btn-style-1" style="margin-top: 20px; height: 30px; padding: 0px 15px;" v-on:click="toggleFollow(follower)">Following</button>
+                                <button v-else class="pull-right btn btn-style-2" style="margin-top: 20px; height: 30px; padding: 0px 15px;" v-on:click="toggleFollow(follower)">Follow</button>
+                            </div>
                             
                             <h4>
                             <a :href="'../../profile/' + follower.id">
@@ -173,7 +175,8 @@
         var followers_app = new Vue({
             el: "#followers_app",
             data: {
-                followers: []
+                followers: [],
+                cur_user_id: "{{ current_user.get_id() }}"
             },
             methods: {
                 loadFollowers: function() {

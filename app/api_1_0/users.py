@@ -391,6 +391,9 @@ def follow_user(to_follow_id):
             description: Internal Server Error
     """
 
+    if current_user.get_id() == to_follow_id:
+        return jsonify({'error': 'Internal Server Error'}), 500
+
     follow = Follow(follower_id=current_user.get_id(), following_id=to_follow_id)
     db.session.add(follow)
 
@@ -450,7 +453,8 @@ def unfollow_user(to_unfollow_id):
 
 @api.route('/users/<string:id>/followers', methods=['GET'])
 def get_followers(id):
-    followers = User.query.get_or_404(id).get_followers()
+    user = User.query.get_or_404(id)
+    followers = user.get_followers()
     followings_current_user = current_user.get_following()
     
     for follower in followers:
@@ -473,11 +477,10 @@ def get_followers(id):
 
 @api.route('/users/<string:id>/followings', methods=['GET'])
 def get_followings(id):
-    followings = User.query.join(Follow, Follow.following_id == User.id)\
-        .order_by(Follow.timestamp.desc())\
-        .filter(Follow.follower_id == id).all()
-    followings_current_user = User.query.join(Follow, Follow.following_id == User.id)\
-        .filter(Follow.follower_id == current_user.get_id()).all()
+    user = User.query.get_or_404(id)
+    followings = user.get_following()
+    followings_current_user = current_user.get_following()
+
     for following in followings:
         if following in followings_current_user:
             following.isFollowing = True
