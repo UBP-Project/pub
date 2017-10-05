@@ -50,7 +50,7 @@
                     </template>
 
                     <!-- PERKS MODAL -->
-                    <div class="modal fade grp-modal" :id="'perks-' + perks.id" role="dialog">
+                    <div class="modal fade grp-modal" :id="'perks-' + perks.id" role="dialog" v-if="perks.length > 0">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <!-- HEADER -->
