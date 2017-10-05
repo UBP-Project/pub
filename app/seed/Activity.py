@@ -132,11 +132,15 @@ for a in activities:
 
 	image = Image.open(os.path.join('app/static/uploads/activity_images/', a.get('image')))
 	
-	image.save(file_path)
+	# image.save(file_path)
 
 	#resize image
 	for size in sizes:
-		new_image = image.resize(size, Image.ANTIALIAS)
+		basewidth = size[0]
+		wpercent = (basewidth/float(image.size[0]))
+		hsize = int((float(image.size[1])*float(wpercent)))
+
+		new_image = image.resize((basewidth,hsize), Image.ANTIALIAS)
 
 		directory = 'app/static/uploads/activity_images/' + str(size[0]) + 'x'+ str(size[1]) + '/'
 

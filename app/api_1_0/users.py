@@ -19,7 +19,7 @@ def get_users():
 
     parameters:
       - name: limit
-        in: query
+        in: queryget
         example: 1
         default: 10
 
@@ -456,7 +456,7 @@ def get_followers(id):
     user = User.query.get_or_404(id)
     followers = user.get_followers()
     followings_current_user = current_user.get_following()
-
+    
     for follower in followers:
         if follower in followings_current_user:
             follower.isFollowing = True

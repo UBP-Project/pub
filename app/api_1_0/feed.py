@@ -32,7 +32,8 @@ def feed():
         'new_activities': new_activity(start_ts, end_ts),
         'new_perks': new_perks(start_ts, end_ts),
         'new_groups': new_groups(start_ts, end_ts),
-        'new_memberships': membership(start_ts, end_ts)
+        'new_memberships': membership(start_ts, end_ts),
+        'new_user_activities': new_user_activity(start_ts, end_ts)
     })
 
 
@@ -119,17 +120,37 @@ def membership_to_json(feed_item):
     return membership
 
 
-def user_activity_feed():
+def new_user_activity(start_ts, end_ts):
     feed = Follow.query.join(User_Activity,
                              User_Activity.user_id == Follow.following_id)\
-        .add_columns(User_Activity.group_id, User_Activity.timestamp)\
+        .add_columns(User_Activity.status, User_Activity.attended,
+                     User_Activity.timestamp.label("ts"))\
         .join(User, Follow.following_id == User.id)\
         .add_columns(User.firstname, User.lastname, User.id.label("user_id"),
                      User.image.label("user_image"))\
         .join(Activity, Activity.id == User_Activity.activity_id)\
-        .add_columns(Interest_Group.name, Interest_Group.id.label("group_id"),
-                     Interest_Group.name.label("group_name"))\
-        .filter(Follow.follower_id == current_user.get_id())\
+        .add_columns(Activity.title, Activity.image.label("act_image"),
+                     Activity.id.label("act_id"),
+                     Activity.description.label("act_desc"))\
+        .filter(Follow.follower_id == current_user.get_id(),
+                User_Activity.timestamp > start_ts, User_Activity.timestamp < end_ts)\
         .order_by(Membership.timestamp.desc())\
         .distinct()
-    return [membership_to_json(f) for f in feed]
+    return [user_activity_to_json(f) for f in feed]
+
+
+def user_activity_to_json(item):
+    f = {
+        'timestamp': item.ts,
+        'user_id': item.user_id,
+        'user_firstname': item.firstname,
+        'user_lastname': item.lastname,
+        'user_image': item.user_image,
+        'activity_id': item.act_id,
+        'activity_title': item.title,
+        'activity_description': item.act_desc,
+        'activity_image': item.act_desc,
+        'status': item.status,
+        'attended': item.attended
+    }
+    return f

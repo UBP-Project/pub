@@ -10,10 +10,11 @@ from app.notification import Notif
 
 from app.utils import is_valid_extension
 from werkzeug.utils import secure_filename
+import dateutil.parser
+from datetime import datetime
 
 import os
 import uuid
-
 
 @api.route('/activities', methods=['GET'])
 @login_required
@@ -67,6 +68,10 @@ def get_activities():
                   example: 70a256f3628947508af68343821d78b6.jpg
                   default: None
                   description: File name of image in uploads/activity_image folder
+              status:
+                  type: integer
+                  example: 1
+                  description: Tell if the activity is (0) - upcoming, (1) - happening, (2) - done
 
     """
     ACTIVITY_PER_PAGE = 9
@@ -76,16 +81,34 @@ def get_activities():
     else:
         page = 1
 
-    activities = Activity.query\
+    query = Activity.query\
             .order_by(Activity.start_date.desc())\
             .paginate(page=page, per_page=9, error_out=False)
 
-    return jsonify({
-        'activities': [activity.to_json() for activity in activities.items],
-        'has_next': activities.has_next,
-        'has_prev': activities.has_prev
-    })
+    activities = []
 
+    current_date = datetime.utcnow()
+
+    for a in query.items:
+      activity = a.to_json()
+
+      start_date = dateutil.parser.parse(str(activity.get('start_date')))
+      end_date = dateutil.parser.parse(str(activity.get('end_date')))
+      
+      if(start_date > current_date):
+        activity['status'] = 0 #upcoming
+      elif (start_date <= current_date) and (end_date > current_date):
+        activity['status'] = 1 #happening
+      else:
+        activity['status'] = 2 #done
+
+      activities.append(activity)
+
+    return jsonify({
+        'activities': activities,
+        'has_next': query.has_next,
+        'has_prev': query.has_prev
+    })
 
 @api.route('/activities', methods=['POST'])
 @login_required
@@ -152,33 +175,27 @@ def new_activity():
             description: Internal Server Error
     """
 
-    image = request.files.get('image')
-    image_filename = secure_filename(image.filename)
-
-    if is_valid_extension(image_filename):
-        extension = image_filename.rsplit('.', 1)[1].lower()
-        image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
-        file_path = os.path.join(
-            'app/static/uploads/activity_images', image_hashed_filename)
-        image.save(file_path)
-        activity = Activity(
-            title=request.form.get('title'),
-            description=request.form.get('description'),
-            start_date=request.form.get('start_date'),
-            end_date=request.form.get('end_date'),
-            address=request.form.get('address'),
-            group_id=request.form.get('group_id'),
-            image=image_hashed_filename
-        )
-        db.session.add(activity)
+    activity = Activity(
+        title=request.form.get('title'),
+        description=request.form.get('description'),
+        start_date=request.form.get('start_date'),
+        end_date=request.form.get('end_date'),
+        address=request.form.get('address'),
+        group_id=request.form.get('group_id'),
+        image=image_hashed_filename
+    )
+    db.session.add(activity)
 
     try:
         db.session.commit()
+        db.session.refresh(activity)
+        if 'image' in request.files:
+          image = request.files.get('image')
+          activity.set_image(image)
         return "Success"  # change this to better message format
     except exc.SQLAlchemyError:
         db.session.rollback()
         return jsonify({'status': 'error'}), 500
-
 
 @api.route('/activities/<uuid(strict=False):id>', methods=['GET'])
 @login_required
@@ -233,7 +250,6 @@ def get_activity_by(id):
     """
     activity = Activity.query.get_or_404(id)
     return jsonify(activity.to_json())
-
 
 @api.route('/activities/<uuid(strict=False):id>', methods=['PUT'])
 @login_required
@@ -313,14 +329,7 @@ def edit_activity_by(id):
 
     if 'image' in request.files:
         image = request.files.get('image')
-        image_filename = secure_filename(image.filename)
-        if is_valid_extension(image_filename):
-            extension = image_filename.rsplit('.', 1)[1].lower()
-            image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
-            file_path = os.path.join(
-                'app/static/uploads/activity_images', image_hashed_filename)
-            image.save(file_path)
-            activity.image = image_hashed_filename
+        activity.set_image(activity)
 
     activity.title = request.form.get('title')
     activity.description = request.form.get('description')
@@ -335,7 +344,6 @@ def edit_activity_by(id):
     except exc.SQLAlchemyError:
         db.session.rollback()
         return jsonify({'status': 'error'}), 500
-
 
 @api.route('/activities/<uuid(strict=False):id>', methods=['DELETE'])
 @login_required
@@ -363,7 +371,6 @@ def delete_activity_by(id):
     activity = Activity.query.filter_by(id=id).delete()
     db.session.commit()
     return "Deleted"
-
 
 @api.route('/activities/<uuid(strict=False):id>/participants/going')
 @login_required
@@ -509,7 +516,6 @@ def going_to_activity_by(id):
             db.session().rollback()
             return jsonify({'status': 'Internal Server Error'}), 500
 
-
 @api.route('/activities/<uuid(strict=False):id>/participants/going', methods=['DELETE'])
 @login_required
 def cancel_going_to_activity_by(id):
@@ -555,7 +561,6 @@ def cancel_going_to_activity_by(id):
         print(e)
         db.session().rollback()
         return jsonify({'status': 'error'}), 500
-
 
 @api.route('/activities/<uuid(strict=False):id>/participants/interested')
 @login_required
@@ -638,7 +643,6 @@ def get_interested(id):
     return jsonify([
         user.to_json() for user in interested
     ])
-
 
 @api.route('/activities/<uuid(strict=False):id>/participants/interested', methods=['POST'])
 @login_required

@@ -75,22 +75,19 @@
                         type: 'GET'
                     }).done(data => {
                         console.log(data);
-                        data.new_activities.forEach((el) => {
-                            el.type = 'new_activity';
-                        });
-                        data.new_perks.forEach((el) => {
-                            el.type = 'new_perk';
-                        });
-                        data.new_groups.forEach((el) => {
-                            el.type = 'new_group';
-                        });
-                        data.new_memberships.forEach((el) => {
-                            el.type = 'new_membership';
-                        });
+
+                        // Add 'type' on each feed item
+                        data.new_activities.forEach((el) => el.type = 'new_activity');
+                        data.new_perks.forEach((el) => el.type = 'new_perk');
+                        data.new_groups.forEach((el) => el.type = 'new_group');
+                        data.new_memberships.forEach((el) => el.type = 'new_membership');
+                        data.new_user_activities.forEach((el) => el.type = 'new_user_activity');
+
                         this.feeds.push.apply(this.feeds, data.new_activities);
                         this.feeds.push.apply(this.feeds, data.new_perks);
                         this.feeds.push.apply(this.feeds, data.new_groups);
                         this.feeds.push.apply(this.feeds, data.new_memberships);
+                        this.feeds.push.apply(this.feeds, data.new_user_activities);
                     });
                 },
             },

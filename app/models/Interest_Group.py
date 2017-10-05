@@ -125,7 +125,11 @@ class Interest_Group(db.Model):
 
         # resize icon
         for size in icon_sizes:
-            new_image = icon.resize(size, Image.ANTIALIAS)
+            basewidth = size[0]
+            wpercent = (basewidth/float(icon.size[0]))
+            hsize = int((float(icon.size[1])*float(wpercent)))
+
+            new_image = icon.resize((basewidth,hsize), Image.ANTIALIAS)
 
             directory = 'app/static/uploads/group_icons/' + \
                 str(size[0]) + 'x' + str(size[1]) + '/'
@@ -157,7 +161,11 @@ class Interest_Group(db.Model):
 
         # resize icon
         for size in cover_sizes:
-            new_image = cover.resize(size, Image.ANTIALIAS)
+            basewidth = size[0]
+            wpercent = (basewidth/float(cover.size[0]))
+            hsize = int((float(cover.size[1])*float(wpercent)))
+            
+            new_image = cover.resize((basewidth,hsize), Image.ANTIALIAS)
 
             directory = 'app/static/uploads/covers/' + \
                 str(size[0]) + 'x' + str(size[1]) + '/'
