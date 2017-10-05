@@ -10,7 +10,7 @@
 
         <div class="row">
             <div class="col-md-12 cover-photo no-padding">
-                <img id="preview_cover" src="{{ url_for('static', filename='uploads/covers/' + group.cover_photo)}}" />
+                <img id="preview_cover" src="{{ url_for('static', filename='uploads/covers/600x250/' + group.cover_photo)}}" />
                 <button id="change-group-cover-btn" class="btn btn-xs btn-style-3">
                     Change Cover Photo
                 </button>
@@ -19,7 +19,7 @@
 
         <div class="row">
             <div class="col-md-12 group-icon text-center">
-                <img id="preview-group-icon" src="{{ url_for('static', filename='uploads/group_icons/' + group.group_icon) }}" />
+                <img id="preview-group-icon" src="{{ url_for('static', filename='uploads/group_icons/200x200/' + group.group_icon) }}" />
                 <span>Change Group Icon</span>
             </div>
         </div>

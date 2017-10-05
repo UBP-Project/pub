@@ -71,7 +71,7 @@
                 <br /><br ?>
                 <div class="col-md-12 no-padding-right text-center">
                     {% if activity.image %}
-                        <img id="preview" src="{{ url_for('static', filename='uploads/activity_images/' + activity.image) }}"/>
+                        <img id="preview" src="{{ url_for('static', filename='uploads/activity_images/600x250/' + activity.image) }}"/>
                     {% else %}
                         <img id="preview" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"/>
                     {% endif %}

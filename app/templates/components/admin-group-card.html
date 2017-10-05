@@ -2,7 +2,7 @@
 <div class="col-md-3 no-padding">
     <div class="group-card">
         {% if group.group_icon %}
-            <img src="{{ url_for('static', filename='uploads/group_icons/' + group.group_icon) }} "/>
+            <img src="{{ url_for('static', filename='uploads/group_icons/200x200/' + group.group_icon) }} "/>
         {% else %}
             <img src="{{ url_for('static', filename='images/pub-default-img.jpg') }} "/>
         {% endif %}
