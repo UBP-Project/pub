@@ -5,10 +5,11 @@
 {% block content %}
     <div class="row admin-page" style="background-color: white">
         {{ group_header(group, current_user) }}
-        <div class="row">
+        <div class="row group-box">
             
-            <div class="col-md-12">
-                <h2>Group Activities</h2>
+            <div class="col-md-12 no-padding">
+                <h3>Group Activities</h3>
+                <br>
             </div>
 
             {% if activities|length > 0 %}
@@ -29,7 +30,7 @@
                 {% endfor %}
             {% else %}
                 <div class="col-md-12">
-                    <h3>This group has no Acitivities.</h3>
+                    <h5>This group has no Acitivities.</h5>
                 </div>
             {% endif %}
         </div>

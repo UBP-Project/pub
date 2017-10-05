@@ -13,35 +13,41 @@
 
     {% if current_user.is_administrator() %}
         <div class="row">
-            <div class="col-md-6">
-                <a href="{{ url_for('admin.group', id=group.id) }}"><h1>{{ group["name"] }}</h1></a>
-                <h5><i>{{ group["about"] }}</i></h5>
-                <a class="btn btn-sm btn-style-1" href="{{ url_for('admin.update_group', id=group.id) }}">Edit this Group</a>
+            <div class="col-md-4">
+                <a href="{{ url_for('admin.group', id=group.id) }}"><h2>{{ group["name"] }}</h2></a>
+                <small>About this Group</small>
+                <h6>{{ group["about"] }}</h6>
                 <br /><br /><br />
             </div>
-            <div class="col-md-6 text-right group-controls" style="padding: 20px;">
+            <div class="col-md-offset-2 col-md-6 text-right group-controls" style="padding: 20px;">
                 <a href="{{ url_for('admin.group_requests', id=group.id) }}" class="btn btn-sm btn-style-3">
                     Requests
                 </a>
                 <a href="{{ url_for('admin.group_members', id=group.id) }}" class="btn btn-sm btn-style-3">
                     Members
                 </a>
+                <a class="btn btn-sm btn-style-1" href="{{ url_for('admin.update_group', id=group.id) }}">
+                    <span class="fa fa-cog"></span>
+                </a>
             </div>
         </div>
     {% else %}
         <div class="row">
-            <div class="col-md-6">
-                <a href="{{ url_for('client.group', id=group.id) }}"><h1>{{ group["name"] }}</h1></a>
-                <h5><i>{{ group["about"] }}</i></h5>
-                <a class="btn btn-sm btn-style-1" href="{{ url_for('client.update_group', id=group.id) }}">Edit this Group</a>
+            <div class="col-md-4">
+                <a href="{{ url_for('client.group', id=group.id) }}"><h2>{{ group["name"] }}</h2></a>
+                <small>About this Group</small>
+                <h6>{{ group["about"] }}</h6>
                 <br /><br /><br />
             </div>
-            <div class="col-md-6 text-right group-controls" style="padding: 20px;">
+            <div class="col-md-offset-2 col-md-6 text-right group-controls" style="padding: 20px;">
                 <a href="{{ url_for('client.group_requests', id=group.id) }}" class="btn btn-sm btn-style-3">
                     Requests
                 </a>
                 <a href="{{ url_for('client.group_members', id=group.id) }}" class="btn btn-sm btn-style-3">
                     Members
+                </a>
+                <a class="btn btn-sm btn-style-1" href="{{ url_for('client.update_group', id=group.id) }}">
+                    <span class="fa fa-cog"></span>
                 </a>
             </div>
         </div>
