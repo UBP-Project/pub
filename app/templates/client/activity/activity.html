@@ -4,7 +4,7 @@
 {% block title %} {{ activity.title }} {% endblock title %}
 
 {% block content %}
-    <div id="activity_app" class="row activity-page" style="background-color: white">
+    <div id="activity_app" class="row activity-page group-box" style="background-color: white">
 
     <div class="col-md-12 activity-header" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), url('{{ url_for('static', filename='uploads/activity_images/600x250/' + activity.image ) }}'); background-repeat: no-repeat !important; background-size: cover !important;">
         <div class="col-md-4 no-padding">
@@ -54,6 +54,7 @@
     <div class="col-md-8 col-md-offset-2 text-center activity-about">
         <hr />
         <h3><strong>About this Activity</strong></h3>
+        <br>
         <div class="text-center">
             {{ activity.description }}
         </div>
@@ -62,6 +63,7 @@
     <div class="col-md-10 col-md-offset-1 text-center activity-about">
         <hr />
         <h3><strong>{{ going_users|length }} people are Going to this Activity</strong></h3>
+        <br>
         <div>
             {% for user in going_users %}
                 {{ user_image_popup(user) }}
@@ -72,6 +74,7 @@
     <div class="col-md-10 col-md-offset-1 text-center activity-about">
         <hr />
         <h3><strong>{{ interested_users|length }} people are Interested to this Activity</strong></h3>
+        <br>
         <div>
             {% for user in interested_users %}
                 {{ user_image_popup(user) }}
