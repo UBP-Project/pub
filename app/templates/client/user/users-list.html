@@ -1,9 +1,0 @@
-<h3>For easy access to other users</h3>
-<h5>Will delete soon once searching for users is done</h5>
-
-{% for user in users %}
-    <a href="{{ url_for('client.view_profile', id=user.id) }}">
-        {{ user.firstname }} {{ user.lastname }}
-    </a>
-    <br />
-{% endfor %}

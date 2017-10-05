@@ -140,9 +140,3 @@ def points(id):
     return render_template("client/user/points.html", user=user, current_user=current_user,\
         is_following=is_following, followers_count=len(followers), following_count=following_count,\
         followers=followers)
-
-@client.route('/users-list')
-@login_required
-def users_list():
-    users = User.query.all()
-    return render_template('client/user/users-list.html', users=users)
