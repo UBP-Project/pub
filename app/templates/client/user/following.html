@@ -23,15 +23,10 @@
 
         <div class="col-md-12 text-right cover">
 
-            <!-- Check if user has set cover photo
-            <img src="{{ url_for('static', filename='images/building.png') }}"
-                style="width: 100%; height: 250px; z-index: 1;"/> -->
-
-            <!-- hold the trianlify cover photo -->
-            <div id="trianglify-cover" class="col-md-12 text-right" style="height: 250px; background-color: white; padding: 0px;">
+            <div id="trianglify-cover" class="col-md-12 text-right tri-cover-photo">
             </div>
 
-            <div id="profile-btns" style="padding: 0px 20px;">
+            <div id="profile-btns" class="profile-buttons">
 
                 {% if user.total_points() > 0 %}
                     <a href="{{ url_for('client.points', id=user.id) }}" class="btn btn-xs following-count">
@@ -46,70 +41,69 @@
                 {% endif %}
 
                 {% if followings_count > 0 %}
-                    <a href="{{ url_for('client.following', id=user.id) }}" class="btn btn-xs" style="padding: 0px 20px;">
+                    <a href="{{ url_for('client.following', id=user.id) }}" class="btn btn-xs profile-buttons">
                         <h6>Following</h6>
                         <h4>{{ followings_count }}</h4>
                     </a>
                 {% else %}
-                    <div class="btn btn-xs" style="padding: 0px 20px;">
+                    <div class="btn btn-xs profile-buttons">
                         <h6>Following</h6>
                         <h4>{{ followings_count }}</h4>
                     </div>
                 {% endif %}
 
-                {% if followings_count > 0 %}
-                    <a href="{{ url_for('client.followers', id=user.id) }}" class="btn btn-xs" style="margin-right: 50px">
+                {% if followers_count > 0 %}
+                    <a href="{{ url_for('client.followers', id=user.id) }}" class="btn btn-xs profile-follower-btn">
                         <h6>Followers</h6>
                         <h4>{{ followers_count }}</h4>
                     </a>
                 {% else %}
-                    <div class="btn btn-xs" style="margin-right: 50px">
+                    <div class="btn btn-xs profile-follower-btn">
                         <h6>Followers</h6>
                         <h4>{{ followers_count }}</h4>
                     </div>
                 {% endif %}
 
                 {% if current_user['id'] == user['id'] %}
-                    <a href="{{ url_for('client.edit_profile', id=user.id) }}" id="btn-edit-profile" class="btn btn-style-3" style="width: 100px">Edit Profile</a>
+                    <a href="{{ url_for('client.edit_profile', id=user.id) }}" id="btn-edit-profile" class="btn btn-style-3 profile-edit-btn">Edit Profile</a>
                 {% endif %}
 
 
                 {% if current_user['id'] != user['id'] and is_following != True %}
-                    <a id="btn-follow" class="btn btn-style-2" style="width: 100px">Follow</a>
+                    <a id="btn-follow" class="btn btn-style-2 profile-edit-btn">Follow</a>
                 {% endif %}
 
                 {% if current_user['id'] != user['id'] and is_following == True %}
-                    <a id="btn-unfollow" class="btn btn-style-1" style="width: 100px">Following</a>
+                    <a id="btn-unfollow" class="btn btn-style-1 profile-edit-btn">Following</a>
                 {% endif %}
             </div>
         </div>
 
-
         <div class="row">
             {% raw %}
-            <div id="followings_app" class="col-md-offset-4 col-md-8" style="padding: 20px 0px;">
+            <div id="followings_app" class="col-md-offset-4 col-md-8 follow-root">
                 <div class="row">
-                    <div v-for="following in followings" class="col-md-6" style="padding: 0px;">
-                        <div style="background-color: white; padding: 10px; margin: 5px;">
-                            <img v-if="following.image" :src="'../../../static/uploads/profile_pictures/' + following.image"
-                                style="width: 50px; height: 50px; border-radius: 25px;">
+                    <div v-for="following in followings" class="col-md-6 mini-card-con">
+                        <div class="follow-card">
 
-                            <img v-else src="../../../static/images/pub-default-img.jpg"
-                                style="width: 50px; height: 50px; border-radius: 25px;">
+                            <img v-if="following.image" :src="'../../../static/uploads/profile_pictures/' + following.image" class="follow-img">
+
+                            <img v-else src="../../../static/images/pub-default-img.jpg" class="follow-img">
 
                             <div v-if="following.id != cur_user_id">
-                                <button v-if="following.isFollowing" class="pull-right btn btn-style-1" style="margin-top: 20px; height: 30px; padding: 0px 15px;" v-on:click="toggleFollow(following)">Following</button>
-                                <button v-else class="pull-right btn btn-style-2" style="margin-top: 20px; height: 30px; padding: 0px 15px;" v-on:click="toggleFollow(following)">Follow</button>
+                                <button v-if="following.isFollowing" class="pull-right btn btn-style-1 mini-follow-btn" v-on:click="toggleFollow(following)">Following</button>
+                                <button v-else class="pull-right btn btn-style-2 mini-follow-btn" v-on:click="toggleFollow(following)">Follow</button>
                             </div>
-
+                            
                             <h4>
                             <a :href="'../../profile/' + following.id">
                                 {{ following.firstname }} {{ following.lastname }}
                             </a>
                             </h4>
 
-                            <p style="font-size: 12px;">{{ following.position }}<br />
+                            <p class="mini-follow-position">{{ following.position }}<br />
                             {{ following.department }}</p>
+                            
                         </div>
                     </div>
                 </div>
@@ -122,7 +116,7 @@
 {% endblock content %}
 
 {% block scripts %}
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/trianglify/0.4.0/trianglify.min.js"></script> -->
+    
     <script>
         var pattern = Trianglify({
             width: $("#trianglify-cover").width(),
@@ -130,9 +124,7 @@
             seed: "{{ user['id'] }}"
         });
         $("#trianglify-cover").append(pattern.svg())
-    </script>
-    <script>
-        // Current Profile follow or unfollow
+
         function set_buttons() {
             $("#btn-follow").on('click', function() {
                 $.ajax({
@@ -165,11 +157,7 @@
                 });
 
         }
-        // initialize buttons
-        set_buttons();
-    </script>
-    <script>
-        // followings follow or unfollow
+
         var followings_app = new Vue({
             el: "#followings_app",
             data: {
@@ -206,6 +194,7 @@
             }
         });
         $(document).ready(function() {
+            set_buttons();
             followings_app.loadFollowings();
         })
     </script>
