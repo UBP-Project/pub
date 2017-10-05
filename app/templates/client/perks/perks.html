@@ -27,7 +27,7 @@
                         <div v-for="perk in perks" class="col-md-6 perks-card" v-on:click="perkClicked(perk)">
                             <div class="row zoomify perks-inner-card" data-toggle="modal" :data-target="'#perks-' + perks.id">
                                 <div class="col-md-5 no-padding perks-col-1">
-                                    <img :src="'../../static/uploads/perks_images/' + perk.image"/>
+                                    <img :src="'../../static/uploads/perks_images/164x200/' + perk.image"/>
                                 </div>
                                 <div class="col-md-7 perks-col-2">
                                     <h4 class="title"><strong>{{ perk.title }}</strong></h4>
@@ -63,7 +63,7 @@
 
                                     <div class="row">
                                         <div class="col-md-5 no-padding perks-modal-body">
-                                            <img :src="'../../static/uploads/perks_images/' + perk.image"/>
+                                            <img :src="'../../static/uploads/perks_images/375x240/' + perk.image"/>
                                         </div>
                                         <div class="col-md-7 perks-modal-content">
                                             <h4 class="title"><strong>{{ perk.title }}</strong></h4>

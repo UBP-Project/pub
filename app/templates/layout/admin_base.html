@@ -58,12 +58,6 @@
         ]
     %}
     
-    {% set points_links = [
-            ('View Pointing Rules', url_for('admin.points'))
-        ]
-    %}
-
-
 <!--     {% for message in get_flashed_messages() %}
         <div class="alert alert-warning">
             {{ message }}
@@ -128,7 +122,7 @@
                 {% endif %}
             {% endfor %}
 
-            <h5>Points</h5>
+          <!--   <h5>Points</h5>
             {% for link in points_links %}
                 {% if request.path == link[1] %}
                     <a class="btb btn-sidebar active" href={{link[1]}}>{{ link[0] }}</a>
@@ -137,7 +131,7 @@
                 {% endif %}
             {% endfor %}
 
-            <hr />
+            <hr /> -->
         </div>
         <div class="col-md-9" style="padding: 0px">
  <!--            <div class="row admin-header">

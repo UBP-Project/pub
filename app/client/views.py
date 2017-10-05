@@ -80,13 +80,6 @@ def perks():
 def create_perks():
     form = CreatePerkForm()
     if form.validate_on_submit():
-        image = form.image.data
-        image_filename = secure_filename(image.filename)
-        extension = image_filename.rsplit('.', 1)[1].lower()
-        image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
-        file_path             = os.path.join('app/static/uploads/perks_images', image_hashed_filename)
-        image.save(file_path)
-
         perk = Perks(
             title=form.title.data,
             description=form.description.data,
@@ -94,6 +87,8 @@ def create_perks():
         )
         db.session.add(perk)
         db.session.commit()
+        db.session.refresh(perk)
+        perk.set_image(form.image.data)
         return redirect(url_for("client.perks"))
     return render_template("client/perks/create.html", form=form)
 
@@ -109,13 +104,7 @@ def edit_perk(id):
 
     if form.validate_on_submit():
         if form.image.data:
-            image = form.image.data
-            image_filename = secure_filename(image.filename)
-            extension = image_filename.rsplit('.', 1)[1].lower()
-            image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
-            file_path             = os.path.join('app/static/uploads/perks_images', image_hashed_filename)
-            image.save(file_path)
-            perk.image = image_hashed_filename
+            perk.set_image(form.image.data)
         perk.title = form.title.data
         perk.description = form.description.data
         db.session.commit()
