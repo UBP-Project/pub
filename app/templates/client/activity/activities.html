@@ -57,7 +57,7 @@
                                         <!-- BODY -->
                                         <div class="modal-body">
                                             <div class="img-container">
-                                               <template v-if="activity.status = '2'">
+                                               <template v-if="activity.status='2'">
                                                     <img :src="activity_modal_images_folder + activity.image" class="img-responsive activity-filter-marker"/>
                                                     <span class="activity-marker-icon">
                                                             <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
@@ -101,10 +101,16 @@
                                                             <template v-if="activity.interested_users.length > 0">
                                                                 <div v-for="interested_user in activity.interested_users" class="col-md-6 mini-container">
                                                                     <a :href="'/profile/' + interested_user.id">
-                                                                        <div>
-                                                                            <img v-if="interested_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+interested_user.image">
-                                                                            <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
-                                                                            <span>{{ interested_user.firstname }} {{interested_user.lastname}}</span>
+                                                                        <div class="row user-mini-box" :title="interested_user.firstname + ' ' + interested_user.lastname">
+                                                                            <span class="col-md-2 user-mini-box-img">
+                                                                                <img v-if="interested_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder + interested_user.image">
+                                                                                <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
+                                                                            </span>
+                                                                            <span class="col-md-9 title user-mini-box-name">
+                                                                                {{ interested_user.firstname }} {{ interested_user.lastname }}
+                                                                            </span>
+                                                                            <span class="col-md-1">
+                                                                            </span>
                                                                         </div>
                                                                     </a>
                                                                 </div>
@@ -120,20 +126,20 @@
                                                         <div class="row">
                                                             <template v-if="activity.going_users.length > 0">
                                                                 <div v-for="going_user in activity.going_users" class="col-md-6 mini-container">
-                    <a :href="'/profile/' + going_user.id">
-                        <div class="row" style="padding: 8px 20px; margin: 0;" :title="going_user.firstname + ' ' + going_user.lastname">
-                            <span class="col-md-2" style="padding: 0;">
-                                <img v-if="going_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+going_user.image">
-                                <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
-                            </span>
-                            <span class="col-md-9 title" style="padding: 5px 10px;">
-                                {{ going_user.firstname }} {{ going_user.lastname }}
-                            </span>
-                            <span class="col-md-1" style="padding: 5px;">
-                                <i v-show="going_user.attended" class="fa fa-check" style="color: #39ad39; font-size: 15px;" title="Attended this activity"></i>
-                            </span>
-                        </div>
-                    </a>
+                                                                    <a :href="'/profile/' + going_user.id">
+                                                                        <div class="row user-mini-box" :title="going_user.firstname + ' ' + going_user.lastname">
+                                                                            <span class="col-md-2 user-mini-box-img">
+                                                                                <img v-if="going_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+going_user.image">
+                                                                                <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
+                                                                            </span>
+                                                                            <span class="col-md-9 title user-mini-box-name">
+                                                                                {{ going_user.firstname }} {{ going_user.lastname }}
+                                                                            </span>
+                                                                            <span class="col-md-1 user-mini-box-mark">
+                                                                                <i v-show="going_user.attended" class="fa fa-check check-indicator"  title="Attended this activity"></i>
+                                                                            </span>
+                                                                        </div>
+                                                                    </a>
                                                                 </div>
                                                             </template>
                                                             <template v-else>
@@ -151,11 +157,11 @@
                                         <div class="modal-footer">
 
                                             <span class="row">
-                                                <span class="col-md-4" style="padding: 0; text-align: left;">
+                                                <span class="col-md-4 activity-manage-btns">
                                                     <a v-if="( (activity.status = '2') || is_manager || activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + activity.id + '/summary'" title="Activity Summary"><i class="fa fa-calendar-check-o"></i></a>
                                                     <a v-show="(is_manager || activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + activity.id + '/attendance'" title="Attendance Checklist"><i class="fa fa-check-square-o"></i></a>
                                                 </span>
-                                                <span class="col-md-8 pull-right" style="padding: 0;">
+                                                <span class="col-md-8 pull-right box-no-padding">
                                                     <button v-if="activity.isInterested" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
                                                         NOT INTERESTED
                                                     </button>
