@@ -85,7 +85,6 @@
 {% endblock content %}
 
 {% block scripts %}
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/trianglify/0.4.0/trianglify.min.js"></script> -->
     <script>
         var pattern = Trianglify({
             width: $("#trianglify-cover").width(),
@@ -93,8 +92,7 @@
             seed: "{{ user['id'] }}"
         });
         $("#trianglify-cover").append(pattern.svg())
-    </script>
-    <script>
+
         function set_buttons() {
             $("#btn-follow").on('click', function() {
                 $.ajax({
@@ -127,7 +125,7 @@
                 });
 
         }
-        // initialize buttons
+        
         set_buttons();
     </script>
 {% endblock scripts %}
