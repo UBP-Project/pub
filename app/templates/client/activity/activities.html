@@ -224,13 +224,11 @@
           },
           methods: {
             loadActivities: function() {
-                //console.log(this.activities);
                 $.ajax({
                     url: "{{ url_for('api.get_activities')}}" + "?page=" + this.activities_page,
                     type: 'GET'
                 }).done(data => {
                     data.activities.forEach((activity) => {
-                        // add neccessary field for display
                         activity.going_users      = [];
                         activity.interested_users = [];
                         activity.isInterested     = false;
@@ -238,20 +236,16 @@
                         activity.isLeader         = false;
                     });
                     console.log(data);
-                    this.activities.push.apply(this.activities, data.activities); // append activities
+                    this.activities.push.apply(this.activities, data.activities);
                     this.activities_page++;
                     this.hasNext = data.has_next;
                 });
             },
             loadActivityInfo: function(activity) {
-                // check if leader
                 $.ajax({
                     url: '/api/v1.0/groups/'+ activity.group_id + '/members',
                     type: 'GET'
                 }).done(function(data) {
-                    //group.leaders = data.leaders;
-                    //console.log(data.leaders);
-                    //activity.isLeader = data.going_users;
                     for(var i = 0; i < data.leaders.length; i++) {
                         if (data.leaders[i].id == '{{current_user.get_id()}}') {
                             activity.isLeader = true;
