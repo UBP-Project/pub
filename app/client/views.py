@@ -82,8 +82,7 @@ def create_perks():
     if form.validate_on_submit():
         perk = Perks(
             title=form.title.data,
-            description=form.description.data,
-            image=image_hashed_filename
+            description=form.description.data
         )
         db.session.add(perk)
         db.session.commit()

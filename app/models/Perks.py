@@ -2,6 +2,9 @@ import uuid
 from app import db
 from sqlalchemy_utils import UUIDType
 from datetime import datetime
+from werkzeug.utils import secure_filename
+import os
+from PIL import Image
 
 class Perks(db.Model):
 	__tablename__ = 'perks'
