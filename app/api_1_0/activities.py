@@ -175,28 +175,23 @@ def new_activity():
             description: Internal Server Error
     """
 
-    image = request.files.get('image')
-    image_filename = secure_filename(image.filename)
-
-    if is_valid_extension(image_filename):
-        extension = image_filename.rsplit('.', 1)[1].lower()
-        image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
-        file_path = os.path.join(
-            'app/static/uploads/activity_images', image_hashed_filename)
-        image.save(file_path)
-        activity = Activity(
-            title=request.form.get('title'),
-            description=request.form.get('description'),
-            start_date=request.form.get('start_date'),
-            end_date=request.form.get('end_date'),
-            address=request.form.get('address'),
-            group_id=request.form.get('group_id'),
-            image=image_hashed_filename
-        )
-        db.session.add(activity)
+    activity = Activity(
+        title=request.form.get('title'),
+        description=request.form.get('description'),
+        start_date=request.form.get('start_date'),
+        end_date=request.form.get('end_date'),
+        address=request.form.get('address'),
+        group_id=request.form.get('group_id'),
+        image=image_hashed_filename
+    )
+    db.session.add(activity)
 
     try:
         db.session.commit()
+        db.session.refresh(activity)
+        if 'image' in request.files:
+          image = request.files.get('image')
+          activity.set_image(image)
         return "Success"  # change this to better message format
     except exc.SQLAlchemyError:
         db.session.rollback()
@@ -334,14 +329,7 @@ def edit_activity_by(id):
 
     if 'image' in request.files:
         image = request.files.get('image')
-        image_filename = secure_filename(image.filename)
-        if is_valid_extension(image_filename):
-            extension = image_filename.rsplit('.', 1)[1].lower()
-            image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
-            file_path = os.path.join(
-                'app/static/uploads/activity_images', image_hashed_filename)
-            image.save(file_path)
-            activity.image = image_hashed_filename
+        activity.set_image(activity)
 
     activity.title = request.form.get('title')
     activity.description = request.form.get('description')

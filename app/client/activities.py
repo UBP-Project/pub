@@ -95,7 +95,7 @@ def edit_activity(id):
 
     if request.method == 'POST':
         if form.image.data is not None:
-            activity.set_image(form.data.image)
+            activity.set_image(form.image.data)
         activity.title       = form.title.data      
         activity.description = form.description.data
         activity.start_date  = form.start_date.data 
