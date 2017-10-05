@@ -1,13 +1,13 @@
 {% macro group_header(group, current_user) %}
     <div class="row">
         <div class="cover-photo">
-            <img src="{{ url_for('static', filename='uploads/covers/' + group.cover_photo) }}" />
+            <img src="{{ url_for('static', filename='uploads/covers/600x250/' + group.cover_photo) }}" />
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-12 group-icon text-center no-padding">
-            <img src="{{ url_for('static', filename='uploads/group_icons/' + group.group_icon) }}" />
+            <img src="{{ url_for('static', filename='uploads/group_icons/200x200/' + group.group_icon) }}" />
         </div>
     </div>
 

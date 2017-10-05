@@ -2,10 +2,10 @@
 
     <div class="col-md-3 col-sm-6 group-card">
 
-        <div class="zoomify group-panel grp-icon" style="background-image: url({{ url_for('static',filename='uploads/covers/' + group.cover_photo) }}); background-size: cover;" data-toggle="modal" data-target="#group-{{ group.id }}" id="{{group.id}}">
+        <div class="zoomify group-panel grp-icon" style="background-image: url({{ url_for('static',filename='uploads/covers/200x170/' + group.cover_photo) }}); background-size: cover;" data-toggle="modal" data-target="#group-{{ group.id }}" id="{{group.id}}">
 
             <div class="group-img">
-                <img src="{{ url_for('static',filename='uploads/group_icons/' + group.group_icon) }}" width="120px" height="120px"/>
+                <img src="{{ url_for('static',filename='uploads/group_icons/130x130/' + group.group_icon) }}" width="120px" height="120px"/>
                 <!-- <img src="{{ group.group_icon }}" width="120px" height="120px"> -->
             </div>
 
@@ -33,8 +33,8 @@
                 <!-- BODY -->
                 <div class="modal-body">
                     
-                    <div class="img-container" style="background-image: url({{ url_for('static',filename='uploads/covers/' + group.cover_photo) }}); background-size: cover; background-repeat: no-repeat; background-origin: center center;">
-                        <img src="{{ url_for('static',filename='uploads/group_icons/' + group.group_icon) }}" class="grp-icon-img img-circle" />
+                    <div class="img-container" style="background-image: url({{ url_for('static',filename='uploads/covers/600x250/' + group.cover_photo) }}); background-size: cover; background-repeat: no-repeat; background-origin: center center;">
+                        <img src="{{ url_for('static',filename='uploads/group_icons/200x200/' + group.group_icon) }}" class="grp-icon-img img-circle" />
                         <!-- <img src="{{ group.group_icon }}" class="img-circle grp-icon-img"/> -->
                     </div>
 
