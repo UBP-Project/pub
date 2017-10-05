@@ -15,7 +15,7 @@
                 {% for activity in activities %}
                     <div class="col-md-3 no-padding">
                         <div class="activity-card"
-                        style="height: 180px; background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{url_for('static',filename='uploads/activity_images/' + activity.image) }})">
+                        style="height: 180px; background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{url_for('static',filename='uploads/activity_images/' + activity.image) }}); background-repeat: no-repeat !important; background-size: cover !important;">
                             <div style="padding: 30px 10px;">
                                 <h3 style="color: #fff;"><strong>{{ activity['title'] }}</strong></h3>
                                 <!-- <h6>{{ activity['description'] }}</h6> -->
