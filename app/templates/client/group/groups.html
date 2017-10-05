@@ -12,7 +12,7 @@
                 <h3>INTEREST GROUPS
                     {% if is_manager %}
                     <span class="pull-right">
-                        <a href="/groups/create" style="text-decoration: none;">
+                        <a href="/groups/create" class="group-create-btn">
                             <button class="btn btn-style-2 btn-sm" title="Create Perks">CREATE GROUP &nbsp;<i class="fa fa-plus"></i></button>
                         </a>
                     </span>
@@ -31,8 +31,8 @@
                             <div class="col-md-3 col-sm-6 group-card" v-on:click="loadGroupInfo(group)" :id="group.id">
                                 <div class="zoomify group-panel grp-icon" data-toggle="modal" :data-target="'#group-' + group.id">
                                     <div class="group-img">
-                                        <img :src="group_card_covers_folder + group.cover_photo" style="height: 100%; width: 100%; min-width: 100%;">
-                                        <img class="img-icon" :src="group_card_icons_folder + group.group_icon" style="z-index: 5; margin-top: -180px;" width="120px" height="120px">
+                                        <img :src="group_card_covers_folder + group.cover_photo" class="group-card-img">
+                                        <img class="img-icon group-card-icon" :src="group_card_icons_folder + group.group_icon" width="120px" height="120px">
                                     </div>
                                     <div class="group-desc">
                                         <h4 class="title">{{ group.name }}</h4>
@@ -54,19 +54,17 @@
                                         <div class="modal-body">
 
                                             <div class="img-container text-center" :style="group.cover">
-                                                <img :src="group_modal_covers_folder + group.cover_photo" style="min-height: 100%;">
-                                                <img class="grp-icon-img" :src="group_modal_icons_folder + group.group_icon" style="position: absolute; top: 25px; margin-left: -100px;">
+                                                <img :src="group_modal_covers_folder + group.cover_photo" class="group-modal-img">
+                                                <img class="grp-icon-img group-modal-icon" :src="group_modal_icons_folder + group.group_icon">
                                             </div>
 
                                             <span class="row">
-                                                <span class="col-md-2 col-lg-2 col-sm-2 hidden-xs" style="border: none;"><h2 class="text-center"></h2></span>
+                                                <span class="col-md-2 col-lg-2 col-sm-2 hidden-xs left-pad"><h2 class="text-center"></h2></span>
                                                 <span class="col-md-8 col-lg-8 col-sm-8"><h2 class="text-center">{{ group.name }}</h2></span>
-                                                <span class="col-md-2 col-lg-2 col-sm-2 text-center" style="padding: 20px 15px 10px 15px;">
-                                                        <a v-show="(group.isLeader || is_manager)" :href="'/groups/' + group.id" class="btn btn-style-3" style="padding: 4px 8px; font-size: 15px;" title="Manage Group"><i class="fa fa-gear"></i></a>
+                                                <span class="col-md-2 col-lg-2 col-sm-2 text-center right-pad">
+                                                        <a v-show="(group.isLeader || is_manager)" :href="'/groups/' + group.id" class="btn btn-style-3 manage-group-link" title="Manage Group"><i class="fa fa-gear"></i></a>
                                                 </span>
                                             </span>
-                                            <!-- <h2 class="text-center">{{ group.name }}</h2>
-                                            <button v-show="group.can_manage"><span class="fa fa-edit"></span></button> -->
 
                                             <div class="content">
                                                 <ul class="nav nav-tabs" role="tablist">
@@ -89,7 +87,7 @@
                                                     </div>
 
                                                     <div role="tabpanel" class="tab-pane" :id="'grp-members-' + group.id">
-                                                        <div class="row" style="padding-bottom: 30px;">
+                                                        <div class="row group-members-tab">
                                                             <h5><strong>Leaders</strong></h5>
                                                             <template v-if="group.leaders.length > 0">
                                                                 <div v-for="leader in group.leaders" class="col-md-6 mini-container">
@@ -103,12 +101,12 @@
                                                                 </div>
                                                             </template>
                                                             <template v-else>
-                                                                <div style="padding-left: 10px;">
+                                                                <div class="no-members-tab">
                                                                     <i><small>This group has no leaders.</small></i>
                                                                 </div>
                                                             </template>
                                                         </div>
-                                                        <div class="row" style="padding-bottom: 30px;">
+                                                        <div class="row group-members-panel">
                                                             <h5><strong>Members</strong></h5>
                                                             <template v-if="group.members.length > 0">
                                                                 <div v-for="member in group.members" class="col-md-6 mini-container">
@@ -122,7 +120,7 @@
                                                                 </div>
                                                             </template>
                                                             <template v-else>
-                                                                <div style="padding-left: 10px;">
+                                                                <div class="no-members-tab">
                                                                     <i><small>This group has no members.</small></i>
                                                                 </div>
                                                             </template>
@@ -137,19 +135,19 @@
                                                                 <!-- ACTIVITY CARD  -->
                                                                 <a :href="'/activities/' + activity.id" :title="activity.title">
                                                                     <div class="col-md-3 col-lg-4 col-sm-6 card-container">
-                                                                        <div style="height: 160px; border-radius: 5px; border: 1px solid #d0d0d0;">
-                                                                            <div style="height: 70%; overflow: hidden;">
+                                                                        <div class="group-activity-card">
+                                                                            <div class="group-activity-inner-con">
                                                                                 <template v-if="today > activity.end_date">
-                                                                                    <img :src="activity_card_images_folder + activity.image" class="img-responsive" style="-webkit-filter: grayscale(100%); filter: grayscale(100%); min-height: 100%; max-width: 100%; border-radius: 5px 5px 0 0;"/>
-                                                                                    <span style="color: green; font-size: 35px; position: absolute; top: 5px; right: 15px;">
+                                                                                    <img :src="activity_card_images_folder + activity.image" class="img-responsive activity-filter-marker"/>
+                                                                                    <span class="activity-marker-icon">
                                                                                             <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
                                                                                     </span>
                                                                                 </template>
                                                                                 <template v-else>
-                                                                                    <img :src="activity_card_images_folder + activity.image" class="img-responsive" style="min-height: 100%; max-width: 100%; border-radius: 5px 5px 0 0;"/>
+                                                                                    <img :src="activity_card_images_folder + activity.image" class="img-responsive not-done-activity"/>
                                                                                 </template>
                                                                             </div>
-                                                                            <div style="height: 30%; padding: 7px;">
+                                                                            <div class="group-activity-title">
                                                                                 <h5 class="text-center title">{{ activity.title }}</h5>
                                                                             </div>
                                                                         </div>
@@ -251,7 +249,6 @@
                         vm.groupPopulation(group);
                         group.isLeader = false;
                     });
-                    //console.log(data.interest_groups);
                     this.groups.push.apply(this.groups, data.interest_groups);
                     this.groups_page++;
                     this.hasNext = data.has_next;
