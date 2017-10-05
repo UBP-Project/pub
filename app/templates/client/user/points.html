@@ -24,10 +24,10 @@
         <div class="col-md-12 text-right cover">
 
             <!-- hold the trianlify cover photo -->
-            <div id="trianglify-cover" class="col-md-12 text-right" style="height: 250px; background-color: white; padding: 0px;">
+            <div id="trianglify-cover" class="col-md-12 text-right tri-cover-photo">
             </div>
 
-            <div id="profile-btns" style="padding: 0px 20px;">
+            <div id="profile-btns" class="profile-buttons">
 
                 {% if user.total_points() > 0 %}
                     <a href="{{ url_for('client.points', id=user.id) }}" class="btn btn-xs following-count">
@@ -42,40 +42,39 @@
                 {% endif %}
 
                 {% if following_count > 0 %}
-                    <a href="{{ url_for('client.following', id=user.id) }}" class="btn btn-xs" style="padding: 0px 20px;">
+                    <a href="{{ url_for('client.following', id=user.id) }}" class="btn btn-xs profile-buttons">
                         <h6>Following</h6>
                         <h4>{{ following_count }}</h4>
                     </a>
                 {% else %}
-                    <div class="btn btn-xs" style="padding: 0px 20px;">
+                    <div class="btn btn-xs profile-buttons">
                         <h6>Following</h6>
                         <h4>{{ following_count }}</h4>
                     </div>
                 {% endif %}
 
                 {% if followers_count > 0 %}
-                    <a href="{{ url_for('client.followers', id=user.id) }}" class="btn btn-xs" style="margin-right: 50px">
+                    <a href="{{ url_for('client.followers', id=user.id) }}" class="btn btn-xs  profile-follower-btn">
                         <h6>Followers</h6>
                         <h4>{{ followers_count }}</h4>
                     </a>
                 {% else %}
-                    <div class="btn btn-xs" style="margin-right: 50px">
+                    <div class="btn btn-xs profile-fowwer-btn">
                         <h6>Followers</h6>
                         <h4>{{ followers_count }}</h4>
                     </div>
                 {% endif %}
 
                 {% if current_user['id'] == user['id'] %}
-                    <a href="{{ url_for('client.edit_profile', id=user.id) }}" id="btn-edit-profile" class="btn btn-style-3" style="width: 100px">Edit Profile</a>
+                    <a href="{{ url_for('client.edit_profile', id=user.id) }}" id="btn-edit-profile" class="btn btn-style-3 profile-edit-btn">Edit Profile</a>
                 {% endif %}
 
-
                 {% if current_user['id'] != user['id'] and is_following != True %}
-                    <a id="btn-follow" class="btn btn-style-2" style="width: 100px">Follow</a>
+                    <a id="btn-follow" class="btn btn-style-2 profile-edit-btn">Follow</a>
                 {% endif %}
 
                 {% if current_user['id'] != user['id'] and is_following == True %}
-                    <a id="btn-unfollow" class="btn btn-style-1" style="width: 100px">Following</a>
+                    <a id="btn-unfollow" class="btn btn-style-1 profile-edit-btn">Following</a>
                 {% endif %}
             </div>
         </div>
@@ -83,13 +82,13 @@
 
         <div class="row">
             {% raw %}
-            <div id="points" class="col-md-offset-4 col-md-8" style="padding: 20px 0px;">
+            <div id="points" class="col-md-offset-4 col-md-8 profile-points">
                 <div class="row">
 
-                    <div v-for="point in points" class="col-md-6" style="padding: 0px;">
-                        <div style="background-color: white; padding: 10px; margin: 5px;">
+                    <div v-for="point in points" class="col-md-6 points-card-container">
+                        <div class="points-card">
 
-                            <h4 style="color: #fd8103;" class="title" :title="point.event"><strong>{{ point.event }}</strong></h4>
+                            <h4 class="title" :title="point.event"><strong>{{ point.event }}</strong></h4>
                             <h5 v-if="point.value == 1">Earned {{ point.value }} point </h5>
                             <h5 v-else>Earned {{ point.value }} points </h5>
                             <h5><small>{{ point.timestamp }}</small></h5>
@@ -107,9 +106,33 @@
 {% endblock content %}
 
 {% block scripts %}
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/trianglify/0.4.0/trianglify.min.js"></script> -->
     <script>
-        // Current Profile follow or unfollow
+
+        var pattern = Trianglify({
+            width: $("#trianglify-cover").width(),
+            height: $("#trianglify-cover").height(),
+            seed: "{{ user['id'] }}"
+        });
+        $("#trianglify-cover").append(pattern.svg());
+
+        var vm = new Vue({
+            el: '#points',
+            data: {
+                points: []
+            },
+            methods: {
+                loadPointHistory: function() {
+                    $.ajax({
+                        url: "{{ url_for('api.points', id = user.id) }}",
+                        type: 'GET'
+                    }).done(data => {
+                        this.points.push.apply(this.points, data.points_history);
+                        console.log(this.points);
+                    });
+                }
+            }
+        });
+
         function set_buttons() {
             $("#btn-follow").on('click', function() {
                 $.ajax({
@@ -142,37 +165,10 @@
                 });
 
         }
-        // initialize buttons
-        set_buttons();
-    </script>
-    <script>
-        var pattern = Trianglify({
-            width: $("#trianglify-cover").width(),
-            height: $("#trianglify-cover").height(),
-            seed: "{{ user['id'] }}"
-        });
-        $("#trianglify-cover").append(pattern.svg());
-
-        var vm = new Vue({
-            el: '#points',
-            data: {
-                points: []
-            },
-            methods: {
-                loadPointHistory: function() {
-                    $.ajax({
-                        url: "{{ url_for('api.points', id = user.id) }}",
-                        type: 'GET'
-                    }).done(data => {
-                        this.points.push.apply(this.points, data.points_history);
-                        console.log(this.points);
-                    });
-                }
-            }
-        });
 
         $(document).ready(function() {
             vm.loadPointHistory();
+            set_buttons();
         });
 
 
