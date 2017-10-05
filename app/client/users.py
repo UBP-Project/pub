@@ -87,13 +87,16 @@ def edit_password(id):
 @login_required
 def followers(id):
     user = User.query.get_or_404(id)
-    followers_follow = Follow.query.filter(Follow.following_id == id).all()
-    followers = []
-    for f in followers_follow:
-        followers.append(User.query.get(f.follower_id))
+
+    # followers_follow = Follow.query.filter(Follow.following_id == id).all()
+
+    followers = user.get_followers()
+
     following_count = Follow.query.filter(Follow.follower_id == id).count()
+
     is_following = True if Follow.query.filter(Follow.follower_id == current_user.get_id(),\
         Follow.following_id == user.get_id()).first() is not None else False
+
     return render_template("client/user/followers.html", user=user, current_user=current_user,\
         is_following=is_following, followers_count=len(followers), following_count=following_count,\
         followers=followers)

@@ -10,10 +10,11 @@ from app.notification import Notif
 
 from app.utils import is_valid_extension
 from werkzeug.utils import secure_filename
+import dateutil.parser
+from datetime import datetime
 
 import os
 import uuid
-
 
 @api.route('/activities', methods=['GET'])
 @login_required
@@ -67,6 +68,10 @@ def get_activities():
                   example: 70a256f3628947508af68343821d78b6.jpg
                   default: None
                   description: File name of image in uploads/activity_image folder
+              status:
+                  type: integer
+                  example: 1
+                  description: Tell if the activity is (0) - upcoming, (1) - happening, (2) - done
 
     """
     ACTIVITY_PER_PAGE = 9
@@ -76,16 +81,34 @@ def get_activities():
     else:
         page = 1
 
-    activities = Activity.query\
+    query = Activity.query\
             .order_by(Activity.start_date.desc())\
             .paginate(page=page, per_page=9, error_out=False)
 
-    return jsonify({
-        'activities': [activity.to_json() for activity in activities.items],
-        'has_next': activities.has_next,
-        'has_prev': activities.has_prev
-    })
+    activities = []
 
+    current_date = datetime.utcnow()
+
+    for a in query.items:
+      activity = a.to_json()
+
+      start_date = dateutil.parser.parse(str(activity.get('start_date')))
+      end_date = dateutil.parser.parse(str(activity.get('end_date')))
+      
+      if(start_date > current_date):
+        activity['status'] = 0 #upcoming
+      elif (start_date <= current_date) and (end_date > current_date):
+        activity['status'] = 1 #happening
+      else:
+        activity['status'] = 2 #done
+
+      activities.append(activity)
+
+    return jsonify({
+        'activities': activities,
+        'has_next': query.has_next,
+        'has_prev': query.has_prev
+    })
 
 @api.route('/activities', methods=['POST'])
 @login_required
@@ -179,7 +202,6 @@ def new_activity():
         db.session.rollback()
         return jsonify({'status': 'error'}), 500
 
-
 @api.route('/activities/<uuid(strict=False):id>', methods=['GET'])
 @login_required
 def get_activity_by(id):
@@ -233,7 +255,6 @@ def get_activity_by(id):
     """
     activity = Activity.query.get_or_404(id)
     return jsonify(activity.to_json())
-
 
 @api.route('/activities/<uuid(strict=False):id>', methods=['PUT'])
 @login_required
@@ -336,7 +357,6 @@ def edit_activity_by(id):
         db.session.rollback()
         return jsonify({'status': 'error'}), 500
 
-
 @api.route('/activities/<uuid(strict=False):id>', methods=['DELETE'])
 @login_required
 def delete_activity_by(id):
@@ -363,7 +383,6 @@ def delete_activity_by(id):
     activity = Activity.query.filter_by(id=id).delete()
     db.session.commit()
     return "Deleted"
-
 
 @api.route('/activities/<uuid(strict=False):id>/participants/going')
 @login_required
@@ -509,7 +528,6 @@ def going_to_activity_by(id):
             db.session().rollback()
             return jsonify({'status': 'Internal Server Error'}), 500
 
-
 @api.route('/activities/<uuid(strict=False):id>/participants/going', methods=['DELETE'])
 @login_required
 def cancel_going_to_activity_by(id):
@@ -555,7 +573,6 @@ def cancel_going_to_activity_by(id):
         print(e)
         db.session().rollback()
         return jsonify({'status': 'error'}), 500
-
 
 @api.route('/activities/<uuid(strict=False):id>/participants/interested')
 @login_required
@@ -638,7 +655,6 @@ def get_interested(id):
     return jsonify([
         user.to_json() for user in interested
     ])
-
 
 @api.route('/activities/<uuid(strict=False):id>/participants/interested', methods=['POST'])
 @login_required

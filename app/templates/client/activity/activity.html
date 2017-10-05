@@ -6,9 +6,9 @@
 {% block content %}
     <div id="activity_app" class="row activity-page" style="background-color: white">
 
-    <div class="col-md-12 activity-header" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), url('{{ url_for('static', filename='uploads/activity_images/' + activity.image ) }}');">
+    <div class="col-md-12 activity-header" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), url('{{ url_for('static', filename='uploads/activity_images/600x250/' + activity.image ) }}');">
         <div class="col-md-4 no-padding">
-            <img src="{{ url_for('static', filename='uploads/activity_images/' + activity.image ) }}">
+            <img src="{{ url_for('static', filename='uploads/activity_images/600x250/' + activity.image ) }}">
         </div>
         <div class="col-md-8">
             <h2 class="ellipsis" style="font-weight: 900;">{{ activity.title }}</h2>

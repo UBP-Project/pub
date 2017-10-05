@@ -19,7 +19,7 @@ def get_users():
 
     parameters:
       - name: limit
-        in: query
+        in: queryget
         example: 1
         default: 10
 
@@ -450,8 +450,9 @@ def unfollow_user(to_unfollow_id):
 
 @api.route('/users/<string:id>/followers', methods=['GET'])
 def get_followers(id):
-    followers = current_user.get_followers()
+    followers = User.query.get_or_404(id).get_followers()
     followings_current_user = current_user.get_following()
+    
     for follower in followers:
         if follower in followings_current_user:
             follower.isFollowing = True

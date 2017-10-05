@@ -28,7 +28,7 @@ class Activity(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow())
     creator_id = db.Column(UUIDType(binary=False), db.ForeignKey('user.id', ondelete="CASCADE", onupdate="CASCADE"), nullable=True)
 
-    def __init__(self, title, description, start_date, end_date, address, image, group_id=None):
+    def __init__(self, title, description, start_date, end_date, address, image=None, group_id=None):
         self.title = title
         self.description = description
         self.start_date = start_date
@@ -96,18 +96,23 @@ class Activity(db.Model):
         image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
         file_path = os.path.join(
             'app/static/uploads/activity_images', image_hashed_filename)
+        
         image.save(file_path)
 
-        image = Image.open(file_path)
-
         sizes = [
-            (600, 250),  # modal cover photo
+            (600, 250), # modal cover photo
             (260, 200)  # card
         ]
 
+        image = Image.open(file_path)
+
         # resize image
         for size in sizes:
-            new_image = image.resize(size)
+            basewidth = size[0]
+            wpercent = (basewidth/float(image.size[0]))
+            hsize = int((float(image.size[1])*float(wpercent)))
+
+            new_image = image.resize((basewidth,hsize), Image.ANTIALIAS)
 
             directory = 'app/static/uploads/activity_images/' + \
                 str(size[0]) + 'x' + str(size[1]) + '/'

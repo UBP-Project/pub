@@ -15,11 +15,6 @@ from ...auth import can_modify_activity, is_manager
 
 ACTIVITIES_PER_PAGE = 16
 
-IMAGE_SIZES = [
-    (600, 250), #modal cover photo
-    (260, 200)  #card
-]
-
 @admin.route('/activities/<uuid(strict=False):id>')
 @admin_required
 def activity(id):
@@ -27,35 +22,12 @@ def activity(id):
     return render_template("admin/activity/view_activity.html",
                            activity=activity)
 
-
 @admin.route('/activities/create', methods=['GET', 'POST'])
 @admin_required
 def create_activity():
     form = CreateActivityForm()
     groups = Interest_Group.query.all()
     if request.method == 'POST':
-        image = form.image.data
-        image_filename = secure_filename(image.filename)
-        extension = image_filename.rsplit('.', 1)[1].lower()
-        image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
-        
-        file_path = os.path.join('app/static/uploads/activity_images', image_hashed_filename)
-
-        image.save(file_path)
-
-        image = Image.open(file_path)
-
-        #resize image
-        for size in IMAGE_SIZES:
-            new_image = image.resize(size)
-
-            directory = 'app/static/uploads/activity_images/' + str(size[0]) + 'x'+ str(size[1]) + '/'
-
-            if not os.path.isdir(directory):
-                os.makedirs(directory)
-
-            new_image.save(os.path.join(directory, image_hashed_filename))
-            
         # create the activity
         activity = Activity(
             title=form.title.data,
@@ -69,6 +41,8 @@ def create_activity():
         db.session.add(activity)
         db.session.commit()
         db.session.refresh(activity)
+
+        activity.set_image(form.image.data)
 
         # set activity point on: interested, going, attended
         activity.set_points('going', form.going_point.data)

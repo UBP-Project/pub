@@ -4,7 +4,7 @@ from wtforms.validators import Required, UUID
 from wtforms.fields.html5 import EmailField, DateField, IntegerField
 from wtforms.widgets import TextArea
 from flask_wtf.file import FileField, FileRequired
-from .models import Interest_Group, Role, Membership
+from .models import Interest_Group, Role, Membership, User
 from flask_login import current_user
 from .auth import is_manager
 
@@ -106,15 +106,14 @@ class CreateActivityForm(FlaskForm, ActivityMixin):
         self.group.choices = [(None, None)] + [(str(group.id), group.name)
                                                for group in Interest_Group.query.all()]
 
-
 class CreateActivityFormClient(FlaskForm, ActivityMixin):
     image = FileField("Activity Image", validators=[FileRequired()])
     submit = SubmitField("Create Activity")
 
     def __init__(self, *args, **kwargs):
         super(CreateActivityFormClient, self).__init__(*args, **kwargs)
-        groups = Interest_Group.query.join(Membership, Membership.group_id == Interest_Group.id)\
-            .filter(Membership.level == 1).all()
+        groups = Interest_Group.query.join(Membership).join(User)\
+            .filter(User.id == current_user.get_id(), Membership.level == 1).all()
         self.group.choices = [(str(group.id), group.name) for group in groups]
 
 
