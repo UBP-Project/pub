@@ -31,7 +31,7 @@
                         <div class="col-md-6" style="padding: 0 10px 20px 0;">
                             <div style="background-color: #fff; height: 320px;">
                                 
-                                <!-- <template v-if="feed.type === 'new_group'">
+                                <template v-if="feed.type === 'new_group'">
                                     <div style="height: 150px; max-width: 100%; overflow: hidden;">
                                         <img :src="'/static/uploads/covers/600x250/' + feed.cover_photo">
                                     </div>
@@ -83,7 +83,7 @@
                                         </a>
                                     </div>
                                     <span style="background-color: #fff; position: absolute; right: 20px; top: 10px; padding: 0 10px;"><h6><small>{{feed.timestamp}}</small></h6></span>
-                                </template> -->
+                                </template>
                                 <template v-else-if="feed.type === 'new_perk'">
                                     <span style="background-color: #fff; position: absolute; right: 20px; top: 10px; padding: 0 10px;"><h6><small>{{feed.timestamp}}</small></h6></span>
                                     <div style="padding: 10px 20px 0;"><h4><b style="color: #564C89;">UNIONBANK PERKS</b></h4></div>
@@ -148,7 +148,7 @@
                                     </div>
 
                                     <div style="width: 100%; position: absolute; top: 65px; padding-right: 10px; left: -110px;" class="text-center">
-                                        <a :href="'/groups/' + feed.group_id" :title="'View ' + feed.group_name" style="text-decoration: none;">
+                                        <a :href="'/profile/' + feed.user_id" :title="'View ' + feed.user_firstname" style="text-decoration: none;">
                                             <img v-if="feed.user_image" :src="'/static/uploads/group_icons/130x130/' + feed.user_image" style="border: 5px solid #fff; height: 130px; width: 130px;" class="img-circle">
                                             <img v-else :src="'/static/images/pub-default-img.jpg'" style="border: 5px solid #fff; height: 130px; width: 130px;" class="img-circle">
                                         </a>
@@ -175,13 +175,36 @@
                                         </a>
                                         <span style="background-color: #fff; position: absolute; right: 20px; top: 10px; padding: 0 10px;"><h6><small>{{feed.timestamp}}</small></h6></span>
                                     </div>
-                                </template>
-
-                                <!--
+                                </template>                                
                                 <template v-if="feed.type === 'new_user_activity'">
-                                    {{ feed.name }}
-                                </template> -->
+                                    
+                                    <div style="height: 170px; max-width: 100%; overflow: hidden;">
+                                        <img :src="'/static/uploads/activity_images/600x250/' + feed.activity_image">
+                                    </div>
 
+                                    <div style="width: 100%; position: absolute; top: 65px; padding-right: 10px; left: -110px;" class="text-center">
+                                        <a :href="'/profile/' + feed.user_id" :title="'View ' + feed.user_firstname" style="text-decoration: none;">
+                                            <img v-if="feed.user_image" :src="'/static/uploads/group_icons/130x130/' + feed.user_image" style="border: 5px solid #fff; height: 130px; width: 130px;" class="img-circle">
+                                            <img v-else :src="'/static/images/pub-default-img.jpg'" style="border: 5px solid #fff; height: 130px; width: 130px;" class="img-circle">
+                                        </a>
+                                    </div>
+
+                                    <h4 class="text-left" style="padding: 20px;">
+                                        <a :href="'/profile/' + feed.user_id" style="text-decoration: none;" :title="feed.user_firstname + ' ' + feed.user_lastname"> {{ feed.user_firstname }} {{ feed.user_lastname }} </a> is {{ feed.status }} to
+                                        <a :href="'/activities/' + feed.activity_id" :title="'View ' + feed.activity_title" style="text-decoration: none; color: #333;">
+                                            <b>{{ feed.activity_title }}</b>
+                                        </a>
+                                    </h4>
+
+                                    <div style="padding: 10px 20px 10px;" class="text-center">
+                                        <hr style="margin: 7px; border-top: 1px solid #c0c0c0;" />
+                                        <a :href="'/activities/' + feed.activity_id" :title="'View ' + feed.activity_title" style="text-decoration: none;">
+                                            <span style="font-size: 13px; color: #564C89;"><b>Check this out!</b><span>
+                                        </a>
+                                    </div>
+                                    <span style="background-color: #fff; position: absolute; right: 20px; top: 10px; padding: 0 10px;"><h6><small>{{feed.timestamp}}</small></h6></span>
+
+                                </template>
 
 
                             </div>
