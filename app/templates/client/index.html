@@ -5,14 +5,15 @@
 {% block content %}
 	<div class="row">
 
-		<div class="col-md-12 col-sm-12 col-xs-12">		
-
-            <div class="text-center" style="padding: 20px; margin-bottom: 20px; background-color: #fff;">
-                <h3 style="margin-top: 10px;">Welcome to <b>UBP: Pub</b></h3>
-                <hr/>
-                <h4>See stories from co-workers here in your Actions Feed.<br/>
-                    <small>Start by connecting with your co-workers on Pub</small>
-                </h4>
+		<div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0;">		
+            <div style="padding: 0 10px;">
+                <div class="text-center" style="padding: 20px; margin-bottom: 20px; background-color: #fff;">
+                    <h3 style="margin-top: 10px;">Welcome to <b>UBP: Pub</b></h3>
+                    <hr/>
+                    <h4>See stories from co-workers here in your Actions Feed.<br/>
+                        <small>Start by connecting with your co-workers on Pub</small>
+                    </h4>
+                </div>
             </div>
                 
 
@@ -20,8 +21,9 @@
             <div id="app">
 
                 <div class="row">
+
                     <div v-for="feed in sorted_feeds">
-                    
+
                         <div class="col-md-6" style="padding: 0 10px 20px 10px;">
                             <div style="background-color: #fff; height: 320px;">
                                 
@@ -245,7 +247,7 @@
                         this.feeds.push.apply(this.feeds, data.new_memberships);
                         this.feeds.push.apply(this.feeds, data.new_user_activities);
                     });
-                },
+                }
             },
             computed: {
                 sorted_feeds: function() {
@@ -253,11 +255,6 @@
                         return new Date(b.timestamp) - new Date(a.timestamp);
                     });
                     return this.feeds;
-                },
-                is_odd: function(index) {
-                    var val = false;
-                    val = ((index % 2) != 0);
-                    return val;
                 }
             }
         });
