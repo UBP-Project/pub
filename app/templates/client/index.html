@@ -27,6 +27,7 @@
 
                 <div v-for="feed in sorted_feeds">
                     <div class="row">
+                        <!-- This is the first column -->
                         <div class="col-md-6" style="padding: 0 10px 20px 0;">
                             <div style="background-color: #fff; height: 320px;">
                                 
@@ -133,7 +134,6 @@
                                         </div>
                                     </div> <!-- END OF PERKS MODAL -->
                                 </template>
-
                                 <!--
                                 <template v-if="feed.type === 'new_membership'">
                                     new  membership
@@ -141,9 +141,6 @@
                                 <template v-if="feed.type === 'new_user_activity'">
                                     {{ feed.name }}
                                 </template> -->
-
-
-
                             </div>
                         </div>
 
@@ -201,6 +198,7 @@
                     this.feeds.sort( (a, b) => {
                         return new Date(b.timestamp) - new Date(a.timestamp);
                     });
+
                     return this.feeds;
                 }
             }
