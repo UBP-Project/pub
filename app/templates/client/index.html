@@ -20,15 +20,9 @@
             <div id="app">
 
                 <div class="row">
-                    <div class="col-md-6" style="padding: 0 15px 10px 10px; position: absolute; right: 0;">
-                        <div style="background-color: #fff; height: 140px;"></div>
-                    </div>
-                </div>
-
-                <div v-for="(feed, index) in sorted_feeds">
-                    <div class="row">
-
-                        <div class="col-md-6" style="padding: 0 10px 20px 0;">
+                    <div v-for="feed in sorted_feeds">
+                    
+                        <div class="col-md-6" style="padding: 0 10px 20px 10px;">
                             <div style="background-color: #fff; height: 320px;">
                                 
                                 <template v-if="feed.type === 'new_group'">
@@ -167,8 +161,8 @@
                                             </a>
                                         </h4>
 
-                                        <h4 v-if="feed.about" class="title"><small>{{ feed.group_about }}</small></h4>
-                                        <h4 v-else class="title"><small><i>Group has no description</i></small></h4>
+                                        <h4 v-if="feed.about" class="title text-left"><small>{{ feed.group_about }}</small></h4>
+                                        <h4 v-else class="title text-left"><small><i>Group has no description</i></small></h4>
                                         <hr style="margin: 7px; border-top: 1px solid #c0c0c0;" />
                                         <a :href="'/profile/' + feed.user_id" :title="'View ' + feed.group_name" style="text-decoration: none;">
                                             <span style="font-size: 13px; color: #564C89;"><b>New member of the group!</b><span>
@@ -203,28 +197,11 @@
                                         </a>
                                     </div>
                                     <span style="background-color: #fff; position: absolute; right: 20px; top: 10px; padding: 0 10px;"><h6><small>{{feed.timestamp}}</small></h6></span>
-
                                 </template>
-
 
                             </div>
                         </div>
 
-                        <!-- This is the second column -->
-                        <div class="col-md-6" style="padding: 0 0 10px 10px; top: 160px;">
-                            <div style="background-color: #fff; height: 320px;">
-                                
-                                
-                                <!--
-                                <template v-if="feed.type === 'new_membership'">
-                                    new  membership
-                                </template>
-                                <template v-if="feed.type === 'new_user_activity'">
-                                    {{ feed.name }}
-                                </template> -->
-
-                            </div>
-                        </div>
                     </div>
                     
                 </div>           
