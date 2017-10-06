@@ -60,25 +60,13 @@ def update_group(id):
     if form.validate_on_submit():
         # handle upload group cover
         if form.cover_photo.data is not None:
-            cover                 = form.cover_photo.data
-            cover_filename        = secure_filename(cover.filename)
-            if is_valid_extension(cover_filename):
-                extension             = cover_filename.rsplit('.', 1)[1].lower()
-                cover_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
-                file_path             = os.path.join('app/static/uploads/covers', cover_hashed_filename)
-                cover.save(file_path)
-                group.cover_photo = cover_hashed_filename
+            cover = form.cover_photo.data
+            group.set_cover(cover)
 
         # handle upload user icon
         if form.group_icon.data is not None:
-            icon                 = form.group_icon.data
-            icon_filename        = secure_filename(icon.filename)
-            if is_valid_extension(icon_filename):
-                extension            = icon_filename.rsplit('.', 1)[1].lower()
-                icon_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
-                file_path            = os.path.join('app/static/uploads/group_icons', icon_hashed_filename)
-                icon.save(file_path)
-                group.group_icon = icon_hashed_filename
+            icon = form.group_icon.data
+            group.set_icon(icon)
 
         group.name = form.name.data
         group.about = form.about.data

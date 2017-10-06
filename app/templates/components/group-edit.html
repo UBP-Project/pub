@@ -49,8 +49,8 @@
                     {{ form.submit(class="btn btn-style-1") }}
                 </div>
             </div>
-            {{ form.cover_photo(class="hidden") }}
-            {{ form.group_icon(class="hidden") }}
+            {{ form.cover_photo(class="hidden", accept='image/*') }}
+            {{ form.group_icon(class="hidden", accept='image/*') }}
 
             <div class="row">
                 <div class="col-md-12 text-left">

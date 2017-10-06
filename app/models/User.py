@@ -37,16 +37,16 @@ class User(UserMixin, db.Model):
     #     lazy='dynamic'
     #     )
 
-    def __init__(self, firstname, middlename, lastname, email, password_hash, department, position, birthday, role_id):
+    def __init__(self, firstname, middlename, lastname, email, department, position, birthday, role_id, image):
         self.firstname = firstname
         self.middlename = middlename
         self.lastname = lastname
         self.email = email
-        self.password_hash = password_hash
         self.department = department
         self.position = position
         self.birthday = birthday
         self.role_id = role_id
+        self.image = image
 
     def __repr__(self):
         return '<User %r>' % self.email

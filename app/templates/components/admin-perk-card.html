@@ -7,7 +7,9 @@
     </div>
     <div class="col-md-8">
         <h2 class="ellipsis"><strong>{{ perk['title'] }}</strong></h2>
-        <h6>{{ perk['description'] }}</h6>
+        <div>
+            {{ perk['description']|safe }}
+        </div>
         <a class="btn btn-sm btn-style-3" href="{{ url_for('admin.edit_perk', id=perk['id']) }}">
                 Edit this Perk
             </a>

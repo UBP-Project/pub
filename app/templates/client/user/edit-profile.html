@@ -79,19 +79,22 @@
                         <label>Firstname</label>
                         {{ form.firstname(
                         placeholder="First name",
-                        class="form-control") }}
+                        class="form-control",
+                        required="true") }}
                     </div>
                     <div class="col-md-4">
                         <label>Middlename</label>
                         {{ form.middlename(
                         placeholder="Middle name",
-                        class="form-control") }}
+                        class="form-control",
+                        required="true") }}
                     </div>
                     <div class="col-md-4">
                         <label>Lastname</label>
                         {{ form.lastname(
                         placeholder="Last name",
-                        class="form-control") }}
+                        class="form-control",
+                        required="true") }}
                     </div>
                 </div>
 
@@ -102,14 +105,16 @@
                         <label>Department</label>
                         {{ form.department(
                             placeholder="Department",
-                            class="form-control"
+                            class="form-control",
+                            required="true"
                         )}}
                     </div>
                     <div class="col-md-6">
                         <label>Position</label>
                         {{ form.position(
                             placeholder="Position",
-                            class="form-control"
+                            class="form-control",
+                            required="true"
                         )}}
                     </div>
                 </div>
@@ -120,13 +125,15 @@
                     <label>Email</label>
                     {{ form.email(
                         placeholder="Email",
-                        class="form-control") }}
+                        class="form-control",
+                        required="true") }}
                 </div>
                 <div class="col-md-6">
                     <label>Birthday</label>
                     {{ form.birthday(
                         placeholder="Birthday",
-                        class="form-control")}}
+                        class="form-control",
+                        required="true")}}
                 </div>
 
                 <br />
@@ -145,7 +152,7 @@
                     )}}
                     <a href="/profile/{{current_user.get_id()}}"><button class="btn btn-default">Cancel</button></a>
                 </div>
-                {{ form.image(style="display: none;") }}
+                {{ form.image(style="display: none;", accept='image/*') }}
             </form>
         </div>
 
