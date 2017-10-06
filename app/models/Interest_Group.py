@@ -6,6 +6,7 @@ from app.models import User, Membership, Entity, Points_Type
 import os
 from werkzeug.utils import secure_filename
 from PIL import Image
+from flask_login import current_user
 
 
 class Interest_Group(db.Model):
@@ -73,6 +74,8 @@ class Interest_Group(db.Model):
 
     def set_leaders(self, leader_ids):
         for leader_id in leader_ids:
+            if str(current_user.get_id()) == leader_id: # Group creator is already assigned as manager
+                continue
             membership = Membership.Membership(
                 group_id=self.id,
                 user_id=leader_id,

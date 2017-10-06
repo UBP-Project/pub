@@ -5,17 +5,18 @@
 {% block content %}
     <div class="row admin-page" style="background-color: white">
         {{ group_header(group, current_user) }}
-        <div class="row">
+        <div class="row group-box">
             
-            <div class="col-md-12">
-                <h2>Group Activities</h2>
+            <div class="col-md-12 no-padding">
+                <h3>Group Activities</h3>
+                <br>
             </div>
 
             {% if activities|length > 0 %}
                 {% for activity in activities %}
                     <div class="col-md-3 no-padding">
                         <div class="activity-card"
-                        style="height: 180px; background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{url_for('static',filename='uploads/activity_images/' + activity.image) }}); background-repeat: no-repeat !important; background-size: cover !important;">
+                        style="height: 180px; background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{url_for('static',filename='uploads/activity_images/260x200/' + activity.image) }}); background-repeat: no-repeat !important; background-size: cover !important;">
                             <div style="padding: 30px 10px;">
                                 <h3 style="color: #fff;"><strong>{{ activity['title'] }}</strong></h3>
                                 <!-- <h6>{{ activity['description'] }}</h6> -->
@@ -29,7 +30,7 @@
                 {% endfor %}
             {% else %}
                 <div class="col-md-12">
-                    <h3>This group has no Acitivities.</h3>
+                    <h5>This group has no Acitivities.</h5>
                 </div>
             {% endif %}
         </div>
