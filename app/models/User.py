@@ -9,6 +9,7 @@ import getpass
 from uuid import UUID
 from datetime import datetime
 from flask_login import current_user
+from flask import abort
 
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
@@ -124,19 +125,18 @@ class User(UserMixin, db.Model):
         if user_points:
             return user_points.points
         else:
-            return 0    
+            return 0
 
     def can_modify_group(self, group_id, abort_on_false=False):
         if self.is_manager() or self.is_administrator():
             return True
-        can_access = Membership.Membership.query.join(Interest_Group.Interest_Group,
-                Interest_Group.Interest_Group.id == Membership.Membership.group_id)\
-            .filter(Membership.Membership.user_id == current_user.get_id(),
-                    Membership.Membership.level == 2,
-                Interest_Group.Interest_Group.id == group_id).first() is not None
-        if can_access == False and abort_on_false == True:
+        is_leader = True if Membership.Membership.query.filter(
+            Membership.Membership.group_id == group_id,
+            Membership.Membership.user_id == self.id,
+            Membership.Membership.level == 1).first() is not None else False
+        if is_leader is False and abort_on_false is True:
             abort(403)
-        return can_access
+        return is_leader
 
     def to_json(self):
         json_post = {

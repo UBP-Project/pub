@@ -6,7 +6,7 @@
 {% block content %}
     <div class="row admin-page">
         {{ group_header(group, current_user) }}
-        {{ members_table(current_user) }}
+        {{ members_table(group, current_user) }}
     </div>
 {% endblock %}
 {% block scripts %}
