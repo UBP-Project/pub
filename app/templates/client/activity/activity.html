@@ -6,88 +6,98 @@
 {% block content %}
     <div id="activity_app" class="row activity-page group-box" style="background-color: white">
 
-    <div class="col-md-12 activity-header" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), url('{{ url_for('static', filename='uploads/activity_images/600x250/' + activity.image ) }}'); background-repeat: no-repeat !important; background-size: cover !important;">
-        <div class="col-md-4 no-padding">
-            <img src="{{ url_for('static', filename='uploads/activity_images/600x250/' + activity.image ) }}">
-        </div>
-        <div class="col-md-8">
-            <h2 class="ellipsis" style="font-weight: 900;">{{ activity.title }}</h2>
-            {% if activity.start_date == activity.end_date %}
-                <h4>{{ activity.start_date|datetime_with_day}}</h4>
-            {% else %}
-                <h4>{{ activity.start_date|datetime_with_day}} to {{ activity.end_date|datetime_with_day}}</h4>
-            {% endif %}
-            <hr />
-                {% raw %}
-                <button v-if="isInterested" type="button" class="btn btn-style-1" id="ninterested-btn" value="cgoing" v-on:click="toggleInterested()">
-                    NOT INTERESTED
-                </button>
-                <button v-else type="button" class="btn btn-style-2" id="interested-btn" value="cgoing" v-on:click="toggleInterested()">
-                    INTERESTED
-                </button>
-
-                <!-- GOING BTNS -->
-                <button v-if="isGoing" type="button" class="btn btn-style-1" id="njoin-btn" value="cgoing" v-on:click="toggleGoing()">
-                    LEAVE ACTIVITY
-                </button>
-                <button v-else type="button" class="btn btn-style-2" id="join-btn" value="cgoing" v-on:click="toggleGoing()">
-                    JOIN ACTIVITY
-                </button>
-                {% endraw %}
-            <hr />
-        </div>
-    </div>
-
-    <div class="col-md-8 col-md-offset-4" style="margin-top: 15px;">
-        <h4>Activity created by 
-            <span>
-                {% if creator.image %}
-                    <img class="circle-img-sm" src="{{url_for('static', filename='uploads/profile_pictures/' + creator.image) }}">
+        <div class="col-md-12 activity-header" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), url('{{ url_for('static', filename='uploads/activity_images/600x250/' + activity.image ) }}'); background-repeat: no-repeat !important; background-size: cover !important;">
+            <div class="col-md-4 no-padding">
+                <img src="{{ url_for('static', filename='uploads/activity_images/600x250/' + activity.image ) }}">
+            </div>
+            <div class="col-md-8">
+                <h2 class="ellipsis" style="font-weight: 900;">{{ activity.title }}</h2>
+                {% if activity.start_date == activity.end_date %}
+                    <h4>{{ activity.start_date|datetime_with_day}}</h4>
                 {% else %}
-                    <img class="circle-img-sm" src="{{url_for('static', filename='images/pub-default-img.jpg') }}">
+                    <h4>{{ activity.start_date|datetime_with_day}} to {{ activity.end_date|datetime_with_day}}</h4>
                 {% endif %}
-            </span>
-            <span>{{ creator.firstname }} {{ creator.lastname }}</span>
-        </h4>
-    </div>
+                <hr />
+                    {% raw %}
+                    <button v-if="isInterested" type="button" class="btn btn-style-1" id="ninterested-btn" value="cgoing" v-on:click="toggleInterested()">
+                        NOT INTERESTED
+                    </button>
+                    <button v-else type="button" class="btn btn-style-2" id="interested-btn" value="cgoing" v-on:click="toggleInterested()">
+                        INTERESTED
+                    </button>
 
-    <div class="col-md-8 col-md-offset-2 text-center activity-about">
-        <hr />
-        <h3><strong>About this Activity</strong></h3>
-        <br>
-        <div class="text-center">
-            {{ activity.description|safe }}
+                    <!-- GOING BTNS -->
+                    <button v-if="isGoing" type="button" class="btn btn-style-1" id="njoin-btn" value="cgoing" v-on:click="toggleGoing()">
+                        LEAVE ACTIVITY
+                    </button>
+                    <button v-else type="button" class="btn btn-style-2" id="join-btn" value="cgoing" v-on:click="toggleGoing()">
+                        JOIN ACTIVITY
+                    </button>
+                    {% endraw %}
+                <hr />
+                {% if current_user.can_modify_activity(activity.id) %}
+                    <a class="btn btn-style-1" href="{{url_for('client.edit_activity', id=activity.id) }}">
+                        Edit this Activity
+                    </a>
+                    <a class="btn btn-style-3" href="{{url_for('client.attendance', id=activity.id) }}" title="Attendance Checklist"><i class="fa fa-check-square-o"></i></a>
+                {% endif %}
+                {% if current_user.can_modify_activity(activity.id) or activity.is_done() %}
+                    <a class="btn btn-style-3" href="{{url_for('client.summary', id=activity.id) }}" title="Activity Summary"><i class="fa fa-calendar-check-o"></i></a>
+                {% endif %}
+            </div>
         </div>
-    </div>
 
-    <div class="col-md-10 col-md-offset-1 text-center activity-about">
-        <hr />
-        <h3><strong>{{ going_users|length }} people are Going to this Activity</strong></h3>
-        <br>
-        <div>
-            {% for user in going_users %}
-                {{ user_image_popup(user) }}
-            {% endfor %}
+        <div class="col-md-8 col-md-offset-4" style="margin-top: 15px;">
+            <h4>Activity created by 
+                <a href="{{ url_for('client.view_profile', id=creator.id) }}">
+                    <span>
+                        {% if creator.image %}
+                            <img class="circle-img-sm" src="{{url_for('static', filename='uploads/profile_pictures/' + creator.image) }}">
+                        {% else %}
+                            <img class="circle-img-sm" src="{{url_for('static', filename='images/pub-default-img.jpg') }}">
+                        {% endif %}
+                    </span>
+                    <span>{{ creator.firstname }} {{ creator.lastname }}</span>
+                </a>
+            </h4>
         </div>
-    </div>
 
-    <div class="col-md-10 col-md-offset-1 text-center activity-about">
-        <hr />
-        <h3><strong>{{ interested_users|length }} people are Interested to this Activity</strong></h3>
-        <br>
-        <div>
-            {% for user in interested_users %}
-                {{ user_image_popup(user) }}
-            {% endfor %}
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1 text-center activity-about">
+                <hr />
+                <h3><strong>About this Activity</strong></h3>
+                <br>
+                <div class="text-center">
+                    {{ activity.description|safe }}
+                </div>
+            </div>
         </div>
-        <hr />
-    </div>
 
-    {% if can_edit_activity %}
-        <a class="btn btn-sm btn-style-1" href="{{url_for('client.edit_activity', id=activity.id) }}">
-            Edit this Activity
-        </a>
-    {% endif %}
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1 text-center activity-about">
+                <hr />
+                <h3><strong>{{ going_users|length }} people are Going to this Activity</strong></h3>
+                <br>
+                <div>
+                    {% for user in going_users %}
+                        {{ user_image_popup(user) }}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1 text-center activity-about">
+                <hr />
+                <h3><strong>{{ interested_users|length }} people are Interested to this Activity</strong></h3>
+                <br>
+                <div>
+                    {% for user in interested_users %}
+                        {{ user_image_popup(user) }}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
     </div>    
 
 {% endblock %}

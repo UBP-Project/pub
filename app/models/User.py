@@ -138,6 +138,18 @@ class User(UserMixin, db.Model):
             abort(403)
         return is_leader
 
+    def can_modify_activity(self, activity_id, abort_on_false=False):
+        if self.is_manager() or self.is_administrator():
+            return True
+        is_leader = Membership.Membership.query.join(Activity.Activity,
+            Activity.Activity.group_id == Membership.Membership.group_id)\
+            .filter(Membership.Membership.user_id == self.id,
+            (Membership.Membership.level == 1) | (Membership.Membership.level == 2),
+            Activity.Activity.id == activity_id).first() is not None
+        if is_leader == False and abort_on_false == True:
+            abort(403)
+        return is_leader
+
     def to_json(self):
         json_post = {
             'id'           : self.id,

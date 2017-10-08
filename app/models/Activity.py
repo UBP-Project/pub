@@ -60,6 +60,9 @@ class Activity(db.Model):
         }
         return json_post
 
+    def is_done(self):
+        return self.end_date < datetime.now()
+
     def set_points(self, action, value):
         entity = Entity.query.filter(
             Entity.entity == 'activity', Entity.action == action).first()
