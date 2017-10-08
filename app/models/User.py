@@ -8,7 +8,7 @@ import uuid
 import getpass
 from uuid import UUID
 from datetime import datetime
-
+from flask_login import current_user
 
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
@@ -37,7 +37,7 @@ class User(UserMixin, db.Model):
     #     lazy='dynamic'
     #     )
 
-    def __init__(self, firstname, middlename, lastname, email, department, position, birthday, role_id, image):
+    def __init__(self, firstname, middlename, lastname, email, department, position, birthday, role_id, image=None):
         self.firstname = firstname
         self.middlename = middlename
         self.lastname = lastname
@@ -72,8 +72,8 @@ class User(UserMixin, db.Model):
         return self.can(Permission.ADMINISTER)
 
     def is_manager(self):
-        manager = Role.query.filter(name == 'Manager').first()
-        return (self.id.role_id == manager.id)
+        manager = Role.query.filter(Role.name == 'Manager').first()
+        return (self.role_id == manager.id)
 
     @property
     def password(self):
@@ -126,6 +126,18 @@ class User(UserMixin, db.Model):
         else:
             return 0    
 
+    def can_modify_group(self, group_id, abort_on_false=False):
+        if self.is_manager() or self.is_administrator():
+            return True
+        can_access = Membership.Membership.query.join(Interest_Group.Interest_Group,
+                Interest_Group.Interest_Group.id == Membership.Membership.group_id)\
+            .filter(Membership.Membership.user_id == current_user.get_id(),
+                    Membership.Membership.level == 2,
+                Interest_Group.Interest_Group.id == group_id).first() is not None
+        if can_access == False and abort_on_false == True:
+            abort(403)
+        return can_access
+
     def to_json(self):
         json_post = {
             'id'           : self.id,
@@ -149,23 +161,25 @@ class User(UserMixin, db.Model):
         middlename      = json_user.get('middlename')
         lastname        = json_user.get('lastname')
         email           = json_user.get('email')
-        password        = json_user.get('password_hash')
+        password        = json_user.get('password')
         department      = json_user.get('department')
         position        = json_user.get('position')
         birthday        = json_user.get('birthday')
         role_id         = json_user.get('role')
 
-        return User(
+        user = User(
             firstname       = firstname,
             middlename      = middlename,
             lastname        = lastname,
             email           = email,
-            password_hash   = password,
             department      = department,
             position        = position,
             birthday        = birthday,
             role_id         = role_id
         )
+
+        user.password = password
+        return user
 
     @staticmethod
     def get(user_id):

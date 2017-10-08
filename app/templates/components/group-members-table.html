@@ -1,4 +1,4 @@
-{% macro members_table() %}
+{% macro members_table(group, current_user) %}
     {% raw %}
         <div class="row" id="members_app">
             <div class="col-md-12 members-list">
@@ -12,9 +12,15 @@
                     <li v-on:click="changeView('managers')"><a>Managers ({{ managers.length }})</a></li>
                   </ul>
                 </div>
+                {% endraw %}
+
+                {% if current_user.can_modify_group(group.id) %}
                 <div class="col-md-2">
                     <button class="pull-right btn btn-sm btn-style-3" style="margin-top: 20px;" type="button" data-toggle="modal" data-target="#add_members_modal">Add Group Members <span class="fa fa-plus-circle"></span></button>
                 </div>
+                {% endif %}
+
+                {% raw %}
                 <table class="users table row table-hover table-condensed">
                         <tbody class="row">
                             <tr v-if="view == 'members'" class="user-table-item row" v-for="(user, index) in members">

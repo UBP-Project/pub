@@ -73,16 +73,23 @@ class Interest_Group(db.Model):
         db.session.commit()
 
     def set_leaders(self, leader_ids):
+        to_commit = False
         for leader_id in leader_ids:
             if str(current_user.get_id()) == leader_id: # Group creator is already assigned as manager
                 continue
-            membership = Membership.Membership(
-                group_id=self.id,
-                user_id=leader_id,
-                status=1,
-                level=1)
-            db.session.add(membership)
-        db.session.commit()
+            if leader_id == '':
+                continue
+            is_valid = True if User.User.query.get(leader_id) is not None else False
+            if is_valid:
+                to_commit = True
+                membership = Membership.Membership(
+                    group_id=self.id,
+                    user_id=leader_id,
+                    status=1,
+                    level=1)
+                db.session.add(membership)
+        if to_commit:
+            db.session.commit()
 
     def get_leaders(self):
         leaders = User.User.query\
