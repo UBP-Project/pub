@@ -430,7 +430,7 @@ def get_going_by(id):
 
     going = User_Activity.query.join(User, User_Activity.user_id == User.id)\
         .add_columns(User.firstname, User.lastname, User.image, User.id, User_Activity.attended)\
-        .filter(User_Activity.activity_id == id).order_by(User.firstname).all()
+        .filter(User_Activity.activity_id == id, User_Activity.status == 1).order_by(User.firstname).all()
 
     return jsonify({
         'going_users': [{
@@ -651,9 +651,11 @@ def interested_to_activity_by(id):
     activity = User_Activity.query.filter_by(
         user_id=current_user.get_id(), activity_id=id, status=0).first()
 
+
     if activity is not None:
         # check if the status is interested
         return jsonify({'status': 'Record already exists'}), 201
+        print("Activity interested is not None")
     else:
         new_user_activity = User_Activity(
             user_id=current_user.get_id(),
