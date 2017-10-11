@@ -1,0 +1,247 @@
+{% extends "./layout/client_base.html" %}
+
+{% block title %} Notifications {% endblock title %}
+
+{% block content %}
+
+
+{% raw %}
+    <div class="row" id="search_app" class="search_page">
+
+        <div class="col-md-12">
+            <div class="group-box">
+
+                <h3>Search Results for "{{ query }}"</h3>
+                <hr/>
+
+                <div class="row">
+
+                    <div class="row">
+                        <div class="collapse navbar-collapse block-center" id="pub-navbar-collapse">
+                            <ul class="nav navbar-nav pull-left">
+                                <li v-bind:class="{ active_tab: filter == 'all' }">
+                                    <a :href="'/search?filter=all&query=' + query">All</a>
+                                </li>
+                                <li v-bind:class="{ active_tab: filter == 'users' }">
+                                    <a :href="'/search?filter=users&query=' + query">Users</a>
+                                </li>
+                                <li v-bind:class="{ active_tab: filter == 'groups' }">
+                                    <a :href="'/search?filter=groups&query=' + query">Interest Groups</a>
+                                </li>
+                                <li v-bind:class="{ active_tab: filter == 'activities' }">
+                                    <a :href="'/search?filter=activities&query=' + query">Activities</a>
+                                </li>
+                                <li v-bind:class="{ active_tab: filter == 'perks' }">
+                                    <a :href="'/search?filter=perks&query=' + query">Perks</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <br>
+                    </div>
+
+                    <div class="row" v-show="results.users && results.users.length > 0">
+                        <div class="col-md-12">
+                            <h4><strong>Users</strong></h4>
+                        </div>
+                        <div v-for="user in results.users" class="col-md-12">
+                            <a :href="'/profile/' + user.id">
+                                <img v-if="user.image != null" class="circle-img-sm" :src="user_images_folder + user.image">
+                                <img v-else class="circle-img-sm" src="/static/images/pub-default-img.jpg">
+                                <span>
+                                    {{ user.firstname }} {{ user.lastname }}
+                                </span>
+                            </a>
+                        </div>
+                        <div class="col-md-12 text-center" v-if="filter == 'all'">
+                            <br>
+                            <a :href="'./search?query=' + this.query + '&filter=users'">See All</a>
+                        </div>
+                        <div class="col-md-12 text-center" v-else>
+                            <br>
+                            <button class="btn btn-style-3" v-on:click="seeMore()" v-show="has_next">See More</a>
+                        </div>  
+                        <div class="col-md-12">
+                            <hr>
+                        </div>
+                    </div> <!-- End of Users -->
+
+                    <div class="row" v-show="results.activities && results.activities.length > 0">
+                        <div class="col-md-12">
+                            <h4><strong>Activities</strong></h4>
+                        </div>
+                        <!-- ACTIVITY CARD -->
+                        <div v-for="activity in results.activities" class="col-md-3 col-lg-4 col-sm-6 card-container" v-on:click="loadActivityInfo(activity)">
+                            <div class="card zoomify" data-toggle="modal" :data-target="'#activity-' + activity.id">
+                                <div class="card-img">
+                                    <template v-if="1">
+                                        <img :src="activity_card_images_folder + activity.image" class="img-responsive activity-filter-marker"/>
+                                        <span class="activity-marker-icon">
+                                                <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
+                                        </span>
+                                    </template>
+                                    <template v-else>
+                                        <img :src="activity_card_images_folder + activity.image" class="img-responsive"/>
+                                    </template>
+                                </div>
+                                <div class="card-desc">
+                                    <h4 class="text-center title">{{ activity.title}}</h4>
+                                    <h5 class="text-center"><small class="text-wrap">{{ activity.start_date }}</small></h5>
+                                </div>
+                            </div>
+                        </div> <!-- END OF ACTIVITY CARD -->
+                        <div class="col-md-12 text-center" v-if="filter == 'all'">
+                            <br>
+                            <a :href="'./search?query=' + this.query + '&filter=activities'">See All</a>
+                        </div>
+                        <div class="col-md-12 text-center" v-else>
+                            <br>
+                            <button class="btn btn-style-3" v-on:click="seeMore()" v-show="has_next">See More</a>
+                        </div>  
+                        <div class="col-md-12">
+                            <hr>
+                        </div>
+                    </div> <!-- End of Activities -->
+
+
+                    
+                    <div class="row" v-show="results.groups  && results.groups.length > 0">
+                        <div class="col-md-12">
+                            <h4><strong>Groups</strong></h4>
+                        </div>
+                        <!-- GROUP CARD -->
+                        <div v-for="group in results.groups" class="col-md-3 col-sm-6 group-card" :id="group.id">
+                            <div class="zoomify group-panel grp-icon" data-toggle="modal" :data-target="'#group-' + group.id">
+                                <div class="group-img">
+                                    <img :src="group_card_covers_folder + group.cover_photo" class="group-card-img">
+                                    <img class="img-icon group-card-icon" :src="group_card_icons_folder + group.group_icon" width="120px" height="120px">
+                                </div>
+                                <div class="group-desc">
+                                    <h4 class="title">{{ group.name }}</h4>
+                                    <p><i class="fa fa-user"></i> {{ group.population }}</p>
+                                </div>
+                            </div>
+                        </div> <!-- END OF GROUP CARD -->
+                        <div class="col-md-12 text-center" v-if="filter == 'all'">
+                            <br>
+                            <a :href="'./search?query=' + this.query + '&filter=groups'">See All</a>
+                        </div>
+                        <div class="col-md-12 text-center" v-else>
+                            <br>
+                            <button class="btn btn-style-3" v-on:click="seeMore()" v-show="has_next">See More</a>
+                        </div>  
+                        <div class="col-md-12">
+                            <hr>
+                        </div>
+                    </div> <!-- End of Groups -->
+
+                    <div class="row" v-show="results.perks  && results.perks.length > 0">
+                        <div class="col-md-12">
+                            <h4><strong>Perks</strong></h4>
+                        </div>
+                        <!-- PERK CARD -->
+                        <div v-for="perk in results.perks" class="col-md-6 perks-card">
+                            <div class="row zoomify perks-inner-card" data-toggle="modal" data-target="'#perks-' + perk.id">
+                                <div class="col-md-5 no-padding perks-col-1">
+                                    <img :src="'../../static/uploads/perks_images/164x200/' + perk.image"/>
+                                </div>
+                                <div class="col-md-7 perks-col-2">
+                                    <h4 class="title"><strong>{{ perk.title }}</strong></h4>
+                                    <div class="perks-desc">
+                                        <p><small><i>Click for description</i></small></p>
+                                    </div>
+                                    <h5 class="title" class="perks-timestamp"><small>{{ perk.timestamp }}</small></h5>
+                                    <span class="perks-edit">
+                                        <a v-show="is_manager" href="'/perks/'+ perk.id + '/edit'" class="perks-edit-btn">
+                                            <button class="btn btn-style-3 btn-sm" :title="'Edit ' + perk.title"><i class="fa fa-gear"></i></button>
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div> <!-- END OF PERK CARD -->
+                        <div class="col-md-12 text-center" v-if="filter == 'all'">
+                            <br>
+                            <a :href="'./search?query=' + this.query + '&filter=perks'">See All</a>
+                        </div>
+                        <div class="col-md-12 text-center" v-else>
+                            <br>
+                            <button class="btn btn-style-3" v-on:click="seeMore()" v-show="has_next">See More</a>
+                        </div>  
+                        <div class="col-md-12">
+                            <hr>
+                        </div>
+                    </div> <!-- End of perks -->
+
+
+            </div>
+        </div>
+    </div> <!-- end of search_app -->
+</div>
+{% endraw %}
+
+{% endblock content %}
+
+{% block scripts %}
+
+    <script>
+        var vm = new Vue({
+            el: "#search_app",
+            data: {
+                notifications: [],
+                page: 1,
+                has_next: false,
+                group_modal_icons_folder: '/static/uploads/group_icons/200x200/',
+                group_modal_covers_folder: '/static/uploads/covers/600x250/',
+                activity_modal_images_folder: '/static/uploads/activity_images/600x250/',
+                group_card_icons_folder: '/static/uploads/group_icons/130x130/',
+                group_card_covers_folder: '/static/uploads/covers/200x170/',
+                activity_card_images_folder: '/static/uploads/activity_images/260x200/',
+                user_images_folder: '/static/uploads/profile_pictures/',
+                activity_card_image_folder: '',
+                results: {users: [], activities: [], groups: [], perks: []},
+                // URL parameter comes from jinja
+                // query - search input
+                // filter - activities, groups, users, perks, all
+                query: "{{ request.args.get('query') }}",
+                filter: "{{ request.args.get('filter', 'all')}}",
+                page: {{ request.args.get("page", 1)|int }}
+            },
+            methods: {
+                loadSearch: function() {
+                    var api_url = '/api/v1.0/search' + "?query=" + this.query + "&filter=" + this.filter + "&page=" + this.page; 
+                    $.ajax({
+                        url: api_url,
+                        type: 'GET'
+                    }).done(data => {
+                        this.results = data.results;
+                        this.has_next = data.has_next;
+                        this.page++;
+                    });
+                },
+                seeMore: function() {
+                    var api_url = '/api/v1.0/search' + "?query=" + this.query + "&filter=" + this.filter + "&page=" + this.page; 
+                    $.ajax({
+                        url: api_url,
+                        type: 'GET'
+                    }).done(data => {
+                        if (this.filter == 'activities') {
+                            this.results.activities.push.apply(this.results.activities, data.results.activities)
+                        } else if (this.filter == 'groups') {
+                            this.results.groups.push.apply(this.results.groups, data.results.groups)
+                        } else if (this.filter == 'users') {
+                            this.results.users.push.apply(this.results.users, data.results.users)
+                        } else if (this.filter == 'perks') {
+                            this.results.perks.push.apply(this.results.perks, data.results.perks)
+                        } else {
+                            alert("Invalid search.")
+                        }
+                    });
+                }
+            }
+        });
+
+        $(document).ready(function() {
+            vm.loadSearch();
+        });
+    </script>
+
+{% endblock scripts %}

@@ -1,3 +1,27 @@
+#search_input {
+    margin-top: 10px;
+    height: 30px;
+    margin-right: 10px;
+    border: 1px solid #fd8103;
+    border-radius: 15px;
+    padding: 8px 15px;
+    min-width: 200px;
+}
+
+
+/* Seach page */
+#search_app .active_tab {
+    border-bottom: 3px solid #fd8103 !important;
+    font-size: 100px !important;
+    color: #fd8103;
+}
+
+#search_app .active_tab a {
+    color: #fd8103;
+    font-weight: "900" !important;
+}
+/* End of search page */
+
 .no-padding {
     padding: 0px !important;
 }

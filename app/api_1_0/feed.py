@@ -26,11 +26,11 @@ def feed():
         ex: 1 is 24 hours, 0.5 12 hours
     """
     page_gap = 0.5
-    start_ts = datetime.now() - timedelta(days=page * 0.5)
+    start_ts = datetime.now() - timedelta(days=page * page_gap)
     if page == 1:
-        end_ts = datetime.now() + timedelta(days=1 * 0.5)
+        end_ts = datetime.now() + timedelta(days=1 * page_gap)
     else:
-        end_ts = datetime.now() - timedelta(days=(page - 1) * 0.5)
+        end_ts = datetime.now() - timedelta(days=(page - 1) * page_gap)
 
     return jsonify({
         'new_activities': new_activity(start_ts, end_ts),
