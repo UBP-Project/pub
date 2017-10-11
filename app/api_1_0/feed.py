@@ -17,10 +17,9 @@ def serialize(model):
 
 @api.route('/feed')
 def feed():
-    if 'page' in request.args:
-        page = int(request.args.get('page'))
-    else:
-        page = 1
+    
+    page = request.args.get('page', 1)
+    page = int(page)
 
     start_ts = date.today() - timedelta(days=page)
     if page == 1:

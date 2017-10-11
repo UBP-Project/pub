@@ -299,13 +299,6 @@ def get_group_members(id):
         'managers':[ manager.to_json() for manager in managers]
     })
 
-@api.route('/groups/<uuid(strict=False):id>/activities', methods=['GET'])
-@login_required
-def get_group_activities(id):
-    activities = Activity.query.filter(Activity.group_id == id).all()
-    return jsonify({
-        'activities': [activity.to_json() for activity in activities]
-    })
 
 @api.route('/interest_groups', methods=['POST'])
 @login_required
@@ -1058,3 +1051,31 @@ def get_population(id):
         'leaders' : leaders,
         'total'   : members + leaders
     }), 200
+
+
+@api.route('/groups/<string:group_id>/activities')
+def get_group_activities(group_id):
+
+    ACTIVITIES_PER_PAGE = 8
+    show = request.args.get('show', 'all')
+    page = int(request.args.get('page', 1))
+
+    if show == 'done':
+        activities = Activity.query.filter(
+            Activity.group_id == group_id,
+            Activity.end_date < datetime.datetime.now())\
+            .order_by(Activity.start_date)\
+            .paginate(page=page, per_page=ACTIVITIES_PER_PAGE, error_out=False)
+    elif show == 'upcoming':
+        activities = Activity.query.filter(
+            Activity.group_id == group_id,
+            Activity.end_date > datetime.datetime.now())\
+            .order_by(Activity.start_date)\
+            .paginate(page=page, per_page=ACTIVITIES_PER_PAGE, error_out=False)
+    else:
+        activities = Activity.query.order_by(Activity.start_date)\
+            .paginate(page=page, per_page=ACTIVITIES_PER_PAGE, error_out=False)
+    return jsonify({
+        'activities': [activity.to_json() for activity in activities.items],
+        'has_next': activities.has_next
+    })
