@@ -153,6 +153,9 @@ def randomize_time(start_timestamp,end_timestamp):
     Modify timestamps of certain records to simulate realistic user actions
 """
 def modify_timestamps():
+
+    print("Modifying timestamps")
+    
     start_timestamp = time.mktime(time.strptime('Sep 1 2017  01:33:00', '%b %d %Y %I:%M:%S'))
     end_timestamp = time.mktime(time.strptime('Oct 12 2017  08:33:00', '%b %d %Y %I:%M:%S'))
 

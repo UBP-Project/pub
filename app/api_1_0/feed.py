@@ -21,11 +21,16 @@ def feed():
     page = request.args.get('page', 1)
     page = int(page)
 
-    start_ts = date.today() - timedelta(days=page)
+    """
+        Duration of each query per page
+        ex: 1 is 24 hours, 0.5 12 hours
+    """
+    page_gap = 0.5
+    start_ts = datetime.now() - timedelta(days=page * 0.5)
     if page == 1:
-        end_ts = date.today() + timedelta(days=1)
+        end_ts = datetime.now() + timedelta(days=1 * 0.5)
     else:
-        end_ts = date.today() - timedelta(days=page - 1)
+        end_ts = datetime.now() - timedelta(days=(page - 1) * 0.5)
 
     return jsonify({
         'new_activities': new_activity(start_ts, end_ts),

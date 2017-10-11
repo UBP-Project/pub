@@ -207,9 +207,12 @@
 
                     </div>
                     
-                </div>           
-            </div>     
-            {% endraw %}
+                </div>
+                {% endraw %}
+                <div class="row text-center">
+                    <img v-show="loading" src="{{ url_for('static', filename='images/spinner.svg') }}">
+                </div>
+            </div> <!-- end of app -->  
 
 		</div>
 
@@ -225,12 +228,15 @@
                 profile_images_folder: '/static/uploads/profile_pictures/',
                 group_modal_icons_folder: '/static/uploads/group_icons/200x200/',
                 feeds: [],
-                default_user_img: '/static/images/pub-default-img.jpg'
+                default_user_img: '/static/images/pub-default-img.jpg',
+                page: 1,
+                loading: false
             },
             methods: {
                 loadFeed: function() {
+                    this.loading = true;
                     $.ajax({
-                        url: "{{ url_for('api.feed') }}",
+                        url: "{{ url_for('api.feed') }}" + "?page=" + this.page,
                         type: 'GET'
                     }).done(data => {
                         console.log(data);
@@ -247,6 +253,8 @@
                         this.feeds.push.apply(this.feeds, data.new_groups);
                         this.feeds.push.apply(this.feeds, data.new_memberships);
                         this.feeds.push.apply(this.feeds, data.new_user_activities);
+                        this.page++;
+                        this.loading = false;
                     });
                 }
             },
@@ -262,6 +270,14 @@
 
         $(document).ready(function() {
             vm.loadFeed();
-        })
+        });
+
+        $(window).scroll(function () {
+            if(vm.loading == false) {
+                if ($(window).height() + $(window).scrollTop() + 100 >= $(document).height()) {
+                    vm.loadFeed();
+                }
+            }
+        });
     </script>
 {% endblock scripts %}
