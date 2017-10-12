@@ -61,7 +61,7 @@ class Activity(db.Model):
         return json_post
 
     def is_done(self):
-        return self.end_date < datetime.now()
+        return self.end_date < datetime.date(datetime.now())
 
     def set_points(self, action, value):
         entity = Entity.query.filter(
