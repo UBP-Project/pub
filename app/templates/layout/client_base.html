@@ -44,13 +44,23 @@
 				<a class="navbar-brand hidden-sm hidden-md hidden-lg" href="/">UBP:Pub</a>
 			</div>
 			<div class="collapse navbar-collapse block-center" id="pub-navbar-collapse">
-				<ul class="nav navbar-nav">
-					<li><a href="/">HOME</a></li>
-					<li><a href="/groups">INTEREST GROUPS</a></li>
-					<li><a href="/activities">ACTIVITIES</a></li>
-					<li><a href="/leaderboard">LEADERBOARD</a></li>
-                    <li><a href="/perks">PERKS</a></li>
-				</ul>
+                <div class="container" style="padding: 0px 35px;">
+    				<ul class="nav navbar-nav pull-left">
+    					<li><a href="/">HOME</a></li>
+    					<li><a href="/groups">INTEREST GROUPS</a></li>
+    					<li><a href="/activities">ACTIVITIES</a></li>
+    					<li><a href="/leaderboard">LEADERBOARD</a></li>
+                        <li><a href="/perks">PERKS</a></li>
+    				</ul>
+                    <form method="get" action="/search">
+                        <span class="input-group search-input-group pull-right">
+                          <input type="text" class="form-control" placeholder="Search Pub" name="query" id="search_input" value="{{request.args.get('query', '')}}">
+                          <span class="input-group-btn">
+                            <button class="btn btn-secondary search-btn" type="sumbit"><i class="fa fa-search"></i></button>
+                          </span>
+                        </span>
+                    </form>
+                </div>
 			</div>
 		</nav>
 

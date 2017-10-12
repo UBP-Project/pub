@@ -36,8 +36,7 @@ def create_activity():
             end_date=form.start_date.data,
             address=form.address.data,
             group_id=None if form.group.data == "None" else uuid.UUID(
-                form.group.data).hex,
-            image=image_hashed_filename)
+                form.group.data).hex)
         db.session.add(activity)
         db.session.commit()
         db.session.refresh(activity)
@@ -136,14 +135,7 @@ def edit_activity(id):
     if request.method == 'POST':
         if form.image.data is not None:
             image = form.image.data
-            image_filename = secure_filename(image.filename)
-            if is_valid_extension(image_filename):
-                extension = image_filename.rsplit('.', 1)[1].lower()
-                image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
-                file_path = os.path.join('app/static/uploads/activity_images',
-                                         image_hashed_filename)
-                image.save(file_path)
-                activity.image = image_hashed_filename
+            activity.set_image(image)
         activity.title = form.title.data
         activity.description = form.description.data
         activity.start_date = form.start_date.data

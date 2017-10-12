@@ -108,6 +108,7 @@
 {% endblock content %}
 
 {% block scripts %}
+
 	<script>
 		var vm = new Vue({
 			el: "#perks_app",
@@ -141,4 +142,5 @@
 			vm.is_manager = "{{ is_manager }}" == "True" ? true : false;
 		})
 	</script>
+    
 {% endblock scripts %}

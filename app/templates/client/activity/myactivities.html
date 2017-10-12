@@ -22,7 +22,7 @@
                             <div class="col-md-3 col-lg-4 col-sm-6 card-container" v-on:click="loadActivityInfo(activity)">
                                 <div class="card zoomify" data-toggle="modal" :data-target="'#activity-joined-' + activity.id">
                                     <div class="card-img">
-                                        <template v-if="activity.status = '2'">
+                                        <template v-if="activityStatus(activity) == 2">
                                             <img :src="activity_card_images_folder + activity.image" class="img-responsive activity-filter-marker"/>
                                             <span class="activity-marker-icon">
                                                     <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
@@ -51,7 +51,7 @@
                                         <!-- BODY -->
                                         <div class="modal-body">
                                             <div class="img-container">
-                                               <template v-if="activity.status='2'">
+                                               <template v-if="activityStatus(activity) == 2">
                                                     <img :src="activity_modal_images_folder + activity.image" class="img-responsive activity-filter-marker"/>
                                                     <span class="activity-marker-icon">
                                                             <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
@@ -152,7 +152,7 @@
 
                                             <span class="row">
                                                 <span class="col-md-4 activity-manage-btns">
-                                                    <a v-if="( (activity.status = '2') || is_manager || activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + activity.id + '/summary'" title="Activity Summary"><i class="fa fa-calendar-check-o"></i></a>
+                                                    <a v-if="( (activityStatus(activity) == 2) || is_manager || activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + activity.id + '/summary'" title="Activity Summary"><i class="fa fa-calendar-check-o"></i></a>
                                                     <a v-show="(is_manager || activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + activity.id + '/attendance'" title="Attendance Checklist"><i class="fa fa-check-square-o"></i></a>
                                                 </span>
                                                 <span class="col-md-8 pull-right box-no-padding">
@@ -220,7 +220,7 @@
                             <div class="col-md-3 col-lg-4 col-sm-6 card-container" v-on:click="loadActivityInfo(activity)">
                                 <div class="card zoomify" data-toggle="modal" :data-target="'#activity-interested-' + activity.id">
                                     <div class="card-img">
-                                        <template v-if="activity.status = '2'">
+                                        <template v-if="activityStatus(activity) == 2">
                                             <img :src="activity_card_images_folder + activity.image" class="img-responsive activity-filter-marker"/>
                                             <span class="activity-marker-icon">
                                                     <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
@@ -249,7 +249,7 @@
                                         <!-- BODY -->
                                         <div class="modal-body">
                                             <div class="img-container">
-                                               <template v-if="activity.status='2'">
+                                               <template v-if="activityStatus(activity) == 2">
                                                     <img :src="activity_modal_images_folder + activity.image" class="img-responsive activity-filter-marker"/>
                                                     <span class="activity-marker-icon">
                                                             <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
@@ -350,7 +350,7 @@
 
                                             <span class="row">
                                                 <span class="col-md-4 activity-manage-btns">
-                                                    <a v-if="( (activity.status = '2') || is_manager || activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + activity.id + '/summary'" title="Activity Summary"><i class="fa fa-calendar-check-o"></i></a>
+                                                    <a v-if="( (activityStatus(activity) == 2) || is_manager || activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + activity.id + '/summary'" title="Activity Summary"><i class="fa fa-calendar-check-o"></i></a>
                                                     <a v-show="(is_manager || activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + activity.id + '/attendance'" title="Attendance Checklist"><i class="fa fa-check-square-o"></i></a>
                                                 </span>
                                                 <span class="col-md-8 pull-right box-no-padding">
@@ -415,6 +415,21 @@
             is_manager: false
           },
           methods: {
+            activityStatus: function(event){
+                currentDate = new Date();
+                startDate = new Date(event.start_date);
+                endDate = new Date(event.end_date);
+
+                if(currentDate > startDate && currentDate < endDate){
+                    return 1; //happening
+                }
+                else if(endDate < currentDate){
+                    return 2;
+                }
+                else{
+                    return 0; //upcoming
+                }
+            },
             loadActivities: function() {
                 $.ajax({
                     url: "{{ url_for('api.my_joined_activities')}}" + "?page=" + this.activities_page,
@@ -527,6 +542,21 @@
             is_manager: false
           },
           methods: {
+            activityStatus: function(event){
+                currentDate = new Date();
+                startDate = new Date(event.start_date);
+                endDate = new Date(event.end_date);
+
+                if(currentDate > startDate && currentDate < endDate){
+                    return 1; //happening
+                }
+                else if(endDate < currentDate){
+                    return 2; // Done
+                }
+                else{
+                    return 0; //upcoming
+                }
+            },
             loadActivities: function() {
                 $.ajax({
                     url: "{{ url_for('api.my_interested_activities')}}" + "?page=" + this.activities_page,

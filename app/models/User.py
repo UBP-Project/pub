@@ -8,7 +8,8 @@ import uuid
 import getpass
 from uuid import UUID
 from datetime import datetime
-
+from flask_login import current_user
+from flask import abort
 
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
@@ -37,16 +38,16 @@ class User(UserMixin, db.Model):
     #     lazy='dynamic'
     #     )
 
-    def __init__(self, firstname, middlename, lastname, email, password_hash, department, position, birthday, role_id):
+    def __init__(self, firstname, middlename, lastname, email, department, position, birthday, role_id, image=None):
         self.firstname = firstname
         self.middlename = middlename
         self.lastname = lastname
         self.email = email
-        self.password_hash = password_hash
         self.department = department
         self.position = position
         self.birthday = birthday
         self.role_id = role_id
+        self.image = image
 
     def __repr__(self):
         return '<User %r>' % self.email
@@ -72,8 +73,10 @@ class User(UserMixin, db.Model):
         return self.can(Permission.ADMINISTER)
 
     def is_manager(self):
-        manager = Role.query.filter(name == 'Manager').first()
-        return (self.id.role_id == manager.id)
+        if self.is_administrator():
+            return True
+        manager = Role.query.filter(Role.name == 'Manager').first()
+        return (self.role_id == manager.id)
 
     @property
     def password(self):
@@ -124,7 +127,30 @@ class User(UserMixin, db.Model):
         if user_points:
             return user_points.points
         else:
-            return 0    
+            return 0
+
+    def can_modify_group(self, group_id, abort_on_false=False):
+        if self.is_manager() or self.is_administrator():
+            return True
+        is_leader = True if Membership.Membership.query.filter(
+            Membership.Membership.group_id == group_id,
+            Membership.Membership.user_id == self.id,
+            Membership.Membership.level == 1).first() is not None else False
+        if is_leader is False and abort_on_false is True:
+            abort(403)
+        return is_leader
+
+    def can_modify_activity(self, activity_id, abort_on_false=False):
+        if self.is_manager() or self.is_administrator():
+            return True
+        is_leader = Membership.Membership.query.join(Activity.Activity,
+            Activity.Activity.group_id == Membership.Membership.group_id)\
+            .filter(Membership.Membership.user_id == self.id,
+            (Membership.Membership.level == 1) | (Membership.Membership.level == 2),
+            Activity.Activity.id == activity_id).first() is not None
+        if is_leader == False and abort_on_false == True:
+            abort(403)
+        return is_leader
 
     def to_json(self):
         json_post = {
@@ -149,23 +175,25 @@ class User(UserMixin, db.Model):
         middlename      = json_user.get('middlename')
         lastname        = json_user.get('lastname')
         email           = json_user.get('email')
-        password        = json_user.get('password_hash')
+        password        = json_user.get('password')
         department      = json_user.get('department')
         position        = json_user.get('position')
         birthday        = json_user.get('birthday')
         role_id         = json_user.get('role')
 
-        return User(
+        user = User(
             firstname       = firstname,
             middlename      = middlename,
             lastname        = lastname,
             email           = email,
-            password_hash   = password,
             department      = department,
             position        = position,
             birthday        = birthday,
             role_id         = role_id
         )
+
+        user.password = password
+        return user
 
     @staticmethod
     def get(user_id):

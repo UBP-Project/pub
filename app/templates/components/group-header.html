@@ -40,15 +40,19 @@
                 <br /><br /><br />
             </div>
             <div class="col-md-offset-2 col-md-6 text-right group-controls" style="padding: 20px;">
+                {% if current_user.can_modify_group(group.id) %}
                 <a href="{{ url_for('client.group_requests', id=group.id) }}" class="btn btn-sm btn-style-3">
                     Requests
                 </a>
+                {% endif %}
                 <a href="{{ url_for('client.group_members', id=group.id) }}" class="btn btn-sm btn-style-3">
                     Members
                 </a>
+                {% if current_user.can_modify_group(group.id) %}
                 <a class="btn btn-sm btn-style-1" href="{{ url_for('client.update_group', id=group.id) }}">
                     <span class="fa fa-cog"></span>
                 </a>
+                {% endif %}
             </div>
         </div>
     {% endif %}

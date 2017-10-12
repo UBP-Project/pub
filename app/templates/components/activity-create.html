@@ -6,7 +6,7 @@
                 <h1 class="pull-left">Create Activity</h1>
                 <div style="margin-top: 25px;">
                     {{ form.submit(
-                        class="btn btn-style-1 pull-right"
+                        class="submit btn btn-style-1 pull-right"
                     )}}
                 </div>
         </div>
@@ -76,6 +76,7 @@
                     </div>
                     {{ form.image(
                         placeholder="Activity Image",
+                        accept='image/*'
                     )}}
                 </div>
             </div>
@@ -100,7 +101,7 @@
 
         <div class="col-md-12 no-padding">
             <hr />
-            {{ form.submit(class="btn btn-block btn-style-1") }}
+            {{ form.submit(class="submit btn btn-block btn-style-1") }}
         </div>
     </form>
 {% endmacro %}
@@ -118,7 +119,7 @@
             ]
         });
 
-        $("#submit").on('click', function(e) {
+        $(".submit").on('click', function(e) {
             $("#description").text($("#description-editor").trumbowyg('html'));
         });
 

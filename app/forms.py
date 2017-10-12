@@ -3,7 +3,7 @@ from wtforms import StringField, SubmitField, PasswordField, SelectField
 from wtforms.validators import Required, UUID
 from wtforms.fields.html5 import EmailField, DateField, IntegerField
 from wtforms.widgets import TextArea
-from flask_wtf.file import FileField, FileRequired
+from flask_wtf.file import FileField, FileRequired, FileAllowed
 from .models import Interest_Group, Role, Membership, User
 from flask_login import current_user
 from .auth import is_manager

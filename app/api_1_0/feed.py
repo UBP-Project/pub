@@ -17,16 +17,20 @@ def serialize(model):
 
 @api.route('/feed')
 def feed():
-    if 'page' in request.args:
-        page = int(request.args.get('page'))
-    else:
-        page = 1
+    
+    page = request.args.get('page', 1)
+    page = int(page)
 
-    start_ts = date.today() - timedelta(days=page)
+    """
+        Duration of each query per page
+        ex: 1 is 24 hours, 0.5 12 hours
+    """
+    page_gap = 0.5
+    start_ts = datetime.now() - timedelta(days=page * page_gap)
     if page == 1:
-        end_ts = date.today() + timedelta(days=1)
+        end_ts = datetime.now() + timedelta(days=1 * page_gap)
     else:
-        end_ts = date.today() - timedelta(days=page - 1)
+        end_ts = datetime.now() - timedelta(days=(page - 1) * page_gap)
 
     return jsonify({
         'new_activities': new_activity(start_ts, end_ts),
