@@ -5,7 +5,7 @@ from ..forms import LoginForm
 from . import client
 from app import db
 from app.models import Perks
-from ..auth import is_manager_or_leader
+from ..auth import is_manager_or_leader, is_manager
 from ..forms import CreatePerkForm, UpdatePerkForm
 
 
