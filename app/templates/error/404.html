@@ -1,16 +1,16 @@
 {% extends "layout/base.html" %}
 
-{% block title %} 404 {% endblock title %}
+{% block title %} Not Found {% endblock title %}
 
 {% block content %}
-	<div class="col-md-4 col-md-offset-4 text-center" style="margin-top: 10%;">
+	<div class="col-md-4 col-md-offset-4 text-center error-div">
 	    <h1>404</h1><br/>
 	    <h1><small>File Not Found</small></h1>
-	    <h5 style="margin: 20px 0;">The resource you tried to access wasn't found in the server</h5>
+	    <h5 class="error-h5">The resource you tried to access wasn't found in the server</h5>
 	    <br/>
-	    <a href="/" style="text-decoration: none; color: #3a3a3a;">
+	    <a href="/" class="error-a">
 	    	<h6>Return to Pub</h6>
-	    	<img src="{{ url_for('static', filename='../../static/images/pub-default-img.jpg') }}" alt="Back to Pub" style="width: 50px; height: 50px; border-radius: 10px;">
+	    	<img src="{{ url_for('static', filename='../../static/images/pub-default-img.jpg') }}" alt="Back to Pub" class="error-img">
 	    </a>
 	</div>
 {% endblock content %}
