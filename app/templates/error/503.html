@@ -1,13 +1,12 @@
 {% extends "layout/base.html" %}
 
-{% block title %} Bad Request {% endblock title %}
+{% block title %} Service Unavailable {% endblock title %}
 
 {% block content %}
 	<div class="col-md-4 col-md-offset-4 text-center error-div">
-	    <h1>400</h1><br/>
-	    <h1><small>Bad Request</small></h1>
-	    <h5 class="error-h5">The resource you tried to access was bad request</h5>
-	    <h5>You don't send right data to see it</h5>
+	    <h1>503</h1><br/>
+	    <h1><small>Service Unavailable</small></h1>
+	    <h5 class="error-h5">The service you tried to access was unavailable</h5>
 	    <br/>
 	    <a href="/" class="error-a">
 	    	<h6>Return to Pub</h6>
