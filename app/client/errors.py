@@ -1,6 +1,14 @@
 from flask import render_template, jsonify, request
 from . import client
 
+@client.app_errorhandler(401)
+def unathorized_error(e):
+    return render_template('error/401.html'),	401
+
+@client.app_errorhandler(403)
+def forbidden_error(e):
+    return render_template('error/403.html'),	403
+
 @client.app_errorhandler(404)
 def page_not_found(e):
 	if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
@@ -8,10 +16,6 @@ def page_not_found(e):
 		response.status_code = 404
 		return response
 	return render_template('error/404.html'),	404
-
-@client.app_errorhandler(403)
-def forbidden_error(e):
-    return render_template('error/403.html'),	403
 
 @client.app_errorhandler(500)
 def internal_server_error(e):
