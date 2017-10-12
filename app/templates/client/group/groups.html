@@ -128,6 +128,7 @@
                                                     </div>
 
                                                     <div role="tabpanel" class="tab-pane" :id="'grp-activities-' + group.id">
+                                                        <h5><strong>Group's upcoming Activities</strong><a class="btn btn-xs btn-style-3" :href="'groups/' + group.id + '/activities'">View all</a></h5>
                                                         <template v-if="group.activities.length > 0">
     
                                                             <div v-for="activity in group.activities">
@@ -159,9 +160,9 @@
                                                             
                                                         </template>
                                                         <template v-else>
-                                                            <div>
-                                                                <p><i><small>Group has no activities.</small></i></p>
-                                                            </div>
+                                                            <p>
+                                                                <i><small>Group has no upcoming activities.</small></i>
+                                                            </p>
                                                         </template>
                                                     </div>
 
@@ -283,9 +284,10 @@
 
                 // load Activities
                 $.ajax({
-                    url: "/api/v1.0/interest_groups/" + group.id + "/activities",
+                    url: "/api/v1.0/interest_groups/" + group.id + "/activities?show=upcoming",
                     type: 'GET'
                 }).done(data => {
+                    console.log(data);
                     group.activities = data;
                 });
 

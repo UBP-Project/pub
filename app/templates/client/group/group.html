@@ -3,7 +3,7 @@
 {% block title %} {{ group["name"] }} {% endblock %}
 
 {% block content %}
-    <div class="row admin-page" style="background-color: white">
+    <div class="row admin-page" style="background-color: white; margin: 0 10px;">
         {{ group_header(group, current_user) }}
         <div class="row group-box">
             
@@ -12,27 +12,648 @@
                 <br>
             </div>
 
-            {% if activities|length > 0 %}
-                {% for activity in activities %}
-                    <div class="col-md-3 no-padding">
-                        <div class="activity-card"
-                        style="height: 180px; background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{url_for('static',filename='uploads/activity_images/260x200/' + activity.image) }}); background-repeat: no-repeat !important; background-size: cover !important;">
-                            <div style="padding: 30px 10px;">
-                                <h3 style="color: #fff;"><strong>{{ activity['title'] }}</strong></h3>
-                                <!-- <h6>{{ activity['description'] }}</h6> -->
-                                <h6 style="color: lightgray;"><i>{{ activity['start_date']}} - {{ activity['end_date']}}</i></h6>
+            <ul class="nav nav-tabs" style="padding: 10px 10px 0;">
+                <li class="active"><a data-toggle="tab" href="#upcoming-activities"><h4 class="text-center" style="color: #564C89;">UPCOMING</h4></a></li>
+                <li><a data-toggle="tab" href="#done-activities"><h4 class="text-center" style="color: #564C89;">DONE</h4></a></li>
+            </ul>
+
+            <div class="tab-content" style="padding: 20px 10px;">
+            
+                <div id="upcoming-activities" class="tab-pane fade in active row">
+                    {% raw %}
+                    <div id="upcoming" class="row">
+
+                        <template v-if="activities.length > 0">
+
+                            <div v-for="activity in activities" id="activity_list">
+                                <!-- ACTIVITY CARD -->
+                                <div class="col-md-3 col-lg-4 col-sm-6 card-container" v-on:click="loadActivityInfo(activity)">
+                                    <div class="card zoomify" data-toggle="modal" :data-target="'#activity-' + activity.id">
+                                        <div class="card-img">
+                                            <template v-if="activityStatus(activity) == 2">
+                                                <img :src="activity_card_images_folder + activity.image" class="img-responsive activity-filter-marker"/>
+                                                <span class="activity-marker-icon">
+                                                        <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
+                                                </span>
+                                            </template>
+                                            <template v-else>
+                                                <img :src="activity_card_images_folder + activity.image" class="img-responsive"/>
+                                            </template>
+                                        </div>
+                                        <div class="card-desc">
+                                            <h4 class="text-center title">{{ activity.title }}</h4>
+                                            <h5 class="text-center"><small class="text-wrap">{{ activity.start_date }}</small></h5>
+                                        </div>
+                                    </div>
+                                </div> <!-- END OF ACTIVITY CARD -->
+
+                                <!-- ACTIVITY MODAL -->
+                                <div class="modal fade" :id="'activity-' + activity.id" role="dialog">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <!-- HEADER -->
+                                            <div class="modal-header">
+                                                <span><b>ACTIVITY</b></span>
+                                                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                                            </div>
+                                            <!-- BODY -->
+                                            <div class="modal-body">
+                                                <div class="img-container">
+                                                   <template v-if="activityStatus(activity) == 2">
+                                                        <img :src="activity_modal_images_folder + activity.image" class="img-responsive activity-filter-marker"/>
+                                                        <span class="activity-marker-icon">
+                                                                <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
+                                                        </span>
+                                                    </template>
+                                                    <template v-else>
+                                                        <img :src="activity_modal_images_folder + activity.image"/>
+                                                    </template>
+                                                </div>
+                                                <span class="row">
+                                                    <span class="col-md-2 col-lg-2 col-sm-2 hidden-xs left-pad"><h2 class="text-center"></h2></span>
+                                                    <span class="col-md-8 col-lg-8 col-sm-8"><h2 class="text-center">{{ activity.title}}</h2></span>
+                                                    <span class="col-md-2 col-lg-2 col-sm-2 text-center right-pad">
+                                                            <a v-show="(is_manager || activity.isLeader)" :href="'/activities/' + activity.id" class="btn btn-style-3" title="Manage Activity"><i class="fa fa-gear"></i></a>
+                                                    </span>
+                                                </span>
+                                                <div class="content">
+                                                    <ul class="nav nav-tabs" role="tablist">
+                                                        <li role="presentation" class="active act-li">
+                                                            <a :href="'#act-desc-' + activity.id" role="tab" data-toggle="tab">Description</a>
+                                                        </li>
+                                                        <li role="presentation" class="act-li">
+                                                            <a :href="'#act-interested-' + activity.id" role="tab" data-toggle="tab">Interested</a>
+                                                        </li>
+                                                        <li role="presentation" class="act-li">
+                                                            <a :href="'#act-going-' + activity.id" role="tab" data-toggle="tab">Going</a>
+                                                        </li>
+                                                    </ul>
+
+                                                    <div class="tab-content">
+                                                        <div role="tabpanel" class="tab-pane active" :id="'act-desc-' + activity.id">
+                                                            <template v-if="activity.description">
+                                                                <div v-html="activity.description"></div>
+                                                            </template>
+                                                            <template v-else>
+                                                                <p><i><small>No description</small></i></p>
+                                                            </template>
+                                                        </div>
+                                                        <div role="tabpanel" class="tab-pane" :id="'act-interested-' + activity.id">
+                                                            <div class="row">
+                                                                <template v-if="activity.interested_users.length > 0">
+                                                                    <div v-for="interested_user in activity.interested_users" class="col-md-6 mini-container">
+                                                                        <a :href="'/profile/' + interested_user.id">
+                                                                            <div class="row user-mini-box" :title="interested_user.firstname + ' ' + interested_user.lastname">
+                                                                                <span class="col-md-2 user-mini-box-img">
+                                                                                    <img v-if="interested_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder + interested_user.image">
+                                                                                    <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
+                                                                                </span>
+                                                                                <span class="col-md-9 title user-mini-box-name">
+                                                                                    {{ interested_user.firstname }} {{ interested_user.lastname }}
+                                                                                </span>
+                                                                                <span class="col-md-1">
+                                                                                </span>
+                                                                            </div>
+                                                                        </a>
+                                                                    </div>
+                                                                </template>
+                                                                <template v-else>
+                                                                     <div class="no-users-activity">
+                                                                        <i><small>No interested users.</small></i>
+                                                                    </div>
+                                                                </template>
+                                                            </div>
+                                                        </div>
+                                                        <div role="tabpanel" class="tab-pane" :id="'act-going-' + activity.id">
+                                                            <div class="row">
+                                                                <template v-if="activity.going_users.length > 0">
+                                                                    <div v-for="going_user in activity.going_users" class="col-md-6 mini-container">
+                                                                        <a :href="'/profile/' + going_user.id">
+                                                                            <div class="row user-mini-box" :title="going_user.firstname + ' ' + going_user.lastname">
+                                                                                <span class="col-md-2 user-mini-box-img">
+                                                                                    <img v-if="going_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+going_user.image">
+                                                                                    <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
+                                                                                </span>
+                                                                                <span class="col-md-9 title user-mini-box-name">
+                                                                                    {{ going_user.firstname }} {{ going_user.lastname }}
+                                                                                </span>
+                                                                                <span class="col-md-1 user-mini-box-mark">
+                                                                                    <i v-show="going_user.attended" class="fa fa-check check-indicator"  title="Attended this activity"></i>
+                                                                                </span>
+                                                                            </div>
+                                                                        </a>
+                                                                    </div>
+                                                                </template>
+                                                                <template v-else>
+                                                                     <div class="no-users-activity">
+                                                                        <i><small>No going users.</small></i>
+                                                                    </div>
+                                                                </template>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- FOOTER -->
+                                            <div class="modal-footer">
+
+                                                <span class="row">
+                                                    <span class="col-md-4 activity-manage-btns">
+                                                        <a v-if="( (activityStatus(activity) == 2) || is_manager || activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + activity.id + '/summary'" title="Activity Summary"><i class="fa fa-calendar-check-o"></i></a>
+                                                        <a v-show="(is_manager || activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + activity.id + '/attendance'" title="Attendance Checklist"><i class="fa fa-check-square-o"></i></a>
+                                                    </span>
+                                                    <span class="col-md-8 pull-right box-no-padding">
+                                                        <button v-if="activity.isInterested" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
+                                                            NOT INTERESTED
+                                                        </button>
+                                                        <button v-else type="button" class="btn btn-style-2" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
+                                                            INTERESTED
+                                                        </button>
+
+                                                        <!-- GOING BTNS -->
+                                                        <button v-if="activity.isGoing" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleGoing(activity)">
+                                                            LEAVE ACTIVITY
+                                                        </button>
+                                                        <button v-else type="button" class="btn btn-style-2" :id="activity.id" value="cgoing" v-on:click="toggleGoing(activity)">
+                                                            JOIN ACTIVITY
+                                                        </button>
+                                                    </span>
+                                                </span>
+                                                <!-- END OF GOING BTNS -->
+
+                                            </div> <!-- end of modal-footer -->
+                                        </div>
+                                    </div>
+                                </div> <!-- end of ACTIVITY MODAL -->
+                            </div> <!-- END of activity_list -->
+
+                            <div class="col-md-12 text-center show-more-box">
+                                <button v-show="hasNext" class="btn btn-style-3" v-on:click="loadActivities">Show More</button>
                             </div>
-                            <a class="btn btn-block btn-style-3" href="{{ url_for('client.activity', id=activity['id']) }}">
-                                View Activity
-                            </a>
-                        </div>
+
+                        </template>
+
+                        <template v-else>
+                            <div class="col-md-12 no-content-box text-center">
+                                <h2><small>NO UPCOMING ACTIVITIES</small></h2>
+                            </div>
+                        </template>
+
                     </div>
-                {% endfor %}
-            {% else %}
-                <div class="col-md-12">
-                    <h5>This group has no Acitivities.</h5>
+                    {% endraw %}
                 </div>
-            {% endif %}
+
+                <div id="done-activities" class="tab-pane fade row">
+                    {% raw %}
+                    <div id="done" class="row">
+
+                        <template v-if="activities.length > 0">
+
+                            <div v-for="activity in activities" id="activity_list">
+                                <!-- ACTIVITY CARD -->
+                                <div class="col-md-3 col-lg-4 col-sm-6 card-container" v-on:click="loadActivityInfo(activity)">
+                                    <div class="card zoomify" data-toggle="modal" :data-target="'#activity-' + activity.id">
+                                        <div class="card-img">
+                                            <template v-if="activityStatus(activity) == 2">
+                                                <img :src="activity_card_images_folder + activity.image" class="img-responsive activity-filter-marker"/>
+                                                <span class="activity-marker-icon">
+                                                        <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
+                                                </span>
+                                            </template>
+                                            <template v-else>
+                                                <img :src="activity_card_images_folder + activity.image" class="img-responsive"/>
+                                            </template>
+                                        </div>
+                                        <div class="card-desc">
+                                            <h4 class="text-center title">{{ activity.title }}</h4>
+                                            <h5 class="text-center"><small class="text-wrap">{{ activity.start_date }}</small></h5>
+                                        </div>
+                                    </div>
+                                </div> <!-- END OF ACTIVITY CARD -->
+
+                                <!-- ACTIVITY MODAL -->
+                                <div class="modal fade" :id="'activity-' + activity.id" role="dialog">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <!-- HEADER -->
+                                            <div class="modal-header">
+                                                <span><b>ACTIVITY</b></span>
+                                                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                                            </div>
+                                            <!-- BODY -->
+                                            <div class="modal-body">
+                                                <div class="img-container">
+                                                   <template v-if="activityStatus(activity) == 2">
+                                                        <img :src="activity_modal_images_folder + activity.image" class="img-responsive activity-filter-marker"/>
+                                                        <span class="activity-marker-icon">
+                                                                <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
+                                                        </span>
+                                                    </template>
+                                                    <template v-else>
+                                                        <img :src="activity_modal_images_folder + activity.image"/>
+                                                    </template>
+                                                </div>
+                                                <span class="row">
+                                                    <span class="col-md-2 col-lg-2 col-sm-2 hidden-xs left-pad"><h2 class="text-center"></h2></span>
+                                                    <span class="col-md-8 col-lg-8 col-sm-8"><h2 class="text-center">{{ activity.title}}</h2></span>
+                                                    <span class="col-md-2 col-lg-2 col-sm-2 text-center right-pad">
+                                                            <a v-show="(is_manager || activity.isLeader)" :href="'/activities/' + activity.id" class="btn btn-style-3" title="Manage Activity"><i class="fa fa-gear"></i></a>
+                                                    </span>
+                                                </span>
+                                                <div class="content">
+                                                    <ul class="nav nav-tabs" role="tablist">
+                                                        <li role="presentation" class="active act-li">
+                                                            <a :href="'#act-desc-' + activity.id" role="tab" data-toggle="tab">Description</a>
+                                                        </li>
+                                                        <li role="presentation" class="act-li">
+                                                            <a :href="'#act-interested-' + activity.id" role="tab" data-toggle="tab">Interested</a>
+                                                        </li>
+                                                        <li role="presentation" class="act-li">
+                                                            <a :href="'#act-going-' + activity.id" role="tab" data-toggle="tab">Going</a>
+                                                        </li>
+                                                    </ul>
+
+                                                    <div class="tab-content">
+                                                        <div role="tabpanel" class="tab-pane active" :id="'act-desc-' + activity.id">
+                                                            <template v-if="activity.description">
+                                                                <div v-html="activity.description"></div>
+                                                            </template>
+                                                            <template v-else>
+                                                                <p><i><small>No description</small></i></p>
+                                                            </template>
+                                                        </div>
+                                                        <div role="tabpanel" class="tab-pane" :id="'act-interested-' + activity.id">
+                                                            <div class="row">
+                                                                <template v-if="activity.interested_users.length > 0">
+                                                                    <div v-for="interested_user in activity.interested_users" class="col-md-6 mini-container">
+                                                                        <a :href="'/profile/' + interested_user.id">
+                                                                            <div class="row user-mini-box" :title="interested_user.firstname + ' ' + interested_user.lastname">
+                                                                                <span class="col-md-2 user-mini-box-img">
+                                                                                    <img v-if="interested_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder + interested_user.image">
+                                                                                    <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
+                                                                                </span>
+                                                                                <span class="col-md-9 title user-mini-box-name">
+                                                                                    {{ interested_user.firstname }} {{ interested_user.lastname }}
+                                                                                </span>
+                                                                                <span class="col-md-1">
+                                                                                </span>
+                                                                            </div>
+                                                                        </a>
+                                                                    </div>
+                                                                </template>
+                                                                <template v-else>
+                                                                     <div class="no-users-activity">
+                                                                        <i><small>No interested users.</small></i>
+                                                                    </div>
+                                                                </template>
+                                                            </div>
+                                                        </div>
+                                                        <div role="tabpanel" class="tab-pane" :id="'act-going-' + activity.id">
+                                                            <div class="row">
+                                                                <template v-if="activity.going_users.length > 0">
+                                                                    <div v-for="going_user in activity.going_users" class="col-md-6 mini-container">
+                                                                        <a :href="'/profile/' + going_user.id">
+                                                                            <div class="row user-mini-box" :title="going_user.firstname + ' ' + going_user.lastname">
+                                                                                <span class="col-md-2 user-mini-box-img">
+                                                                                    <img v-if="going_user.image" class="img-circle" width="30px" height="30px" :src="user_images_folder+going_user.image">
+                                                                                    <img v-else :src="'../../../static/images/pub-default-img.jpg'" width="30px" height="30px" class="img-circle">
+                                                                                </span>
+                                                                                <span class="col-md-9 title user-mini-box-name">
+                                                                                    {{ going_user.firstname }} {{ going_user.lastname }}
+                                                                                </span>
+                                                                                <span class="col-md-1 user-mini-box-mark">
+                                                                                    <i v-show="going_user.attended" class="fa fa-check check-indicator"  title="Attended this activity"></i>
+                                                                                </span>
+                                                                            </div>
+                                                                        </a>
+                                                                    </div>
+                                                                </template>
+                                                                <template v-else>
+                                                                     <div class="no-users-activity">
+                                                                        <i><small>No going users.</small></i>
+                                                                    </div>
+                                                                </template>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- FOOTER -->
+                                            <div class="modal-footer">
+
+                                                <span class="row">
+                                                    <span class="col-md-4 activity-manage-btns">
+                                                        <a v-if="( (activityStatus(activity) == 2) || is_manager || activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + activity.id + '/summary'" title="Activity Summary"><i class="fa fa-calendar-check-o"></i></a>
+                                                        <a v-show="(is_manager || activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + activity.id + '/attendance'" title="Attendance Checklist"><i class="fa fa-check-square-o"></i></a>
+                                                    </span>
+                                                    <span class="col-md-8 pull-right box-no-padding">
+                                                        <button v-if="activity.isInterested" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
+                                                            NOT INTERESTED
+                                                        </button>
+                                                        <button v-else type="button" class="btn btn-style-2" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
+                                                            INTERESTED
+                                                        </button>
+
+                                                        <!-- GOING BTNS -->
+                                                        <button v-if="activity.isGoing" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleGoing(activity)">
+                                                            LEAVE ACTIVITY
+                                                        </button>
+                                                        <button v-else type="button" class="btn btn-style-2" :id="activity.id" value="cgoing" v-on:click="toggleGoing(activity)">
+                                                            JOIN ACTIVITY
+                                                        </button>
+                                                    </span>
+                                                </span>
+                                                <!-- END OF GOING BTNS -->
+
+                                            </div> <!-- end of modal-footer -->
+                                        </div>
+                                    </div>
+                                </div> <!-- end of ACTIVITY MODAL -->
+                            </div> <!-- END of activity_list -->
+
+                            <div class="col-md-12 text-center show-more-box">
+                                <button v-show="hasNext" class="btn btn-style-3" v-on:click="loadActivities">Show More</button>
+                            </div>
+
+                        </template>
+
+                        <template v-else>
+                            <div class="col-md-12 no-content-box text-center">
+                                <h2><small>NO ACTIVITIES</small></h2>
+                            </div>
+                        </template>
+
+                    </div>
+                    {% endraw %}
+                </div>
+
+            </div>
+
         </div>
     </div>
 {% endblock %}
+
+{% block scripts %}
+    <script>
+        var upcoming = new Vue({
+          el: '#upcoming',
+          data: {
+            activities: [],
+            activities_page: 1,
+            hasNext: false,
+            activity_card_images_folder: '/static/uploads/activity_images/260x200/',
+            activity_modal_images_folder: '/static/uploads/activity_images/600x250/',
+            user_images_folder: '/static/uploads/profile_pictures/',
+            can_manage_activity: false,
+            is_manager: false
+          },
+          methods: {
+            activityStatus: function(event){
+                currentDate = new Date();
+                startDate = new Date(event.start_date);
+                endDate = new Date(event.end_date);
+
+                if(currentDate > startDate && currentDate < endDate){
+                    return 1; //happening
+                }
+                else if(endDate < currentDate){
+                    return 2;
+                }
+                else{
+                    return 0; //upcoming
+                }
+            },
+            loadActivities: function(group_id) {
+                $.ajax({
+                    url: '/api/v1.0/groups/' + group_id +'/activities?show=upcoming',
+                    type: 'GET'
+                }).done(data => {
+                    data.activities.forEach((activity) => {
+                        activity.going_users      = [];
+                        activity.interested_users = [];
+                        activity.isInterested     = false;
+                        activity.isGoing          = false;
+                        activity.isLeader         = false;
+                    });
+                    this.activities.push.apply(this.activities, data.activities);
+                    this.activities_page++;
+                    this.hasNext = data.has_next;
+                });
+            },
+            loadActivityInfo: function(activity) {
+                $.ajax({
+                    url: '/api/v1.0/groups/'+ activity.group_id + '/members',
+                    type: 'GET'
+                }).done(function(data) {
+                    for(var i = 0; i < data.leaders.length; i++) {
+                        if (data.leaders[i].id == '{{current_user.get_id()}}') {
+                            activity.isLeader = true;
+                            console.log('You are a leader of this group');
+                            break;
+                        }
+                    }
+                }).fail(function() {
+                    console.log("error");
+                });
+                // load going users
+                $.ajax({
+                    url: '/api/v1.0/activities/'+ activity.id + '/participants/going',
+                    type: 'GET'
+                }).done(function(data) {
+                    //console.log(data);
+                    activity.going_users = data.going_users;
+                }).fail(function() {
+                    console.log("error");
+                });
+                // load interested users
+                $.ajax({
+                    url: '/api/v1.0/activities/'+ activity.id + '/participants/interested',
+                    type: 'GET'
+                }).done(function(data) {
+                    //console.log(data);
+                    activity.interested_users = data;
+                }).fail(function() {
+                    console.log("error");
+                });
+                // check user involvement in the activity
+                $.ajax({
+                    url: '/api/v1.0/activities/' + activity.id + '/participation',
+                    type: 'GET'
+                }).done(function(data) {
+                    activity.isGoing = data.going;
+                    activity.isInterested = data.interested;
+                });
+            },
+            toggleGoing: function(activity) {
+                if (activity.isGoing) {
+                    $.ajax({
+                        url: '/api/v1.0/activities/'+ activity.id + '/participants/going',
+                        type: 'DELETE'
+                    }).done(function(data) {
+                         activity.isGoing = false;
+                    });
+                } else {
+                    $.ajax({
+                        url: '/api/v1.0/activities/'+ activity.id + '/participants/going',
+                        type: 'POST'
+                    }).done(function(data) {
+                         activity.isGoing = true;
+                    });
+                }
+            },
+            toggleInterested: function(activity) {
+                if (activity.isInterested) {
+                    $.ajax({
+                        url: '/api/v1.0/activities/'+ activity.id + '/participants/interested',
+                        type: 'DELETE'
+                    }).done(function(data) {
+                         activity.isInterested = false;
+                    });
+                } else {
+                    $.ajax({
+                        url: '/api/v1.0/activities/'+ activity.id + '/participants/interested',
+                        type: 'POST'
+                    }).done(function(data) {
+                         activity.isInterested = true;
+                    });
+                }
+            }
+          }
+        });
+        var done = new Vue({
+          el: '#done',
+          data: {
+            activities: [],
+            activities_page: 1,
+            hasNext: false,
+            activity_card_images_folder: '/static/uploads/activity_images/260x200/',
+            activity_modal_images_folder: '/static/uploads/activity_images/600x250/',
+            user_images_folder: '/static/uploads/profile_pictures/',
+            can_manage_activity: false,
+            is_manager: false
+          },
+          methods: {
+            activityStatus: function(event){
+                currentDate = new Date();
+                startDate = new Date(event.start_date);
+                endDate = new Date(event.end_date);
+
+                if(currentDate > startDate && currentDate < endDate){
+                    return 1; //happening
+                }
+                else if(endDate < currentDate){
+                    return 2;
+                }
+                else{
+                    return 0; //upcoming
+                }
+            },
+            loadActivities: function(group_id) {
+                $.ajax({
+                    url: '/api/v1.0/groups/' + group_id +'/activities?show=done',
+                    type: 'GET'
+                }).done(data => {
+                    data.activities.forEach((activity) => {
+                        activity.going_users      = [];
+                        activity.interested_users = [];
+                        activity.isInterested     = false;
+                        activity.isGoing          = false;
+                        activity.isLeader         = false;
+                    });
+                    this.activities.push.apply(this.activities, data.activities);
+                    this.activities_page++;
+                    this.hasNext = data.has_next;
+                });
+            },
+            loadActivityInfo: function(activity) {
+                $.ajax({
+                    url: '/api/v1.0/groups/'+ activity.group_id + '/members',
+                    type: 'GET'
+                }).done(function(data) {
+                    for(var i = 0; i < data.leaders.length; i++) {
+                        if (data.leaders[i].id == '{{current_user.get_id()}}') {
+                            activity.isLeader = true;
+                            console.log('You are a leader of this group');
+                            break;
+                        }
+                    }
+                }).fail(function() {
+                    console.log("error");
+                });
+                // load going users
+                $.ajax({
+                    url: '/api/v1.0/activities/'+ activity.id + '/participants/going',
+                    type: 'GET'
+                }).done(function(data) {
+                    //console.log(data);
+                    activity.going_users = data.going_users;
+                }).fail(function() {
+                    console.log("error");
+                });
+                // load interested users
+                $.ajax({
+                    url: '/api/v1.0/activities/'+ activity.id + '/participants/interested',
+                    type: 'GET'
+                }).done(function(data) {
+                    //console.log(data);
+                    activity.interested_users = data;
+                }).fail(function() {
+                    console.log("error");
+                });
+                // check user involvement in the activity
+                $.ajax({
+                    url: '/api/v1.0/activities/' + activity.id + '/participation',
+                    type: 'GET'
+                }).done(function(data) {
+                    activity.isGoing = data.going;
+                    activity.isInterested = data.interested;
+                });
+            },
+            toggleGoing: function(activity) {
+                if (activity.isGoing) {
+                    $.ajax({
+                        url: '/api/v1.0/activities/'+ activity.id + '/participants/going',
+                        type: 'DELETE'
+                    }).done(function(data) {
+                         activity.isGoing = false;
+                    });
+                } else {
+                    $.ajax({
+                        url: '/api/v1.0/activities/'+ activity.id + '/participants/going',
+                        type: 'POST'
+                    }).done(function(data) {
+                         activity.isGoing = true;
+                    });
+                }
+            },
+            toggleInterested: function(activity) {
+                if (activity.isInterested) {
+                    $.ajax({
+                        url: '/api/v1.0/activities/'+ activity.id + '/participants/interested',
+                        type: 'DELETE'
+                    }).done(function(data) {
+                         activity.isInterested = false;
+                    });
+                } else {
+                    $.ajax({
+                        url: '/api/v1.0/activities/'+ activity.id + '/participants/interested',
+                        type: 'POST'
+                    }).done(function(data) {
+                         activity.isInterested = true;
+                    });
+                }
+            }
+          }
+        });
+        $(document).ready(function() {
+            upcoming.loadActivities('{{ group.id }}');
+            upcoming.can_manage_activity = "{{ can_manage_activity }}" == "True" ? true : false;
+            upcoming.is_manager = "{{ is_manager }}" == "True" ? true : false;
+            done.loadActivities('{{ group.id }}');
+            done.can_manage_activity = "{{ can_manage_activity }}" == "True" ? true : false;
+            done.is_manager = "{{ is_manager }}" == "True" ? true : false;
+        });
+    </script>
+{% endblock scripts %}
