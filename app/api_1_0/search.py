@@ -70,7 +70,7 @@ def search():
         activities = Activity.query.filter(
             or_(Activity.title.ilike("%" + q + "%"),
                 Activity.description.ilike("%" + q + "%")))\
-            .order_by(Activity.start_date)\
+            .order_by(Activity.start_date.desc())\
             .limit(LIMIT_ALL_ACTIVITIES)
 
         perks = Perks.query.filter(or_(
@@ -112,7 +112,7 @@ def search_activities():
     activities = Activity.query.filter(
         or_(Activity.title.ilike("%" + q + "%"),
             Activity.description.ilike("%" + q + "%")))\
-        .order_by(Activity.start_date)\
+        .order_by(Activity.start_date.desc())\
         .paginate(page=page, per_page=per_page, error_out=False)
 
     return activities

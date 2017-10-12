@@ -290,7 +290,7 @@
                 }).fail(function() {
                     console.log("error");
                 });
-                // check if users is interested
+                // check user involvement in the activity
                 $.ajax({
                     url: '/api/v1.0/activities/' + activity.id + '/participation',
                     type: 'GET'

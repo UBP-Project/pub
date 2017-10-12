@@ -73,6 +73,8 @@ class User(UserMixin, db.Model):
         return self.can(Permission.ADMINISTER)
 
     def is_manager(self):
+        if self.is_administrator():
+            return True
         manager = Role.query.filter(Role.name == 'Manager').first()
         return (self.role_id == manager.id)
 

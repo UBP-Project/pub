@@ -10,15 +10,19 @@
 
 
 /* Seach page */
-#search_app .active_tab {
+#search_page .active_tab {
     border-bottom: 3px solid #fd8103 !important;
     font-size: 100px !important;
     color: #fd8103;
 }
 
-#search_app .active_tab a {
+#search_page .active_tab a {
     color: #fd8103;
     font-weight: "900" !important;
+}
+
+#search_page .user-result {
+    padding: 10px;
 }
 /* End of search page */
 
