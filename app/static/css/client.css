@@ -1,11 +1,33 @@
 #search_input {
-    margin-top: 10px;
     height: 30px;
-    margin-right: 10px;
     border: 1px solid #fd8103;
-    border-radius: 15px;
-    padding: 8px 15px;
-    min-width: 200px;
+    padding: 6px 8px;
+    font-size: 15px;
+    line-height: 15px;
+}
+
+#search_input:hover, #search_input:active, #search_input:focus {
+    border: 1px solid #fd8f0f;
+    outline: none;
+}
+
+.search-btn {
+    background-color: #fd8103;
+    color: #fff;
+    height: 30px;
+    padding: 3px 10px;
+}
+
+.search-btn:hover {
+    background-color: #fd8f0f;
+    color: #fff;
+}
+
+.search-input-group {
+    width: 200px;
+    padding: 10px 0;
+    margin-right: 10px;
+    height: 30px;
 }
 
 
