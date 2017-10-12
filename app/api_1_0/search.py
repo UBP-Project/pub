@@ -93,7 +93,7 @@ def search():
 def search_groups():
     q = request.args.get('query')
     page = int(request.args.get('page', 1))
-    per_page = int(request.args.get('per_page', 9))
+    per_page = int(request.args.get('per_page', 8))
 
     groups = Interest_Group.query.filter(or_(
             Interest_Group.name.ilike("%" + q + "%"),
@@ -107,7 +107,7 @@ def search_groups():
 def search_activities():
     q = request.args.get('query')
     page = int(request.args.get('page', 1))
-    per_page = int(request.args.get('per_page', 8))
+    per_page = int(request.args.get('per_page', 9))
 
     activities = Activity.query.filter(
         or_(Activity.title.ilike("%" + q + "%"),
