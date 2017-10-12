@@ -7,8 +7,8 @@ def page_not_found(e):
 		response = jsonify({'error': 'not found'})
 		response.status_code = 404
 		return response
-	return render_template('404.html'),	404
+	return render_template('error/404.html'),	404
 
 @client.app_errorhandler(500)
 def internal_server_error(e):
-    return render_template('500.html'),	500
+    return render_template('error/500.html'),	500
