@@ -1,6 +1,7 @@
 import uuid
 from app import db
 from sqlalchemy_utils import UUIDType
+from sqlalchemy import func
 from datetime import datetime
 from werkzeug.utils import secure_filename
 import os
@@ -12,7 +13,8 @@ class Perks(db.Model):
 	title 		= db.Column(db.Text(4294967295), nullable=False)
 	image 		= db.Column(db.String(200))
 	description = db.Column(db.Text(4294967295))
-	timestamp   = db.Column(db.DateTime, default=datetime.utcnow())
+	timestamp	= db.Column(db.DateTime, server_default=func.now())
+	updated 	= db.Column(db.DateTime, onupdate=func.now())
 
 	def __init__(self, title, description, image=""):
 		self.title = title

@@ -1,6 +1,6 @@
 from app import db
-# from app.models import GUID()
 from sqlalchemy_utils import UUIDType
+from sqlalchemy import func
 import uuid
 
 class Assignment(db.Model):
@@ -9,6 +9,8 @@ class Assignment(db.Model):
     activity_id     = db.Column(UUIDType(binary=False), db.ForeignKey('activity.id', ondelete="CASCADE", onupdate="CASCADE"))
     assigned_to     = db.Column(UUIDType(binary=False), db.ForeignKey('user.id', ondelete="CASCADE", onupdate="CASCADE"))
     initiated_by    = db.Column(UUIDType(binary=False), db.ForeignKey('user.id', ondelete="CASCADE", onupdate="CASCADE"))
+    timestamp		= db.Column(db.DateTime, server_default=func.now())
+    updated 		= db.Column(db.DateTime, onupdate=func.now())
 
     def __init__(self, activity_id, assigned_to, initiated_by):
         self.activity_id    = activity_id

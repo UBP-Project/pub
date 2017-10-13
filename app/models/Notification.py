@@ -2,6 +2,7 @@ from flask import url_for
 from app import db
 from app.models import User, Follow
 from sqlalchemy_utils import UUIDType
+from sqlalchemy import func
 from datetime import datetime
 from flask_login import login_required
 import uuid
@@ -11,13 +12,13 @@ class Notification_Object(db.Model):
     id              = db.Column(UUIDType(binary=False), default=uuid.uuid4, primary_key=True)
     entity_type_id  = db.Column(db.Integer, db.ForeignKey('entity.id'))
     entity_id       = db.Column(UUIDType(binary=False))
-    timestamp       = db.Column(db.DateTime)
+    timestamp       = db.Column(db.DateTime, server_default=func.now())
+    updated         = db.Column(db.DateTime, onupdate=func.now())
     status          = db.Column(db.Boolean)
 
     def __init__(self, entity_type_id, entity_id):
         self.entity_type_id    = entity_type_id
         self.entity_id = entity_id
-        self.timestamp = datetime.utcnow()
         self.status = True
 
     def set_inactive(self):

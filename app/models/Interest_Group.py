@@ -1,6 +1,7 @@
 from app import db
 from datetime import datetime
 from sqlalchemy_utils import UUIDType
+from sqlalchemy import func
 import uuid
 from app.models import User, Membership, Entity, Points_Type
 import os
@@ -18,7 +19,8 @@ class Interest_Group(db.Model):
     about = db.Column(db.Text(4294967295))
     cover_photo = db.Column(db.String(100))
     group_icon = db.Column(db.String(100))
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow())
+    timestamp = db.Column(db.DateTime, server_default=func.now())
+    updated = db.Column(db.DateTime, onupdate=func.now())
 
     def __init__(self, name, about, cover_photo="", group_icon=""):
         self.name = name

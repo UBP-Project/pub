@@ -1,12 +1,13 @@
 from app import db
 from sqlalchemy_utils import UUIDType
+from sqlalchemy import func
 from datetime import datetime
 
 class Follow(db.Model):
     __tablename__   = 'follow'
     follower_id     = db.Column(UUIDType(binary=False), db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True)
     following_id    = db.Column(UUIDType(binary=False), db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True)
-    timestamp       = db.Column(db.DateTime, default=datetime.utcnow())
+    timestamp       = db.Column(db.DateTime, server_default=func.now())
     status          = db.Column(db.Integer) #0 pending #1 accepted'
 
     # followed = db.relationship('User',

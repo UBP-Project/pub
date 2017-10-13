@@ -2,6 +2,7 @@ from app import db
 from app.models import Entity, Points_Type
 from datetime import datetime
 from sqlalchemy_utils import UUIDType
+from sqlalchemy import func
 import uuid
 from datetime import datetime
 from flask_login import current_user
@@ -24,7 +25,8 @@ class Activity(db.Model):
         'interest_group.id', ondelete="CASCADE",
         onupdate="CASCADE"), nullable=True)
     image = db.Column(db.String(200))
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow())
+    timestamp = db.Column(db.DateTime, server_default=func.now())
+    updated = db.Column(db.DateTime, onupdate=func.now())
     creator_id = db.Column(UUIDType(binary=False), db.ForeignKey('user.id', ondelete="CASCADE", onupdate="CASCADE"), nullable=True)
 
     def __init__(self, title, description, start_date, end_date, address, image=None, group_id=None):
