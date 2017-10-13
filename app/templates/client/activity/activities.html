@@ -69,7 +69,7 @@
                                             </div>
                                             <span class="row">
                                                 <span class="col-md-2 col-lg-2 col-sm-2 hidden-xs left-pad"><h2 class="text-center"></h2></span>
-                                                <span class="col-md-8 col-lg-8 col-sm-8"><h2 class="text-center">{{ activity.title}}</h2></span>
+                                                <span class="col-md-8 col-lg-8 col-sm-8"><a :href="'/activities/' + activity.id" class="activity-title-link" :title="'Visit ' + activity.title + ' Page'"><h2 class="text-center">{{ activity.title}}</h2></span>
                                                 <span class="col-md-2 col-lg-2 col-sm-2 text-center right-pad">
                                                         <a v-show="(is_manager || activity.isLeader)" :href="'/activities/' + activity.id" class="btn btn-style-3" title="Manage Activity"><i class="fa fa-gear"></i></a>
                                                 </span>

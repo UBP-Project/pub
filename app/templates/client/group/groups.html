@@ -128,7 +128,7 @@
                                                     </div>
 
                                                     <div role="tabpanel" class="tab-pane" :id="'grp-activities-' + group.id">
-                                                        <h5><strong>Group's upcoming Activities</strong><a class="btn btn-xs btn-style-3 pull-right" :href="'groups/' + group.id" title="View all activities">View all</a></h5>
+                                                        <h5><strong>Group's upcoming Activities</strong><a class="btn btn-xs btn-style-3 pull-right" :href="'/groups/' + group.id" title="View all activities">View all</a></h5>
                                                         <template v-if="group.activities.length > 0">
     
                                                             <div v-for="activity in group.activities">
