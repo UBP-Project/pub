@@ -5,11 +5,134 @@
         <div class="col-md-12">
             <div class="group-box">
 
-                <h3>EDIT ACTIVITY: <span style="color: #fd8103;">{{ activity.title }}</span></h3>
+                <h3>EDIT ACTIVITY: <span style="color: #fd8103;">{{ activity.title }}</span>
+                    <button type="button" class="btn btn-danger btn-sm pull-right" data-toggle="modal" data-target="#delete-confirmation" title="Delete Activity">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </h3>
                 <hr/>
 
                 <div>
 
+                    <form class="row form-page activity-form group-box" method="post" enctype="multipart/form-data" name="create_activity" style="border-bottom: 0;">
+                        {{ form.hidden_tag() }}
+
+                        <div class="col-md-6 no-padding">
+                            <div class="col-md-12 no-padding">
+                                <label>Title</label>
+                                {{ form.title(
+                                    placeholder="Title",
+                                    class="form-control",
+                                    required="true") }}
+                            </div>
+                            <div class="col-md-6 no-padding-left">
+                                <label>Start Date</label>
+                                {{ form.start_date(
+                                    placeholder="Start Date",
+                                    class="form-control",
+                                    required="true")}}
+                            </div>
+
+                            <div class="col-md-6 no-padding-right">
+                                <label>End Date</label>
+                                {{ form.end_date(
+                                    placeholder="End Date",
+                                    class="form-control",
+                                    required="true")}}
+                            </div>
+                            <div class="col-md-12 no-padding">
+                                <label>Address</label>
+                                {{ form.address(
+                                    placeholder="Address",
+                                    class="form-control",
+                                    required="true"
+                                )}}
+                            </div>
+                            <div class="col-md-12 no-padding">
+                                <label>Assign to Group</label>
+                                {{ form.group(
+                                    class="form-control",
+                                    required="true")
+                                }}
+                            </div>
+
+                            <div class="col-md-12 no-padding">
+                                <label>Description</label>
+                                <div id="description-editor" class="wysiwyg-editor" placeholder="Describe this activity">
+
+                                </div>
+                                {{ form.description(
+                                    placeholder="Description",
+                                    class="none",
+                                    hidden="true") }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 no-padding-right" style="padding: 0px;">
+                            <div class="img-upload">
+                                <br /><br ?>
+                                <div class="col-md-12 no-padding-right text-center">
+                                    {% if activity.image %}
+                                        <img id="preview" src="{{ url_for('static', filename='uploads/activity_images/600x250/' + activity.image) }}"/>
+                                    {% else %}
+                                        <img id="preview" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"/>
+                                    {% endif %}
+                                    <div id="upload-btn" class="text">
+                                        <button class="btn btn-style-1">Choose Activity Image</button>
+                                    </div>
+                                    {{ form.image(
+                                        placeholder="Activity Image",
+                                        accept='image/*'
+                                    )}}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 no-padding text-center">
+                            <hr /><br/>
+                            <h4>Set Points for this Activity</h4>
+                            <div class="col-sm-offset-3 col-sm-2 no-padding-left">
+                                <label>Interested pts.</label>
+                                {{ form.interested_point(class="form-control") }}
+                            </div>
+                            <div class="col-sm-2 no-padding-left">
+                                <label>Joined pts.</label>
+                                {{ form.going_point(class="form-control") }}
+                            </div>
+                            <div class="col-sm-2 no-padding-left">
+                                <label>Attended pts.</label>
+                                {{ form.attended_point(class="form-control") }}
+                            </div>
+                        </div>
+                        <br/>
+
+                        <div class="col-md-12 no-padding text-center">
+                            <hr /><br/>
+                            {{ form.submit(class="submit btn btn-style-1", style="width: 50%;") }}
+                        </div>
+
+                    </form>
+
+                    <!-- Delete Activity confirmation modal -->
+                    <form method="post" class="modal fade" id="delete-confirmation" role="dialog">
+                        <div class="modal-dialog modal-sm">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                              <h4>Confirm Delete</h4>
+                            </div>
+                            <div class="modal-body">
+                              <p>Delete Activity: {{ activity.title }}</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button type="submit" name="delete" value="delete" class="btn btn-danger">
+                                    Delete this Activity
+                                </button>
+                            </div>
+                          </div>
+                        </div>
+                    </form>
 
                 </div>
 
