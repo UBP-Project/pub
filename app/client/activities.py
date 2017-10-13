@@ -24,7 +24,7 @@ def myactivities():
     show_create = is_manager_or_leader()
     activities = Activity.query.all()
     return render_template("client/activity/myactivities.html", activities=activities,\
-        show_create=show_create, user=current_user)
+        show_create=show_create, user=current_user, can_manage_activity = is_manager_or_leader(), is_manager = is_manager())
 
 @client.route('/activities/<string:id>')
 @login_required
