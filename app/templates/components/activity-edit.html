@@ -6,9 +6,11 @@
             <div class="group-box">
 
                 <h3>EDIT ACTIVITY: <span style="color: #fd8103;">{{ activity.title }}</span>
-                    <button type="button" class="btn btn-danger btn-sm pull-right" data-toggle="modal" data-target="#delete-confirmation" title="Delete Activity">
-                        <i class="fa fa-trash"></i>
-                    </button>
+                    <span class="pull-right">
+                        <a href="javascript:history.back()" class="group-create-btn">
+                            <button class="btn btn-style-4 btn-sm" title="Cancel">CANCEL</button>
+                        </a>
+                    </span>
                 </h3>
                 <hr/>
 
@@ -109,6 +111,9 @@
                         <div class="col-md-12 no-padding text-center">
                             <hr /><br/>
                             {{ form.submit(class="submit btn btn-style-1", style="width: 50%;") }}
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-confirmation" title="Delete Activity" style="width: 20%;">
+                                <i class="fa fa-trash"></i>
+                            </button>
                         </div>
 
                     </form>
