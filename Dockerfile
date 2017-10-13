@@ -17,9 +17,9 @@ EXPOSE 5000
 ENV FLASK_CONFIG development
 
 # Run app.py when the container launches
-#CMD ["python", "manage.py", "shell"]
-#CMD ["db.drop_all()"]
-#CMD ["db.create_all()"]
-#CMD ["seed()"]
-#CMD ["quit()"]
+CMD ["python", "manage.py", "shell"]
+CMD ["db.drop_all()"]
+CMD ["db.create_all()"]
+CMD ["seed()"]
+CMD ["quit()"]
 CMD ["python", "manage.py", "runserver"]

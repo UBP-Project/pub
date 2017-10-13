@@ -138,7 +138,7 @@
                                         </div>
                                     </div> <!-- END OF PERKS MODAL -->
                                 </template>
-                                <template v-if="feed.type === 'new_membership'">
+                                <template v-else-if="feed.type === 'new_membership'">
                                     <div class="new-group-cover">
                                         <img :src="'/static/uploads/covers/600x250/' + feed.group_cover">
                                     </div>
@@ -173,7 +173,7 @@
                                         <span class="timestamp-wrapper"><h6><small>{{feed.timestamp}}</small></h6></span>
                                     </div>
                                 </template>                                
-                                <template v-if="feed.type === 'new_user_activity'">
+                                <template v-else-if="feed.type === 'new_user_activity'">
                                     
                                     <div class="new-activity-cover">
                                         <img :src="'/static/uploads/activity_images/600x250/' + feed.activity_image">

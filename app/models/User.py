@@ -118,9 +118,17 @@ class User(UserMixin, db.Model):
         db.session.commit()
 
     def total_points(self):
-        user_points = db.session.query(Points, func.sum(Points.value).label('points'))\
+        # user_points = db.session.query(Points, func.sum(Points.value).label('points'))\
+        #     .join(User)\
+        #     .group_by(Points.user_id)\
+        #     .filter(User.id == self.id)\
+        #     .first()
+        
+        user_points = Points.query\
+            .with_entities(
+                func.sum(Points.value).label("points")
+            )\
             .join(User)\
-            .group_by(Points.user_id)\
             .filter(User.id == self.id)\
             .first()
 

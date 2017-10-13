@@ -1,8 +1,14 @@
 version: '3'
 services:
+  db:
+    image: "mysql"
   web:
     build: .
     ports:
      - "5000:5000"
+    volumes:
+     - .:/code
+    depends_on:
+      - db
   redis:
     image: "redis:alpine"
