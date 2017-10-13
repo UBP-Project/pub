@@ -1,90 +1,95 @@
 {% macro edit_perk(form, perk) %}
-    <form class="row form-page activity-form group-box" style="padding: 20px; background-color: white;" method="post" enctype="multipart/form-data" name="create_perk">
-        {{ form.hidden_tag() }}
 
-        <h3>EDIT PERKS - <span style="color: #aaa;">{{ perk.title }}</span>
-                {{ form.submit(
-                    class="btn btn-style-1 pull-right"
-                )}}
-        </h3>
+     <div class="row">
 
-        <div class="col-md-12 no-padding">
-            <hr />
-        </div>
+        <div class="col-md-12">
+            <div class="group-box">
 
-        <div class="col-md-6 no-padding">
-            <div class="col-md-12 no-padding">
-                <label>Title</label>
-                {{ form.title(
-                    placeholder="Title",
-                    class="form-control",
-                    required="true") }}
-            </div>
+                <h3>EDIT PERKS: <span style="color: #fd8103;">{{ perk.title }}</span>
+                    <button type="button" class="btn btn-danger btn-sm pull-right" data-toggle="modal" data-target="#delete-confirmation" title="Delete Perks">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </h3>
+                <hr/>
 
-            <div class="col-md-12 no-padding">
-                <label>Description</label>
-                <div id="description-editor" class="wysiwyg-editor" placeholder="Describe this activity">
+                <div>
+
+                    <form class="row form-page activity-form group-box" style="border-bottom: 0;" method="post" enctype="multipart/form-data" name="create_perk">
+                        {{ form.hidden_tag() }}
+
+                        <div class="col-md-6 no-padding">
+                            <div class="col-md-12 no-padding">
+                                <label>Title</label>
+                                {{ form.title(
+                                    placeholder="Title",
+                                    class="form-control",
+                                    required="true") }}
+                            </div>
+                            <div class="col-md-12 no-padding">
+                                <label>Description</label>
+                                <div id="description-editor" class="wysiwyg-editor" placeholder="Describe this activity">
+                                </div>
+                                {{ form.description(
+                                    placeholder="Description",
+                                    class="none",   
+                                    hidden="true") }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 no-padding-right" style="padding: 0px;">
+                            <div class="img-upload">
+                                <br /><br />
+                                <div class="col-md-12 no-padding-right text-center">
+                                    {% if perk.image %}
+                                        <img id="preview" src="{{ url_for('static', filename='uploads/perks_images/375x240/' + perk.image) }}"/>
+                                    {% else %}
+                                        <img id="preview" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"/>
+                                    {% endif %}
+                                    <div id="upload-btn" class="text">
+                                        <button class="btn btn-style-1">Choose Perk Image</button>
+                                    </div>
+                                    {{ form.image(
+                                        placeholder="Perk Image",
+                                        accept='image/*'
+                                    )}}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 no-padding text-center">
+                            <hr /><br/>
+                            {{ form.submit(class="submit btn btn-style-1", style="width: 50%;") }}
+                        </div>
+
+                    </form>
+
+                    <form method="post" class="modal fade" id="delete-confirmation" role="dialog">
+                        <div class="modal-dialog modal-sm">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                              <h4>Confirm Delete</h4>
+                            </div>
+                            <div class="modal-body">
+                              <p>Delete Perk: {{ perk.title }} ?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button type="submit" name="delete" value="delete" class="btn btn-danger">
+                                    Delete this Perk
+                                </button>
+                            </div>
+                          </div>
+                        </div>
+                    </form>
 
                 </div>
-                {{ form.description(
-                    placeholder="Description",
-                    class="none",   
-                    hidden="true") }}
-            </div>
 
-            
-
-        </div>
-
-        <div class="col-md-6 no-padding-right" style="padding: 0px;">
-            <div class="img-upload">
-                <br /><br />
-                <div class="col-md-12 no-padding-right text-center">
-                    {% if perk.image %}
-                        <img id="preview" src="{{ url_for('static', filename='uploads/perks_images/375x240/' + perk.image) }}"/>
-                    {% else %}
-                        <img id="preview" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"/>
-                    {% endif %}
-                    <div id="upload-btn" class="text">
-                        <button class="btn btn-style-1">Choose Perk Image</button>
-                    </div>
-                    {{ form.image(
-                        placeholder="Perk Image",
-                        accept='image/*'
-                    )}}
-                </div>
             </div>
         </div>
 
-        <div class="col-md-12 no-padding">
-            <br /><br /><br />
-            <hr />
-            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-confirmation">
-                Delete this Perk
-            </button>
-        </div>
-    </form>
+    </div>
 
-    <!-- Delete Activity confirmation modal -->
-    <form method="post" class="modal fade" id="delete-confirmation" role="dialog">
-        <div class="modal-dialog modal-sm">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4>Confirm Delete</h4>
-            </div>
-            <div class="modal-body">
-              <p>Delete Perk: {{ perk.title }}</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="submit" name="delete" value="delete" class="btn btn-danger">
-                    Delete this Perk
-                </button>
-            </div>
-          </div>
-        </div>
-    </form>
 {% endmacro %}
 {% macro edit_perk_script() %}
     <script>
