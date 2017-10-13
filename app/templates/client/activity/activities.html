@@ -245,7 +245,7 @@
             },
             loadActivities: function() {
                 $.ajax({
-                    url: "{{ url_for('api.get_activities')}}" + "?page=" + this.activities_page,
+                    url: "{{ url_for('api.get_activities')}}" + "?show=upcoming&page=" + this.activities_page,
                     type: 'GET'
                 }).done(data => {
                     data.activities.forEach((activity) => {

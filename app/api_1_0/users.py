@@ -684,14 +684,14 @@ def my_joined_activities():
             activities = Activity.query\
                 .join(User_Activity)\
                 .join(User)\
-                .order_by(Activity.start_date.desc())\
+                .order_by(Activity.start_date)\
                 .filter(User.id == current_user.get_id(), User_Activity.status == 1)\
                 .paginate(page=page, per_page=3, error_out=False)
     else:
         activities = Activity.query\
                 .join(User_Activity)\
                 .join(User)\
-                .order_by(Activity.start_date.desc())\
+                .order_by(Activity.start_date)\
                 .filter(User.id == current_user.get_id(), User_Activity.status == 1)\
                 .paginate(page=page, per_page=3, error_out=False)
 
@@ -789,14 +789,14 @@ def my_interested_activities():
             activities = Activity.query\
                 .join(User_Activity)\
                 .join(User)\
-                .order_by(Activity.start_date.desc())\
+                .order_by(Activity.start_date)\
                 .filter(User.id == current_user.get_id(), User_Activity.status == 0)\
                 .paginate(page=page, per_page=3, error_out=False)
     else:
         activities = Activity.query\
                 .join(User_Activity)\
                 .join(User)\
-                .order_by(Activity.start_date.desc())\
+                .order_by(Activity.start_date)\
                 .filter(User.id == current_user.get_id(), User_Activity.status == 0)\
                 .paginate(page=page, per_page=3, error_out=False)
 
