@@ -20,6 +20,9 @@
                 <br /><br /><br />
             </div>
             <div class="col-md-offset-2 col-md-6 text-right group-controls" style="padding: 20px;">
+                <a href="{{ url_for('admin.group', id=group.id) }}" class="btn btn-sm btn-style-3">
+                    Activities
+                </a>
                 <a href="{{ url_for('admin.group_requests', id=group.id) }}" class="btn btn-sm btn-style-3">
                     Requests
                 </a>
@@ -34,12 +37,15 @@
     {% else %}
         <div class="row">
             <div class="col-md-4">
-                <a href="{{ url_for('client.group', id=group.id) }}"><h2>{{ group["name"] }}</h2></a>
+                <a href="{{ url_for('client.group', id=group.id) }}" class="page-title-link" title="{{ group['name'] }}"><h2>{{ group["name"] }}</h2></a>
                 <small>About this Group</small>
                 <h6>{{ group["about"] }}</h6>
                 <br /><br /><br />
             </div>
             <div class="col-md-offset-2 col-md-6 text-right group-controls" style="padding: 20px;">
+                <a href="{{ url_for('client.group', id=group.id) }}" class="btn btn-sm btn-style-3">
+                    Activities
+                </a>
                 {% if current_user.can_modify_group(group.id) %}
                 <a href="{{ url_for('client.group_requests', id=group.id) }}" class="btn btn-sm btn-style-3">
                     Requests
