@@ -1060,8 +1060,8 @@ def get_population(id):
         'total'   : members + leaders
     }), 200
 
-
 @api.route('/groups/<string:group_id>/activities')
+@login_required
 def get_group_activities(group_id):
 
     ACTIVITIES_PER_PAGE = 8
@@ -1071,17 +1071,17 @@ def get_group_activities(group_id):
     if show == 'done':
         activities = Activity.query.filter(
             Activity.group_id == group_id,
-            Activity.end_date < datetime.datetime.now())\
-            .order_by(Activity.start_date)\
+            Activity.end_date < func.now())\
+            .order_by(Activity.start_date.desc())\
             .paginate(page=page, per_page=ACTIVITIES_PER_PAGE, error_out=False)
     elif show == 'upcoming':
         activities = Activity.query.filter(
             Activity.group_id == group_id,
-            Activity.end_date > datetime.datetime.now())\
+            Activity.end_date > func.now())\
             .order_by(Activity.start_date)\
             .paginate(page=page, per_page=ACTIVITIES_PER_PAGE, error_out=False)
     else:
-        activities = Activity.query.order_by(Activity.start_date)\
+        activities = Activity.query.order_by(Activity.start_date.desc())\
             .paginate(page=page, per_page=ACTIVITIES_PER_PAGE, error_out=False)
     return jsonify({
         'activities': [activity.to_json() for activity in activities.items],

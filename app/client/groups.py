@@ -122,7 +122,6 @@ def create_group():
 def mygroups():
     return render_template("client/group/mygroups.html", user=current_user, is_manager=is_manager())
 
-
 @client.route('/groups/<uuid(strict=False):id>/requests', methods=['POST', 'GET'])
 @login_required
 def group_requests(id):

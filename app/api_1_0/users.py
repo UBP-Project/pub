@@ -604,6 +604,11 @@ def my_joined_activities():
     tags:
       - users
     parameters:
+      - name: show
+        in: query
+        type: string
+        example: all
+        default: all
       - name: page
         in: query
         type: integer
@@ -652,7 +657,38 @@ def my_joined_activities():
     else:
         page = 1
 
-    activities = Activity.query\
+    if 'show' in request.args:
+        if request.args.get('show') == 'done':
+            activities = Activity.query\
+                .join(User_Activity)\
+                .join(User)\
+                .filter(
+                    Activity.end_date < func.now(),
+                    User.id == current_user.get_id(),
+                    User_Activity.status == 1
+                )\
+                .order_by(Activity.start_date.desc())\
+                .paginate(page=page, per_page=3, error_out=False)
+        elif request.args.get('show') == 'upcoming':
+            activities = Activity.query\
+                .join(User_Activity)\
+                .join(User)\
+                .filter(
+                    Activity.end_date > func.now(),
+                    User.id == current_user.get_id(),
+                    User_Activity.status == 1
+                )\
+                .order_by(Activity.start_date)\
+                .paginate(page=page, per_page=3, error_out=False)
+        else:
+            activities = Activity.query\
+                .join(User_Activity)\
+                .join(User)\
+                .order_by(Activity.start_date.desc())\
+                .filter(User.id == current_user.get_id(), User_Activity.status == 1)\
+                .paginate(page=page, per_page=3, error_out=False)
+    else:
+        activities = Activity.query\
                 .join(User_Activity)\
                 .join(User)\
                 .order_by(Activity.start_date.desc())\
@@ -672,6 +708,11 @@ def my_interested_activities():
     tags:
       - users
     parameters:
+      - name: show
+        in: query
+        type: string
+        example: all
+        default: all
       - name: page
         in: query
         type: integer
@@ -721,7 +762,38 @@ def my_interested_activities():
     else:
         page = 1
 
-    activities = Activity.query\
+    if 'show' in request.args:
+        if request.args.get('show') == 'done':
+            activities = Activity.query\
+                .join(User_Activity)\
+                .join(User)\
+                .filter(
+                    Activity.end_date < func.now(),
+                    User.id == current_user.get_id(),
+                    User_Activity.status == 0
+                )\
+                .order_by(Activity.start_date.desc())\
+                .paginate(page=page, per_page=3, error_out=False)
+        elif request.args.get('show') == 'upcoming':
+            activities = Activity.query\
+                .join(User_Activity)\
+                .join(User)\
+                .filter(
+                    Activity.end_date > func.now(),
+                    User.id == current_user.get_id(),
+                    User_Activity.status == 0
+                )\
+                .order_by(Activity.start_date)\
+                .paginate(page=page, per_page=3, error_out=False)
+        else:
+            activities = Activity.query\
+                .join(User_Activity)\
+                .join(User)\
+                .order_by(Activity.start_date.desc())\
+                .filter(User.id == current_user.get_id(), User_Activity.status == 0)\
+                .paginate(page=page, per_page=3, error_out=False)
+    else:
+        activities = Activity.query\
                 .join(User_Activity)\
                 .join(User)\
                 .order_by(Activity.start_date.desc())\

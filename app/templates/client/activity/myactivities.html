@@ -442,7 +442,7 @@
             },
             loadActivities: function() {
                 $.ajax({
-                    url: "{{ url_for('api.my_joined_activities')}}" + "?page=" + this.activities_page,
+                    url: "{{ url_for('api.my_joined_activities')}}" + "?show=all&page=" + this.activities_page,
                     type: 'GET'
                 }).done(data => {
                     data.joined_activities.forEach((activity) => {
@@ -452,7 +452,6 @@
                         activity.isGoing          = false;
                         activity.isLeader         = false;
                     });
-                    console.log(data);
                     this.activities.push.apply(this.activities, data.joined_activities);
                     this.activities_page++;
                     this.hasNext = data.has_next;
@@ -569,7 +568,7 @@
             },
             loadActivities: function() {
                 $.ajax({
-                    url: "{{ url_for('api.my_interested_activities')}}" + "?page=" + this.activities_page,
+                    url: "{{ url_for('api.my_interested_activities')}}" + "?show=all&page=" + this.activities_page,
                     type: 'GET'
                 }).done(data => {
                     data.interested_activities.forEach((activity) => {
