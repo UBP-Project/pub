@@ -135,19 +135,11 @@
                                                             <div v-for="activity in group.activities">
 
                                                                 <!-- ACTIVITY CARD  -->
-                                                                <a :href="'/activities/' + activity.id" :title="activity.title">
+                                                                <a :href="'/activities/' + activity.id" :title="activity.title" class="group-activity-link">
                                                                     <div class="col-md-3 col-lg-4 col-sm-6 card-container">
                                                                         <div class="group-activity-card">
                                                                             <div class="group-activity-inner-con">
-                                                                                <template v-if="activity.status === '2'">
-                                                                                    <img :src="activity_card_images_folder + activity.image" class="img-responsive activity-filter-marker"/>
-                                                                                    <span class="activity-marker-icon">
-                                                                                            <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
-                                                                                    </span>
-                                                                                </template>
-                                                                                <template v-else>
-                                                                                    <img :src="activity_card_images_folder + activity.image" class="img-responsive not-done-activity"/>
-                                                                                </template>
+                                                                                <img :src="activity_card_images_folder + activity.image" class="img-responsive not-done-activity"/>
                                                                             </div>
                                                                             <div class="group-activity-title">
                                                                                 <h5 class="text-center title">{{ activity.title }}</h5>
@@ -337,19 +329,11 @@
                                                             <div v-for="activity in group.activities">
 
                                                                 <!-- ACTIVITY CARD  -->
-                                                                <a :href="'/activities/' + activity.id" :title="activity.title">
+                                                                <a :href="'/activities/' + activity.id" :title="activity.title" class="group-activity-link">
                                                                     <div class="col-md-3 col-lg-4 col-sm-6 card-container">
                                                                         <div class="group-activity-card">
                                                                             <div class="group-activity-inner-con">
-                                                                                <template v-if="activity.status === '2'">
-                                                                                    <img :src="activity_card_images_folder + activity.image" class="img-responsive activity-filter-marker"/>
-                                                                                    <span class="activity-marker-icon">
-                                                                                            <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
-                                                                                    </span>
-                                                                                </template>
-                                                                                <template v-else>
-                                                                                    <img :src="activity_card_images_folder + activity.image" class="img-responsive not-done-activity"/>
-                                                                                </template>
+                                                                                <img :src="activity_card_images_folder + activity.image" class="img-responsive not-done-activity"/>
                                                                             </div>
                                                                             <div class="group-activity-title">
                                                                                 <h5 class="text-center title">{{ activity.title }}</h5>

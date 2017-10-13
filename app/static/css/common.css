@@ -66,3 +66,13 @@ table.users td {
 .form-page .trumbowyg-box {
     margin-top: 0px;
 }
+
+.page-title-link {
+    text-decoration: none;
+    color: #3a3a3a;
+}
+
+.page-title-link:hover {
+    text-decoration: none;
+    color: #3a3a3a;
+}
