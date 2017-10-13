@@ -44,7 +44,7 @@
 								<a href="{{ url_for('client.followers', id=leader.id) }}">
 									<div class="zoomify user-card-2">
 										{% if leader.image %}
-											<img src="{{ url_for('static', filename='uploads/profile_pictures/' + leader.image )}}">
+											<img src="{{ url_for('static', filename='uploads/profile_pictures/40x40/' + leader.image )}}">
 										{% else %}
 											<img src="{{ url_for('static', filename='images/pub-default-img.jpg')}}">
 										{% endif %}

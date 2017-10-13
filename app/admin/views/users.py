@@ -89,7 +89,7 @@ def profile(id):
 
     if request.method == 'POST':
         if form.image.data is not None:
-            user.set_image(form.image.data)
+            user.set_photo(form.image.data)
         user.firstname  = form.firstname.data,
         user.middlename = form.middlename.data,
         user.lastname   = form.lastname.data, 
@@ -130,12 +130,6 @@ def change_password(id):
 def create_user():
     form = CreateUserForm()
     if request.method == 'POST':
-        image                 = form.image.data
-        image_filename        = secure_filename(image.filename)
-        extension             = image_filename.rsplit('.', 1)[1].lower()
-        image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
-        file_path             = os.path.join('app/static/uploads/profile_pictures', image_hashed_filename)
-        image.save(file_path)
         user = User(
             firstname=form.firstname.data,
             middlename=form.middlename.data,
@@ -144,12 +138,12 @@ def create_user():
             department=form.department.data,
             position=form.position.data,
             birthday=form.birthday.data,
-            role_id=uuid.UUID(form.role.data).hex,
-            image=image_hashed_filename)
+            role_id=uuid.UUID(form.role.data).hex)
         user.password = form.password.data
         db.session.add(user)
         db.session.commit()
-        # flash("Success creating user")
+        db.session.refresh(user)
+        user.set_photo(form.image.data)
         return redirect(url_for("admin.users"))
     flash_errors(form)
     return render_template('admin/user/create.html', form=form)

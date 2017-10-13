@@ -6,11 +6,13 @@ from sqlalchemy_utils import UUIDType
 from flask_login import UserMixin
 import uuid
 import getpass
+import os
 from uuid import UUID
 from datetime import datetime
 from flask_login import current_user
 from flask import abort
 from PIL import Image
+from werkzeug.utils import secure_filename
 
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
@@ -29,17 +31,6 @@ class User(UserMixin, db.Model):
     timestamp = db.Column(db.DateTime, server_default=func.now())
     updated = db.Column(db.DateTime, onupdate=func.now())
     
-    # followed      = db.relationship('Follow', foreign_keys=[Follow.follower_id], backref=db.backref('follower', lazy='joined'), lazy='dynamic', passive_deletes=True, passive_updates=True)
-    # follower      = db.relationship('Follow', foreign_keys=[Follow.following_id], backref=db.backref('followed', lazy='joined'), passive_deletes=True, passive_updates=True)
-
-    # followed = db.relationship('User',
-    #     secondary = Follow,
-    #     primaryjoin = (Follow.follower_id == id),
-    #     secondaryjoin = (Follow.follower_id == id),
-    #     backref = db.backref('Follow', lazy='dynamic'),
-    #     lazy='dynamic'
-    #     )
-
     def __init__(self, firstname, middlename, lastname, email, department, position, birthday, role_id, image=None):
         self.firstname = firstname
         self.middlename = middlename
@@ -110,7 +101,7 @@ class User(UserMixin, db.Model):
             if not os.path.isdir(directory):
                 os.makedirs(directory)
 
-            new_image.save(os.path.join(directory, image_hashed_filename))
+            new_image.save(os.path.join(directory, image_hashed_filename), quality=100)
         self.image = image_hashed_filename
         db.session.commit()
 
