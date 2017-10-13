@@ -26,6 +26,10 @@ def get_activities():
       - activities
 
     parameters:
+      - show:
+        in: query
+        example: upcoming
+        default: all
       - name: page
         in: query
         example: 1
@@ -68,10 +72,6 @@ def get_activities():
                   example: 70a256f3628947508af68343821d78b6.jpg
                   default: None
                   description: File name of image in uploads/activity_image folder
-              status:
-                  type: integer
-                  example: 1
-                  description: Tell if the activity is (0) - upcoming, (1) - happening, (2) - done
 
     """
     ACTIVITY_PER_PAGE = 9
