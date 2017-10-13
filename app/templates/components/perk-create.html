@@ -1,60 +1,71 @@
 {% macro create_perk(form) %}
-    <form class="row form-page activity-form group-box" style="padding: 20px; background-color: white"  method="post" enctype="multipart/form-data" name="create_perk">
-        {{ form.hidden_tag() }}
+    
+    <div class="row">
 
-        <div class="col-md-12 no-padding">
-                <h3 class="pull-left">CREATE PERK</h3>
-                <div style="margin-top: 10px;">
-                    {{ form.submit(
-                        class="btn btn-style-1 pull-right"
-                    )}}
+        <div class="col-md-12">
+            <div class="group-box">
+
+                <h3>CREATE PERKS</h3>
+                <hr/>
+
+                <div>
+
+                    <form class="row form-page activity-form group-box" style="border-bottom: 0;"  method="post" enctype="multipart/form-data" name="create_perk">
+                        {{ form.hidden_tag() }}
+
+                        <div class="col-md-6 no-padding">
+                            <div class="col-md-12 no-padding">
+                                <label>Title</label>
+                                {{ form.title(
+                                    placeholder="Title",
+                                    class="form-control",
+                                    required="true") }}
+                            </div>
+                            <div class="col-md-12 no-padding">
+                                <label>Description</label>
+                                <div id="description-editor" class="wysiwyg-editor" placeholder="Describe this perk">
+                                </div>
+                                {{ form.description(
+                                    placeholder="Description",
+                                    class="none",   
+                                    hidden="true") }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 no-padding-right" style="padding: 0px;">
+                            <div class="img-upload">
+                                <br /><br ?>
+                                <div class="col-md-12 no-padding-right text-center">
+                                    <img id="preview" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"/>
+                                    <div id="upload-btn" class="text">
+                                        <button class="btn btn-style-1">Choose Perk Image</button>
+                                    </div>
+                                    {{ form.image(
+                                        placeholder="Perk Image",
+                                        accept='image/*'
+                                    )}}
+                                </div>
+                            </div>
+                        </div>
+
+                        <br/>
+
+                        <div class="col-md-12 no-padding text-center">
+                            <hr /><br/>
+                            {{ form.submit(
+                                class="btn btn-style-1", style="width: 50%;"
+                            )}}
+                        </div>
+
+                    </form>
+
                 </div>
-        </div>
 
-        <div class="col-md-12 no-padding">
-            <hr />
-        </div>
-
-        <div class="col-md-6 no-padding">
-            <div class="col-md-12 no-padding">
-                <label>Title</label>
-                {{ form.title(
-                    placeholder="Title",
-                    class="form-control",
-                    required="true") }}
-            </div>
-
-            <div class="col-md-12 no-padding">
-                <label>Description</label>
-                <div id="description-editor" class="wysiwyg-editor" placeholder="Describe this perk">
-
-                </div>
-                {{ form.description(
-                    placeholder="Description",
-                    class="none",   
-                    hidden="true") }}
-            </div>
-
-            
-
-        </div>
-
-        <div class="col-md-6 no-padding-right" style="padding: 0px;">
-            <div class="img-upload">
-                <br /><br ?>
-                <div class="col-md-12 no-padding-right text-center">
-                    <img id="preview" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"/>
-                    <div id="upload-btn" class="text">
-                        <button class="btn btn-style-1">Choose Perk Image</button>
-                    </div>
-                    {{ form.image(
-                        placeholder="Perk Image",
-                        accept='image/*'
-                    )}}
-                </div>
             </div>
         </div>
-    </form>
+
+    </div>
+
 {% endmacro %}
 {% macro create_perk_script() %}
     <script>
