@@ -1,128 +1,149 @@
 {% macro create_group(form) %}
-    <form class="form-group form-page row edit-group group-box" method="post" enctype="multipart/form-data" name="edit_group">
+    
+    <div class="row">
 
-        <div class="row">
-            <div class="col-md-12 no-padding">
-                <h1 class="title">Create Interest Group</h1>
-                <hr />
-            </div>
-        </div>
+        <div class="col-md-12">
+            <div class="group-box">
 
-        <div class="row">
-            <div class="col-md-12 cover-photo no-padding">
-                <img id="preview_cover" src="{{ url_for('static', filename='images/pub-default-img.jpg' )}}" />
-                <button id="change-group-cover-btn" class="btn btn-xs btn-style-3">
-                    Change Cover Photo
-                </button>
-            </div>
-        </div>
+                <h3>CREATE INTEREST GROUP
+                    <span class="pull-right">
+                        <a href="javascript:history.back()" class="group-create-btn">
+                            <button class="btn btn-style-4 btn-sm" title="Cancel">CANCEL</button>
+                        </a>
+                    </span>
+                </h3>
+                <hr/>
 
-        <div class="row">
-            <div class="col-md-12 group-icon text-center">
-                <img id="preview-group-icon" src="{{ url_for('static', filename='images/pub-default-img.jpg' )}}" />
-                <span>Change Group Icon</span>
-            </div>
-        </div>
+                <div>
 
-        <br /><br /><br />
+                    <form class="form-group form-page row edit-group group-box" method="post" enctype="multipart/form-data" name="edit_group" style="border-bottom: 0;">
 
-        <div class="col-md-6" style="padding: 0px">
-            <div class="col-md-12 no-padding">
-                {{ form.hidden_tag() }}
-                <label>Group name</label>
-                {{ form.name(
-                    placeholder="Group name",
-                    class="form-control",
-                    required="true") }}
-                
-                <label>About this Group</label>
-                {{ form.about(
-                    placeholder="About this Group",
-                    class="form-control input-md",
-                    required="true") }}
-                
-                <div class="col-sm-12 no-padding-left">
-                    <div class="col-sm-6 no-padding">
-                        <label>Points on joining this group:</label>
-                        {{ form.joined_point(class="form-control", min="0") }}
-                    </div>
+                        <div class="row">
+                            <div class="col-md-12 cover-photo no-padding">
+                                <img id="preview_cover" src="{{ url_for('static', filename='images/pub-default-img.jpg' )}}" />
+                                <button id="change-group-cover-btn" class="btn btn-xs btn-style-3">
+                                    Change Cover Photo
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 group-icon text-center" style="">
+                                <img id="preview-group-icon" src="{{ url_for('static', filename='images/pub-default-img.jpg' )}}" />
+                                <span>Change Group Icon</span>
+                            </div>
+                        </div>
+
+                        <br/><br/><br/>
+
+                        <div class="col-md-6" style="padding: 0px">
+                            <div class="col-md-12 no-padding">
+                                {{ form.hidden_tag() }}
+                                <label>Group name</label>
+                                {{ form.name(
+                                    placeholder="Group name",
+                                    class="form-control",
+                                    required="true") }}
+                                
+                                <label>About this Group</label>
+                                {{ form.about(
+                                    placeholder="About this Group",
+                                    class="form-control input-md",
+                                    required="true") }}
+                                
+                                <div class="col-sm-12 no-padding-left">
+                                    <div class="col-sm-6 no-padding">
+                                        <label>Points on joining this group:</label>
+                                        {{ form.joined_point(class="form-control", min="0") }}
+                                    </div>
+                                </div>
+                            
+                            </div>
+                            {{ form.cover_photo(class="hidden", accept='image/*') }}
+                            {{ form.group_icon(class="hidden", accept='image/*') }}
+                        </div>
+
+                        {% raw %}
+                        <div id="add_leaders_app" class="col-md-6 no-padding-right">
+                            <div class="col-md-12 no-padding-right">
+                                <br />
+                                <span class="lead">Group Leaders
+                                </span>
+                                <button type="button" data-toggle="modal" data-target="#users_modal" class="btn btn-style-1 pull-right">
+                                    +
+                                </button>
+                                <hr />
+                            </div>
+
+                            <div class="col-md-12 no-padding">
+                                <div v-for="(user, index) in leaders" class="col-md-12" style="margin: 5px !important;">
+                                    <img v-if="user.image" :src="'../../static/uploads/profile_pictures/' + user.image" class="circle-img-sm" />
+                                    <img v-else src="../../static/images/pub-default-img.jpg" class="circle-img-sm" />
+                                    <span>{{ user.firstname }} {{ user.lastname }}</span>
+                                    <span><button type="button" class="btn btn-sm btn-style-3 pull-right" style="margin-top: 10px;" v-on:click="removeLeader(user, index)">Remove Leader</button></span>
+                                </div>
+                                <br /><br /><br />
+                            </div>
+
+                            <!-- Users list modal -->
+                            <div id="users_modal" class="modal fade" role="dialog">
+                              <div class="modal-dialog">
+
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                  <div class="modal-header" style="padding-bottom: 5px;">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Add Leaders</h4>
+                                    <input type="text" v-model="query" class="form-control" placeholder="Search Users"
+                                        style="margin-top: 10px;"/>
+                                  </div>
+
+                                  <!-- All users list -->
+                                  <div v-if="query.length == 0" class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
+                                    <div v-for="(user, index) in sorted_users" class="col-md-12" style="padding: 8px;">
+                                        <img v-if="user.image" :src="'../../static/uploads/profile_pictures/' + user.image" class="circle-img-sm" />
+                                        <img v-else src="../../static/images/pub-default-img.jpg" class="circle-img-sm" />
+                                        <span>{{ user.firstname }} {{ user.lastname }}</span>
+                                        <span><button type="button" class="btn btn-style-1 pull-right" v-on:click="setAsLeader(user, index, users)">Set as Leader</button></span>
+                                    </div> <!-- end of all users -->
+                                  </div>
+
+                                  <!-- Searched Users -->
+                                  <div v-else class="modal-body" style="max-height: calc(100vh - 200px); min-height: calc(100vh - 200px); overflow-y: auto;">
+                                    <div v-for="(user, index) in searched_users" class="col-md-12" style="padding: 8px;">
+                                        <img v-if="user.image" :src="'../../static/uploads/profile_pictures/' + user.image" class="circle-img-sm" />
+                                        <img v-else src="../../static/images/pub-default-img.jpg" class="circle-img-sm" />
+                                        <span>{{ user.firstname }} {{ user.lastname }}</span>
+                                        <span><button type="button" class="btn btn-style-1 pull-right" v-on:click="setAsLeader(user, index, searched_users)">Set as Leader</button></span>
+                                    </div> <!-- end of searched users -->
+                                  </div>
+
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                  </div>
+                                </div>
+
+                              </div>
+                            </div> <!-- End of Users list modal -->
+                        </div>
+                        {% endraw %}
+
+                        <div class="col-md-12 no-padding text-center">
+                            <hr /><br/>
+                            {{ form.submit(class="submit btn btn-style-1", style="width: 50%;") }}
+                        </div>
+
+                        {{ form.leader_ids(hidden="true") }}
+
+                    </form>
+
                 </div>
-            
-                <div class="col-md-12 no-padding">
-                    <hr />
-                    {{ form.submit(class="btn btn-style-1") }}
-                </div>
+
             </div>
-            {{ form.cover_photo(class="hidden", accept='image/*') }}
-            {{ form.group_icon(class="hidden", accept='image/*') }}
         </div>
 
+    </div>
 
-        {% raw %}
-        <div id="add_leaders_app" class="col-md-6 no-padding-right">
-            <div class="col-md-12 no-padding-right">
-                <br />
-                <span class="lead">Group Leaders
-                </span>
-                <button type="button" data-toggle="modal" data-target="#users_modal" class="btn btn-style-1 pull-right">
-                    +
-                </button>
-                <hr />
-            </div>
-
-            <div class="col-md-12 no-padding">
-                <div v-for="(user, index) in leaders" class="col-md-12" style="margin: 5px !important;">
-                    <img v-if="user.image" :src="'../../static/uploads/profile_pictures/' + user.image" class="circle-img-sm" />
-                    <img v-else src="../../static/images/pub-default-img.jpg" class="circle-img-sm" />
-                    <span>{{ user.firstname }} {{ user.lastname }}</span>
-                    <span><button type="button" class="btn btn-sm btn-style-3 pull-right" style="margin-top: 10px;" v-on:click="removeLeader(user, index)">Remove Leader</button></span>
-                </div>
-                <br /><br /><br />
-            </div>
-
-            <!-- Users list modal -->
-            <div id="users_modal" class="modal fade" role="dialog">
-              <div class="modal-dialog">
-
-                <!-- Modal content-->
-                <div class="modal-content">
-                  <div class="modal-header" style="padding-bottom: 5px;">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Add Leaders</h4>
-                    <input type="text" v-model="query" class="form-control" placeholder="Search Users"
-                        style="margin-top: 10px;"/>
-                  </div>
-
-                  <!-- All users list -->
-                  <div v-if="query.length == 0" class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
-                    <div v-for="(user, index) in sorted_users" class="col-md-12" style="padding: 8px;">
-                        <img v-if="user.image" :src="'../../static/uploads/profile_pictures/' + user.image" class="circle-img-sm" />
-                        <img v-else src="../../static/images/pub-default-img.jpg" class="circle-img-sm" />
-                        <span>{{ user.firstname }} {{ user.lastname }}</span>
-                        <span><button type="button" class="btn btn-style-1 pull-right" v-on:click="setAsLeader(user, index, users)">Set as Leader</button></span>
-                    </div> <!-- end of all users -->
-                  </div>
-
-                  <!-- Searched Users -->
-                  <div v-else class="modal-body" style="max-height: calc(100vh - 200px); min-height: calc(100vh - 200px); overflow-y: auto;">
-                    <div v-for="(user, index) in searched_users" class="col-md-12" style="padding: 8px;">
-                        <img v-if="user.image" :src="'../../static/uploads/profile_pictures/' + user.image" class="circle-img-sm" />
-                        <img v-else src="../../static/images/pub-default-img.jpg" class="circle-img-sm" />
-                        <span>{{ user.firstname }} {{ user.lastname }}</span>
-                        <span><button type="button" class="btn btn-style-1 pull-right" v-on:click="setAsLeader(user, index, searched_users)">Set as Leader</button></span>
-                    </div> <!-- end of searched users -->
-                  </div>
-
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  </div>
-                </div>
-
-              </div>
-            </div> <!-- End of Users list modal -->
-        </div>
-        {% endraw %}
-        {{ form.leader_ids(hidden="true") }}
 {% endmacro %}
 {% macro create_group_script() %}
 <script>
