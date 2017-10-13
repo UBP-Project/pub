@@ -4,7 +4,7 @@
 {% block title %} {{ group["name"] }} {% endblock %}
 
 {% block content %}
-    <div class="row admin-page" style="background-color: white;">
+    <div class="row admin-page" style="background-color: white; margin: 0 10px;">
         {{ group_header(group, current_user) }}
         {{ members_table(group, current_user) }}
     </div>
