@@ -1,109 +1,117 @@
 {% macro create_activity(form) %}
-    <form class="row form-page activity-form group-box" style="padding: 20px; background-color: white" method="post" enctype="multipart/form-data" name="create_activity">
-        {{ form.hidden_tag() }}
 
-        <div class="col-md-12 no-padding">
-                <h1 class="pull-left">Create Activity</h1>
-                <div style="margin-top: 25px;">
-                    {{ form.submit(
-                        class="submit btn btn-style-1 pull-right"
-                    )}}
+    <div class="row">
+
+        <div class="col-md-12">
+            <div class="group-box">
+
+                <h3>CREATE ACTIVITY</h3>
+                <hr/>
+
+                <div>
+                    
+                    <form class="row form-page activity-form group-box" method="post" enctype="multipart/form-data" name="create_activity" style="border-bottom: 0;">
+                        {{ form.hidden_tag() }}
+
+                        <div class="col-md-6 no-padding">
+                            <div class="col-md-12 no-padding">
+                                <label>Title</label>
+                                {{ form.title(
+                                    placeholder="Title",
+                                    class="form-control",
+                                    required="true") }}
+                            </div>
+                            <div class="col-md-6 no-padding-left">
+                                <label>Start Date</label>
+                                {{ form.start_date(
+                                    placeholder="Start Date",
+                                    class="form-control",
+                                    required="true")}}
+                            </div>
+
+                            <div class="col-md-6 no-padding-right">
+                                <label>End Date</label>
+                                {{ form.end_date(
+                                    placeholder="End Date",
+                                    class="form-control",
+                                    required="true")}}
+                            </div>
+                            <div class="col-md-12 no-padding">
+                                <label>Address</label>
+                                {{ form.address(
+                                    placeholder="Address",
+                                    class="form-control",
+                                    required="true"
+                                )}}
+                            </div>
+                            <div class="col-md-12 no-padding">
+                                <label>Assign to Group</label>
+                                {{ form.group(
+                                    class="form-control",
+                                    required="true")
+                                }}
+                            </div>
+
+                            <div class="col-md-12 no-padding">
+                                <label>Description</label>
+                                <div id="description-editor" class="wysiwyg-editor" placeholder="Describe this activity">
+
+                                </div>
+                                {{ form.description(
+                                    placeholder="Description",
+                                    class="none",   
+                                    hidden="true") }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 no-padding-right" style="padding: 0px;">
+                            <div class="img-upload">
+                                <br /><br ?>
+                                <div class="col-md-12 no-padding-right text-center">
+                                    <img id="preview" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"/>
+                                    <div id="upload-btn" class="text">
+                                        <button class="btn btn-style-1">Choose Activity Image</button>
+                                    </div>
+                                    {{ form.image(
+                                        placeholder="Activity Image",
+                                        accept='image/*'
+                                    )}}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 no-padding text-center">
+                            <hr /><br/>
+                            <h4>Set Points for this Activity</h4>
+                            <div class="col-sm-offset-3 col-sm-2 no-padding-left">
+                                <label>Interested pts.</label>
+                                {{ form.interested_point(class="form-control") }}
+                            </div>
+                            <div class="col-sm-2 no-padding-left">
+                                <label>Joined pts.</label>
+                                {{ form.going_point(class="form-control") }}
+                            </div>
+                            <div class="col-sm-2 no-padding-left">
+                                <label>Attended pts.</label>
+                                {{ form.attended_point(class="form-control") }}
+                            </div>
+                        </div>
+                        <br/>
+
+                        <div class="col-md-12 no-padding text-center">
+                            <hr /><br/>
+                            {{ form.submit(class="submit btn btn-style-1", style="width: 50%;") }}
+                        </div>
+
+
+                    </form>
+
                 </div>
-        </div>
 
-        <div class="col-md-12 no-padding">
-            <hr />
-        </div>
-
-        <div class="col-md-6 no-padding">
-            <div class="col-md-12 no-padding">
-                <label>Title</label>
-                {{ form.title(
-                    placeholder="Title",
-                    class="form-control",
-                    required="true") }}
-            </div>
-            <div class="col-md-6 no-padding-left">
-                <label>Start Date</label>
-                {{ form.start_date(
-                    placeholder="Start Date",
-                    class="form-control",
-                    required="true")}}
-            </div>
-
-            <div class="col-md-6 no-padding-right">
-                <label>End Date</label>
-                {{ form.end_date(
-                    placeholder="End Date",
-                    class="form-control",
-                    required="true")}}
-            </div>
-            <div class="col-md-12 no-padding">
-                <label>Address</label>
-                {{ form.address(
-                    placeholder="Address",
-                    class="form-control",
-                    required="true"
-                )}}
-            </div>
-            <div class="col-md-12 no-padding">
-                <label>Assign to Group</label>
-                {{ form.group(
-                    class="form-control",
-                    required="true")
-                }}
-            </div>
-
-            <div class="col-md-12 no-padding">
-                <label>Description</label>
-                <div id="description-editor" class="wysiwyg-editor" placeholder="Describe this activity">
-
-                </div>
-                {{ form.description(
-                    placeholder="Description",
-                    class="none",   
-                    hidden="true") }}
             </div>
         </div>
+    </div>
 
-        <div class="col-md-6 no-padding-right" style="padding: 0px;">
-            <div class="img-upload">
-                <br /><br ?>
-                <div class="col-md-12 no-padding-right text-center">
-                    <img id="preview" src="{{ url_for('static', filename='images/pub-default-img.jpg') }}"/>
-                    <div id="upload-btn" class="text">
-                        <button class="btn btn-style-1">Choose Activity Image</button>
-                    </div>
-                    {{ form.image(
-                        placeholder="Activity Image",
-                        accept='image/*'
-                    )}}
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-12 no-padding">
-            <hr />
-            <h4>Set Points for this Activity</h4>
-            <div class="col-sm-2 no-padding-left">
-                <label>Interested pts.</label>
-                {{ form.interested_point(class="form-control") }}
-            </div>
-            <div class="col-sm-2 no-padding-left">
-                <label>Joined pts.</label>
-                {{ form.going_point(class="form-control") }}
-            </div>
-            <div class="col-sm-2 no-padding-left">
-                <label>Attended pts.</label>
-                {{ form.attended_point(class="form-control") }}
-            </div>
-        </div>
-
-        <div class="col-md-12 no-padding">
-            <hr />
-            {{ form.submit(class="submit btn btn-block btn-style-1") }}
-        </div>
-    </form>
 {% endmacro %}
 {% macro create_activity_script() %}
 <script>

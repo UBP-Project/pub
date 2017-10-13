@@ -11,7 +11,7 @@
     outline: none;
 }
 
-.search-btn {
+.search-btn, .search-btn:active {
     background-color: #fd8103;
     color: #fff;
     height: 30px;
