@@ -9,11 +9,15 @@
             
             <div class="col-md-12 no-padding">
                 <h3>Group Activities
-                    {% if can_manage_activity %}
-                    <a href="/activities/create">
-                        <button class="btn btn-style-2 btn-sm pull-right" title="Create Activity">CREATE ACTIVITY &nbsp;<i class="fa fa-plus"></i></button>
-                    </a>
-                    {% endif %}
+                    {% raw %}
+                    <div id="app">
+                        <span v-show="( is_leader || is_manager )">
+                            <a href="/activities/create">
+                                <button class="btn btn-style-2 btn-sm pull-right" title="Create Activity">CREATE ACTIVITY &nbsp;<i class="fa fa-plus"></i></button>
+                            </a>
+                        </span>
+                    </div>
+                    {% endraw %}
                 </h3>
                 <br>
             </div>
@@ -413,6 +417,32 @@
 
 {% block scripts %}
     <script>
+        var app = new Vue({
+              el: '#app',
+              data: {
+                is_leader: false,
+                is_manager: false
+              },
+              methods: {
+                checkPermission: function(group_id, current_user_id){
+                    $.ajax({
+                        url: '/api/v1.0/groups/'+ group_id + '/members',
+                        type: 'GET'
+                    }).done(data => {
+                        for(var i = 0; i < data.leaders.length; i++) {
+                            if (data.leaders[i].id == current_user_id) {
+                                this.is_leader = true;
+                                console.log('You are leader of this group');
+                                break;
+                            }
+                        }
+                    }).fail(function() {
+                        console.log("error");
+                    });
+                }
+              }
+        });
+
         var upcoming = new Vue({
           el: '#upcoming',
           data: {
@@ -466,7 +496,6 @@
                     for(var i = 0; i < data.leaders.length; i++) {
                         if (data.leaders[i].id == '{{current_user.get_id()}}') {
                             activity.isLeader = true;
-                            console.log('You are a leader of this group');
                             break;
                         }
                     }
@@ -591,7 +620,6 @@
                     for(var i = 0; i < data.leaders.length; i++) {
                         if (data.leaders[i].id == '{{current_user.get_id()}}') {
                             activity.isLeader = true;
-                            console.log('You are a leader of this group');
                             break;
                         }
                     }
@@ -664,6 +692,8 @@
           }
         });
         $(document).ready(function() {
+            app.checkPermission('{{ group.id }}', '{{current_user.get_id()}}');
+            app.is_manager = "{{ is_manager }}" == "True" ? true : false;
             upcoming.loadActivities('{{ group.id }}');
             upcoming.can_manage_activity = "{{ can_manage_activity }}" == "True" ? true : false;
             upcoming.is_manager = "{{ is_manager }}" == "True" ? true : false;
