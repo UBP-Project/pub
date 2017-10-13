@@ -27,7 +27,7 @@ users = [
 		'middlename'	:	'Awa',
 		'lastname'		:	'Periabras',
 		'email'			:	'redperiabras@gmail.com',
-		'password'	:	'12345',
+		'password'		:	'12345',
 		'department'	:	'Business Analytics',
 		'position'		:	'Project Hire',
 		'birthday'		:	'1998-02-01'
@@ -37,7 +37,7 @@ users = [
 		'middlename'	:	'Soneja',
 		'lastname'		:	'Conde',
 		'email'			:	'asconde1997@gmail.com',
-		'password'	:	'12345',
+		'password'		:	'12345',
 		'department'	:	'Business Analytics',
 		'position'		:	'Project Hire',
 		'birthday'		:	'1997-09-07'
@@ -47,7 +47,7 @@ users = [
 		'middlename'	:	'Torres',
 		'lastname'		:	'Hari',
 		'email'			:	'princejulius230@gmail.com',
-		'password'	:	'12345',
+		'password'		:	'12345',
 		'department'	:	'Business Analytics',
 		'position'		:	'Project Hire',
 		'birthday'		:	'1997-07-23'
@@ -57,7 +57,7 @@ users = [
 		'middlename'	:	'Test',
 		'lastname'		:	'Test',
 		'email'			:	'test@gmail.com',
-		'password'	:	'test',
+		'password'		:	'test',
 		'department'	:	'Business Analytics',
 		'position'		:	'Project Hire',
 		'birthday'		:	'1997-09-07'

@@ -131,6 +131,7 @@ class Interest_Group(db.Model):
         icon_sizes = [
             (130, 130),  # card icon
             (200, 200),  # modal icon
+            (100, 100)   
         ]
 
         icon = Image.open(file_path)
@@ -166,7 +167,8 @@ class Interest_Group(db.Model):
 
         cover_sizes = [
             (200, 170),  # card cover
-            (600, 250)  # modal cover
+            (600, 250),  # modal cover
+            (420, 150)
         ]
 
         cover = Image.open(file_path)

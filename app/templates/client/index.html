@@ -29,11 +29,11 @@
                                 
                                 <template v-if="feed.type === 'new_group'">
                                     <div class="new-group-cover">
-                                        <img :src="'/static/uploads/covers/600x250/' + feed.cover_photo">
+                                        <img :src="'/static/uploads/covers/420x150/' + feed.cover_photo">
                                     </div>
                                     <div class="text-center new-group-icon-wrapper">
                                         <a :href="'/groups/' + feed.id" :title="'View ' + feed.name">
-                                            <img :src="'/static/uploads/group_icons/130x130/' + feed.group_icon" class="img-circle">
+                                            <img :src="'/static/uploads/group_icons/100x100/' + feed.group_icon" class="img-circle">
                                         </a>
                                     </div>
                                     <div class="text-center new-group-desc">
@@ -51,7 +51,7 @@
                                 </template>
                                 <template v-else-if="feed.type === 'new_activity'">
                                     <div class="new-activity-cover">
-                                        <img :src="'/static/uploads/activity_images/600x250/' + feed.activity_image">
+                                        <img :src="'/static/uploads/activity_images/260x200/' + feed.activity_image">
                                     </div>
                                     <div class="text-center new-activity-desc">
                                         <a :href="'/activities/' + feed.activity_id" :title="'View ' + feed.activity_title">
@@ -140,19 +140,19 @@
                                 </template>
                                 <template v-else-if="feed.type === 'new_membership'">
                                     <div class="new-group-cover">
-                                        <img :src="'/static/uploads/covers/600x250/' + feed.group_cover">
+                                        <img :src="'/static/uploads/covers/420x150/' + feed.group_cover">
                                     </div>
 
                                     <div class="text-center new-member-user">
                                         <a :href="'/profile/' + feed.user_id" :title="'View ' + feed.user_firstname">
-                                            <img v-if="feed.user_image" :src="'/static/uploads/group_icons/130x130/' + feed.user_image" class="img-circle">
+                                            <img v-if="feed.user_image" :src="'/static/uploads/profile_pictures/' + feed.user_image" class="img-circle">
                                             <img v-else :src="'/static/images/pub-default-img.jpg'" class="img-circle">
                                         </a>
                                     </div>
 
                                     <div class="text-center new-to-group-icon">
                                         <a :href="'/groups/' + feed.group_id" :title="'View ' + feed.group_name">
-                                            <img :src="'/static/uploads/group_icons/130x130/' + feed.group_icon" class="img-circle">
+                                            <img :src="'/static/uploads/group_icons/100x100/' + feed.group_icon" class="img-circle">
                                         </a>
                                     </div>
 
@@ -176,7 +176,7 @@
                                 <template v-else-if="feed.type === 'new_user_activity'">
                                     
                                     <div class="new-activity-cover">
-                                        <img :src="'/static/uploads/activity_images/600x250/' + feed.activity_image">
+                                        <img :src="'/static/uploads/activity_images/420x150/' + feed.activity_image">
                                     </div>
 
                                     <div class="text-center new-activity-user">

@@ -10,6 +10,7 @@ from uuid import UUID
 from datetime import datetime
 from flask_login import current_user
 from flask import abort
+from PIL import Image
 
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
@@ -79,6 +80,40 @@ class User(UserMixin, db.Model):
         manager = Role.query.filter(Role.name == 'Manager').first()
         return (self.role_id == manager.id)
 
+    def set_photo(self, image):
+        image_filename = secure_filename(image.filename)
+        extension = image_filename.rsplit('.', 1)[1].lower()
+        image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
+        file_path = os.path.join(
+            'app/static/uploads/profile_pictures', image_hashed_filename)
+        
+        image.save(file_path)
+
+        sizes = [
+            (40, 40),   # icon
+            (200, 200), # profile page
+        ]
+
+        image = Image.open(file_path)
+
+        # resize image
+        for size in sizes:
+            basewidth = size[0]
+            wpercent = (basewidth/float(image.size[0]))
+            hsize = int((float(image.size[1])*float(wpercent)))
+
+            new_image = image.resize((basewidth,hsize), Image.ANTIALIAS)
+
+            directory = 'app/static/uploads/profile_pictures/' + \
+                str(size[0]) + 'x' + str(size[1]) + '/'
+
+            if not os.path.isdir(directory):
+                os.makedirs(directory)
+
+            new_image.save(os.path.join(directory, image_hashed_filename))
+        self.image = image_hashed_filename
+        db.session.commit()
+
     @property
     def password(self):
         raise AttributeError("password is not a readable attribute")
@@ -118,13 +153,7 @@ class User(UserMixin, db.Model):
         points = Points.query.filter(Points.user_id == self.id, Points.event == event).delete()
         db.session.commit()
 
-    def total_points(self):
-        # user_points = db.session.query(Points, func.sum(Points.value).label('points'))\
-        #     .join(User)\
-        #     .group_by(Points.user_id)\
-        #     .filter(User.id == self.id)\
-        #     .first()
-        
+    def total_points(self):        
         user_points = Points.query\
             .with_entities(
                 func.sum(Points.value).label("points")

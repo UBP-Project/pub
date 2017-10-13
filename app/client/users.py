@@ -30,14 +30,7 @@ def edit_profile(id):
     user = current_user
     if form.validate_on_submit():
         if form.image.data is not None:
-            image                 = form.image.data
-            image_filename        = secure_filename(image.filename)
-            if is_valid_extension(image_filename):
-                extension             = image_filename.rsplit('.', 1)[1].lower()
-                image_hashed_filename = str(uuid.uuid4().hex) + '.' + extension
-                file_path             = os.path.join('app/static/uploads/profile_pictures', image_hashed_filename)
-                image.save(file_path)
-                user.image   = image_hashed_filename
+            user.set_image(form.image.data)
         user.firstname  = form.firstname.data,
         user.middlename = form.middlename.data,
         user.lastname   = form.lastname.data, 

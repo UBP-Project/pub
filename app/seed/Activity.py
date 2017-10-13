@@ -126,10 +126,10 @@ for a in activities:
 	file_path             = os.path.join('app/static/uploads/activity_images', image_hashed_filename)
 
 	sizes = [
-		(600, 250), #modal cover photo
-		(260, 200)  #card
+		(600, 250), # modal cover photo
+		(260, 200), # card
+		(420, 150)
 	]
-
 	image = Image.open(os.path.join('app/static/uploads/activity_images/', a.get('image')))
 	
 	#resize image

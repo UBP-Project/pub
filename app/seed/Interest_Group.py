@@ -93,9 +93,10 @@ for g in groups:
 	file_path = os.path.join('app/static/uploads/group_icons',icon_hashed_filename)
 
 	icon_sizes = [
-		(130, 130), #card icon
-		(200, 200), #modal icon
-	]
+        (130, 130),  # card icon
+        (200, 200),  # modal icon
+        (100, 100)   
+    ]
 
 	icon = Image.open(os.path.join('app/static/uploads/group_icons/', g.get('group_icon')))
 
@@ -122,9 +123,10 @@ for g in groups:
 	file_path = os.path.join('app/static/uploads/covers',cover_hashed_filename)
 
 	cover_sizes = [
-		(200, 170), #card cover
-		(600, 250)  #modal cover
-	]
+        (200, 170),  # card cover
+        (600, 250),  # modal cover
+        (420, 150)
+    ]
 
 	cover = Image.open(os.path.join('app/static/uploads/covers/', g.get('cover_photo')))
 

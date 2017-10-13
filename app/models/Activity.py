@@ -105,7 +105,8 @@ class Activity(db.Model):
 
         sizes = [
             (600, 250), # modal cover photo
-            (260, 200)  # card
+            (260, 200), # card
+            (420, 150)
         ]
 
         image = Image.open(file_path)
