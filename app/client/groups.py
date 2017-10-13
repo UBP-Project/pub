@@ -44,7 +44,7 @@ def group(id):
         current_user.get_id()==Membership.user_id,\
         id==Membership.group_id).first()
     return render_template('client/group/group.html', group=group, members=members, user=current_user,\
-        membership=membership, form=form, activities=activities)
+        membership=membership, form=form, activities=activities, can_manage_activity = is_manager_or_leader(), is_manager = is_manager())
 
 @client.route('/groups/<string:id>/edit', methods=['GET', 'POST'])
 def update_group(id):
