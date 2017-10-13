@@ -723,6 +723,7 @@ def group_activities_by(id):
     ])
 
 @api.route('/interest_groups/<uuid(strict=False):group_id>/accept', methods=['POST'])
+@login_required
 def accept_request(group_id):
     """
     Accepts group joining request
@@ -768,6 +769,7 @@ def accept_request(group_id):
     return jsonify({'status': 'Success'}), 200
 
 @api.route('/interest_groups/<uuid(strict=False):group_id>/decline', methods=['POST', 'GET'])
+@login_required
 def decline_request(group_id):
     """
     Declines group joining request
@@ -802,6 +804,7 @@ def decline_request(group_id):
     return jsonify({'status': 'Success'}), 200
 
 @api.route('/interest_groups/<uuid(strict=False):group_id>/requests', methods=['GET'])
+@login_required
 def get_requests(group_id):
     """
     Get the list of users requesting to join the group
@@ -861,6 +864,7 @@ def get_requests(group_id):
     }), 200
 
 @api.route('/interest_groups/<uuid(strict=False):group_id>/setleader', methods=['POST'])
+@login_required
 def set_leader(group_id):
     """
     Get the list of users requesting to join the group
@@ -914,6 +918,7 @@ def set_leader(group_id):
     return jsonify({'status': 'Success'}), 200
 
 @api.route('/interest_groups/<uuid(strict=False):group_id>/remove_leader', methods=['POST'])
+@login_required
 def remove_leader(group_id):
     """
     Remove user as a leader of the group
@@ -948,6 +953,7 @@ def remove_leader(group_id):
     return jsonify({'status': 'Success'}), 200
 
 @api.route('/interest_groups/<uuid(strict=False):group_id>/remove', methods=['POST'])
+@login_required
 def remove_member(group_id):
     """
     Remove user as a member of the group
@@ -982,6 +988,7 @@ def remove_member(group_id):
     return jsonify({'status': 'Success'}), 200
 
 @api.route('/interest_groups/<string:id>/non_members')
+@login_required
 def get_non_members(id):
     users = User.query.all()
     group_members = User.query.join(Membership, Membership.user_id == User.id)\
@@ -993,6 +1000,7 @@ def get_non_members(id):
     return jsonify({'non_members': [ user.to_json() for user in non_members ]})
 
 @api.route('/interest_groups/add_member', methods=['POST'])
+@login_required
 def add_member():
     user_id = request.form.get('user_id')
     group_id = request.form.get('group_id')
@@ -1044,16 +1052,16 @@ def get_population(id):
 
     leaders = User.query.join(Membership, Membership.user_id == User.id)\
             .join(Interest_Group)\
-            .filter(Interest_Group.id == group.id, Membership.status == 1, Membership.level != 0).count()
-
+            .filter(Interest_Group.id == group.id, Membership.status == 1, Membership.level == 1).count()
+    
     return jsonify({
         'members' : members,
         'leaders' : leaders,
         'total'   : members + leaders
     }), 200
 
-
 @api.route('/groups/<string:group_id>/activities')
+@login_required
 def get_group_activities(group_id):
 
     ACTIVITIES_PER_PAGE = 8
@@ -1063,17 +1071,17 @@ def get_group_activities(group_id):
     if show == 'done':
         activities = Activity.query.filter(
             Activity.group_id == group_id,
-            Activity.end_date < datetime.datetime.now())\
-            .order_by(Activity.start_date)\
+            Activity.end_date < func.now())\
+            .order_by(Activity.start_date.desc())\
             .paginate(page=page, per_page=ACTIVITIES_PER_PAGE, error_out=False)
     elif show == 'upcoming':
         activities = Activity.query.filter(
             Activity.group_id == group_id,
-            Activity.end_date > datetime.datetime.now())\
+            Activity.end_date > func.now())\
             .order_by(Activity.start_date)\
             .paginate(page=page, per_page=ACTIVITIES_PER_PAGE, error_out=False)
     else:
-        activities = Activity.query.order_by(Activity.start_date)\
+        activities = Activity.query.order_by(Activity.start_date.desc())\
             .paginate(page=page, per_page=ACTIVITIES_PER_PAGE, error_out=False)
     return jsonify({
         'activities': [activity.to_json() for activity in activities.items],

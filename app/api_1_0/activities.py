@@ -7,6 +7,7 @@ import json
 from flask_login import login_required, current_user
 from ..auth import is_manager_or_leader
 from app.notification import Notif
+from sqlalchemy import func
 
 from app.utils import is_valid_extension
 from werkzeug.utils import secure_filename
@@ -26,10 +27,16 @@ def get_activities():
       - activities
 
     parameters:
+      - name: show
+        in: query
+        example: upcoming
+        default: all
+        type: string
       - name: page
         in: query
         example: 1
         default: 1
+        type: integer
 
     responses:
       200:
@@ -68,10 +75,6 @@ def get_activities():
                   example: 70a256f3628947508af68343821d78b6.jpg
                   default: None
                   description: File name of image in uploads/activity_image folder
-              status:
-                  type: integer
-                  example: 1
-                  description: Tell if the activity is (0) - upcoming, (1) - happening, (2) - done
 
     """
     ACTIVITY_PER_PAGE = 9
@@ -81,7 +84,25 @@ def get_activities():
     else:
         page = 1
 
-    activities = Activity.query\
+    if 'show' in request.args:
+        if request.args.get('show') == 'done':
+            activities = Activity.query.filter(
+                    Activity.end_date < func.now()
+                )\
+                .order_by(Activity.start_date.desc())\
+                .paginate(page=page, per_page=9, error_out=False)
+        elif request.args.get('show') == 'upcoming':
+            activities = Activity.query.filter(
+                    Activity.end_date > func.now()
+                )\
+                .order_by(Activity.start_date)\
+                .paginate(page=page, per_page=9, error_out=False)
+        else:
+            activities = Activity.query\
+                .order_by(Activity.start_date.desc())\
+                .paginate(page=page, per_page=9, error_out=False)
+    else:
+        activities = Activity.query\
             .order_by(Activity.start_date.desc())\
             .paginate(page=page, per_page=9, error_out=False)
 
