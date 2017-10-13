@@ -8,7 +8,13 @@
         <div class="row group-box">
             
             <div class="col-md-12 no-padding">
-                <h3>Group Activities</h3>
+                <h3>Group Activities
+                    {% if can_manage_activity %}
+                    <a href="/activities/create">
+                        <button class="btn btn-style-2 btn-sm pull-right" title="Create Activity">CREATE ACTIVITY &nbsp;<i class="fa fa-plus"></i></button>
+                    </a>
+                    {% endif %}
+                </h3>
                 <br>
             </div>
 
