@@ -9,7 +9,7 @@
                   <ul class="dropdown-menu">
                     <li v-on:click="changeView('members')"><a>Members ({{ members.length }})</a></li>
                     <li v-on:click="changeView('leaders')"><a>Leaders ({{ leaders.length }})</a></li>
-                    <li v-on:click="changeView('managers')"><a>Managers ({{ managers.length }})</a></li>
+                    <!-- <li v-on:click="changeView('managers')"><a>Managers ({{ managers.length }})</a></li> -->
                   </ul>
                 </div>
                 {% endraw %}
@@ -31,12 +31,18 @@
                                 <td>{{ user['lastname'] }}</td>
                                 <td>{{ user['position'] }}</td>
                                 <td>{{ user['department'] }}</td>
+                                {% endraw %}
+
+                                {% if current_user.can_modify_group(group.id) %}
                                 <td class="text-center">
                                     <button class="btn btn-sm btn-style-3" v-on:click="setLeader(user, index)">Set as Leader</button>
                                 </td>
                                 <td>
                                     <span class="fa fa-times-circle" style="cursor: pointer;" v-on:click="removeFromGroup(user, index)"></span>
                                 </td>
+                                {% endif %}
+
+                                {% raw %}
                             </tr>
 
                             <tr v-if="view == 'leaders'" class="user-table-item row" v-for="(user, index) in leaders">
@@ -54,7 +60,7 @@
                                     <span class="fa fa-times-circle" style="cursor: pointer;" v-on:click="removeFromGroup(user, index)"></span>
                                 </td>
                             </tr>
-
+                            <!-- 
                             <tr v-if="view == 'managers'" class="user-table-item row" v-for="(user, index) in managers">
                                 <td v-if="user.image"><img class="circle-img-sm" :src="'../../../static/uploads/profile_pictures/' + user.image" /></td>
                                 <td v-else><img class="circle-img-sm" :src="'../../../static/images/pub-default-img.jpg'" /></td>
@@ -63,10 +69,10 @@
                                 <td>{{ user['lastname'] }}</td>
                                 <td>{{ user['position'] }}</td>
                                 <td>{{ user['department'] }}</td>
-                                <!-- <td>
+                                 <td>
                                     <span class="fa fa-times-circle" style="cursor: pointer;" v-on:click="removeFromGroup(user, index)"></span>
-                                </td> -->
-                            </tr>
+                                </td> 
+                            </tr> -->
                         </tbody>
                 </table>
             </div> <!-- End of Members list -->
