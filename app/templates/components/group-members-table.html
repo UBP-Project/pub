@@ -53,12 +53,18 @@
                                 <td>{{ user['lastname'] }}</td>
                                 <td>{{ user['position'] }}</td>
                                 <td>{{ user['department'] }}</td>
+                                {% endraw %}
+
+                                {% if current_user.can_modify_group(group.id) %}
                                 <td class="text-center">
                                     <button class="btn btn-sm btn-style-1" v-on:click="removeLeader(user, index)">Remove Leader</button>
                                 </td>
                                 <td>
                                     <span class="fa fa-times-circle" style="cursor: pointer;" v-on:click="removeFromGroup(user, index)"></span>
                                 </td>
+                                {% endif %}
+
+                                {% raw %}
                             </tr>
                             <!-- 
                             <tr v-if="view == 'managers'" class="user-table-item row" v-for="(user, index) in managers">
