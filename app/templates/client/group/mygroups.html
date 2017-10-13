@@ -61,7 +61,7 @@
 
                                             <span class="row">
                                                 <span class="col-md-2 col-lg-2 col-sm-2 hidden-xs left-pad"><h2 class="text-center"></h2></span>
-                                                <span class="col-md-8 col-lg-8 col-sm-8"><h2 class="text-center">{{ group.name }}</h2></span>
+                                                <span class="col-md-8 col-lg-8 col-sm-8"><a :href="'/groups/' + group.id" style="text-decoration: none; color: #3a3a3a;" :title="'Visit ' + group.name + ' page'"><h2 class="text-center">{{ group.name }}</h2></a></span>
                                                 <span class="col-md-2 col-lg-2 col-sm-2 text-center right-pad">
                                                         <a v-show="(group.isLeader || is_manager)" :href="'/groups/' + group.id" class="btn btn-style-3 manage-group-link" title="Manage Group"><i class="fa fa-gear"></i></a>
                                                 </span>
@@ -129,6 +129,7 @@
                                                     </div>
 
                                                     <div role="tabpanel" class="tab-pane" :id="'grp-activities-' + group.id">
+                                                        <h5><strong>Group's upcoming Activities</strong><a class="btn btn-xs btn-style-3 pull-right" :href="'/groups/' + group.id" title="View all activities">View all</a></h5>
                                                         <template v-if="group.activities.length > 0">
     
                                                             <div v-for="activity in group.activities">
@@ -138,7 +139,7 @@
                                                                     <div class="col-md-3 col-lg-4 col-sm-6 card-container">
                                                                         <div class="group-activity-card">
                                                                             <div class="group-activity-inner-con">
-                                                                                <template v-if="activity.status = '2'">
+                                                                                <template v-if="activity.status === '2'">
                                                                                     <img :src="activity_card_images_folder + activity.image" class="img-responsive activity-filter-marker"/>
                                                                                     <span class="activity-marker-icon">
                                                                                             <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
@@ -160,9 +161,9 @@
                                                             
                                                         </template>
                                                         <template v-else>
-                                                            <div>
-                                                                <p><i><small>Group has no activities.</small></i></p>
-                                                            </div>
+                                                            <p>
+                                                                <i><small>Group has no upcoming activities.</small></i>
+                                                            </p>
                                                         </template>
                                                     </div>
 
@@ -262,7 +263,7 @@
 
                                             <span class="row">
                                                 <span class="col-md-2 col-lg-2 col-sm-2 hidden-xs left-pad"><h2 class="text-center"></h2></span>
-                                                <span class="col-md-8 col-lg-8 col-sm-8"><h2 class="text-center">{{ group.name }}</h2></span>
+                                                <span class="col-md-8 col-lg-8 col-sm-8"><a :href="'/groups/' + group.id" style="text-decoration: none; color: #3a3a3a;" :title="'Visit ' + group.name + ' page'"><h2 class="text-center">{{ group.name }}</h2></a></span>
                                                 <span class="col-md-2 col-lg-2 col-sm-2 text-center right-pad">
                                                         <a v-show="(group.isLeader || is_manager)" :href="'/groups/' + group.id" class="btn btn-style-3 manage-group-link" title="Manage Group"><i class="fa fa-gear"></i></a>
                                                 </span>
@@ -330,6 +331,7 @@
                                                     </div>
 
                                                     <div role="tabpanel" class="tab-pane" :id="'grp-activities-' + group.id">
+                                                        <h5><strong>Group's upcoming Activities</strong><a class="btn btn-xs btn-style-3 pull-right" :href="'/groups/' + group.id" title="View all activities">View all</a></h5>
                                                         <template v-if="group.activities.length > 0">
     
                                                             <div v-for="activity in group.activities">
@@ -339,7 +341,7 @@
                                                                     <div class="col-md-3 col-lg-4 col-sm-6 card-container">
                                                                         <div class="group-activity-card">
                                                                             <div class="group-activity-inner-con">
-                                                                                <template v-if="activity.status = '2'">
+                                                                                <template v-if="activity.status === '2'">
                                                                                     <img :src="activity_card_images_folder + activity.image" class="img-responsive activity-filter-marker"/>
                                                                                     <span class="activity-marker-icon">
                                                                                             <i class="fa fa-check-circle-o" title="ACTIVITY DONE"></i>
@@ -361,9 +363,9 @@
                                                             
                                                         </template>
                                                         <template v-else>
-                                                            <div>
-                                                                <p><i><small>Group has no activities.</small></i></p>
-                                                            </div>
+                                                            <p>
+                                                                <i><small>Group has no upcoming activities.</small></i>
+                                                            </p>
                                                         </template>
                                                     </div>
 
@@ -484,10 +486,11 @@
 
                 // load Activities
                 $.ajax({
-                    url: "/api/v1.0/interest_groups/" + group.id + "/activities",
+                    url: '/api/v1.0/groups/' + group.id +'/activities?show=upcoming',
                     type: 'GET'
                 }).done(data => {
-                    group.activities = data;
+                    console.log(data.activities);
+                    group.activities = data.activities;
                 });
 
                 // check membership status
@@ -586,10 +589,11 @@
 
                 // load Activities
                 $.ajax({
-                    url: "/api/v1.0/interest_groups/" + group.id + "/activities",
+                    url: '/api/v1.0/groups/' + group.id +'/activities?show=upcoming',
                     type: 'GET'
                 }).done(data => {
-                    group.activities = data;
+                    console.log(data.activities);
+                    group.activities = data.activities;
                 });
 
                 // check membership status
