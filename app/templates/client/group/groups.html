@@ -287,8 +287,8 @@
                     url: '/api/v1.0/groups/' + group.id +'/activities?show=upcoming',
                     type: 'GET'
                 }).done(data => {
-                    console.log(data);
-                    group.activities = data;
+                    console.log(data.activities);
+                    group.activities = data.activities;
                 });
 
                 // check membership status
