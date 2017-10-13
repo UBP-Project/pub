@@ -125,7 +125,7 @@ class Activity(db.Model):
             if not os.path.isdir(directory):
                 os.makedirs(directory)
 
-            new_image.save(os.path.join(directory, image_hashed_filename))
+            new_image.save(os.path.join(directory, image_hashed_filename), quality=100)
         self.image = image_hashed_filename
         db.session.commit()
 

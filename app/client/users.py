@@ -30,7 +30,7 @@ def edit_profile(id):
     user = current_user
     if form.validate_on_submit():
         if form.image.data is not None:
-            user.set_image(form.image.data)
+            user.set_photo(form.image.data)
         user.firstname  = form.firstname.data,
         user.middlename = form.middlename.data,
         user.lastname   = form.lastname.data, 
