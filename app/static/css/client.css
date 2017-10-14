@@ -193,11 +193,18 @@
 /*------ END OF EDIT GROUP -------------*/
 
 
-/* ------- START EDIT ACTIVITY ------- */
+/* ------- START CREATE/EDIT ACTIVITY ------- */
+#dpStartDate {
+    background-color: white;
+}
+
+#dpEndDate {
+    background-color: white;
+}
 
 
 
-/* ------- END OF EDIT ACTIVITY -------- */
+/* ------- END OF CREATE/EDIT ACTIVITY -------- */
 
 
 /* HOME */

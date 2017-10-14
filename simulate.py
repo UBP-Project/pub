@@ -171,6 +171,10 @@ def modify_timestamps():
     for group in groups:
         group.timestamp = randomize_time(start_timestamp, end_timestamp)
 
+    # set a group to be the first group ever, "realistic" simulation purposes
+    group = Interest_Group.query.order_by(Interest_Group.timestamp).first()
+    group.timestamp = time.localtime(start_timestamp)
+
 
     perks = Perks.query.all()
     for perk in perks:

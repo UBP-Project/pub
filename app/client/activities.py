@@ -59,7 +59,7 @@ def create_activity():
             title = form.title.data,
             description = form.description.data,
             start_date = form.start_date.data,
-            end_date = form.start_date.data,
+            end_date = form.end_date.data,
             address = form.address.data,
             group_id = None if form.group.data == "None" else uuid.UUID(form.group.data).hex,
             image ='placeholder-activity.jpg')

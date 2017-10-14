@@ -31,16 +31,18 @@
                                 <label>Start Date</label>
                                 {{ form.start_date(
                                     placeholder="Start Date",
-                                    class="form-control",
+                                    class="hidden",
                                     required="true")}}
+                                <input type="text" class="form-control" id="dpStartDate" readonly="readonly">
                             </div>
 
                             <div class="col-md-6 no-padding-right">
                                 <label>End Date</label>
                                 {{ form.end_date(
                                     placeholder="End Date",
-                                    class="form-control",
+                                    class="hidden",
                                     required="true")}}
+                                <input type="text" class="form-control" id="dpEndDate" readonly="readonly">
                             </div>
                             <div class="col-md-12 no-padding">
                                 <label>Address</label>
@@ -147,8 +149,42 @@
     </div>
 
 {% endmacro %}
-{% macro edit_activity_script() %}
+{% macro edit_activity_script(activity) %}
 <script>
+
+    // Get the current start_date and end_date values from jinja
+    var sd = moment('{{activity.start_date}}').format('ddd, MMMM DD YYYY');
+    var ed = moment('{{activity.end_date}}').format('ddd, MMMM DD YYYY');
+
+    $("#dpStartDate").val(sd);
+    $("#dpEndDate").val(ed);
+
+    var picker_start = new Pikaday({
+        field: document.getElementById('dpStartDate'),
+        format: 'ddd, MMMM DD YYYY',
+        minDate: new Date(),
+        setDefaultDate: sd,
+        onSelect: function() {
+            $("#start_date").val(this.getMoment().format('YYYY-MM-DD'));
+            picker_end.setMinDate(this.getDate());
+            if (this.getDate() > picker_end.getDate()) {
+                $("#end_date").val(this.getMoment().format('YYYY-MM-DD'));
+                picker_end.setDate(this.getDate());
+            }
+        }
+    });
+
+    var picker_end = new Pikaday({
+        field: document.getElementById('dpEndDate'),
+        format: 'ddd, MMMM DD YYYY',
+        minDate: new Date(),
+        setDefaultDate: ed,
+        onSelect: function() {
+            $("#end_date").val(this.getMoment().format('YYYY-MM-DD'));
+        }
+    });
+
+
     $(document).ready(function() {
         $('#description-editor').trumbowyg({
             btns: [
