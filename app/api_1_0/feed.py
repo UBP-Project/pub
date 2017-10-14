@@ -15,6 +15,12 @@ def serialize(model):
     return dict((c, unicode(getattr(model, c))) for c in columns)
 
 
+def getLastTimeStamp():
+    # Group is most likely to contain the last timestamp
+    group = Interest_Group.query.order_by(Interest_Group.timestamp).first()
+    return group.timestamp
+
+
 @api.route('/feed')
 def feed():
     
@@ -32,13 +38,21 @@ def feed():
     else:
         end_ts = datetime.now() - timedelta(days=(page - 1) * page_gap)
 
-    return jsonify({
-        'new_activities': new_activity(start_ts, end_ts),
-        'new_perks': new_perks(start_ts, end_ts),
-        'new_groups': new_groups(start_ts, end_ts),
-        'new_memberships': membership(start_ts, end_ts),
-        'new_user_activities': new_user_activity(start_ts, end_ts)
-    })
+    last_ts = getLastTimeStamp()
+    if last_ts >= end_ts: # dont return anything the query reaches the end of the timestamp
+        return jsonify({
+            'end_of_feed': True
+        })
+
+    else:
+        return jsonify({
+            'end_of_feed': False,
+            'new_activities': new_activity(start_ts, end_ts),
+            'new_perks': new_perks(start_ts, end_ts),
+            'new_groups': new_groups(start_ts, end_ts),
+            'new_memberships': membership(start_ts, end_ts),
+            'new_user_activities': new_user_activity(start_ts, end_ts)
+        })
 
 
 def new_activity(start_ts, end_ts):
