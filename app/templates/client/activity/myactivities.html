@@ -10,8 +10,8 @@
 			{% raw %}
             <div class="group-box" id="joined">
 
-                <h3>ACTIVITIES
-                    <button type="button" class="btn btn-style-3 btn-sm pull-right" v-on:click="viewAll()" style="margin-left: 10px;" title="View upcoming & previous activities">View all</button>
+                <h3>MY ACTIVITIES
+                    <button type="button" class="btn btn-style-3 btn-sm pull-right" v-on:click="viewAll()" style="margin-left: 10px;" title="View upcoming & previous activities I joined">View all</button>
                     {% endraw %}
                     {% if can_manage_activity %}
                     <a href="/activities/create">
@@ -219,13 +219,17 @@
 	<div class="row">
 
 		<div class="col-md-12">
-			<div class="group-box">
+			{% raw %}
+            <div class="group-box" id="interested">
 
-				<h3>ACTIVITIES I'M INTERESTED IN</h3>
+                <h3>ACTIVITIES I'M INTERESTED IN
+                    <button type="button" class="btn btn-style-3 btn-sm pull-right" v-on:click="viewAll()" style="margin-left: 10px;" title="View upcoming & previous activities I'm interested">View all</button>
+                    {% endraw %}
+                </h3>
                 <hr/>
 
                 {% raw %}
-                <div id="interested" class="row">
+                <div class="row">
 
                     <template v-if="activities.length > 0">
 
@@ -461,6 +465,7 @@
                         activity.isGoing          = false;
                         activity.isLeader         = false;
                     });
+                    //console.log(data);
                     this.activities.push.apply(this.activities, data.joined_activities);
                     this.activities_page++;
                     this.hasNext = data.has_next;
@@ -545,20 +550,17 @@
             },
             viewAll: function() {
                 $.ajax({
-                    url: "{{ url_for('api.get_activities')}}" + "?page=" + this.activities_page,
+                    url: "{{ url_for('api.my_joined_activities')}}" + "?page=" + this.activities_page,
                     type: 'GET'
                 }).done(data => {
-                    console.log('VIEW ALL ACTIVITIES');
-                    //this.activities = [];
-                    data.activities.forEach((activity) => {
+                    data.joined_activities.forEach((activity) => {
                         activity.going_users      = [];
                         activity.interested_users = [];
                         activity.isInterested     = false;
                         activity.isGoing          = false;
                         activity.isLeader         = false;
                     });
-                    console.log(data);
-                    this.activities.push.apply(this.activities, data.activities);
+                    this.activities.push.apply(this.activities, data.joined_activities);
                     this.activities_page++;
                     this.hasNext = data.has_next;
                 });
@@ -688,6 +690,24 @@
                          activity.isInterested = true;
                     });
                 }
+            },
+            viewAll: function() {
+                $.ajax({
+                    url: "{{ url_for('api.my_interested_activities')}}" + "?page=" + this.activities_page,
+                    type: 'GET'
+                }).done(data => {
+                    data.interested_activities.forEach((activity) => {
+                        activity.going_users      = [];
+                        activity.interested_users = [];
+                        activity.isInterested     = false;
+                        activity.isGoing          = false;
+                        activity.isLeader         = false;
+                    });
+                    console.log(data);
+                    this.activities.push.apply(this.activities, data.interested_activities);
+                    this.activities_page++;
+                    this.hasNext = data.has_next;
+                });
             }
           }
         });

@@ -347,7 +347,7 @@
                     url: "{{ url_for('api.get_activities')}}" + "?page=" + this.activities_page,
                     type: 'GET'
                 }).done(data => {
-                    console.log('VIEW ALL ACTIVITIES');
+                    //console.log('VIEW ALL ACTIVITIES');
                     //this.activities = [];
                     data.activities.forEach((activity) => {
                         activity.going_users      = [];
@@ -356,7 +356,7 @@
                         activity.isGoing          = false;
                         activity.isLeader         = false;
                     });
-                    console.log(data);
+                    //console.log(data);
                     this.activities.push.apply(this.activities, data.activities);
                     this.activities_page++;
                     this.hasNext = data.has_next;
