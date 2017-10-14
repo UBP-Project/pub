@@ -15,7 +15,7 @@
             {% raw %}
             <div class="group-box" id="app">
 
-                <h3>ACTIVITY SUMMARY: <span style="color: #fd8103;">{{activity_title}}</span>
+                <h3>ACTIVITY SUMMARY: <a :href="'/activities/' + activity_id" style="text-decoration: none;" :title="activity_title + ' Page'"><span style="color: #fd8103;">{{activity_title}}</span></a>
                     <a v-show="(can_manage_activity || is_manager)" href="./attendance">
                         <button class="btn btn-style-3 btn-sm pull-right" title="Attendance Checklist"><i class="fa fa-check-square-o"></i></button>
                     </a>
