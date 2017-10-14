@@ -6,7 +6,7 @@
 
             {% raw %}
             <div class="group-box" id="app">
-                <h3>ATTENDANCE: <span style="color: #fd8103;">{{activity_title}}</span>
+                <h3>ATTENDANCE: <a :href="'/activities/' + activity_id" style="text-decoration: none;" :title="activity_title + ' Page'"><span style="color: #fd8103;">{{activity_title}}</span></a>
                     <a :href="'/activities/' + activity_id + '/summary'">
                         <button class="btn btn-style-3 btn-sm pull-right" title="Activity Summary"><i class="fa fa-calendar-check-o"></i></button>
                     </a>
