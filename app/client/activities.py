@@ -130,7 +130,7 @@ def edit_activity(id):
 def attendance(id):
     is_manager_or_leader(abort_on_false=True)  # Forbidden if not a leader or manager
     activity = Activity.query.get_or_404(id)
-    return render_template("attendance/checklist.html", activity=activity)
+    return render_template("attendance/checklist.html", activity=activity, is_manager = is_manager(), can_manage_activity = can_modify_activity(id))
 
 @client.route('/activities/<string:id>/summary')
 @login_required

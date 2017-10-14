@@ -1,15 +1,19 @@
 {% macro attendance(activity) %}
-    <div id="app" class="checklist">
-        <div class="col-md-12 no-padding group-box">
-            <div class="row">
-                <h3>ACTIVITY ATTENDANCE - {{activity.title}}
-                    <a v-show="can_manage_activity" href="./attendance">
-                        <button class="btn btn-style-3 btn-sm pull-right" title="Attendance Checklist"><i class="fa fa-check-square-o"></i></button>
+    
+    <div class="row">
+
+        <div class="col-md-12">
+
+            {% raw %}
+            <div class="group-box" id="app">
+                <h3>ATTENDANCE: <span style="color: #fd8103;">{{activity_title}}</span>
+                    <a :href="'/activities/' + activity_id + '/summary'">
+                        <button class="btn btn-style-3 btn-sm pull-right" title="Activity Summary"><i class="fa fa-calendar-check-o"></i></button>
                     </a>
                 </h3>
                 <hr/>
+
                 <div class="col-md-8 col-md-offset-2 text-center">
-                    {% raw %}
                     <br>
                     <input class="form-control input-lg" placeholder="Search Going Users" v-model="query"/>
                     <br />
@@ -42,9 +46,14 @@
                     </div>
                 </div>
                 <br>
-                {% endraw %}
+
+
+
             </div>
+            {% endraw %}
+
         </div>
+
     </div>
 
 {% endmacro %}
@@ -57,8 +66,9 @@
                 default_img: "{{ url_for('static', filename='images/pub-default-img.jpg') }}",
                 query: "",
                 show_all: true,
-                search_items: [],
-                can_manage_activity: false
+                activity_id: "",
+                activity_title: "",
+                search_items: []
             },
             watch: {
                 query: function() {
@@ -68,7 +78,7 @@
                             if (user.firstname.includes(this.query) || user.lastname.includes(this.query)) {
                                 return user; 
                             }
-                            console.log(user.firstname, this.query);
+                            //console.log(user.firstname, this.query);
                         });
                     } else {
                         this.show_all = true;
@@ -82,7 +92,7 @@
                         url: "{{ url_for('api.get_going_by', id=activity.id)}}",
                         type: 'GET'
                     }).done(data => {
-                        console.log(data);
+                        //console.log(data);
                         this.going_users = data.going_users;
                     });
                 },
@@ -103,6 +113,8 @@
         });
         $(document).ready(function() {
             vm.loadGoingUsers();
+            vm.activity_id = '{{activity.id}}';
+            vm.activity_title = '{{activity.title}}';
         })
     </script>
 {% endmacro %}
