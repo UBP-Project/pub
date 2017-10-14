@@ -7,9 +7,12 @@
 	<div class="row">
 
 		<div class="col-md-12">
-			<div class="group-box">
+			{% raw %}
+            <div class="group-box" id="joined">
 
-				<h3>MY ACTIVITIES
+                <h3>ACTIVITIES
+                    <button type="button" class="btn btn-style-3 btn-sm pull-right" v-on:click="viewAll()" style="margin-left: 10px;" title="View upcoming & previous activities">View all</button>
+                    {% endraw %}
                     {% if can_manage_activity %}
                     <a href="/activities/create">
                         <button class="btn btn-style-2 btn-sm pull-right" title="Create Activity">CREATE ACTIVITY &nbsp;<i class="fa fa-plus"></i></button>
@@ -19,7 +22,7 @@
                 <hr/>
 
                 {% raw %}
-                <div id="joined" class="row">
+                <div class="row">
 
                     <template v-if="activities.length > 0">
 
@@ -539,6 +542,26 @@
                          activity.isInterested = true;
                     });
                 }
+            },
+            viewAll: function() {
+                $.ajax({
+                    url: "{{ url_for('api.get_activities')}}" + "?page=" + this.activities_page,
+                    type: 'GET'
+                }).done(data => {
+                    console.log('VIEW ALL ACTIVITIES');
+                    //this.activities = [];
+                    data.activities.forEach((activity) => {
+                        activity.going_users      = [];
+                        activity.interested_users = [];
+                        activity.isInterested     = false;
+                        activity.isGoing          = false;
+                        activity.isLeader         = false;
+                    });
+                    console.log(data);
+                    this.activities.push.apply(this.activities, data.activities);
+                    this.activities_page++;
+                    this.hasNext = data.has_next;
+                });
             }
           }
         });
