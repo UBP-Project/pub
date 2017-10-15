@@ -56,7 +56,7 @@
     				</ul>
                     <form method="get" action="/search">
                         <span class="input-group search-input-group pull-right">
-                          <input type="text" class="form-control" placeholder="Search Pub" name="query" id="search_input" value="{{request.args.get('query', '')}}">
+                          <input type="text" class="form-control" placeholder="Search Pub" name="query" id="search_input" value="{{request.args.get('query', '')}}" required/>
                           <span class="input-group-btn">
                             <button class="btn btn-secondary search-btn" type="sumbit"><i class="fa fa-search"></i></button>
                           </span>

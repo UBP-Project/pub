@@ -19,22 +19,29 @@
                 {% endif %}
                 <hr />
                     {% raw %}
-                    <button v-if="isInterested" type="button" class="btn btn-style-1" id="ninterested-btn" value="cgoing" v-on:click="toggleInterested()">
-                        NOT INTERESTED
-                    </button>
-                    <button v-else type="button" class="btn btn-style-2" id="interested-btn" value="cgoing" v-on:click="toggleInterested()">
-                        INTERESTED
-                    </button>
+                    <div id="activity_app">
+                        <div v-show="upcoming">
+                            <button v-if="isInterested" type="button" class="btn btn-style-1" id="ninterested-btn" value="cgoing" v-on:click="toggleInterested()">
+                                NOT INTERESTED
+                            </button>
+                            <button v-else type="button" class="btn btn-style-2" id="interested-btn" value="cgoing" v-on:click="toggleInterested()">
+                                INTERESTED
+                            </button>
 
-                    <!-- GOING BTNS -->
-                    <button v-if="isGoing" type="button" class="btn btn-style-1" id="njoin-btn" value="cgoing" v-on:click="toggleGoing()">
-                        LEAVE ACTIVITY
-                    </button>
-                    <button v-else type="button" class="btn btn-style-2" id="join-btn" value="cgoing" v-on:click="toggleGoing()">
-                        JOIN ACTIVITY
-                    </button>
+                            <!-- GOING BTNS -->
+                            <button v-if="isGoing" type="button" class="btn btn-style-1" id="njoin-btn" value="cgoing" v-on:click="toggleGoing()">
+                                LEAVE ACTIVITY
+                            </button>
+                            <button v-else type="button" class="btn btn-style-2" id="join-btn" value="cgoing" v-on:click="toggleGoing()">
+                                JOIN ACTIVITY
+                            </button>
+
+                            <hr />
+                        </div>
+                    </div>
+
                     {% endraw %}
-                <hr />
+
                 {% if current_user.can_modify_activity(activity.id) %}
                     <a class="btn btn-style-1" href="{{url_for('client.edit_activity', id=activity.id) }}">
                         Edit this Activity
@@ -108,23 +115,25 @@
             el: "#activity_app",
             data: {
                 isGoing: false,
-                isInterested: false
+                isInterested: false,
+                upcoming: false
             },
             methods: {
-                activityStatus: function(event){
+                checkIfDone: function(activity_start_date, activity_end_date){
                     currentDate = new Date();
-                    startDate = new Date(event.start_date);
-                    endDate = new Date(event.end_date);
+                    startDate = new Date(activity_start_date);
+                    endDate = new Date(activity_end_date);
 
                     if(currentDate > startDate && currentDate < endDate){
-                        return 1; //happening
+                        this.upcoming = true;
                     }
                     else if(endDate < currentDate){
-                        return 2;
+                        this.upcoming = false;
                     }
                     else{
-                        return 0; //upcoming
+                        this.upcoming = true;
                     }
+                    console.log(this.upcoming);
                 },
                 loadActivityStatus: function() {
                     $.ajax({
@@ -171,10 +180,12 @@
                 }
 
             }
-        })
+        });
+
         $(document).ready(function(){
             $('[data-toggle="popover"]').popover();
             vm.loadActivityStatus();
+            vm.checkIfDone('{{activity.start_date}}','{{activity.end_date}}');
         });
     </script>
 {% endblock %}
