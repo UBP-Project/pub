@@ -11,7 +11,7 @@
             <div class="group-box" id="app">
 
                 <h3>ACTIVITIES
-                    <button type="button" class="btn btn-style-3 btn-sm pull-right" v-on:click="viewAll()" style="margin-left: 10px;" title="View upcoming & previous activities">View all</button>
+                    <button type="button" class="btn btn-style-3 btn-sm pull-right" v-on:click="viewAllInit" style="margin-left: 10px;" title="View upcoming & previous activities">View all</button>
                     {% endraw %}
                     {% if can_manage_activity %}
                     <a href="/activities/create">
@@ -195,7 +195,8 @@
                         </div> <!-- END of activity_list -->
 
                         <div class="col-md-12 text-center show-more-box">
-                            <button v-show="hasNext" class="btn btn-style-3" v-on:click="loadActivities">Show More</button>
+                            <button v-show="hasNext && only_upcoming" class="btn btn-style-3" v-on:click="loadActivities">Show More</button>
+                            <button v-show="hasNext && view_all_mode" class="btn btn-style-3" v-on:click="viewAllNext">Show More</button>
                         </div>
 
                     </template>
@@ -228,7 +229,9 @@
             activity_modal_images_folder: '/static/uploads/activity_images/600x250/',
             user_images_folder: '/static/uploads/profile_pictures/',
             can_manage_activity: false,
-            is_manager: false
+            is_manager: false,
+            view_all_mode: false,
+            only_upcoming: true
           },
           methods: {
             activityStatus: function(event){
@@ -342,13 +345,33 @@
                     });
                 }
             },
-            viewAll: function() {
+            viewAllInit: function() {
+                this.activities_page = 1;
+                this.activities = [];
+                this.view_all_mode = true;
+                this.only_upcoming = false;
                 $.ajax({
                     url: "{{ url_for('api.get_activities')}}" + "?page=" + this.activities_page,
                     type: 'GET'
                 }).done(data => {
-                    //console.log('VIEW ALL ACTIVITIES');
-                    //this.activities = [];
+                    data.activities.forEach((activity) => {
+                        activity.going_users      = [];
+                        activity.interested_users = [];
+                        activity.isInterested     = false;
+                        activity.isGoing          = false;
+                        activity.isLeader         = false;
+                    });
+                    //console.log(data);
+                    this.activities.push.apply(this.activities, data.activities);
+                    this.activities_page++;
+                    this.hasNext = data.has_next;
+                });
+            },
+            viewAllNext: function() {
+                $.ajax({
+                    url: "{{ url_for('api.get_activities')}}" + "?page=" + this.activities_page,
+                    type: 'GET'
+                }).done(data => {
                     data.activities.forEach((activity) => {
                         activity.going_users      = [];
                         activity.interested_users = [];
