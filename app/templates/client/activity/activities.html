@@ -366,6 +366,7 @@
 
                     this.view_all_mode = true;
                     this.only_upcoming = false;
+                    
                     $.ajax({
                         url: "{{ url_for('api.get_activities')}}" + "?page=" + this.activities_page,
                         type: 'GET'
