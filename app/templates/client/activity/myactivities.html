@@ -169,7 +169,7 @@
                                                     <a v-if="( (activityStatus(activity) == 2) || is_manager || activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + activity.id + '/summary'" title="Activity Summary"><i class="fa fa-calendar-check-o"></i></a>
                                                     <a v-show="(is_manager || activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + activity.id + '/attendance'" title="Attendance Checklist"><i class="fa fa-check-square-o"></i></a>
                                                 </span>
-                                                <span class="col-md-8 pull-right box-no-padding">
+                                                <span class="col-md-8 pull-right box-no-padding" v-show="activityStatus(activity) != 2">
                                                     <button v-if="activity.isInterested" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
                                                         NOT INTERESTED
                                                     </button>
@@ -377,7 +377,7 @@
                                                     <a v-if="( (activityStatus(activity) == 2) || is_manager || activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + activity.id + '/summary'" title="Activity Summary"><i class="fa fa-calendar-check-o"></i></a>
                                                     <a v-show="(is_manager || activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + activity.id + '/attendance'" title="Attendance Checklist"><i class="fa fa-check-square-o"></i></a>
                                                 </span>
-                                                <span class="col-md-8 pull-right box-no-padding">
+                                                <span class="col-md-8 pull-right box-no-padding" v-show="activityStatus(activity) != 2">
                                                     <button v-if="activity.isInterested" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
                                                         NOT INTERESTED
                                                     </button>

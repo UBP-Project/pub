@@ -111,6 +111,21 @@
                 isInterested: false
             },
             methods: {
+                activityStatus: function(event){
+                    currentDate = new Date();
+                    startDate = new Date(event.start_date);
+                    endDate = new Date(event.end_date);
+
+                    if(currentDate > startDate && currentDate < endDate){
+                        return 1; //happening
+                    }
+                    else if(endDate < currentDate){
+                        return 2;
+                    }
+                    else{
+                        return 0; //upcoming
+                    }
+                },
                 loadActivityStatus: function() {
                     $.ajax({
                         url: "../../api/v1.0/activities/" + "{{ activity.id }}" + "/participation",
