@@ -53,11 +53,32 @@ def leaderboard():
         .limit(10)\
         .all()
 
-    followed_leaders = db.session.query(Follow,
-            func.count(Follow.following_id).label('total'), Follow.following_id)\
-        .join(User, User.id == Follow.following_id)\
-        .add_columns(User.id, User.firstname, User.lastname, User.image)\
-        .group_by(Follow.following_id).order_by('total DESC').limit(10).all()
+    point_leaders = user_points = Points.query\
+            .join(User)\
+            .with_entities(
+                User.id,
+                User.firstname,
+                User.lastname,
+                User.image,
+                func.sum(Points.value).label("points")
+            )\
+            .order_by(func.sum(Points.value))\
+            .limit(10)\
+            .all()
+
+    followed_leaders = Follow.query\
+            .join(User, User.id == Follow.following_id)\
+            .with_entities(
+                User.id,
+                User.firstname,
+                User.lastname,
+                User.image,
+                func.count(Follow.following_id).label('total')
+            )\
+            .group_by(Follow.following_id)\
+            .order_by(func.count(Follow.following_id).desc())\
+            .limit(10)\
+            .all()
 
     return render_template("client/views/leaderboard.html", user=current_user,
                            point_leaders=point_leaders,
