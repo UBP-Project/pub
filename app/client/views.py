@@ -44,24 +44,37 @@ def notifications():
 @client.route('/leaderboard')
 @login_required
 def leaderboard():
-
-    point_leaders = db.session.query(Points, func.sum(Points.value).label('points'))\
+    point_leaders = Points.query\
         .join(User)\
+        .with_entities(
+            User.id,
+            User.firstname,
+            User.lastname,
+            User.image,
+            func.sum(Points.value).label("points")
+        )\
         .group_by(Points.user_id)\
-        .add_columns(User.id, User.firstname, User.lastname, User.image)\
-        .order_by('points DESC')\
+        .order_by(func.sum(Points.value).desc())\
         .limit(10)\
         .all()
 
-    followed_leaders = db.session.query(Follow,
-            func.count(Follow.following_id).label('total'), Follow.following_id)\
-        .join(User, User.id == Follow.following_id)\
-        .add_columns(User.id, User.firstname, User.lastname, User.image)\
-        .group_by(Follow.following_id).order_by('total DESC').limit(10).all()
+    # point_leaders = db.session.query(Points, func.sum(Points.value).label('points'))\
+    #     .join(User)\
+    #     .group_by(Points.user_id)\
+    #     .add_columns(User.id, User.firstname, User.lastname, User.image)\
+    #     .order_by('points DESC')\
+    #     .limit(10)\
+    #     .all()
+
+    # followed_leaders = db.session.query(Follow,
+    #         func.count(Follow.following_id).label('total'), Follow.following_id)\
+    #     .join(User, User.id == Follow.following_id)\
+    #     .add_columns(User.id, User.firstname, User.lastname, User.image)\
+    #     .group_by(Follow.following_id).order_by('total DESC').limit(10).all()
 
     return render_template("client/views/leaderboard.html", user=current_user,
                            point_leaders=point_leaders,
-                           followed_leaders=followed_leaders)
+                           followed_leaders=None)
 
 
 @client.route('/logout')
