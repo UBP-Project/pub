@@ -153,7 +153,7 @@ class User(UserMixin, db.Model):
             .filter(User.id == self.id)\
             .first()
 
-        if user_points:
+        if user_points.points is not None:
             return user_points.points
         else:
             return 0

@@ -593,8 +593,11 @@ def join_group(id):
             description: Record Exists
         500:
             description: Internal Server Error
-    """    
-    membership = Membership(user_id=current_user.get_id(),group_id=id)
+    """
+    if current_user.is_manager(): # no need to confirm manager in join group
+        membership = Membership(user_id=current_user.get_id(),group_id=id, status=1)
+    else:
+        membership = Membership(user_id=current_user.get_id(),group_id=id)
     
     db.session.add(membership)
 

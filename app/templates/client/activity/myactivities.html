@@ -11,7 +11,7 @@
             <div class="group-box" id="joined">
 
                 <h3>MY ACTIVITIES
-                    <button type="button" class="btn btn-style-3 btn-sm pull-right" v-on:click="viewAll()" style="margin-left: 10px;" title="View upcoming & previous activities I joined">View all</button>
+                    <button type="button" class="btn btn-style-4 btn-sm pull-right" v-on:click="viewAllInit" style="margin-left: 10px;" title="View upcoming & previous activities I joined" id="viewAllButton">VIEW ALL</button>
                     {% endraw %}
                     {% if can_manage_activity %}
                     <a href="/activities/create">
@@ -169,7 +169,7 @@
                                                     <a v-if="( (activityStatus(activity) == 2) || is_manager || activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + activity.id + '/summary'" title="Activity Summary"><i class="fa fa-calendar-check-o"></i></a>
                                                     <a v-show="(is_manager || activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + activity.id + '/attendance'" title="Attendance Checklist"><i class="fa fa-check-square-o"></i></a>
                                                 </span>
-                                                <span class="col-md-8 pull-right box-no-padding">
+                                                <span class="col-md-8 pull-right box-no-padding" v-show="activityStatus(activity) != 2">
                                                     <button v-if="activity.isInterested" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
                                                         NOT INTERESTED
                                                     </button>
@@ -195,7 +195,8 @@
                         </div> <!-- END of activity_list -->
 
                         <div class="col-md-12 text-center show-more-box">
-                            <button v-show="hasNext" class="btn btn-style-3" v-on:click="loadActivities">Show More</button>
+                            <button v-show="hasNext && only_upcoming" class="btn btn-style-3" v-on:click="loadActivities">Show More</button>
+                            <button v-show="hasNext && view_all_mode" class="btn btn-style-3" v-on:click="viewAllNext">Show More</button>
                         </div>
 
                     </template>
@@ -223,7 +224,7 @@
             <div class="group-box" id="interested">
 
                 <h3>ACTIVITIES I'M INTERESTED IN
-                    <button type="button" class="btn btn-style-3 btn-sm pull-right" v-on:click="viewAll()" style="margin-left: 10px;" title="View upcoming & previous activities I'm interested">View all</button>
+                    <button type="button" class="btn btn-style-4 btn-sm pull-right" v-on:click="viewAllInit" style="margin-left: 10px;" title="View upcoming & previous activities I'm interested" id="viewAllBtnInterested">VIEW ALL</button>
                     {% endraw %}
                 </h3>
                 <hr/>
@@ -376,7 +377,7 @@
                                                     <a v-if="( (activityStatus(activity) == 2) || is_manager || activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + activity.id + '/summary'" title="Activity Summary"><i class="fa fa-calendar-check-o"></i></a>
                                                     <a v-show="(is_manager || activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + activity.id + '/attendance'" title="Attendance Checklist"><i class="fa fa-check-square-o"></i></a>
                                                 </span>
-                                                <span class="col-md-8 pull-right box-no-padding">
+                                                <span class="col-md-8 pull-right box-no-padding" v-show="activityStatus(activity) != 2">
                                                     <button v-if="activity.isInterested" type="button" class="btn btn-style-1" :id="activity.id" value="cgoing" v-on:click="toggleInterested(activity)">
                                                         NOT INTERESTED
                                                     </button>
@@ -402,7 +403,8 @@
                         </div> <!-- END of activity_list -->
 
                         <div class="col-md-12 text-center show-more-box">
-                            <button v-show="hasNext" class="btn btn-style-3" v-on:click="loadActivities">Show More</button>
+                            <button v-show="hasNext && only_upcoming" class="btn btn-style-3" v-on:click="loadActivities">Show More</button>
+                            <button v-show="hasNext && view_all_mode" class="btn btn-style-3" v-on:click="viewAllNext">Show More</button>
                         </div>
 
                     </template>
@@ -435,7 +437,9 @@
             activity_modal_images_folder: '/static/uploads/activity_images/600x250/',
             user_images_folder: '/static/uploads/profile_pictures/',
             can_manage_activity: false,
-            is_manager: false
+            is_manager: false,
+            view_all_mode: false,
+            only_upcoming: true
           },
           methods: {
             activityStatus: function(event){
@@ -455,7 +459,7 @@
             },
             loadActivities: function() {
                 $.ajax({
-                    url: "{{ url_for('api.my_joined_activities')}}" + "?&page=" + this.activities_page,
+                    url: "{{ url_for('api.my_joined_activities')}}" + "?show=upcoming&page=" + this.activities_page,
                     type: 'GET'
                 }).done(data => {
                     data.joined_activities.forEach((activity) => {
@@ -548,9 +552,50 @@
                     });
                 }
             },
-            viewAll: function() {
+            viewAllInit: function() {
+                
+                this.activities_page = 1;
+                this.activities = [];
+
+                if(this.view_all_mode) {
+
+                    $('#viewAllButton').removeClass('btn-style-3');
+                    $('#viewAllButton').addClass('btn-style-4');
+                    
+                    this.view_all_mode = false;
+                    this.only_upcoming = true;
+                    joined.loadActivities();
+
+                } else {
+
+                    $('#viewAllButton').removeClass('btn-style-4');
+                    $('#viewAllButton').addClass('btn-style-3');
+
+                    this.view_all_mode = true;
+                    this.only_upcoming = false;
+                    
+                    $.ajax({
+                        url: "{{ url_for('api.my_joined_activities')}}" + "?&page=" + this.activities_page,
+                        type: 'GET'
+                    }).done(data => {
+                        data.joined_activities.forEach((activity) => {
+                            activity.going_users      = [];
+                            activity.interested_users = [];
+                            activity.isInterested     = false;
+                            activity.isGoing          = false;
+                            activity.isLeader         = false;
+                        });
+                        this.activities.push.apply(this.activities, data.joined_activities);
+                        this.activities_page++;
+                        this.hasNext = data.has_next;
+                    });
+
+                }
+
+            },
+            viewAllNext: function() {
                 $.ajax({
-                    url: "{{ url_for('api.my_joined_activities')}}" + "?page=" + this.activities_page,
+                    url: "{{ url_for('api.my_joined_activities')}}" + "?&page=" + this.activities_page,
                     type: 'GET'
                 }).done(data => {
                     data.joined_activities.forEach((activity) => {
@@ -578,7 +623,9 @@
             activity_modal_images_folder: '/static/uploads/activity_images/600x250/',
             user_images_folder: '/static/uploads/profile_pictures/',
             can_manage_activity: false,
-            is_manager: false
+            is_manager: false,
+            view_all_mode: false,
+            only_upcoming: true
           },
           methods: {
             activityStatus: function(event){
@@ -598,7 +645,7 @@
             },
             loadActivities: function() {
                 $.ajax({
-                    url: "{{ url_for('api.my_interested_activities')}}" + "?&page=" + this.activities_page,
+                    url: "{{ url_for('api.my_interested_activities')}}" + "?show=upcoming&page=" + this.activities_page,
                     type: 'GET'
                 }).done(data => {
                     data.interested_activities.forEach((activity) => {
@@ -691,9 +738,50 @@
                     });
                 }
             },
-            viewAll: function() {
+            viewAllInit: function() {
+                
+                this.activities_page = 1;
+                this.activities = [];
+
+                if(this.view_all_mode) {
+
+                    $('#viewAllBtnInterested').removeClass('btn-style-3');
+                    $('#viewAllBtnInterested').addClass('btn-style-4');
+                    
+                    this.view_all_mode = false;
+                    this.only_upcoming = true;
+                    interested.loadActivities();
+
+                } else {
+
+                    $('#viewAllBtnInterested').removeClass('btn-style-4');
+                    $('#viewAllBtnInterested').addClass('btn-style-3');
+
+                    this.view_all_mode = true;
+                    this.only_upcoming = false;
+                    
+                    $.ajax({
+                        url: "{{ url_for('api.my_interested_activities')}}" + "?&page=" + this.activities_page,
+                        type: 'GET'
+                    }).done(data => {
+                        data.interested_activities.forEach((activity) => {
+                            activity.going_users      = [];
+                            activity.interested_users = [];
+                            activity.isInterested     = false;
+                            activity.isGoing          = false;
+                            activity.isLeader         = false;
+                        });
+                        this.activities.push.apply(this.activities, data.interested_activities);
+                        this.activities_page++;
+                        this.hasNext = data.has_next;
+                    });
+
+                }
+
+            },
+            viewAllNext: function() {
                 $.ajax({
-                    url: "{{ url_for('api.my_interested_activities')}}" + "?page=" + this.activities_page,
+                    url: "{{ url_for('api.my_interested_activities')}}" + "?&page=" + this.activities_page,
                     type: 'GET'
                 }).done(data => {
                     data.interested_activities.forEach((activity) => {
@@ -703,7 +791,6 @@
                         activity.isGoing          = false;
                         activity.isLeader         = false;
                     });
-                    console.log(data);
                     this.activities.push.apply(this.activities, data.interested_activities);
                     this.activities_page++;
                     this.hasNext = data.has_next;

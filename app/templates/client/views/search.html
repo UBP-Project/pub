@@ -1,9 +1,3 @@
-<!-- 
-    TODO:
-        Interest Group - modal
-        User - add follwo unfollow button
- -->
-
 {% extends "./layout/client_base.html" %}
 
 {% block title %} Search Results {% endblock title %}
@@ -178,6 +172,51 @@
                     </div> <!-- End of perks -->
 
 
+
+
+                    <!-- No Search results displays -->
+                    <div class="row" v-show="filter == 'all' && results.users.length == 0 &&
+                        results.groups.length == 0 && results.activities.length == 0 && results.perks.length == 0">
+                            <div class="col-md-12 text-center">
+                                <br><br><br>
+                                <h4>No search results.</h4>
+                                <br><br><br>
+                            </div>
+                    </div>
+
+                    <div class="row" v-show="filter == 'users' && results.users.length == 0">
+                            <div class="col-md-12 text-center">
+                                <br><br><br>
+                                <h4>No users found.</h4>
+                                <br><br><br>
+                            </div>
+                    </div>
+
+                    <div class="row" v-show="filter == 'groups' && results.groups.length == 0">
+                            <div class="col-md-12 text-center">
+                                <br><br><br>
+                                <h4>No groups found.</h4>
+                                <br><br><br>
+                            </div>
+                    </div>
+
+                    <div class="row" v-show="filter == 'activities' && results.activities.length == 0">
+                            <div class="col-md-12 text-center">
+                                <br><br><br>
+                                <h4>No activities found.</h4>
+                                <br><br><br>
+                            </div>
+                    </div>
+
+                    <div class="row" v-show="filter == 'perks' && results.perks.length == 0">
+                            <div class="col-md-12 text-center">
+                                <br><br><br>
+                                <h4>No perks found.</h4>
+                                <br><br><br>
+                            </div>
+                    </div>
+
+
             </div>
         </div>
 
@@ -253,7 +292,7 @@
                             <span class="col-md-2 col-lg-2 col-sm-2 hidden-xs left-pad"><h2 class="text-center"></h2></span>
                             <span class="col-md-8 col-lg-8 col-sm-8"><h2 class="text-center">{{ disp_activity.title}}</h2></span>
                             <span class="col-md-2 col-lg-2 col-sm-2 text-center right-pad">
-                                    <a v-show="can_edit_activity" :href="'/activities/' + disp_activity.id" class="btn btn-style-3" title="Manage Activity"><i class="fa fa-gear"></i></a>
+                                    <a v-show="can_manage_activity" :href="'/activities/' + disp_activity.id" class="btn btn-style-3" title="Manage Activity"><i class="fa fa-gear"></i></a>
                             </span>
                         </span>
                         <div class="content">
@@ -341,9 +380,9 @@
                         <span class="row">
                             <span class="col-md-4 activity-manage-btns">
                                 <a v-if="( (activityStatus(disp_activity) == 2) || is_manager || disp_activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + disp_activity.id + '/summary'" title="Activity Summary"><i class="fa fa-calendar-check-o"></i></a>
-                                <a v-show="(is_manager || disp_activity.isLeader)" class="btn btn-style-3" :href="'/activities/' + disp_activity.id + '/attendance'" title="Attendance Checklist"><i class="fa fa-check-square-o"></i></a>
+                                <a v-show="(is_manager || can_manage_activity)" class="btn btn-style-3" :href="'/activities/' + disp_activity.id + '/attendance'" title="Attendance Checklist"><i class="fa fa-check-square-o"></i></a>
                             </span>
-                            <span class="col-md-8 pull-right box-no-padding">
+                            <span class="col-md-8 pull-right box-no-padding" v-show="activityStatus(disp_activity) != 2">
                                 <button v-if="is_interested" type="button" class="btn btn-style-1" :id="disp_activity.id" value="cgoing" v-on:click="toggleInterested(disp_activity)">
                                     NOT INTERESTED
                                 </button>
@@ -553,7 +592,7 @@
                 disp_activity: null,
                 disp_going_users: [],
                 disp_interested_users: [],
-                can_edit_activity: false,
+                can_manage_activity: false,
                 is_going: false,
                 is_interested: false,
 
@@ -622,6 +661,20 @@
                     this.is_going = false;
                     this.is_interested = false;
 
+                    $.ajax({
+                        url: '/api/v1.0/groups/'+ activity.group_id + '/members',
+                        type: 'GET'
+                    }).done(data => {
+                        for(var i = 0; i < data.leaders.length; i++) {
+                            if (data.leaders[i].id == '{{current_user.get_id()}}') {
+                                this.can_manage_activity = true;
+                                break;
+                            }
+                        }
+                    }).fail(function() {
+                        console.log("error");
+                    });
+
                     // Load Activity data
                     // load going users
                     $.ajax({
@@ -650,8 +703,20 @@
                     });
 
                 },
-                activityStatus: function(activity) {
-                    return 2;
+                activityStatus: function(event){
+                    currentDate = new Date();
+                    startDate = new Date(event.start_date);
+                    endDate = new Date(event.end_date);
+
+                    if(currentDate > startDate && currentDate < endDate){
+                        return 1; //happening
+                    }
+                    else if(endDate < currentDate){
+                        return 2;
+                    }
+                    else{
+                        return 0; //upcoming
+                    }
                 },
                 toggleGoing: function(activity) {
                     if (this.is_going) {

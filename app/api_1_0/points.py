@@ -94,12 +94,9 @@ def points(id):
         404:
             description: Not Found
     """
-	points = db.session.query(Points, func.sum(Points.value).label('points'))\
-			.join(User)\
-			.group_by(Points.user_id)\
-			.filter(User.id == id)\
-			.first()\
-			.points
+	user = User.query.get_or_404(id)
+
+	points = user.total_points()
 
 	points_history = Points.query\
 			.join(User)\

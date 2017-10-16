@@ -44,27 +44,19 @@ def notifications():
 @client.route('/leaderboard')
 @login_required
 def leaderboard():
-
-    point_leaders = db.session.query(Points, func.sum(Points.value).label('points'))\
+    point_leaders = Points.query\
         .join(User)\
+        .with_entities(
+            User.id,
+            User.firstname,
+            User.lastname,
+            User.image,
+            func.sum(Points.value).label("points")
+        )\
         .group_by(Points.user_id)\
-        .add_columns(User.id, User.firstname, User.lastname, User.image)\
-        .order_by('points DESC')\
+        .order_by(func.sum(Points.value).desc())\
         .limit(10)\
         .all()
-
-    point_leaders = user_points = Points.query\
-            .join(User)\
-            .with_entities(
-                User.id,
-                User.firstname,
-                User.lastname,
-                User.image,
-                func.sum(Points.value).label("points")
-            )\
-            .order_by(func.sum(Points.value))\
-            .limit(10)\
-            .all()
 
     followed_leaders = Follow.query\
             .join(User, User.id == Follow.following_id)\
