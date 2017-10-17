@@ -45,7 +45,7 @@
                         </div>
                         <div class="col-md-12 no-padding text-center show-more-box">
                         	<br/>
-                            <button v-show="hasNext" class="btn btn-style-3" v-on:click="loadPerks">Show More</button>
+                            <button v-show="hasNext" class="btn btn-style-3" v-on:click="loadPerks" :disabled="is_loading">Show More</button>
                         </div>
                     </template>
 
@@ -118,9 +118,16 @@
 				hasNext: false,
 				is_manager: false,
                 perk: null,
+                is_loading: false
 			},
 			methods: {
 				loadPerks: function() {
+                    if (this.is_loading == true) {
+                        return;
+                    }
+
+                    this.is_loading = true;
+
 					$.ajax({
 						url: '../../api/v1.0/perks' + "?page=" + this.page,
 						type: 'GET'
@@ -130,6 +137,7 @@
 						this.hasNext = data.has_next;
 						this.page++;
                         this.perk = data.perks[0];
+                        this.is_loading = false;
 					});
 				},
                 perkClicked: function(perk) {

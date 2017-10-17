@@ -185,7 +185,7 @@
                         </div> <!-- end of group-listing -->
 
                         <div class="show-more-box col-md-12">
-                            <button v-show="hasNext" class="btn btn-style-3" v-on:click="loadGroups">Show More</button>
+                            <button v-show="hasNext" class="btn btn-style-3" v-on:click="loadGroups" :disabled="is_loading">Show More</button>
                         </div> <!-- end of show more div -->
 
                     </template>
@@ -379,7 +379,7 @@
                         </div> <!-- end of group-listing -->
 
                         <div class="show-more-box col-md-12">
-                            <button v-show="hasNext" class="btn btn-style-3" v-on:click="loadGroups">Show More</button>
+                            <button v-show="hasNext" class="btn btn-style-3" v-on:click="loadGroups" :disabled="is_loading">Show More</button>
                         </div> <!-- end of show more div -->
 
                     </template>
@@ -416,10 +416,17 @@
             group_card_covers_folder: '/static/uploads/covers/200x170/',
             activity_card_images_folder: '/static/uploads/activity_images/260x200/',
             user_images_folder: '/static/uploads/profile_pictures/',
-            default_img: "background-image: url('/static/images/pub-default-img.jpg');"
+            default_img: "background-image: url('/static/images/pub-default-img.jpg');",
+            is_loading: false
           },
           methods: {
             loadGroups: function() {
+                if (this.is_loading == true) {
+                    return;
+                }
+
+                this.is_loading = true;
+
                 $.ajax({
                     url: "{{ url_for('api.my_groups') }}" + "?page=" + this.groups_page,
                     type: 'GET'
@@ -438,6 +445,7 @@
                     this.groups.push.apply(this.groups, data.mygroups);
                     this.groups_page++;
                     this.hasNext = data.has_next;
+                    this.is_loading = false;
                 });
             },
             groupPopulation: function(group) {
@@ -519,10 +527,17 @@
             group_card_covers_folder: '/static/uploads/covers/200x170/',
             activity_card_images_folder: '/static/uploads/activity_images/260x200/',
             user_images_folder: '/static/uploads/profile_pictures/',
-            default_img: "background-image: url('/static/images/pub-default-img.jpg');"
+            default_img: "background-image: url('/static/images/pub-default-img.jpg');",
+            is_loading: false
           },
           methods: {
             loadGroups: function() {
+                if (this.is_loading == true) {
+                    return;
+                }
+
+                this.is_loading = true;
+                
                 $.ajax({
                     url: "{{ url_for('api.my_pending_groups') }}" + "?page=" + this.groups_page,
                     type: 'GET'
@@ -541,6 +556,7 @@
                     this.groups.push.apply(this.groups, data.mygroups);
                     this.groups_page++;
                     this.hasNext = data.has_next;
+                    this.is_loading = false;
                 });
             },
             groupPopulation: function(group) {
