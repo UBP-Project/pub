@@ -861,8 +861,7 @@ def my_groups():
                 .join(Membership)\
                 .join(User)\
                 .filter(User.id == current_user.get_id(),
-                    Membership.status == Membership.MEMBERSHIP_ACCEPTED,
-                    Membership.level == Membership.MEMBERSHIP_MEMBER)\
+                    Membership.status == Membership.MEMBERSHIP_ACCEPTED)\
                 .paginate(page=page, per_page=4, error_out=False)
 
     return jsonify({
