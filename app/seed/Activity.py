@@ -12,8 +12,8 @@ activities = [
 	{
 		'title'			: 'Fun Run',
 		'description'	: 'Run Run Run',
-		'start_date'	: '2017-10-19',
-		'end_date'		: '2017-10-20',
+		'start_date'	: '2017-10-21',
+		'end_date'		: '2017-10-21',
 		'address'		: 'Luneta Park',
 		'group_id'		: Interest_Group.query.filter(Interest_Group.name=='Sports').first().id,
 		'image'			: '70a256f3628947508af68343821d78b6.jpg'
@@ -21,8 +21,8 @@ activities = [
 	{
 		'title'			: 'Tech Summit',
 		'description'	: 'Catch up with all the new trends with the technology',
-		'start_date'	: '2017-10-06',
-		'end_date'		: '2017-10-06',
+		'start_date'	: '2017-10-26',
+		'end_date'		: '2017-10-27',
 		'address'		: 'Marco Polo',
 		'group_id'		: Interest_Group.query.filter(Interest_Group.name=='Technology').first().id,
 		'image'			: '8fc972debdde43568ab712730eb9f963.jpg'
@@ -30,8 +30,8 @@ activities = [
 	{
 		'title'			: 'Art Exhibit',
 		'description'	: 'UnionBank Artists Exhibit',
-		'start_date'	: '2017-10-21',
-		'end_date'		: '2017-10-21',
+		'start_date'	: '2017-10-23',
+		'end_date'		: '2017-10-23',
 		'address'		: '47th Floor, UnionBank Plaza',
 		'group_id'		: Interest_Group.query.filter(Interest_Group.name=='Arts').first().id,
 		'image'			: '56946b7fb0f64255af220a34664fd5a7.png'
@@ -39,8 +39,8 @@ activities = [
 	{
 		'title'			: 'Zumba Zumba',
 		'description'	: 'UnionBank Zumba sa Umaga',
-		'start_date'	: '2017-10-04',
-		'end_date'		: '2017-10-07',
+		'start_date'	: '2017-10-22',
+		'end_date'		: '2017-10-22',
 		'address'		: '48th Floor, UnionBank Plaza',
 		'group_id'		: Interest_Group.query.filter(Interest_Group.name=='Zumba').first().id,
 		'image'			: 'b31da3d4eaf54ed8a71a686f04c71ed0.jpg'
@@ -48,8 +48,8 @@ activities = [
 	{
 		'title'			: 'Mass',
 		'description'	: 'Misa para sa Masa',
-		'start_date'	: '2017-10-05',
-		'end_date'		: '2017-10-05',
+		'start_date'	: '2017-10-20',
+		'end_date'		: '2017-10-20',
 		'address'		: 'Ground Floor, UnionBank Plaza',
 		'group_id'		: Interest_Group.query.filter(Interest_Group.name=='Family').first().id,
 		'image'			: '402e8ec51b344f94b8c21f555f973004.png'
@@ -66,8 +66,8 @@ activities = [
 	{
 		'title'			: 'Weekend Games',
 		'description'	: '',
-		'start_date'	: '2017-10-14',
-		'end_date'		: '2017-10-15',
+		'start_date'	: '2017-10-23',
+		'end_date'		: '2017-10-24',
 		'address'		: 'Valle Verde I',
 		'group_id'		: Interest_Group.query.filter(Interest_Group.name=='Basketball').first().id,
 		'image'			: 'juan.jpg'
@@ -75,8 +75,8 @@ activities = [
 	{
 		'title'			: 'Mobile Legends Tournament',
 		'description'	: 'MoBa',
-		'start_date'	: '2017-10-16',
-		'end_date'		: '2017-10-16',
+		'start_date'	: '2017-10-20',
+		'end_date'		: '2017-10-20',
 		'address'		: 'Valle Verde I',
 		'group_id'		: Interest_Group.query.filter(Interest_Group.name=='Gamers').first().id,
 		'image'			: 'mobile-legends-hack.png'
@@ -84,8 +84,8 @@ activities = [
 	{
 		'title'			: 'Sunday Trekking',
 		'description'	: 'MoBa',
-		'start_date'	: '2017-10-10',
-		'end_date'		: '2017-10-10',
+		'start_date'	: '2017-10-15',
+		'end_date'		: '2017-10-15',
 		'address'		: 'Mt. Mayon',
 		'group_id'		: Interest_Group.query.filter(Interest_Group.name=='Hikers').first().id,
 		'image'			: 'trek.jpg'
@@ -93,8 +93,8 @@ activities = [
 	{
 		'title'			: 'Free Checkup',
 		'description'	: 'Medical mission for employees',
-		'start_date'	: '2017-10-11',
-		'end_date'		: '2017-10-11',
+		'start_date'	: '2017-10-13',
+		'end_date'		: '2017-10-13',
 		'address'		: '48th Floor, Unionbank Plaza',
 		'group_id'		: Interest_Group.query.filter(Interest_Group.name=='Medical').first().id,
 		'image'			: 'medical.jpg'
@@ -102,8 +102,8 @@ activities = [
 	{
 		'title'			: 'UHAC AND PLAY: Employees Edition',
 		'description'	: 'Hackathon for employees',
-		'start_date'	: '2017-10-15',
-		'end_date'		: '2017-10-17',
+		'start_date'	: '2017-12-01',
+		'end_date'		: '2017-12-03',
 		'address'		: '48th Floor, Unionbank Plaza',
 		'group_id'		: Interest_Group.query.filter(Interest_Group.name=='Technology').first().id,
 		'image'			: 'hackathon.jpg'
@@ -111,8 +111,8 @@ activities = [
 	{
 		'title'			: 'Trending items',
 		'description'	: 'Worthy shopping items',
-		'start_date'	: '2017-10-18',
-		'end_date'		: '2017-10-18',
+		'start_date'	: '2017-10-26',
+		'end_date'		: '2017-10-27',
 		'address'		: '48th Floor, Unionbank Plaza',
 		'group_id'		: Interest_Group.query.filter(Interest_Group.name=='Shopping').first().id,
 		'image'			: 'best-shopping-in-Bucharest.jpg'

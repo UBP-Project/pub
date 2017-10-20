@@ -156,8 +156,8 @@ def modify_timestamps():
 
     print("Modifying timestamps")
     
-    start_timestamp = time.mktime(time.strptime('Sep 1 2017  01:33:00', '%b %d %Y %I:%M:%S'))
-    end_timestamp = time.mktime(time.strptime('Oct 12 2017  08:33:00', '%b %d %Y %I:%M:%S'))
+    start_timestamp = time.mktime(time.strptime('Sep 15 2017  01:33:00', '%b %d %Y %I:%M:%S'))
+    end_timestamp = time.mktime(time.strptime('Oct 20 2017  08:33:00', '%b %d %Y %I:%M:%S'))
 
     follows = Follow.query.all()
     for follow in follows:
