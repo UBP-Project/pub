@@ -7,7 +7,7 @@ admin = [
 		'firstname'		:	'UnionBank',
 		'lastname'		:	'Admin',
 		'email'			:	'admin@unionbank.com',
-		'password'	:	'admin',
+		'password'		:	'admin',
 		'department'	:	'Talent Acquisition',
 		'position'		:	'Head'
 	}]
@@ -53,8 +53,8 @@ users = [
 		'birthday'		:	'1997-07-23'
 	},
 	{
-		'firstname'		:	'Test',
-		'middlename'	:	'Test',
+		'firstname'		:	'Juan',
+		'middlename'	:	'dela Cruz',
 		'lastname'		:	'Test',
 		'email'			:	'test@gmail.com',
 		'password'		:	'test',
