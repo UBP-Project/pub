@@ -1,3 +1,7 @@
-def application(environ, start_response):
-    start_response('200 OK', [('Content-Type', 'text/html')])
-    return ["<h1 style='color:blue'>Hello There!</h1>"]
+import os
+from manage import app
+
+os.environ["FLASK_CONFIG"] = "production"
+
+if __name__ == "__main__":
+	app.run()
